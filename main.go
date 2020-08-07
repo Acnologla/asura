@@ -1,16 +1,28 @@
+/*
+    __   ____  _  _  ____   __  
+   / _\ / ___)/ )( \(  _ \ / _\ 
+  /    \\___ \) \/ ( )   //    \
+  \_/\_/(____/\____/(__\_)\_/\_/
+
+  This is the source code of the bot 
+  "Asura" made in Golang and manteined by
+  Chiyoku and Acnologia
+  Copyright 2020
+
+*/
+
 package main
 
 import (
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
-	"asura/src/logs"
+	"asura/src/telemetry"
 	"asura/src/database"
-	"os"
-	_ "asura/src/commands"
-	"asura/src/utils"
 	"asura/src/handler"
+	_ "asura/src/commands" // Initialize all commands and put them into an array
 	"context"
 	"fmt"
+	"os"
 )
 
 func onReady(session disgord.Session, evt *disgord.Ready) {
@@ -18,16 +30,19 @@ func onReady(session disgord.Session, evt *disgord.Ready) {
 }
 
 func main(){
+
+	// If it's not in production so it's good to read a ".env" file
 	if os.Getenv("production") == ""{
 		err := godotenv.Load()
 		if err != nil { panic("Cannot read the motherfucking envfile") }
 	}
 
-	logs.Init()
+	// Initialize datalog services for telemetry of the application
+	telemetry.Init()
 	database.Init()
-	utils.MetricUpdate()
+	telemetry.MetricUpdate()
 
-	fmt.Println("Iniciando bot....")
+	fmt.Println("Starting bot...")
 
 	client := disgord.New(disgord.Config{
         BotToken: os.Getenv("TOKEN"),
