@@ -15,7 +15,6 @@ func init() {
 	})
 }
 
-func runPing(session disgord.Session, evt *disgord.MessageCreate, args []string) {
-	msg := evt.Message
+func runPing(session disgord.Session, msg *disgord.Message, args []string) {
 	msg.Reply(context.Background(), session, "pong")
 }

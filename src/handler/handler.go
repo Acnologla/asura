@@ -13,7 +13,7 @@ import (
 // A struct that stores the information of a single "command" of the bot
 type Command struct {
 	Aliases    []string
-	Run        func(disgord.Session, *disgord.MessageCreate, []string)
+	Run        func(disgord.Session, *disgord.Message, []string)
 	Available  bool
 	Arguments  []Argument 
 }
@@ -31,9 +31,7 @@ func CompareStrings(first string, second string) int {
 	return levenshtein.ComputeDistance(first, second)
 }
 
-//Handles messages and call the functions that they have to execute.
-func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
-	msg := evt.Message
+func handleCommand(session disgord.Session, msg *disgord.Message) {
 
 	if msg.Author.Bot {
 		return
@@ -76,7 +74,7 @@ func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 			}
 		}
 		if len(realCommand.Aliases) > 0 {
-			realCommand.Run(session, evt, args)
+			realCommand.Run(session, msg, args)
 			tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 			telemetry.Info(fmt.Sprintf("Command %s used by %s", realCommand.Aliases[0], tag), map[string]string{
 				"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
@@ -86,4 +84,10 @@ func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 			})
 		}
 	}
+}
+
+//Handles messages and call the functions that they have to execute.
+func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
+	msg := evt.Message
+	handleCommand(session, msg)
 }
