@@ -1,10 +1,10 @@
 /*
-    __   ____  _  _  ____   __  
-   / _\ / ___)/ )( \(  _ \ / _\ 
+    __   ____  _  _  ____   __
+   / _\ / ___)/ )( \(  _ \ / _\
   /    \\___ \) \/ ( )   //    \
   \_/\_/(____/\____/(__\_)\_/\_/
 
-  This is the source code of the bot 
+  This is the source code of the bot
   "Asura" made in Golang and manteined by
   Chiyoku and Acnologia
   Copyright 2020
@@ -14,27 +14,29 @@
 package main
 
 import (
-	"github.com/andersfylling/disgord"
-	"github.com/joho/godotenv"
-	"asura/src/telemetry"
+	_ "asura/src/commands" // Initialize all commands and put them into an array
 	"asura/src/database"
 	"asura/src/handler"
-	_ "asura/src/commands" // Initialize all commands and put them into an array
+	"asura/src/telemetry"
 	"context"
 	"fmt"
+	"github.com/andersfylling/disgord"
+	"github.com/joho/godotenv"
 	"os"
 )
 
 func onReady(session disgord.Session, evt *disgord.Ready) {
-	fmt.Println("Bot",evt.User.Username,"Logged!!")
+	fmt.Println("Bot", evt.User.Username, "Logged!!")
 }
 
-func main(){
+func main() {
 
 	// If it's not in production so it's good to read a ".env" file
-	if os.Getenv("production") == ""{
+	if os.Getenv("production") == "" {
 		err := godotenv.Load()
-		if err != nil { panic("Cannot read the motherfucking envfile") }
+		if err != nil {
+			panic("Cannot read the motherfucking envfile")
+		}
 	}
 
 	// Initialize datalog services for telemetry of the application
@@ -45,11 +47,13 @@ func main(){
 	fmt.Println("Starting bot...")
 
 	client := disgord.New(disgord.Config{
-        BotToken: os.Getenv("TOKEN"),
-	}) 
+		BotToken: os.Getenv("TOKEN"),
+	})
 
 	client.On(disgord.EvtMessageCreate, handler.OnMessage)
 	client.On(disgord.EvtReady, onReady)
 
-	defer client.StayConnectedUntilInterrupted(context.Background())
+	client.StayConnectedUntilInterrupted(context.Background())
+
+	fmt.Println("Good bye!")
 }
