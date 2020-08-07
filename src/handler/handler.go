@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"asura/src/logs"
+	"asura/src/telemetry"
 	"github.com/agnivade/levenshtein"
 )
 
@@ -65,7 +65,7 @@ func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 		if len(realCommand.Aliases) > 0{
 			realCommand.Run(session, evt, args) 
 				tag := msg.Author.Username +"#"+msg.Author.Discriminator.String()
-				logs.Info(fmt.Sprintf("Command %s used by %s",realCommand.Aliases[0],tag),map[string]string{
+				telemetry.Info(fmt.Sprintf("Command %s used by %s",realCommand.Aliases[0],tag),map[string]string{
 					"guild": strconv.FormatUint(uint64(msg.GuildID),10),
 					"user": strconv.FormatUint(uint64(msg.Author.ID),10),
 					"command": realCommand.Aliases[0],

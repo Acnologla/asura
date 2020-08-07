@@ -1,4 +1,4 @@
-package logs
+package telemetry
 
 import (
 	"encoding/json"

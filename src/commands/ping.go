@@ -8,7 +8,7 @@ import (
 
 func init() {
 	handler.Register(handler.Command {
-		Aliases: []string{"ping", "piiiing"},
+		Aliases: []string{"ping"},
 		Run: runPing,
 	})
 }
