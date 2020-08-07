@@ -12,9 +12,10 @@ import (
 
 // A struct that stores the information of a single "command" of the bot
 type Command struct {
-	Aliases   []string
-	Run       func(disgord.Session, *disgord.MessageCreate, []string)
-	Available bool
+	Aliases    []string
+	Run        func(disgord.Session, *disgord.MessageCreate, []string)
+	Available  bool
+	Arguments  []Argument 
 }
 
 // The place that will be stored all the commands
