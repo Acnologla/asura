@@ -91,3 +91,10 @@ func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 	msg := evt.Message
 	handleCommand(session, msg)
 }
+
+func OnMessageUpdate(session disgord.Session, evt *disgord.MessageUpdate) {
+	if len(evt.Message.Embeds) == 0{
+		msg := evt.Message 
+		handleCommand(session, msg) 
+	} 
+}
