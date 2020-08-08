@@ -53,6 +53,7 @@ func main() {
 	handler.Client = client
 
 	client.On(disgord.EvtMessageCreate, handler.OnMessage)
+	client.On(disgord.EvtMessageUpdate, handler.OnMessageUpdate)
 	client.On(disgord.EvtReady, onReady)
 
 	client.StayConnectedUntilInterrupted(context.Background())
