@@ -8,13 +8,10 @@ import (
 	"bytes"
 	"io"
 	"image/png"
-	"image"
+	"asura/src/utils"
 	"strings"
 	"os"
-	"fmt"
-	"net/http"
 	"github.com/nfnt/resize"
-	"github.com/willwashburn/fasterimage"
 )
 
 func init() {
@@ -25,18 +22,7 @@ func init() {
 	})
 }
 
-func downloadImage(url string) image.Image {
-	response, err := http.Get(url)
-    if err != nil {
-		fmt.Println("Went wrong!")
-	}
-
-    defer response.Body.Close()
-	img, err := png.Decode(response.Body)
-	return img
-}
-
-
+// ke
 func runTest(session disgord.Session, msg *disgord.Message, args []string) {
 	// Loads the template of nunca.png in memory
 	file, err := os.Open("resources/nunca.png")
@@ -47,9 +33,12 @@ func runTest(session disgord.Session, msg *disgord.Message, args []string) {
 	if err != nil { return; }
 
 	// Download user image	
-	url,err := msg.Author.AvatarURL(512,false)
-	avatar := downloadImage(strings.Replace(url, ".webp", ".png", 1))
-
+	url := utils.GetImageURL(msg,args)
+	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
+	avatar,err  := utils.DownloadImage(replacer.Replace(url))
+	if err != nil{
+		msg.Reply(context.Background(), session, "Invalid image")
+	}
 	// Resize the images
 	img  = resize.Resize(500, 500, img, resize.Lanczos3)
 	avatar = resize.Resize(500, 350, avatar, resize.Lanczos3)

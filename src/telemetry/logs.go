@@ -15,10 +15,11 @@ func log(level string, message string, values map[string]string) {
 	values["message"] = message
 	values["level"] = level
 	jsonValue, _ := json.Marshal(values)
-	_, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
+	res, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
 		fmt.Println(err)
 	}
+	defer res.Body.Close()
 	fmt.Printf("[%s] - %s\n", level, message)
 }
 

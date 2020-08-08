@@ -24,9 +24,10 @@ func MetricUpdate() {
 		ram := fmt.Sprintf(defaultMetric, "memory.rss", time.Now().Unix(), 159)
 		series := fmt.Sprintf("%s,%s,%s,%s", users, guilds, channels, ram)
 		realMetric := fmt.Sprintf(masterMetric, series)
-		_, err := http.Post(url, "application/json", bytes.NewBuffer([]byte(realMetric)))
+		res, err := http.Post(url, "application/json", bytes.NewBuffer([]byte(realMetric)))
 		if err != nil {
 			fmt.Println(err)
 		}
+		res.Body.Close()
 	}
 }
