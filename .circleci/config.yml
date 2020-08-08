@@ -3,7 +3,6 @@ jobs:
  build:
    docker:
       - image: circleci/golang:1.14
-   machine: true
    steps:
      - checkout
      - run: go test ./test -v
