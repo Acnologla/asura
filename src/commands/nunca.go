@@ -7,6 +7,7 @@ import (
 	"github.com/fogleman/gg"
 	"bytes"
 	"io"
+	"fmt"
 	"image/png"
 	"asura/src/utils"
 	"strings"
@@ -16,7 +17,7 @@ import (
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:    []string{"test"},
+		Aliases:    []string{"nunca","deusnunc","never"},
 		Run:        runTest,
 		Available:  true,
 	})
@@ -36,8 +37,11 @@ func runTest(session disgord.Session, msg *disgord.Message, args []string) {
 	url := utils.GetImageURL(msg,args)
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
 	avatar,err  := utils.DownloadImage(replacer.Replace(url))
+	
 	if err != nil{
+		fmt.Println(err)
 		msg.Reply(context.Background(), session, "Invalid image")
+		return
 	}
 	// Resize the images
 	img  = resize.Resize(500, 500, img, resize.Lanczos3)
