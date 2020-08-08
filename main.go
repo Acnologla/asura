@@ -32,7 +32,7 @@ func onReady(session disgord.Session, evt *disgord.Ready) {
 func main() {
 
 	// If it's not in production so it's good to read a ".env" file
-	if os.Getenv("production") == "" {
+	if os.Getenv("PRODUCTION") == "" {
 		err := godotenv.Load()
 		if err != nil {
 			panic("Cannot read the motherfucking envfile")

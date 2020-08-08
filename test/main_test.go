@@ -8,7 +8,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	if os.Getenv("production") == "" {
+	if os.Getenv("PRODUCTION") == "" {
 		err := godotenv.Load("../.env")
 		if err != nil {
 			log.Println("Cannot read the motherfucking envfile")
