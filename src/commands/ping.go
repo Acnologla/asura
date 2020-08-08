@@ -11,7 +11,6 @@ func init() {
 		Aliases:    []string{"ping"},
 		Run:        runPing,
 		Available:  true,
-		Arguments:  []handler.Argument { },
 	})
 }
 
