@@ -20,7 +20,7 @@ func init() {
 		Aliases:    []string{"nunca","deusnunc","never"},
 		Run:        runNunca,
 		Available:  true,
-		Cooldown: 10,
+		Cooldown: 5,
 		Usage: "j!nunca @user",
 		Help: "Algo que deus nunca aceitaria",
 	})
