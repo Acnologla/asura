@@ -50,6 +50,8 @@ func main() {
 		BotToken: os.Getenv("TOKEN"),
 	})
 
+	handler.Client = client
+
 	client.On(disgord.EvtMessageCreate, handler.OnMessage)
 	client.On(disgord.EvtReady, onReady)
 

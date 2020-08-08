@@ -15,11 +15,11 @@ type Command struct {
 	Aliases    []string
 	Run        func(disgord.Session, *disgord.Message, []string)
 	Available  bool
-	Arguments  []Argument 
 }
 
 // The place that will be stored all the commands
 var Commands []Command = make([]Command, 0)
+var Client *disgord.Client
 
 //Register a new command into the big array of commands
 func Register(command Command) {

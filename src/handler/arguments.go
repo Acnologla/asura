@@ -3,36 +3,32 @@ package handler
 import (
 	"strings"
 	"strconv"
+	"errors"
+	"fmt"
+	
 )
-type Argument interface { 
-	Num() NumberArgument
-	Str() StringArgument
-	Mention() MentionArgument
-}
 
-type NumberArgument struct {
-	min int
-	max int
-}
-
-type StringArgument struct {
-	min int
-	max int
-}
-
-type MentionArgument struct {
-	sameServer bool 
-}
-
-func (arg *NumberArgument) Validate(str string) bool {
+func ValidateNumber(str string, min int, max int) error {
 	integer, err := strconv.Atoi(str)
-	return err != nil && integer >= arg.min && integer <= arg.max
+	if err != nil {
+		return errors.New(fmt.Sprintf("Expected a number but instead got %s",str))
+	}
+	if integer < min || integer > max {
+		return errors.New(fmt.Sprintf("Expected %s to be a number between %d and %d",str, min, max))
+	}
+	return nil
 }
 
-func (arg *StringArgument) Validate(str string) bool {
-	return len(str) >= arg.min && len(str) <= arg.max
+func ValidateString(str string, min int, max int) error {
+	if len(str) < min || len(str)  > max {
+		return errors.New(fmt.Sprintf("Expected %s to be a text with size between %d and %d",str, min, max))
+	}
+	return nil
 }
 
-func (arg *MentionArgument) Validate(str string) bool {
-	return strings.HasPrefix(str,"<@") &&  strings.HasPrefix(str,">")
+func ValidateUserMention(str string) error {
+	if !strings.HasPrefix(str,"<@!") || !strings.HasPrefix(str,">") {
+		return errors.New(fmt.Sprintf("Expected a user mention but instead got %s",str))
+	}
+	return nil
 }
