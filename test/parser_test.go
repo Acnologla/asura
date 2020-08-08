@@ -17,7 +17,7 @@ func TestParser(t *testing.T) {
 		if handler.ValidateNumber(args[2], 0, 10) == nil {
 			t.Errorf("Expected error in %s",args[2])
 		}
-		if handler.ValidateMention(args[3]) == nil {
+		if handler.ValidateUserMention(args[3]) == nil {
 			t.Errorf("Expected success in %s",args[3])
 		}
 	})
