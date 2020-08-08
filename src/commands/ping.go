@@ -11,6 +11,9 @@ func init() {
 		Aliases:    []string{"ping"},
 		Run:        runPing,
 		Available:  true,
+		Cooldown: 1,
+		Usage: "j!ping",
+		Help: "Veja meu ping",
 	})
 }
 

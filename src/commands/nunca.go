@@ -18,13 +18,15 @@ import (
 func init() {
 	handler.Register(handler.Command{
 		Aliases:    []string{"nunca","deusnunc","never"},
-		Run:        runTest,
+		Run:        runNunca,
 		Available:  true,
+		Cooldown: 10,
+		Usage: "j!nunca @user",
+		Help: "Algo que deus nunca aceitaria",
 	})
 }
 
-// ke
-func runTest(session disgord.Session, msg *disgord.Message, args []string) {
+func runNunca(session disgord.Session, msg *disgord.Message, args []string) {
 	// Loads the template of nunca.png in memory
 	file, err := os.Open("resources/nunca.png")
 	defer file.Close()
