@@ -8,15 +8,17 @@ import (
 	"github.com/andersfylling/disgord"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 )
 
 // A struct that stores the information of a single "command" of the bot
 type Command struct {
 	Aliases    []string
 	Run        func(disgord.Session, *disgord.Message, []string)
-	Help string
-	Usage string
-	Cooldown int
+	Help       string
+	Usage      string
+	Cooldown   int
 	Available  bool
 }
 
@@ -24,8 +26,14 @@ type Command struct {
 var Commands []Command = make([]Command, 0)
 var Client *disgord.Client
 
+
+var Cooldowns = map[string]map[disgord.Snowflake]time.Time{}
+var CooldownMutexes = map[string]*sync.RWMutex{}
+
 //Register a new command into the big array of commands
 func Register(command Command) {
+	Cooldowns[command.Aliases[0]] = map[disgord.Snowflake]time.Time{}
+	CooldownMutexes[command.Aliases[0]] = &sync.RWMutex{}
 	Commands = append(Commands, command)
 }
 
@@ -52,6 +60,28 @@ func FindCommand(command string) (realCommand Command){
 	return
 }
 
+// This hell of Mutexes are a simple way to sincronize all the goroutines around the Cooldown array.
+func checkCooldown(session disgord.Session, msg *disgord.Message, command string, id disgord.Snowflake, cooldown int) bool {
+	CooldownMutexes[command].RLock()
+	if val, ok := Cooldowns[command][id]; ok {
+		time_until := float64(cooldown)-time.Since(val).Seconds()
+		msg.Reply(context.Background(), session, fmt.Sprintf("You have to wait %.2f seconds to use this command again",time_until))
+		CooldownMutexes[command].RUnlock()
+		return true
+	}
+	CooldownMutexes[command].RUnlock()
+	CooldownMutexes[command].Lock()
+	Cooldowns[command][id] = time.Now()
+	CooldownMutexes[command].Unlock()
+	go func() { 
+		time.Sleep( time.Duration(cooldown) * time.Second)
+		CooldownMutexes[command].Lock()
+		delete(Cooldowns[command], id) 
+		CooldownMutexes[command].Unlock()
+	}()
+	return false
+}
+
 func handleCommand(session disgord.Session, msg *disgord.Message) {
 
 	if msg.Author.Bot {
@@ -67,6 +97,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 	botMention := fmt.Sprintf("<@!%d> ", uint64(myself.ID))
 
 	if strings.HasPrefix(msg.Content, "j!") || strings.HasPrefix(msg.Content, "asura ") || strings.HasPrefix(msg.Content, botMention) {
+		// I dont know if it's efficient but this is the easiest way to remove one of the three prefixes from the command.
 		var raw string
 		switch {
 		case strings.HasPrefix(msg.Content, "j!"):
@@ -76,11 +107,16 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 		case strings.HasPrefix(msg.Content, botMention):
 			raw = strings.TrimPrefix(msg.Content, botMention)
 		}
+
 		splited := strings.Fields(raw)
 		command := strings.ToLower(splited[0])
 		args := splited[1:]
 		realCommand := FindCommand(command)
+		
 		if len(realCommand.Aliases) > 0 {
+			if checkCooldown(session, msg, realCommand.Aliases[0], msg.Author.ID, realCommand.Cooldown) {
+				return
+			}
 			realCommand.Run(session, msg, args)
 			tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 			telemetry.Info(fmt.Sprintf("Command %s used by %s", realCommand.Aliases[0], tag), map[string]string{
@@ -99,6 +135,7 @@ func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 	handleCommand(session, msg)
 }
 
+//If you want to edit a message to make the command work again
 func OnMessageUpdate(session disgord.Session, evt *disgord.MessageUpdate) {
 	if len(evt.Message.Embeds) == 0{
 		msg := evt.Message 
