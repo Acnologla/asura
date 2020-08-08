@@ -8,12 +8,12 @@ import (
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:    []string{"ping"},
-		Run:        runPing,
-		Available:  true,
-		Cooldown: 1,
-		Usage: "j!ping",
-		Help: "Veja meu ping",
+		Aliases:   []string{"ping"},
+		Run:       runPing,
+		Available: true,
+		Cooldown:  1,
+		Usage:     "j!ping",
+		Help:      "Veja meu ping",
 	})
 }
 

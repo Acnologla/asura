@@ -14,18 +14,17 @@ import (
 
 // A struct that stores the information of a single "command" of the bot
 type Command struct {
-	Aliases    []string
-	Run        func(disgord.Session, *disgord.Message, []string)
-	Help       string
-	Usage      string
-	Cooldown   int
-	Available  bool
+	Aliases   []string
+	Run       func(disgord.Session, *disgord.Message, []string)
+	Help      string
+	Usage     string
+	Cooldown  int
+	Available bool
 }
 
 // The place that will be stored all the commands
 var Commands []Command = make([]Command, 0)
 var Client *disgord.Client
-
 
 var Cooldowns = map[string]map[disgord.Snowflake]time.Time{}
 var CooldownMutexes = map[string]*sync.RWMutex{}
@@ -42,7 +41,7 @@ func CompareStrings(first string, second string) int {
 	return levenshtein.ComputeDistance(first, second)
 }
 
-func FindCommand(command string) (realCommand Command){
+func FindCommand(command string) (realCommand Command) {
 	for _, cmd := range Commands {
 		for _, alias := range cmd.Aliases {
 			if alias == command {
@@ -64,8 +63,8 @@ func FindCommand(command string) (realCommand Command){
 func checkCooldown(session disgord.Session, msg *disgord.Message, command string, id disgord.Snowflake, cooldown int) bool {
 	CooldownMutexes[command].RLock()
 	if val, ok := Cooldowns[command][id]; ok {
-		time_until := float64(cooldown)-time.Since(val).Seconds()
-		msg.Reply(context.Background(), session, fmt.Sprintf("You have to wait %.2f seconds to use this command again",time_until))
+		time_until := float64(cooldown) - time.Since(val).Seconds()
+		msg.Reply(context.Background(), session, fmt.Sprintf("You have to wait %.2f seconds to use this command again", time_until))
 		CooldownMutexes[command].RUnlock()
 		return true
 	}
@@ -73,10 +72,10 @@ func checkCooldown(session disgord.Session, msg *disgord.Message, command string
 	CooldownMutexes[command].Lock()
 	Cooldowns[command][id] = time.Now()
 	CooldownMutexes[command].Unlock()
-	go func() { 
-		time.Sleep( time.Duration(cooldown) * time.Second)
+	go func() {
+		time.Sleep(time.Duration(cooldown) * time.Second)
 		CooldownMutexes[command].Lock()
-		delete(Cooldowns[command], id) 
+		delete(Cooldowns[command], id)
 		CooldownMutexes[command].Unlock()
 	}()
 	return false
@@ -112,7 +111,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 		command := strings.ToLower(splited[0])
 		args := splited[1:]
 		realCommand := FindCommand(command)
-		
+
 		if len(realCommand.Aliases) > 0 {
 			if checkCooldown(session, msg, realCommand.Aliases[0], msg.Author.ID, realCommand.Cooldown) {
 				return
@@ -137,8 +136,8 @@ func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 
 //If you want to edit a message to make the command work again
 func OnMessageUpdate(session disgord.Session, evt *disgord.MessageUpdate) {
-	if len(evt.Message.Embeds) == 0{
-		msg := evt.Message 
-		handleCommand(session, msg) 
-	} 
+	if len(evt.Message.Embeds) == 0 {
+		msg := evt.Message
+		handleCommand(session, msg)
+	}
 }
