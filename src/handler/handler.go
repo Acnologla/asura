@@ -14,6 +14,9 @@ import (
 type Command struct {
 	Aliases    []string
 	Run        func(disgord.Session, *disgord.Message, []string)
+	Help string
+	Usage string
+	Cooldown int
 	Available  bool
 }
 
@@ -29,6 +32,24 @@ func Register(command Command) {
 // This function simply calculates the levenshtein distance between two strings
 func CompareStrings(first string, second string) int {
 	return levenshtein.ComputeDistance(first, second)
+}
+
+func FindCommand(command string) (realCommand Command){
+	for _, cmd := range Commands {
+		for _, alias := range cmd.Aliases {
+			if alias == command {
+				realCommand = cmd
+				continue
+			}
+		}
+	}
+	for _, cmd := range Commands {
+		if 1 >= CompareStrings(cmd.Aliases[0], command) {
+			realCommand = cmd
+			continue
+		}
+	}
+	return
 }
 
 func handleCommand(session disgord.Session, msg *disgord.Message) {
@@ -58,21 +79,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 		splited := strings.Fields(raw)
 		command := strings.ToLower(splited[0])
 		args := splited[1:]
-		var realCommand Command
-		for _, cmd := range Commands {
-			for _, alias := range cmd.Aliases {
-				if alias == command {
-					realCommand = cmd
-					continue
-				}
-			}
-		}
-		for _, cmd := range Commands {
-			if 1 >= CompareStrings(cmd.Aliases[0], command) {
-				realCommand = cmd
-				continue
-			}
-		}
+		realCommand := FindCommand(command)
 		if len(realCommand.Aliases) > 0 {
 			realCommand.Run(session, msg, args)
 			tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
