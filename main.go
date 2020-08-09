@@ -51,14 +51,18 @@ func onGuildDelete(session disgord.Session, evt *disgord.GuildDelete) {
 func onGuildCreate(session disgord.Session, evt *disgord.GuildCreate) {
 	return
 	guild := evt.Guild
-	if guild.JoinedAt == nil{
-		telemetry.Warn(fmt.Sprintf("Joined in  %s", guild.Name), map[string]string{
-			"id":  strconv.FormatUint(uint64(guild.ID), 10),
-			"eventType": "join",
-		})
+	bot, err := session.GetCurrentUser(context.Background())
+	if err != nil{
+		fmt.Println(err)
 		return
 	}
-	if (20 * time.Second) > (time.Since(guild.JoinedAt.Time) * time.Second){
+	member, err := handler.Client.GetMember(context.Background(),guild.ID,bot.ID,disgord.IgnoreCache)
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(time.Until(member.JoinedAt.Time).Seconds())
+	if 2  > time.Until(member.JoinedAt.Time).Seconds(){
 		telemetry.Warn(fmt.Sprintf("Joined in  %s", guild.Name), map[string]string{
 			"id":  strconv.FormatUint(uint64(guild.ID), 10),
 			"eventType": "join",
