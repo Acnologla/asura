@@ -20,13 +20,50 @@ import (
 	"asura/src/telemetry"
 	"context"
 	"fmt"
+	"time"
+	"os"
+	"strconv"
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
-	"os"
 )
 
 func onReady(session disgord.Session, evt *disgord.Ready) {
-	fmt.Println("Bot", evt.User.Username, "Logged!!")
+	telemetry.Info(fmt.Sprintf("%s Started", evt.User.Username), map[string]string{
+		"eventType": "ready",
+	})
+	go telemetry.MetricUpdate(handler.Client)
+
+}
+
+func onGuildDelete(session disgord.Session, evt *disgord.GuildDelete) {
+	return
+	guild ,err := handler.Client.GetGuild(context.Background(),evt.UnavailableGuild.ID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	telemetry.Warn(fmt.Sprintf("Leaved from %s", guild.Name), map[string]string{
+		"id": strconv.FormatUint(uint64(evt.UnavailableGuild.ID), 10),
+		"eventType": "leave",
+	})
+	
+}
+
+func onGuildCreate(session disgord.Session, evt *disgord.GuildCreate) {
+	return
+	guild := evt.Guild
+	if guild.JoinedAt == nil{
+		telemetry.Warn(fmt.Sprintf("Joined in  %s", guild.Name), map[string]string{
+			"id":  strconv.FormatUint(uint64(guild.ID), 10),
+			"eventType": "join",
+		})
+		return
+	}
+	if (20 * time.Second) > (time.Since(guild.JoinedAt.Time) * time.Second){
+		telemetry.Warn(fmt.Sprintf("Joined in  %s", guild.Name), map[string]string{
+			"id":  strconv.FormatUint(uint64(guild.ID), 10),
+			"eventType": "join",
+		})
+	}
 }
 
 func main() {
@@ -42,7 +79,6 @@ func main() {
 	// Initialize datalog services for telemetry of the application
 	telemetry.Init()
 	database.Init()
-	telemetry.MetricUpdate()
 
 	fmt.Println("Starting bot...")
 
@@ -55,7 +91,8 @@ func main() {
 	client.On(disgord.EvtMessageCreate, handler.OnMessage)
 	client.On(disgord.EvtMessageUpdate, handler.OnMessageUpdate)
 	client.On(disgord.EvtReady, onReady)
-
+	client.On(disgord.EvtGuildCreate, onGuildCreate)
+	client.On(disgord.EvtGuildDelete, onGuildDelete)
 	client.StayConnectedUntilInterrupted(context.Background())
 
 	fmt.Println("Good bye!")
