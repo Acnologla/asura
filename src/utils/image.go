@@ -3,7 +3,6 @@ package utils
 import (
 	"asura/src/handler"
 	"context"
-	"fmt"
 	"github.com/andersfylling/disgord"
 	"image"
 	_ "image/jpeg"
