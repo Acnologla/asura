@@ -12,14 +12,16 @@ var url string
 
 // Beautify the log message and send it the DataDog service
 func log(level string, message string, values map[string]string) {
-	values["message"] = message
-	values["level"] = level
-	jsonValue, _ := json.Marshal(values)
-	res, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
-	if err != nil {
-		fmt.Println(err)
+	if os.Getenv("PRODUCTION") !=""{
+		values["message"] = message
+		values["level"] = level
+		jsonValue, _ := json.Marshal(values)
+		res, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer res.Body.Close()
 	}
-	defer res.Body.Close()
 	fmt.Printf("[%s] - %s\n", level, message)
 }
 

@@ -19,6 +19,7 @@ const (
 
 // The main purpose of this function it to send the metrics of the bot to the service "Datadog"
 func metricUpdate(client *disgord.Client) {
+	if os.Getenv("PRODUCTION") != ""{
 		url := fmt.Sprintf(metricURL, os.Getenv("DATADOG_API_KEY"))
 		date := time.Now().Unix()
 		guildsSize,err := client.GetGuilds(context.Background(),&disgord.GetCurrentUserGuildsParams{})
@@ -37,6 +38,7 @@ func metricUpdate(client *disgord.Client) {
 			Error(err.Error(),map[string]string{})
 		}
 		res.Body.Close()
+	}
 }
 
 func MetricUpdate(client *disgord.Client){
