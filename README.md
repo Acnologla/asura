@@ -7,6 +7,4 @@ Asura é um bot feito para ajudar os servidores do discord a ficarem mais divert
 
 ## :heavy_check_mark: Para fazer:
 - [x] Base do bot (conexão com database, telemetria e handling de comandos)
-- [ ] Comandos de avatar
-- [ ] Comandos de galo
-- [ ] Comandos extras de galo (trocar nome, trocar classe, trocar clã do galo e etc)
+- [ ] Traduzir frases do arguments.go
