@@ -5,7 +5,6 @@ import (
 	"asura/src/utils"
 	"bytes"
 	"context"
-	"fmt"
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
@@ -43,7 +42,6 @@ func runNunca(session disgord.Session, msg *disgord.Message, args []string) {
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
 
 	if err != nil {
-		fmt.Println(err)
 		msg.Reply(context.Background(), session, "Invalid image")
 		return
 	}
