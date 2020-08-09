@@ -8,7 +8,7 @@ import (
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:   []string{"suporte","servidor"},
+		Aliases:   []string{"suporte", "servidor"},
 		Run:       runSupport,
 		Available: true,
 		Cooldown:  1,

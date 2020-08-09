@@ -18,7 +18,7 @@ func init() {
 }
 
 func runPing(session disgord.Session, msg *disgord.Message, args []string) {
-	ping,_ := handler.Client.HeartbeatLatencies()
-	shard := disgord.ShardID(msg.GuildID,1)
+	ping, _ := handler.Client.HeartbeatLatencies()
+	shard := disgord.ShardID(msg.GuildID, 1)
 	msg.Reply(context.Background(), session, ping[shard].String())
 }
