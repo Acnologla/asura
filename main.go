@@ -94,6 +94,8 @@ func main() {
 
 	client.On(disgord.EvtMessageCreate, handler.OnMessage)
 	client.On(disgord.EvtMessageUpdate, handler.OnMessageUpdate)
+	client.On(disgord.EvtMessageReactionAdd, handler.OnReactionAdd)
+	client.On(disgord.EvtMessageReactionRemove, handler.OnReactionRemove)
 	client.On(disgord.EvtReady, onReady)
 	client.On(disgord.EvtGuildCreate, onGuildCreate)
 	client.On(disgord.EvtGuildDelete, onGuildDelete)
