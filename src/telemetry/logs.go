@@ -12,7 +12,7 @@ var url string
 
 // Beautify the log message and send it the DataDog service
 func log(level string, message string, values map[string]string) {
-	if os.Getenv("PRODUCTION") !=""{
+	if os.Getenv("PRODUCTION") != "" {
 		values["message"] = message
 		values["level"] = level
 		jsonValue, _ := json.Marshal(values)
