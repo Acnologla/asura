@@ -60,6 +60,7 @@ func runNunca(session disgord.Session, msg *disgord.Message, args []string) {
 	png.Encode(pw, dc.Image())
 
 	session.SendMsg(context.Background(), msg.ChannelID, &disgord.CreateMessageParams{
+		Content: msg.Author.Mention(),
 		Files: []disgord.CreateMessageFileParams{
 			{bytes.NewReader(b.Bytes()), "nuncalul.jpg", false},
 		},
