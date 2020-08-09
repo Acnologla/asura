@@ -50,7 +50,7 @@ func DownloadImage(url string) (image.Image, error) {
 	return img, nil
 }
 
-// TODO: Remove this absurd quantity of ifs and make the function get 
+// TODO: Remove this absurd quantity of ifs and make the function get
 // Persons without avatar
 // This function is used to get a url for an iamge that will be used
 // To a lot of functions. 

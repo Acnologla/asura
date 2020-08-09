@@ -3,13 +3,13 @@ package commands
 import (
 	"asura/src/handler"
 	"context"
-	"strings"
 	"github.com/andersfylling/disgord"
+	"strings"
 )
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:   []string{"escrever","escrita","mock"},
+		Aliases:   []string{"escrever", "escrita", "mock"},
 		Run:       runEscrever,
 		Available: true,
 		Cooldown:  1,
@@ -20,13 +20,13 @@ func init() {
 
 func runEscrever(session disgord.Session, msg *disgord.Message, args []string) {
 	text := ""
-	str:= strings.Join(args," ")
-	for i:=0; i < len(str);i++{
-		if i % 2 ==0{
+	str := strings.Join(args, " ")
+	for i := 0; i < len(str); i++ {
+		if i%2 == 0 {
 			text += strings.ToUpper(string(str[i]))
-		}else{
+		} else {
 			text += strings.ToLower(string(str[i]))
 		}
 	}
-	msg.Reply(context.Background(), session, msg.Author.Mention() + ", " + text)
+	msg.Reply(context.Background(), session, msg.Author.Mention()+", "+text)
 }
