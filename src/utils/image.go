@@ -54,22 +54,22 @@ func DownloadImage(url string) (image.Image, error) {
 // Persons without avatar
 // This function is used to get a url for an iamge that will be used
 // To a lot of functions. 
-func GetImageURL(msg *disgord.Message, args []string) string {
+func GetImageURL(msg *disgord.Message, args []string,size int) string {
 	if len(msg.Mentions) > 0 {
-		avatar, _ := msg.Mentions[0].AvatarURL(512, false)
+		avatar, _ := msg.Mentions[0].AvatarURL(size, false)
 		return avatar
 	}
 	if len(args) > 0 {
 		converted, _ := strconv.Atoi(args[0])
 		user, err := handler.Client.GetUser(context.Background(), disgord.NewSnowflake(uint64(converted)))
 		if err == nil {
-			avatar, _ := user.AvatarURL(512, false)
+			avatar, _ := user.AvatarURL(size, false)
 			return avatar
 		}
 	}
 	if checkImage(strings.Join(args, "")) {
 		return strings.Join(args, "")
 	}
-	avatar, _ := msg.Author.AvatarURL(512, false)
+	avatar, _ := msg.Author.AvatarURL(size, false)
 	return avatar
 }

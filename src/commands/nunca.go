@@ -37,7 +37,7 @@ func runNunca(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 
 	// Download user image
-	url := utils.GetImageURL(msg, args)
+	url := utils.GetImageURL(msg, args,512)
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
 
@@ -60,7 +60,6 @@ func runNunca(session disgord.Session, msg *disgord.Message, args []string) {
 	png.Encode(pw, dc.Image())
 
 	session.SendMsg(context.Background(), msg.ChannelID, &disgord.CreateMessageParams{
-		Content: msg.Author.Mention(),
 		Files: []disgord.CreateMessageFileParams{
 			{bytes.NewReader(b.Bytes()), "nuncalul.jpg", false},
 		},
