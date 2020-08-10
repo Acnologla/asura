@@ -6,7 +6,9 @@ import (
 	"firebase.google.com/go/db"
 	"fmt"
 	"google.golang.org/api/option"
+	"github.com/andersfylling/disgord"
 	"log"
+	"errors"
 	"os"
 )
 
@@ -40,4 +42,22 @@ func Init() error {
 		return err
 	}
 	return nil
+}
+
+func GetUserDB(id disgord.Snowflake) (User, error) {
+	var acc User
+	err := Database.NewRef(fmt.Sprintf("users/%d",id)).Get(context.Background(), &acc);
+	if err != nil {
+		return acc, errors.New("Not bro")
+	}
+	return acc, nil
+}
+
+func GetGaloDB(id disgord.Snowflake) (Galo, error) {
+	var acc Galo
+	err := Database.NewRef(fmt.Sprintf("galo/%d",id)).Get(context.Background(), &acc);
+	if err != nil {
+		return acc, errors.New("Not bro")
+	}
+	return acc, nil
 }
