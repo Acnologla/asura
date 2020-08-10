@@ -1,0 +1,53 @@
+[
+    {
+        "name": "Bicada",
+        "damage": [5,16]
+    },
+    {
+        "name": "Comida",
+        "damage": [11,20]
+    },
+    {
+        "name":"Bicada furadeira",
+        "damage":[14,23]
+    },
+    {
+        "name": "Galada",
+        "damage": [17,26]
+    },
+    {
+        "name": "Chute",
+        "damage": [20,29]
+    },
+    {
+        "name": "Investida",
+        "damage": [23,32]
+    },
+    {
+        "name": "Investisa pesada",
+        "damage":[26,35]
+    },
+    {
+        "name":"Voadora planar",
+        "damage": [29,38]
+    },
+    {
+        "name":"Planada",
+        "damage": [32,41]
+    },
+    {
+        "name": "Bicada de ferro",
+        "damage": [35,44]
+    },
+    { 
+        "name": "Stomp",
+        "damage":[38,47]
+    },
+    {
+        "name": "Chute dominante",
+        "damage": [41,50]
+    },{
+        "name": "Bicada suprema",
+        "damage":[44,53]
+    }
+]
