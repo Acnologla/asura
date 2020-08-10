@@ -30,7 +30,6 @@ func init() {
 
 func runTest(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, err := database.GetGaloDB(msg.Author.ID)
-
 	if err == nil{
 		file, err := os.Open("resources/galo.png")
 		defer file.Close()
@@ -48,51 +47,61 @@ func runTest(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 
-		avatar = resize.Resize(160,160, avatar, resize.Lanczos3)
+		avatar = resize.Resize(127,127, avatar, resize.Lanczos3)
 
-		dc := gg.NewContext(555, 204)
+		dc := gg.NewContext(560, 365)
 		dc.DrawImage(img, 0, 0)
-		dc.DrawImage(avatar, 20, 21)
+		dc.DrawImage(avatar, 41, 108)
 		if err := dc.LoadFontFace("./resources/Raleway-Light.ttf", 24); err != nil {
 			panic(err)
 		}
-		dc.SetRGB(0, 0, 0)
-		dc.DrawStringAnchored("Galo de " + msg.Author.Username, 204 + 334/2, 40, 0.5, 0.5)
+		dc.SetRGB(1,1,1)
+		dc.DrawStringAnchored("Galo de " + msg.Author.Username, 195, 167, 0, 0.5)
 
 		level := float64(math.Floor(math.Sqrt(float64(galo.Xp)/30)))
 		baseExp := float64(math.Floor(math.Pow(float64(level) ,2)*30))
 		nextExp := float64(math.Floor(math.Pow(float64(level)+1,2)*30))
 		nextRetExp := (float64(galo.Xp) - baseExp) / (nextExp - baseExp)
 
-		dc.SetRGB(1,1,1)
-		dc.DrawRectangle(204 + 17, 66, 300, 20)
+		dc.SetRGB(float64(255)/255,float64(135)/255,float64(135)/255)
+		dc.DrawRectangle(204, 204, 320, 26)
 		dc.Fill()
-		dc.SetRGB(0.5, 0.5, 0.5)
-		dc.DrawRectangle(204 + 20, 69, nextRetExp*(300-17), 14)
+		dc.SetRGB(float64(207)/255,float64(65)/255,float64(65)/255)
+		dc.DrawRectangle(207, 207, nextRetExp*(314), 20)
 		dc.Fill()
 
 		if err := dc.LoadFontFace("./resources/Raleway-Light.ttf", 14); err != nil {
 			panic(err)
 		}
 
-		dc.SetRGB(0,0,0)
+		dc.SetRGB(1,1,1)
 		expText := fmt.Sprintf("%d/%d",(galo.Xp - int(baseExp)), int((nextExp - baseExp)))
-		dc.DrawStringAnchored(expText, 204 + 334/2, 76, 0.5, 0.5)
+		dc.DrawStringAnchored(expText, 204 + 334/2, 216, 0.5, 0.5)
+
+		if err := dc.LoadFontFace("./resources/Raleway-Light.ttf", 20); err != nil {
+			panic(err)
+		}
+
+		total := galo.Wins+galo.Loss
+		var winrate float64
+		if total == 0 {
+			winrate = 0 
+		} else {
+			winrate = float64(galo.Wins)/float64(total)
+		}
+
+		dc.SetRGB(0.3, 0.3, 0.3)
+		dc.DrawStringAnchored(fmt.Sprintf("WINS: %d",galo.Wins), 520, 260, 1, 0)
+		dc.DrawStringAnchored(fmt.Sprintf("LOSS: %d",galo.Loss), 520, 283, 1, 0)
+		dc.DrawStringAnchored(fmt.Sprintf("WINRATE: %.2f",winrate), 520, 306, 1, 0)
+		dc.DrawStringAnchored(fmt.Sprintf("FIGHTS: %d",total), 520, 329, 1, 0)
 
 		if err := dc.LoadFontFace("./resources/Raleway-Black.ttf", 34); err != nil {
 			panic(err)
 		}
-		dc.SetRGB(0.3, 0.3, 0.3)
-		fmt.Printf("%d \n\r",204 +(5/6 * 334))
-		dc.DrawStringAnchored("LVL", 204 + 334/6, 130, 0.5, 0)
-		dc.DrawStringAnchored("WINS", 204 + 334/2, 130, 0.5, 0)
-		dc.DrawStringAnchored("TYPE", 204 +(5*334)/6, 130, 0.5, 0)
-		if err := dc.LoadFontFace("./resources/Raleway-Black.ttf", 25); err != nil {
-			panic(err)
-		}
-		dc.DrawStringAnchored(fmt.Sprintf("%d",int(level+1)), 204 + 334/6, 154, 0.5, 0.5)
-		dc.DrawStringAnchored("343", 204 + 334/2, 150, 0.5, 0.5)
-		dc.DrawStringAnchored("FIRE", 204 +(5*334)/6, 154, 0.5, 0.5)
+
+		dc.DrawStringAnchored("LVL", 190+ 130/2, 285, 0.5, 0)
+		dc.DrawStringAnchored(fmt.Sprintf("%d",int(level)), 190+ 130/2, 315, 0.5, 0)
 
 		var b bytes.Buffer
 		pw := io.Writer(&b)
