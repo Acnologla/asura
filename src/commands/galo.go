@@ -22,7 +22,7 @@ func init() {
 		Aliases:   []string{"galo"},
 		Run:       runTest,
 		Available: true,
-		Cooldown:  1,
+		Cooldown:  10,
 		Usage:     "j!galo",
 		Help:      "Informação sobre seu galo",
 	})
