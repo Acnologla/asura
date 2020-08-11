@@ -29,7 +29,11 @@ func init() {
 }
 
 func runTest(session disgord.Session, msg *disgord.Message, args []string) {
-	galo, err := database.GetGaloDB(msg.Author.ID)
+	var person = msg.Author
+	if len(msg.Mentions) != 0 {
+		person = msg.Mentions[0]
+	}
+	galo, err := database.GetGaloDB(person.ID)
 	if err == nil{
 		file, err := os.Open("resources/galo.png")
 		defer file.Close()
@@ -56,7 +60,7 @@ func runTest(session disgord.Session, msg *disgord.Message, args []string) {
 			panic(err)
 		}
 		dc.SetRGB(1,1,1)
-		dc.DrawStringAnchored("Galo de " + msg.Author.Username, 195, 167, 0, 0.5)
+		dc.DrawStringAnchored("Galo de " + person.Username, 195, 167, 0, 0.5)
 
 		level := float64(math.Floor(math.Sqrt(float64(galo.Xp)/30)))
 		baseExp := float64(math.Floor(math.Pow(float64(level) ,2)*30))
@@ -101,7 +105,7 @@ func runTest(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 
 		dc.DrawStringAnchored("LVL", 190+ 130/2, 285, 0.5, 0)
-		dc.DrawStringAnchored(fmt.Sprintf("%d",int(level)), 190+ 130/2, 315, 0.5, 0)
+		dc.DrawStringAnchored(fmt.Sprintf("%d",int(level + 1)), 190+ 130/2, 315, 0.5, 0)
 
 		var b bytes.Buffer
 		pw := io.Writer(&b)
