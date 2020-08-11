@@ -38,7 +38,7 @@ func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	count:=0
-	message,_ := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
+	message,err:= msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
 			Color:       65535,
 			Title: fmt.Sprintf("Avatar numero %d",count+1),
@@ -47,6 +47,9 @@ func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
 			},
 		},
 	})
+	if err !=nil {
+		return
+	}
 	message.React(ctx,session,"⬅️")
 	message.React(ctx,session,"➡️")
 	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji,u disgord.Snowflake) {
@@ -79,5 +82,4 @@ func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 		}
 	},60*10)
-
 }
