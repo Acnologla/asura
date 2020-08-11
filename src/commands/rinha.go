@@ -59,7 +59,6 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		galoAdv, _ := database.GetGaloDB(msg.Mentions[0].ID)
 
 		embed := disgord.Embed{
-			Description: ":crossed_swords: **Acnologia** usou a **Galada** dando **20** De dano!",
 			Color:       65535,
 			Title:       "Briga de galo",
 			Fields: []*disgord.EmbedField{
@@ -104,17 +103,30 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 							break
 						}
 					}
+					battleMutex.Lock()	
+					if index == len(currentBattles) {
+						currentBattles = currentBattles[0:len(currentBattles)-1]
+					}else{	
+						currentBattles = append(currentBattles[0:index],currentBattles[(index+1):]...)
+					}
+					battleMutex.Unlock()
+
+					builder := handler.Client.UpdateMessage(ctx, mes.ChannelID, mes.ID)
+					builder.SetEmbed(&disgord.Embed{
+						Color:       65535,
+						Description:       "Alguem venceu e ganhou X levels",
+					})
+					time.Sleep(4 * time.Second)
+					builder.Execute()
+
 					return
-					/*battleMutex.Lock()	
-					currentBattles = append(currentBattles[0:index],currentBattles[(index+1):]...)
-					battleMutex.Unlock()*/
 				} 
 
 
 				damage := rand.Intn(20) + 10
 			
 				attacker := battle.Person
-				defended := rand.Intn(20) < 7
+				defended := rand.Intn(20) < 4
 
 				if battle.Round {
 					attacker = battle.Other
@@ -128,13 +140,13 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 					}
 				}
 
-				embed.Description = fmt.Sprintf(rinhaDescAttack, ":shield:", attacker.Username, damage)
+				embed.Description = fmt.Sprintf(rinhaDescAttack, ":crossed_swords:", attacker.Username, damage)
 
 				if defended {
 					if battle.Round {
-						embed.Description = embed.Description + fmt.Sprintf("\n%s Defendeu!", battle.Person.Username)
+						embed.Description = embed.Description + fmt.Sprintf("\n:shield:%s Defendeu!\n", battle.Person.Username)
 					} else {
-						embed.Description = embed.Description + fmt.Sprintf("\n%s Defendeu!", battle.Other.Username)
+						embed.Description = embed.Description + fmt.Sprintf("\n:shield:%s Defendeu!\n", battle.Other.Username)
 					}
 				}
 
