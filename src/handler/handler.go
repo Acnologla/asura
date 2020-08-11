@@ -64,7 +64,7 @@ func checkCooldown(session disgord.Session, msg *disgord.Message, command string
 	CooldownMutexes[command].RLock()
 	if val, ok := Cooldowns[command][id]; ok {
 		time_until := float64(cooldown) - time.Since(val).Seconds()
-		msg.Reply(context.Background(), session, fmt.Sprintf("You have to wait %.2f seconds to use this command again", time_until))
+		msg.Reply(context.Background(), session, fmt.Sprintf("Voce tem que esperar %.1f segundos para usar esse comando denovo!", time_until))
 		CooldownMutexes[command].RUnlock()
 		return true
 	}
