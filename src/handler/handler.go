@@ -46,7 +46,7 @@ func FindCommand(command string) (realCommand Command) {
 		for _, alias := range cmd.Aliases {
 			if alias == command {
 				realCommand = cmd
-				continue
+				return
 			}
 		}
 	}
