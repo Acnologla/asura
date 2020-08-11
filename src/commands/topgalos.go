@@ -32,7 +32,6 @@ func runTopGalos(session disgord.Session, msg *disgord.Message, args []string) {
 	var text string
 	var myPos int
 	for i := len(result) -1 ; 0 <=i;i--{
-		count++
 		if i > len(result)-11{
 			var gal database.Galo
 			if err := result[i].Unmarshal(&gal); err != nil {
