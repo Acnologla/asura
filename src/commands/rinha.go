@@ -2,11 +2,11 @@ package commands
 
 import (
 	"asura/src/database"
+	"asura/src/utils"
 	"asura/src/handler"
 	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
-	"math"
 	"math/rand"
 	"sync"
 	"time"
@@ -40,9 +40,6 @@ func init() {
 	})
 }
 
-func calcLevel(xp int) int {
-	return int(math.Floor(math.Sqrt(float64(xp) / 30)))
-}
 
 func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(msg.Mentions) != 0 {
@@ -63,12 +60,12 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 			Title:       "Briga de galo",
 			Fields: []*disgord.EmbedField{
 				&disgord.EmbedField{
-					Name:   fmt.Sprintf(rinhaUserTitle, msg.Author.Username, calcLevel(galoAuthor.Xp)+1),
+					Name:   fmt.Sprintf(rinhaUserTitle, msg.Author.Username, utils.CalcLevel(galoAuthor.Xp)+1),
 					Value:  "Normal \n**(100/100)**",
 					Inline: true,
 				},
 				&disgord.EmbedField{
-					Name:   fmt.Sprintf(rinhaUserTitle, msg.Mentions[0].Username, calcLevel(galoAdv.Xp)+1),
+					Name:   fmt.Sprintf(rinhaUserTitle, msg.Mentions[0].Username, utils.CalcLevel(galoAdv.Xp)+1),
 					Value:  "Normal \n**(100/100)**",
 					Inline: true,
 				},
