@@ -90,7 +90,6 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 
 		var mes *disgord.Message
 
-		go func() {
 			for {
 
 				if battle.Life[0] <= 0 || battle.Life[1] <= 0 {
@@ -169,7 +168,6 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 
 				time.Sleep(2 * time.Second)
 			}
-		}()
 
 	} else {
 		msg.Reply(context.Background(), session, "Você tem que mencionar alguem!")
