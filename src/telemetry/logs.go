@@ -28,19 +28,19 @@ func log(level string, message string, values map[string]string) {
 // Different "flavours" of log message to make it easier to separate
 
 func Debug(message string, values map[string]string) {
-	log("debug", message, values)
+	go log("debug", message, values)
 }
 
 func Info(message string, values map[string]string) {
-	log("info", message, values)
+	go log("info", message, values)
 }
 
 func Warn(message string, values map[string]string) {
-	log("warn", message, values)
+	go log("warn", message, values)
 }
 
 func Error(message string, values map[string]string) {
-	log("error", message, values)
+	go log("error", message, values)
 }
 
 // Initialize the url variable with the DataDogKey that is found in .env or the environment variables.
