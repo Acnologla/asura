@@ -48,7 +48,7 @@ func win(tiles [9]int) int{
 	return 3
 }
 
-func play(tile int, tiles *[9]int, turn int) bool{
+func playTTT(tile int, tiles *[9]int, turn int) bool{
 	if tiles[tile] != 0 {
 		return false
 	}
@@ -89,7 +89,7 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 		if !removed && turnUser.ID == u{
 			if utils.Includes(emojis,emoji.Name){
 				tile := utils.IndexOf(emojis,emoji.Name)
-				played := play(tile,&tiles,turn)
+				played := playTTT(tile,&tiles,turn)
 				if played{
 					if turn == 2{
 						turn --
