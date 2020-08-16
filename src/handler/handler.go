@@ -95,13 +95,13 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 
 	botMention := fmt.Sprintf("<@!%d> ", uint64(myself.ID))
 
-	if strings.HasPrefix(msg.Content, "j!") || strings.HasPrefix(msg.Content, "asura ") || strings.HasPrefix(msg.Content, botMention) {
+	if strings.HasPrefix(strings.ToLower(msg.Content), "j!") || strings.HasPrefix(strings.ToLower(msg.Content), "asura ") || strings.HasPrefix(msg.Content, botMention) {
 		// I dont know if it's efficient but this is the easiest way to remove one of the three prefixes from the command.
 		var raw string
 		switch {
-		case strings.HasPrefix(msg.Content, "j!"):
+		case strings.HasPrefix(strings.ToLower(msg.Content), "j!"):
 			raw = msg.Content[2:]
-		case strings.HasPrefix(msg.Content, "asura "):
+		case strings.HasPrefix(strings.ToLower(msg.Content), "asura "):
 			raw = msg.Content[6:]
 		case strings.HasPrefix(msg.Content, botMention):
 			raw = strings.TrimPrefix(msg.Content, botMention)
