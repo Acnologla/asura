@@ -164,11 +164,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 							slideLeft(&board, &points)
 							board = rotateBoard(&board, false)
 						} else if emoji.Name == arrows[3] {
-							board = rotateBoard(&board, true)
-							board = rotateBoard(&board, true)
 							slideLeft(&board, &points)
-							board = rotateBoard(&board, false)
-							board = rotateBoard(&board, false)
 						}
 						if oldPoints != points {
 							lastPlay = time.Now()
