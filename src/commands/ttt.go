@@ -6,6 +6,7 @@ import (
 	"asura/src/utils"
 	"fmt"
 	"github.com/andersfylling/disgord"
+	"time"
 )
 
 func init() {
@@ -76,6 +77,7 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 	for i :=0;i <len(emojis);i++{
 		err := message.React(ctx,session,emojis[i])
 		if err!= nil {
+			time.Sleep(200 * time.Millisecond)
 			i--
 		}
 	}
