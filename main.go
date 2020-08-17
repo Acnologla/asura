@@ -1,16 +1,3 @@
-/*
-    __   ____  _  _  ____   __
-   / _\ / ___)/ )( \(  _ \ / _\
-  /    \\___ \) \/ ( )   //    \
-  \_/\_/(____/\____/(__\_)\_/\_/
-
-  This is the source code of the bot
-  "Asura" made in Golang and manteined by
-  Chiyoku and Acnologia
-  Copyright 2020
-
-*/
-
 package main
 
 import (
