@@ -30,7 +30,7 @@ func sendReaction(removed bool, id disgord.Snowflake, emoji disgord.Emoji, user 
 	ReactionLock.RLock()
 	if cb, found := ReactionHandlers[id]; found {
 		ReactionLock.RUnlock()
-		cb(removed, emoji,user)
+		go cb(removed, emoji,user)
 		return
 	}
 	ReactionLock.RUnlock()
