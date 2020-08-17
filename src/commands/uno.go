@@ -192,6 +192,7 @@ func (game *unoGame) newPlayer(p *disgord.User) {
 		cards:    newCards,
 	}
 	game.players = append(game.players, &newPlayer)
+
 }
 
 func (game *unoGame) start() {
@@ -202,8 +203,6 @@ func (game *unoGame) start() {
 			break
 		}
 	}
-	index := utils.IndexOf(game.cards, initialCard)
-	game.cards = utils.Splice(cards, index)
 	game.board = append(game.board, initialCard)
 	game.status = "n"
 }
@@ -243,6 +242,8 @@ func shuffle(arr []string) []string {
 }
 
 func getCards(msg *disgord.Message, session disgord.Session) {
+	gameMutex.RLock()
+	defer gameMutex.RUnlock()
 	game := currentGames[msg.GuildID]
 	if game == nil {
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Não tem nenhum jogo nessa guilda, use j!uno create para criar um")
@@ -260,7 +261,7 @@ func getCards(msg *disgord.Message, session disgord.Session) {
 			}
 			chanID, err := handler.Client.CreateDM(context.Background(), msg.Author.ID)
 			if err == nil {
-				handler.Client.SendMsg(context.Background(), chanID.ID, &disgord.CreateMessageParams{
+				go handler.Client.SendMsg(context.Background(), chanID.ID, &disgord.CreateMessageParams{
 					Content: "Para jogar uma carta usa j!uno play <id da carta> ( o id é o coiso que ta encima da carta)",
 					Files: []disgord.CreateMessageFileParams{
 						{bytes.NewReader(game.drawCards(p).Bytes()), "uno.png", false},
@@ -274,6 +275,8 @@ func getCards(msg *disgord.Message, session disgord.Session) {
 }
 
 func sendEmbed(msg *disgord.Message, session disgord.Session) {
+	gameMutex.RLock()
+	defer gameMutex.RUnlock()
 	game := currentGames[msg.GuildID]
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Files: []disgord.CreateMessageFileParams{
@@ -316,8 +319,10 @@ func create(msg *disgord.Message, session disgord.Session) {
 			time.Sleep(60 * time.Second)
 			game = currentGames[msg.GuildID]
 			if 1 >= len(game.players) {
-				msg.Reply(context.Background(), session, "Como só teve um jogador, o uno foi cancelado, uno j!uno create para jogar novamente")
+				go msg.Reply(context.Background(), session, "Como só teve um jogador, o uno foi cancelado, uno j!uno create para jogar novamente")
+				gameMutex.Lock()
 				delete(currentGames, msg.GuildID)
+				gameMutex.Unlock()
 			} else {
 				go func() {
 					for {
@@ -327,16 +332,21 @@ func create(msg *disgord.Message, session disgord.Session) {
 						if game != nil {
 							if time.Since(game.lastPlay).Seconds()/60 >= 3 {
 								if game.refuse == 4 {
-									msg.Reply(context.Background(), session, "4 rodadas sem jogar consecutivas, jogo acabado")
-									delete(currentGames, msg.GuildID)
 									gameMutex.RUnlock()
+									gameMutex.Lock()
+									delete(currentGames, msg.GuildID)
+									gameMutex.Unlock()
+									msg.Reply(context.Background(), session, "4 rodadas sem jogar consecutivas, jogo acabado")
 									return
 								} else {
+									gameMutex.RUnlock()
+									gameMutex.Lock()
 									game.buy(game.players[0], 1)
-									msg.Reply(context.Background(), session, fmt.Sprintf("O %s seu turno e comprou uma carta agora é o turno de %s", game.players[0].username, game.players[1].username))
+									go msg.Reply(context.Background(), session, fmt.Sprintf("O %s seu turno e comprou uma carta agora é o turno de %s", game.players[0].username, game.players[1].username))
 									game.addToLast()
 									game.lastPlay = time.Now()
 									game.refuse++
+									gameMutex.Unlock()
 								}
 							}
 						} else {
@@ -358,7 +368,9 @@ func create(msg *disgord.Message, session disgord.Session) {
 						})
 					}
 				}
+				gameMutex.Lock()
 				game.start()
+				gameMutex.Unlock()
 				sendEmbed(msg, session)
 			}
 		}()
@@ -379,42 +391,55 @@ func isInGame(msg *disgord.Message, game *unoGame) bool {
 	return isInGame
 }
 func leave(msg *disgord.Message, session disgord.Session) {
+	gameMutex.RLock()
 	game := currentGames[msg.GuildID]
 	if game == nil {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
 		return
 	}
 	if game.status != "n" {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
 		return
 	}
 	var isInGame = isInGame(msg, game)
 	if !isInGame {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce não ta no jogo")
 		return
 	}
+	gameMutex.RUnlock()
+	gameMutex.Lock()
 	game.removePlayer(msg.Author)
 	game = currentGames[msg.GuildID]
+	gameMutex.Unlock()
 	if 1 >= len(game.players) {
-		msg.Reply(context.Background(), session, "Como todos os jogadores sairam ou só sobrou 1 o jogo foi encerrado")
+		go msg.Reply(context.Background(), session, "Como todos os jogadores sairam ou só sobrou 1 o jogo foi encerrado")
+		gameMutex.Lock()
 		delete(currentGames, msg.GuildID)
+		gameMutex.Unlock()
 		return
 	}
 	msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce saiu do jogo agora é o turno do "+game.players[0].username)
 }
 
 func buy(msg *disgord.Message, session disgord.Session) {
+	gameMutex.RLock()
 	game := currentGames[msg.GuildID]
 	if game == nil {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
 		return
 	}
 	if game.status != "n" {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
 		return
 	}
 	var isInGame = isInGame(msg, game)
 	if !isInGame {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao ta no jogo")
 		return
 	}
@@ -426,31 +451,41 @@ func buy(msg *disgord.Message, session disgord.Session) {
 		}
 	}
 	if p.id != game.players[0].id {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Não é seu turno")
 		return
 	}
+	gameMutex.RUnlock()
+	gameMutex.Lock()
 	game.buy(p, 1)
 	game.addToLast()
+	game.lastPlay = time.Now()
+	gameMutex.Unlock()
 	getCards(msg, session)
 	sendEmbed(msg, session)
-	game.lastPlay = time.Now()
 }
 
 func play(msg *disgord.Message, session disgord.Session, args []string) {
+	gameMutex.RLock()
 	game := currentGames[msg.GuildID]
 	if game == nil {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
 		return
 	}
 	if game.status != "n" {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
 		return
 	}
 	if len(args) == 0 {
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Diga uma carta para jogr")
+		gameMutex.RUnlock()
+		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Diga uma carta para jogar")
+		return
 	}
 	var isInGame = isInGame(msg, game)
 	if !isInGame {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao ta no jogo")
 		return
 	}
@@ -462,30 +497,38 @@ func play(msg *disgord.Message, session disgord.Session, args []string) {
 		}
 	}
 	if p.id != game.players[0].id {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Não é seu turno")
 		return
 	}
 	if strings.HasPrefix(args[0], "WILD") && 2 > len(args) {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Essa é uma carta preta usa  então voce tem que definir a cor apos a carta exemplo:\nj!uno play wild <Y (Amarelo) | G (Verde) | B (Azul) | R (Vermelho) >")
 		return
 	}
+	gameMutex.RUnlock()
+	gameMutex.Lock()
 	play := game.play(p, args)
 	if play != "" {
+		gameMutex.Unlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", "+play)
 		return
 	}
 	game = currentGames[msg.GuildID]
 	game.refuse = 0
 	game.lastPlay = time.Now()
+	gameMutex.Unlock()
 	sendEmbed(msg, session)
 	if len(p.cards) == 0 {
+		gameMutex.Lock()
 		if !p.uno {
 			game.buy(p, 2)
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce comprou 2 cartas por não ter falado uno")
+			gameMutex.Unlock()
+			go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce comprou 2 cartas por não ter falado uno")
 			getCards(msg, session)
 			return
 		}
-		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
+		go msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 			Embed: &disgord.Embed{
 				Title:       "Uno ganhou",
 				Description: fmt.Sprintf("O %s venceu o uno", p.username),
@@ -496,10 +539,13 @@ func play(msg *disgord.Message, session disgord.Session, args []string) {
 			},
 		})
 		delete(currentGames, msg.GuildID)
+		gameMutex.Unlock()
 	}
 
 }
 func uno(msg *disgord.Message, session disgord.Session) {
+	gameMutex.RLock()
+	defer gameMutex.RUnlock()
 	game := currentGames[msg.GuildID]
 	if game == nil {
 		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
@@ -522,23 +568,27 @@ func uno(msg *disgord.Message, session disgord.Session) {
 		}
 	}
 	if len(p.cards) == 1 {
-		msg.Reply(context.Background(), session, fmt.Sprintf("O %s ta no uno", msg.Author.Username))
+		go msg.Reply(context.Background(), session, fmt.Sprintf("O %s ta no uno", msg.Author.Username))
 		p.uno = true
 	} else {
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao ta no uno nao")
 	}
 }
 func join(msg *disgord.Message, session disgord.Session) {
+	gameMutex.RLock()
 	game := currentGames[msg.GuildID]
 	if game == nil {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Não tem nenhum jogo em preparação nesse servidor, use j!uno create para iniciar um")
 		return
 	}
 	if game.status == "n" {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", O jogo ja começou")
 		return
 	}
 	if len(game.players) >= 8 {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Este jogo ja encheu! maximo 8 pessoas")
 		return
 	}
@@ -547,12 +597,15 @@ func join(msg *disgord.Message, session disgord.Session) {
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce ja ta no jogo")
 		return
 	}
+	gameMutex.RUnlock()
+	gameMutex.Lock()
 	game.newPlayer(msg.Author)
+	gameMutex.Unlock()
 	var text string
 	for _, player := range game.players {
 		text += player.username + "\n"
 	}
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
+	go msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
 			Color: 16711680,
 			Title: "Uno",
@@ -565,7 +618,6 @@ func join(msg *disgord.Message, session disgord.Session) {
 }
 
 func runUno(session disgord.Session, msg *disgord.Message, args []string) {
-
 	if len(args) == 0 {
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 			Content: msg.Author.Mention(),
@@ -584,7 +636,6 @@ func runUno(session disgord.Session, msg *disgord.Message, args []string) {
 		if len(args) >= 2 {
 			args[1] = strings.ToUpper(args[1])
 		}
-		gameMutex.RLock()
 		if function == "create" {
 			create(msg, session)
 		} else if function == "join" {
@@ -597,7 +648,6 @@ func runUno(session disgord.Session, msg *disgord.Message, args []string) {
 			uno(msg, session)
 		} else if function == "play" || function == "jogar" {
 			if len(args) == 0 {
-				gameMutex.RUnlock()
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", Diga uma carta para jogar, j!uno play <id da carta>")
 				return
 			}
@@ -605,7 +655,6 @@ func runUno(session disgord.Session, msg *disgord.Message, args []string) {
 		} else if function == "buy" || function == "comprar" {
 			buy(msg, session)
 		} else {
-			gameMutex.RUnlock()
 			msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 				Content: msg.Author.Mention(),
 				Embed: &disgord.Embed{
@@ -616,6 +665,5 @@ func runUno(session disgord.Session, msg *disgord.Message, args []string) {
 			})
 			return
 		}
-		gameMutex.RUnlock()
 	}
 }
