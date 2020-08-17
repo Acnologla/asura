@@ -329,6 +329,7 @@ func create(msg *disgord.Message, session disgord.Session) {
 								if game.refuse == 4 {
 									msg.Reply(context.Background(), session, "4 rodadas sem jogar consecutivas, jogo acabado")
 									delete(currentGames, msg.GuildID)
+									gameMutex.RUnlock()
 									return
 								} else {
 									game.buy(game.players[0], 1)
@@ -339,10 +340,11 @@ func create(msg *disgord.Message, session disgord.Session) {
 								}
 							}
 						} else {
+							gameMutex.RUnlock()
 							return
 						}
+						gameMutex.RUnlock()
 					}
-					gameMutex.RUnlock()
 				}()
 				for _, player2 := range game.players {
 

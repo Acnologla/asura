@@ -141,6 +141,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 							time.Sleep(200 * time.Millisecond)
 						}
 					}
+					return
 				}
 			}
 		}()
