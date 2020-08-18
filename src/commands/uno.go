@@ -68,7 +68,8 @@ func (game *unoGame) getBoard() *bytes.Buffer {
 func (game *unoGame) buy(p *player, count int) {
 	for i := 0; i < count; i++ {
 		if len(game.cards) == 0 {
-			gameCards := append([]string{}, game.board[:len(game.board)-1]...)
+			gameCards := append([]string{}, game.board[:len(game.board)-2]...)
+			fmt.Println(gameCards)
 			for i, card := range gameCards {
 				if strings.HasSuffix(card, "WILDP4") {
 					gameCards[i] = "WILDP4"
@@ -76,12 +77,17 @@ func (game *unoGame) buy(p *player, count int) {
 					gameCards[i] = "WILD"
 				}
 			}
-			game.cards = shuffle(gameCards)
-			game.board = game.board[len(game.board)-1:]
+			if 1 < len(gameCards){ 
+				game.cards = shuffle(gameCards)
+				game.board = game.board[len(game.board)-1:]
+			}
 		}
-		newCard := game.cards[:1][0]
-		game.cards = game.cards[1:]
-		p.cards = append(p.cards, newCard)
+		if len(game.cards) != 0{
+			newCard := game.cards[:1][0]
+			game.cards = game.cards[1:]
+			p.cards = append(p.cards, newCard)
+		}
+		fmt.Println(game.cards)
 	}
 }
 
@@ -326,11 +332,11 @@ func create(msg *disgord.Message, session disgord.Session) {
 			} else {
 				go func() {
 					for {
-						time.Sleep(60 * 3 * time.Second)
+						time.Sleep(60 * time.Second)
 						gameMutex.RLock()
 						game := currentGames[msg.GuildID]
 						if game != nil {
-							if time.Since(game.lastPlay).Seconds()/60 >= 3 {
+							if time.Since(game.lastPlay).Seconds()/60 >= 2 {
 								if game.refuse == 4 {
 									gameMutex.RUnlock()
 									gameMutex.Lock()
@@ -347,6 +353,7 @@ func create(msg *disgord.Message, session disgord.Session) {
 									game.lastPlay = time.Now()
 									game.refuse++
 									gameMutex.Unlock()
+									continue
 								}
 							}
 						} else {
