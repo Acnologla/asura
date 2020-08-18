@@ -69,7 +69,6 @@ func (game *unoGame) buy(p *player, count int) {
 	for i := 0; i < count; i++ {
 		if len(game.cards) == 0 {
 			gameCards := append([]string{}, game.board[:len(game.board)-2]...)
-			fmt.Println(gameCards)
 			for i, card := range gameCards {
 				if strings.HasSuffix(card, "WILDP4") {
 					gameCards[i] = "WILDP4"
@@ -87,7 +86,6 @@ func (game *unoGame) buy(p *player, count int) {
 			game.cards = game.cards[1:]
 			p.cards = append(p.cards, newCard)
 		}
-		fmt.Println(game.cards)
 	}
 }
 
