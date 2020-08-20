@@ -24,7 +24,7 @@
         "damage": [23,32]
     },
     {
-        "name": "Investisa pesada",
+        "name": "Investida pesada",
         "damage":[26,35]
     },
     {
@@ -49,5 +49,20 @@
     },{
         "name": "Bicada suprema",
         "damage":[44,53]
+    },{
+        "name": "Rasteira",
+        "damage": [47,56]
+    },
+    {
+        "name": "Relampago de chutes",
+        "damage": [50,56]
+    },
+    {
+        "name": "Rasteira relampago",
+        "damage": [53,58]
+    },
+    {
+        "name" : "Bicada dupla",
+        "damage": [55,61]
     }
 ]
