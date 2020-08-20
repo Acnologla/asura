@@ -22,8 +22,8 @@ type User struct {
 type Galo struct {
 	Xp   int `json:"xp"`
 	Type int `json:"type"`
-	Wins int `json:"wins"`
-	Loss int `json:"loss"`
+//	Wins int `json:"wins"`
+//	Loss int `json:"loss"`
 }
 
 func Init() error {
