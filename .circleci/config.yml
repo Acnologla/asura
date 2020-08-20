@@ -3,8 +3,8 @@ jobs:
  build:
    machine: true
    steps:
-     - checkout
-     - run: echo GITLABPASSWORD | docker login registry.gitlab.com --username acnologla --password-stdin
+     - checkout 
+     - run: echo "$GITLABPASSWORD" | docker login registry.gitlab.com --username acnologla --password-stdin
      - run: docker build -t registry.gitlab.com/acnologla/asura .
      - run: docker run -e CI=true registry.gitlab.com/acnologla/asura go test -v ./test
      - run: docker push registry.gitlab.com/acnologla/asura
