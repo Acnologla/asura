@@ -12,6 +12,7 @@ RUN go mod download
 
 COPY . .
 
+RUN go test -v ./test
 RUN go build -o main .
 
 WORKDIR /usr/dist
