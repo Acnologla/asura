@@ -15,20 +15,19 @@ ENV FIREBASE_CONFIG=$FIREBASE_CONFIG
 ENV FIREBASE_PROJECTID=$FIREBASE_PROJECT_ID
 ENV DATADOG_API_KEY=$DATADOG_API_KEY
 
-WORKDIR /usr/app
+WORKDIR /build
 
 COPY go.mod .
 RUN go mod download
 
 COPY . .
 
-RUN go test -v ./test
 RUN go build -o main .
 
-WORKDIR /usr/dist
+WORKDIR /dist
 
-RUN cp -r /usr/app .
+RUN cp /build/main .
 
 EXPOSE 4000
 
-CMD ["/usr/dist/main"]
+CMD ["/dist/main"]
