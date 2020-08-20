@@ -7,7 +7,6 @@ import (
 	"github.com/andersfylling/disgord"
 	"encoding/json"
 	"asura/src/database"
-	"strconv"
 	"asura/src/utils"
 	"fmt"
 )
@@ -16,10 +15,13 @@ type skill struct{
 	Name   string `json:"name"`
     Damage [2]int `json:"damage"`
 }
+var upgrades map[string]int
 var skills []skill
 func init() {
 	byteValue, _ := ioutil.ReadFile("./resources/atacks.json")
 	json.Unmarshal([]byte(byteValue), &skills)
+	up, _ := ioutil.ReadFile("./resources/upgrades.json")
+	json.Unmarshal([]byte(up), &upgrades)
 	handler.Register(handler.Command{
 		Aliases:   []string{"galo","galolevel","meugalo"},
 		Run:       runGalo,
@@ -35,9 +37,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(msg.Mentions) > 0 {
 		user = msg.Mentions[0]
 	}
-	var galo database.Galo
-	id := strconv.FormatUint(uint64(user.ID),10)
-	database.Database.NewRef("galo/"+id).Get(context.Background(), &galo)
+	galo,_ := database.GetGaloDB(user.ID)
 	level := utils.CalcLevel(galo.Xp) +1
 	nextLevel := utils.CalcXP(level)
 	var nextSkill string
@@ -45,6 +45,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		nextSkill = skills[level].Name
 	} 
 	var fields []*disgord.EmbedField
+
 	for i:= 0; i < level;i++{
 		if len(skills)-1 >= i {
 			fields = append(fields,&disgord.EmbedField{
@@ -54,6 +55,22 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			})
 		}
 	}
+	var ups string
+	if level >= 10{
+		for key, val := range upgrades{
+			if level >= val{
+				ups += key 
+			}
+		}
+	}
+	if level > 10 {
+		num := level-10
+		m := len(skills)-10
+		if level - 10 > m{
+			num = m
+		}
+		fields = fields[num:]
+	}
 	msg.Reply(context.Background(),session,disgord.CreateMessageParams{
 		Content: msg.Author.Mention(),
 		Embed: &disgord.Embed{
@@ -62,7 +79,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			Thumbnail: &disgord.EmbedThumbnail{
 				URL: "https://blogs.uai.com.br/cantodogalo/wp-content/uploads/sites/32/2017/09/galo-imagem.jpg",
 			},
-			Description: fmt.Sprintf("Level **%d**\nXP: **%d/%d**\nProxima habilidade: **%s**\n\nHabilidades Atuais:",level,galo.Xp,nextLevel,nextSkill),
+			Description: fmt.Sprintf("Level **%d**\nXP: **%d/%d**\nProxima habilidade: **%s**\nUpgrades: %s\nHabilidades Atuais:",level,galo.Xp,nextLevel,nextSkill,ups),
 			Fields: fields,
 		},
 	})	
