@@ -1,4 +1,4 @@
-FROM golang:alpine
+FROM golang:1.14.7
 ENV GOOS=linux \
     GOARCH=amd64
 
