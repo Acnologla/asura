@@ -1,7 +1,5 @@
 FROM golang:alpine
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=linux \
+ENV GOOS=linux \
     GOARCH=amd64
 
 ARG TOKEN
@@ -22,12 +20,4 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o main .
-
-WORKDIR /dist
-
-RUN cp /build/main .
-
-EXPOSE 4000
-
-CMD ["/dist/main"]
+RUN go run main.go
