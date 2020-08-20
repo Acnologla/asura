@@ -16,7 +16,7 @@ RUN go build -o main .
 
 WORKDIR /usr/dist
 
-RUN cp /build/main .
+RUN cp /usr/app .
 
 ENV TOKEN=TOKEN
 ENV FIREBASE_CONFIG=FIREBASE_CONFIG
