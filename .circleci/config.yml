@@ -8,8 +8,7 @@ jobs:
      - run:
         name: Unit test
         command: go test -v ./test
-     - setup_remote_docker:
-        docker_layer_caching: true 
+     - setup_remote_docker
      - run: 
         name: Docker build and deploy     
         command: | 
