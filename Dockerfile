@@ -18,14 +18,14 @@ WORKDIR /build
 
 COPY go.mod .
 RUN go mod download
-RUN go test -v ./test
 
 COPY . .
-RUN go build -o ./main.go
+RUN go test -v ./test
+RUN go build -o main .
 
 FROM alpine
 WORKDIR /dist
-COPY --from=builder ./main /dist
+COPY --from=builder /build/main /dist
 
 
 ENTRYPOINT ./main
