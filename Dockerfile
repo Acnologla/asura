@@ -2,14 +2,9 @@ FROM golang:alpine AS builder
 ENV GOOS=linux \
     GOARCH=amd64
 
-ARG TOKEN
 ARG PRODUCTION
 ARG FIREBASE_CONFIG
 ARG FIREBASE_PROJECT_ID
-ARG DATADOG_API_KEY
-
-
-
 WORKDIR /build
 ENV PRODUCTION=TRUE
 ENV FIREBASE_CONFIG=$FIREBASE_CONFIG
@@ -53,5 +48,5 @@ RUN echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repos
 CMD chromium-browser --headless --disable-gpu --remote-debugging-port=9222 --disable-web-security --safebrowsing-disable-auto-update --disable-sync --disable-default-apps --hide-scrollbars --metrics-recording-only --mute-audio --no-first-run --no-sandbox
 
 COPY --from=builder /build/main /dist
-COPY --from=builder /build/resources /dist
+COPY --from=builder /build/resources /dist/resources
 ENTRYPOINT ./main 
