@@ -2,7 +2,6 @@ package telemetry
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"net/http"
@@ -18,19 +17,15 @@ const (
 )
 
 // The main purpose of this function it to send the metrics of the bot to the service "Datadog"
-func metricUpdate(client *disgord.Client) {
+func metricUpdate(session disgord.Session) {
 	if os.Getenv("PRODUCTION") != "" {
 		url := fmt.Sprintf(metricURL, os.Getenv("DATADOG_API_KEY"))
 		date := time.Now().Unix()
-		guildsSize, err := client.GetGuilds(context.Background(), &disgord.GetCurrentUserGuildsParams{})
-		if err != nil {
-			Error(err.Error(), map[string]string{})
-			return
-		}
+		guildsSize := session.GetConnectedGuilds()
 		var memory runtime.MemStats
 		runtime.ReadMemStats(&memory)
 		guilds := fmt.Sprintf(defaultMetric, "client.guilds", date, len(guildsSize))
-		ram := fmt.Sprintf(defaultMetric, "memory.rss", date, memory.TotalAlloc/1024/1024)
+		ram := fmt.Sprintf(defaultMetric, "memory.rss", date, memory.Alloc/1024/1024)
 		series := fmt.Sprintf("%s,%s", guilds, ram)
 		realMetric := fmt.Sprintf(masterMetric, series)
 		res, err := http.Post(url, "application/json", bytes.NewBuffer([]byte(realMetric)))
@@ -41,9 +36,9 @@ func metricUpdate(client *disgord.Client) {
 	}
 }
 
-func MetricUpdate(client *disgord.Client) {
+func MetricUpdate(session disgord.Session) {
 	for {
-		metricUpdate(client)
+		metricUpdate(session)
 		time.Sleep(5 * time.Minute)
 	}
 }

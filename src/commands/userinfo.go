@@ -32,28 +32,31 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	id := strconv.FormatUint(uint64(user.ID),10)
 	database.Database.NewRef("users/"+id).Get(context.Background(), &userinfo)
 	database.Database.NewRef("private/"+id).Get(context.Background(), &private)
-	guilds,err := session.GetGuilds(context.Background(),&disgord.GetCurrentUserGuildsParams{})
-	if err != nil{
-		return
-	}
+	guilds := session.GetConnectedGuilds()
 	oldAvatars := ""
 	oldUsernames := ""
 	filteredGuilds := ""
 	count := 0
 	date := ((uint64(user.ID) >> 22) +1420070400000) / 1000
 	for i,guild := range guilds{
-		_, is :=handler.Client.GetMember(context.Background(),guild.ID, user.ID)
-		if 20 >= count && is == nil {
-			filteredGuilds += guild.Name
-			count ++
-			if i != len(guilds){
-				filteredGuilds+= "** | **"
+		_, is :=session.GetMember(context.Background(),guild, user.ID)
+		if 12 >= count{
+			break
+		}
+		if is == nil {
+			name,err := session.GetGuild(context.Background(),guild)
+			if err == nil {
+				filteredGuilds += name.Name
+				count ++
+				if i != len(guilds){
+					filteredGuilds+= "** | **"
+				}
 			}
 		}
 	}
 	if len(userinfo.Usernames) >0 {
-		if len(userinfo.Usernames) > 20{
-			oldUsernames = strings.Join(userinfo.Usernames[:20], "** | **")
+		if len(userinfo.Usernames) > 12{
+			oldUsernames = strings.Join(userinfo.Usernames[:12], "** | **")
 		}else{
 			oldUsernames = strings.Join(userinfo.Usernames, "** | **")
 		}
