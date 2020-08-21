@@ -1,24 +1,23 @@
 package utils
 
 import (
-	"asura/src/handler"
-	"context"
 	"github.com/andersfylling/disgord"
 	"strconv"
+	"context"
 	"strings"
 )
 
-func GetUser(msg *disgord.Message, args []string) *disgord.User {
+func GetUser(msg *disgord.Message, args []string,session disgord.Session) *disgord.User {
 	if len(msg.Mentions) > 0 {
 		return msg.Mentions[0]
 	}
 	if len(args) > 0 {
 		converted, _ := strconv.Atoi(args[0])
-		user, err := handler.Client.GetUser(context.Background(), disgord.NewSnowflake(uint64(converted)))
+		user, err := session.GetUser(context.Background(),disgord.NewSnowflake(uint64(converted)))
 		if err == nil {
 			return user
 		} else {
-			members, err := handler.Client.GetMembers(context.Background(), msg.GuildID, &disgord.GetMembersParams{
+			members, err := session.GetMembers(context.Background(),msg.GuildID, &disgord.GetMembersParams{
 				Limit: 0,
 			})
 			if err == nil {

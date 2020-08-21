@@ -1,14 +1,13 @@
 package utils
 
 import (
-	"asura/src/handler"
-	"context"
 	"github.com/andersfylling/disgord"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
 	"net/http"
 	"strconv"
+	"context"
 	"strings"
 )
 
@@ -54,14 +53,14 @@ func DownloadImage(url string) (image.Image, error) {
 // Persons without avatar
 // This function is used to get a url for an iamge that will be used
 // To a lot of functions. 
-func GetImageURL(msg *disgord.Message, args []string,size int) string {
+func GetImageURL(msg *disgord.Message, args []string,size int,session disgord.Session) string {
 	if len(msg.Mentions) > 0 {
 		avatar, _ := msg.Mentions[0].AvatarURL(size, false)
 		return avatar
 	}
 	if len(args) > 0 {
 		converted, _ := strconv.Atoi(args[0])
-		user, err := handler.Client.GetUser(context.Background(), disgord.NewSnowflake(uint64(converted)))
+		user, err := session.GetUser(context.Background(),disgord.NewSnowflake(uint64(converted)))
 		if err == nil {
 			avatar, _ := user.AvatarURL(size, false)
 			return avatar
