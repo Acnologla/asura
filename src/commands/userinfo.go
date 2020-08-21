@@ -40,7 +40,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	date := ((uint64(user.ID) >> 22) +1420070400000) / 1000
 	for i,guild := range guilds{
 		_, is :=session.GetMember(context.Background(),guild, user.ID)
-		if 12 >= count{
+		if count >= 12{
 			break
 		}
 		if is == nil {
