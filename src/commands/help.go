@@ -22,9 +22,11 @@ func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(args) > 0 {
 		command := handler.FindCommand(args[0])
 		aliasesText := ""
-		for _, aliase := range command.Aliases[1:] {
-			aliasesText += fmt.Sprintf("`%s` ", aliase)
-		}
+		if len(command.Aliases) > 1{
+			for _, aliase := range command.Aliases[1:] {
+				aliasesText += fmt.Sprintf("`%s` ", aliase)
+			}
+		}	
 		if len(command.Aliases) > 0 {
 			msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 				Embed: &disgord.Embed{

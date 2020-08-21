@@ -82,6 +82,9 @@ func checkCooldown(session disgord.Session, msg *disgord.Message, command string
 }
 
 func handleCommand(session disgord.Session, msg *disgord.Message) {
+	if msg.Author == nil{
+		return
+	}
 	if msg.Author.Bot || uint64(msg.GuildID) == 0{
 		return
 	}
