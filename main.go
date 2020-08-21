@@ -13,6 +13,7 @@ import (
 )
 
 func onReady(session disgord.Session, evt *disgord.Ready) {
+	handler.Client.UpdateStatusString("Use j!comandos para ver meus comandos")
 	telemetry.Info(fmt.Sprintf("%s Started", evt.User.Username), map[string]string{
 		"eventType": "ready",
 	})
