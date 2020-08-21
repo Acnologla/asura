@@ -110,11 +110,13 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 		Content: msg.Author.Mention(),
 	})
 	if err == nil {
+		j:=0
 		for i := 0; i < 4; i++ {
 			err := message.React(context.Background(), session, arrows[i])
-			if err != nil {
+			if err != nil && 10 > j {
 				time.Sleep(200 * time.Millisecond)
 				i--
+				j++
 			}
 		}
 		go func() {

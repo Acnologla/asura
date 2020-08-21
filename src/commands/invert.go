@@ -29,7 +29,7 @@ func init() {
 func runInvert(session disgord.Session, msg *disgord.Message, args []string) {
 	
 	// Download user image
-	url := utils.GetImageURL(msg, args,256)
+	url := utils.GetImageURL(msg, args,256,session)
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
 

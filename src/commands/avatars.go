@@ -22,7 +22,7 @@ func init() {
 }
 
 func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg, args)
+	user := utils.GetUser(msg, args,session)
 	ctx:= context.Background()
 	var userinfo database.User
 	var private bool

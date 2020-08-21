@@ -100,7 +100,7 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 					From: firstMove,
 					To: secondMove,
 				})
-				user, err := handler.Client.GetUser(context.Background(),nextPlay)
+				user, err := session.GetUser(context.Background(),nextPlay)
 				var username,avatar string
 				if err == nil{
 					username = user.Username
@@ -134,7 +134,7 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 					}else{
 						currentPlay = currentGame.white
 					}
-					winner,err := handler.Client.GetUser(context.Background(),currentPlay)
+					winner,err := session.GetUser(context.Background(),currentPlay)
 					if err == nil{
 						embed.Description = fmt.Sprintf("O %s venceu o xadrez",winner.Username)
 					}else{

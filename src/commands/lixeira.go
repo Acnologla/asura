@@ -37,7 +37,7 @@ func runLixeira(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 
 	// Download user image
-	url := utils.GetImageURL(msg, args,128)
+	url := utils.GetImageURL(msg, args,128,session)
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
 

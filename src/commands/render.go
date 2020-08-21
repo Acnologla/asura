@@ -67,7 +67,7 @@ func runRender(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	doc := soup.HTMLParse(resp)
 	p := doc.Find("section", "class", "iprep").Find("h2").Find("a").Text()
-	channel,err := handler.Client.GetChannel(context.Background(),msg.ChannelID)
+	channel,err := session.GetChannel(context.Background(),msg.ChannelID)
 	if err != nil{
 		return
 	}
@@ -75,11 +75,12 @@ func runRender(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+ ", Voce não pode renderizar sites pornograficos")
 		return
 	}
-	contex,_ := context.WithTimeout(context.Background(),15*time.Second)
+	contex,_ := context.WithTimeout(context.Background(),60*time.Second)
 	ctx, cancel := chromedp.NewContext(contex)
 	defer cancel()
 	var buf []byte
 	if err := chromedp.Run(ctx, elementScreenshot(text, `html`, &buf)); err != nil {
+		fmt.Println(err)
 		return
 	}
 	avatar, _ := msg.Author.AvatarURL(512, false)

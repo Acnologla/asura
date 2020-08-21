@@ -185,7 +185,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 				lastAtack = currentAtack + "\n"
 				if 0>= rinhaPlayers[turn].Life{
-					xpOb := rand.Intn(8) + 5 - (rinhaPlayers[currentTurn].Level - rinhaPlayers[turn].Level)
+					xpOb := (rand.Intn(10) + 5) - (2 * (rinhaPlayers[currentTurn].Level - rinhaPlayers[turn].Level))
 					if 0 > xpOb{
 						xpOb = 0
 					}

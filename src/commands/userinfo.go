@@ -24,7 +24,7 @@ func init() {
 }
 
 func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg,args)
+	user := utils.GetUser(msg,args,session)
 	var userinfo database.User
 	var private bool
 	avatar,_ := user.AvatarURL(512,false)
@@ -32,7 +32,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	id := strconv.FormatUint(uint64(user.ID),10)
 	database.Database.NewRef("users/"+id).Get(context.Background(), &userinfo)
 	database.Database.NewRef("private/"+id).Get(context.Background(), &private)
-	guilds,err := handler.Client.GetGuilds(context.Background(),&disgord.GetCurrentUserGuildsParams{})
+	guilds,err := session.GetGuilds(context.Background(),&disgord.GetCurrentUserGuildsParams{})
 	if err != nil{
 		return
 	}
@@ -65,7 +65,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 		if len(avats) > 12{
 			avats = avats[:12]
 		}
-		for i, avatar := range avats[:12:12]{
+		for i, avatar := range avats{
 			oldAvatars+= fmt.Sprintf("[**Link**](%s)",avatar)
 			if i != len(avats){
 				oldAvatars+= "** | **"

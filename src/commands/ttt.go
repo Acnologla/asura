@@ -74,11 +74,13 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 	if err != nil{
 		return
 	}
+	j := 0
 	for i :=0;i <len(emojis);i++{
 		err := message.React(ctx,session,emojis[i])
-		if err!= nil {
+		if err!= nil && 10 > j {
 			time.Sleep(200 * time.Millisecond)
 			i--
+			j++
 		}
 	}
 	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji,u disgord.Snowflake) {

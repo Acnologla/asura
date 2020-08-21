@@ -20,7 +20,7 @@ func init() {
 }
 
 func runAvatar(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg, args)
+	user := utils.GetUser(msg, args,session)
 	avatar, _ := user.AvatarURL(512, false)
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
