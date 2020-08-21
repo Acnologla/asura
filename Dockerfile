@@ -12,18 +12,20 @@ ENV TOKEN=$TOKEN
 ENV FIREBASE_CONFIG=$FIREBASE_CONFIG
 ENV FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID
 ENV DATADOG_API_KEY=$DATADOG_API_KEY
+ENV CGO_ENABLED 0
 
 WORKDIR /build
 
 COPY go.mod .
 RUN go mod download
+RUN go test -v ./test
 
 COPY . .
 RUN go build -o ./main.go
 
 FROM alpine
 WORKDIR /dist
-COPY --from=builder /build/main /dist
+COPY --from=builder ./main /dist
 
 
 ENTRYPOINT ./main
