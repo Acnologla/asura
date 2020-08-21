@@ -19,5 +19,12 @@ COPY go.mod .
 RUN go mod download
 
 COPY . .
+RUN go test -v ./test
+RUN go build -o ./main.go
 
-CMD ["go","run","main.go"]
+FROM alpine
+WORKDIR /dist
+COPY --from=builder /build/main /dist
+
+
+ENTRYPOINT ./main
