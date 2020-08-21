@@ -152,9 +152,9 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 					s = num
 				}
 				if rinhaPlayers[turn].Level > len(skills[s:])-1{
-					num = rand.Intn(len(skills[s:])-1)
+					num = rand.Intn(len(skills[s:]))
 				}else if rinhaPlayers[turn].Level > 0{
-					num = rand.Intn(rinhaPlayers[turn].Level)
+					num = rand.Intn(rinhaPlayers[turn].Level+1)
 				}
 				atack := skills[s:][num]
 				damage := rand.Intn(atack.Damage[1]-1 - atack.Damage[0]) + atack.Damage[0]
