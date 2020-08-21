@@ -2,19 +2,12 @@ FROM golang:alpine AS builder
 ENV GOOS=linux \
     GOARCH=amd64
 
-ARG FIREBASE_CONFIG
-ARG FIREBASE_PROJECT_ID
 WORKDIR /build
-ENV PRODUCTION=TRUE
-ENV FIREBASE_CONFIG=$FIREBASE_CONFIG
-ENV FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID
-ENV CGO_ENABLED 0
 
 COPY go.mod .
 RUN go mod download
 
 COPY . .
-RUN go test -v ./test
 RUN go build -o main .
 
 FROM alpine
