@@ -110,14 +110,10 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 		Content: msg.Author.Mention(),
 	})
 	if err == nil {
-		j:=0
 		for i := 0; i < 4; i++ {
-			err := message.React(context.Background(), session, arrows[i])
-			if err != nil && 10 > j {
-				time.Sleep(200 * time.Millisecond)
-				i--
-				j++
-			}
+			utils.Try(func()error{
+				return message.React(context.Background(), session, arrows[i])
+			},5)
 		}
 		go func() {
 			for {
@@ -135,14 +131,10 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 							Text: "Voce não jogou durante 2 minutos",
 						},
 					})
-					for {
+					utils.Try(func()error{
 						_, err := msgUpdater.Execute()
-						if err == nil {
-							break
-						} else {
-							time.Sleep(200 * time.Millisecond)
-						}
-					}
+						return err
+					},10)
 					return
 				}
 			}
@@ -180,21 +172,19 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 								}
 							}
 						}
-						n := empty[rand.Intn(len(empty))]
-						board[n/len(board)][n%len(board)] = 2
+						if len(empty)  > 0{
+							n := empty[rand.Intn(len(empty))]
+							board[n/len(board)][n%len(board)] = 2
+						}
 						msgUpdater := handler.Client.UpdateMessage(context.Background(), msg.ChannelID, message.ID)
 						msgUpdater.SetEmbed(&disgord.Embed{
 							Title:       "2048",
 							Description: fmt.Sprintf("%s\n\n%s", drawPoints(points), drawBoard(board)),
 						})
-						for {
+						utils.Try(func()error{
 							_, err := msgUpdater.Execute()
-							if err == nil {
-								break
-							} else {
-								time.Sleep(200 * time.Millisecond)
-							}
-						}
+							return err
+						},10)
 						handler.Client.DeleteUserReaction(context.Background(), msg.ChannelID, message.ID, u, emoji.Name)
 					}
 				} else if u != message.Author.ID {

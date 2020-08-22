@@ -44,16 +44,12 @@ func init() {
 
 
 func edit(message *disgord.Message,embed *disgord.Embed){
-	for i :=0; i <10;i++{
+	utils.Try(func()error{
 		msgUpdater := handler.Client.UpdateMessage(context.Background(),message.ChannelID,message.ID)
 		msgUpdater.SetEmbed(embed)
 		_,err := msgUpdater.Execute()
-		if err != nil{
-			time.Sleep(250 * time.Millisecond)
-		}else{
-			break
-		}
-	}
+		return err
+	},5)
 }
 
 func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
