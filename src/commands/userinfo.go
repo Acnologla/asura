@@ -36,27 +36,29 @@ func updateGuilds(session disgord.Session){
 }
 func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	user := utils.GetUser(msg, args, session)
+	ctx := context.Background()
 	var userinfo database.User
 	var private bool
 	avatar, _ := user.AvatarURL(512, false)
 	authorAvatar, _ := msg.Author.AvatarURL(512, false)
 	id := strconv.FormatUint(uint64(user.ID), 10)
-	database.Database.NewRef("users/"+id).Get(context.Background(), &userinfo)
-	database.Database.NewRef("private/"+id).Get(context.Background(), &private)
+	database.Database.NewRef("users/"+id).Get(ctx, &userinfo)
+	database.Database.NewRef("private/"+id).Get(ctx, &private)
 	oldAvatars := ""
 	oldUsernames := ""
 	filteredGuilds := ""
 	count := 0
+	date := ((uint64(user.ID) >> 22) + 1420070400000) / 1000
+	/*
 	if len(cGuilds) == 0 {
 		updateGuilds(session)
 	}
 	if time.Since(lastUpdated).Seconds()/60 > 30 {
 		go updateGuilds(session)
 	}
-	date := ((uint64(user.ID) >> 22) + 1420070400000) / 1000
 	for i, guild := range cGuilds {
-		_, is := session.GetMember(context.Background(),guild.ID,user.ID)
-		if count >= 12 {
+		_, is := session.GetMember(ctx,guild.ID,user.ID)
+		if count >= 8 {
 			break
 		}
 		if is == nil {
@@ -67,6 +69,9 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 
 		}
+	}*/
+	if filteredGuilds == ""{
+		filteredGuilds = "Nenhum servidor compartilhado"
 	}
 	if len(userinfo.Usernames) > 0 {
 		if len(userinfo.Usernames) > 12 {
@@ -93,7 +98,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	} else {
 		oldAvatars = "Nenhum avatar antigo registrado"
 	}
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
+	msg.Reply(ctx, session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
 			Color: 65535,
 			Title: fmt.Sprintf("%s(%s)", user.Username, user.ID),
