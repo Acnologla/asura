@@ -110,6 +110,9 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 		}
 
 		splited := strings.Fields(raw)
+		if len(splited) == 0 {
+			return
+		}
 		command := strings.ToLower(splited[0])
 		args := splited[1:]
 		realCommand := FindCommand(command)
