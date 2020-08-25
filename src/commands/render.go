@@ -66,7 +66,12 @@ func runRender(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	doc := soup.HTMLParse(resp)
-	p := doc.Find("section", "class", "iprep").Find("h2").Find("a").Text()
+	iprep := doc.Find("section","class","iprep")
+	if iprep.Error != nil{
+		msg.Reply(context.Background(), session, msg.Author.Mention()+ ", Site invalido")
+		return
+	} 
+	p := iprep.Find("h2").Find("a").Text()
 	channel,err := session.GetChannel(context.Background(),msg.ChannelID)
 	if err != nil{
 		return
