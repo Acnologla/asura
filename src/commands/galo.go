@@ -59,9 +59,11 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	if level >= 10{
 		for key, val := range upgrades{
 			if level >= val{
-				ups += key 
+				ups += key +"\n"
 			}
 		}
+	}else{
+		ups = "Nenhum\n"
 	}
 	if level > 10 {
 		num := level-10
@@ -79,7 +81,10 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			Thumbnail: &disgord.EmbedThumbnail{
 				URL: "https://blogs.uai.com.br/cantodogalo/wp-content/uploads/sites/32/2017/09/galo-imagem.jpg",
 			},
-			Description: fmt.Sprintf("Level **%d**\nXP: **%d/%d**\nProxima habilidade: **%s**\nUpgrades: %s\nHabilidades Atuais:",level,galo.Xp,nextLevel,nextSkill,ups),
+			Footer: &disgord.EmbedFooter{
+				Text: "Use j!upgrades para ver os upgrades disponiveis",
+			},
+			Description: fmt.Sprintf("Level **%d**\nXP: **%d/%d**\nProxima habilidade: **%s**\nUpgrades: %sHabilidades Atuais:",level,galo.Xp,nextLevel,nextSkill,ups),
 			Fields: fields,
 		},
 	})	

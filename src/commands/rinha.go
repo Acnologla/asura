@@ -163,8 +163,17 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				}else{
 					turn =0
 				}
+				if rinhaPlayers[turn].Level >= 5 {
+					damage -= int(damage/10)
+				}
+				if rinhaPlayers[turn].Level >= 15 &&  20 > rand.Intn(100){
+					damage = 0
+					currentAtack = fmt.Sprintf("%s O **%s** desviou do ataque **%s** de **%s**",rinhaEmojis[currentTurn],rinhaPlayers[turn].User.Username,atack.Name,rinhaPlayers[currentTurn].User.Username) 
+
+				}else{
+					currentAtack = fmt.Sprintf("%s **%s** Usou **%s** em **%s** causando **%d** de dano!",rinhaEmojis[currentTurn],rinhaPlayers[currentTurn].User.Username,atack.Name,rinhaPlayers[turn].User.Username,damage) 
+				}
 				rinhaPlayers[turn].Life -= damage
-				currentAtack = fmt.Sprintf("%s **%s** Usou **%s** em **%s** causando **%d** de dano!",rinhaEmojis[currentTurn],rinhaPlayers[currentTurn].User.Username,atack.Name,rinhaPlayers[turn].User.Username,damage) 
 				embed.Color = rinhaColors[currentTurn]
 				embed.Description = lastAtack + currentAtack
 				embed.Fields = []*disgord.EmbedField{
