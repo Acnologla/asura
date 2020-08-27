@@ -121,7 +121,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 			if checkCooldown(session, msg, realCommand.Aliases[0], msg.Author.ID, realCommand.Cooldown) {
 				return
 			}
-			go realCommand.Run(session, msg, args)
+			realCommand.Run(session, msg, args)
 			tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 			telemetry.Info(fmt.Sprintf("Command %s used by %s", realCommand.Aliases[0], tag), map[string]string{
 				"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
