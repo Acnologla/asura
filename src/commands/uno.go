@@ -367,7 +367,6 @@ func create(msg *disgord.Message, session disgord.Session) {
 							gameMutex.RUnlock()
 							return
 						}
-						gameMutex.RUnlock()
 					}
 				}()
 				for _, player2 := range game.players {
@@ -613,6 +612,7 @@ func join(msg *disgord.Message, session disgord.Session) {
 	}
 	var isInGame = isInGame(msg, game)
 	if isInGame {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce ja ta no jogo")
 		return
 	}

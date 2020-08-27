@@ -136,13 +136,13 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 //Handles messages and call the functions that they have to execute.
 func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 	msg := evt.Message
-	handleCommand(session, msg)
+	go handleCommand(session, msg)
 }
 
 //If you want to edit a message to make the command work again
 func OnMessageUpdate(session disgord.Session, evt *disgord.MessageUpdate) {
 	if len(evt.Message.Embeds) == 0 {
 		msg := evt.Message
-		handleCommand(session, msg)
+		go handleCommand(session, msg)
 	}
 }
