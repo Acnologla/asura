@@ -64,5 +64,9 @@
     {
         "name" : "Bicada dupla",
         "damage": [55,61]
+    },
+    {
+        "name": "Chute divino",
+        "damage": [58,64]
     }
 ]
