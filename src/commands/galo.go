@@ -57,6 +57,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	var ups string
 	if level >= 10{
+		ups = "\n"
 		for key, val := range upgrades{
 			if level >= val{
 				ups += key +"\n"
