@@ -1,4 +1,4 @@
-package vm
+package interpreter
 
 import (
 	"strconv"
