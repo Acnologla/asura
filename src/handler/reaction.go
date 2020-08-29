@@ -37,9 +37,9 @@ func sendReaction(removed bool, id disgord.Snowflake, emoji disgord.Emoji, user 
 }
 
 func OnReactionAdd(session disgord.Session, evt *disgord.MessageReactionAdd) {
-	sendReaction(false, evt.MessageID, *evt.PartialEmoji,evt.UserID)
+	go sendReaction(false, evt.MessageID, *evt.PartialEmoji,evt.UserID)
 }
 
 func OnReactionRemove(session disgord.Session, evt *disgord.MessageReactionRemove) {
-	sendReaction(true, evt.MessageID, *evt.PartialEmoji, evt.UserID)
+	go sendReaction(true, evt.MessageID, *evt.PartialEmoji, evt.UserID)
 }

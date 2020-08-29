@@ -20,19 +20,6 @@ func onReady(session disgord.Session, evt *disgord.Ready) {
 	go telemetry.MetricUpdate(handler.Client)
 
 }
-func initBot(){
-	client := disgord.New(disgord.Config{
-		BotToken: os.Getenv("TOKEN"),
-	})
-
-	handler.Client = client
-	client.On(disgord.EvtMessageCreate, handler.OnMessage)
-	client.On(disgord.EvtMessageUpdate, handler.OnMessageUpdate)
-	client.On(disgord.EvtMessageReactionAdd, handler.OnReactionAdd)
-	client.On(disgord.EvtMessageReactionRemove, handler.OnReactionRemove)
-	client.On(disgord.EvtReady, onReady)
-	client.StayConnectedUntilInterrupted(context.Background())
-}
 
 func main() {
 
@@ -48,6 +35,15 @@ func main() {
 	telemetry.Init()
 	database.Init()
 	fmt.Println("Starting bot...")
-	go initBot()
-	for{}
+	client := disgord.New(disgord.Config{
+		BotToken: os.Getenv("TOKEN"),
+	})
+
+	handler.Client = client
+	client.On(disgord.EvtMessageCreate, handler.OnMessage)
+	client.On(disgord.EvtMessageUpdate, handler.OnMessageUpdate)
+	client.On(disgord.EvtMessageReactionAdd, handler.OnReactionAdd)
+	client.On(disgord.EvtMessageReactionRemove, handler.OnReactionRemove)
+	client.On(disgord.EvtReady, onReady)
+	client.StayConnectedUntilInterrupted(context.Background())	
 }

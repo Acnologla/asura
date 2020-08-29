@@ -12,9 +12,10 @@ import (
 	"image/png"
 	"io"
 	"math/rand"
+	"github.com/sasha-s/go-deadlock"
 	"os"
 	"strings"
-	"sync"
+	//"sync"
 	"time"
 )
 
@@ -213,7 +214,7 @@ func (game *unoGame) start() {
 
 var (
 	currentGames               = map[disgord.Snowflake]*unoGame{}
-	gameMutex    *sync.RWMutex = &sync.RWMutex{}
+	gameMutex    *deadlock.RWMutex = &deadlock.RWMutex{}
 )
 
 func init() {
@@ -247,9 +248,9 @@ func shuffle(arr []string) []string {
 
 func getCards(msg *disgord.Message, session disgord.Session) {
 	gameMutex.RLock()
-	defer gameMutex.RUnlock()
 	game := currentGames[msg.GuildID]
 	if game == nil {
+		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Não tem nenhum jogo nessa guilda, use j!uno create para criar um")
 		return
 	}
@@ -263,6 +264,7 @@ func getCards(msg *disgord.Message, session disgord.Session) {
 					break
 				}
 			} 
+			gameMutex.RUnlock()
 			b := bytes.NewReader(game.drawCards(p).Bytes())
 			chanID, err := handler.Client.CreateDM(context.Background(), msg.Author.ID)
 			if err == nil {
@@ -274,8 +276,11 @@ func getCards(msg *disgord.Message, session disgord.Session) {
 				})
 			}
 		} else {
+			gameMutex.RUnlock()
 			go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce não ta no jogo")
 		}
+	}else{
+		gameMutex.RUnlock()
 	}
 }
 
@@ -360,7 +365,6 @@ func create(msg *disgord.Message, session disgord.Session) {
 									game.lastPlay = time.Now()
 									game.refuse++
 									gameMutex.Unlock()
-									continue
 								}
 							}
 						} else {
@@ -621,10 +625,12 @@ func join(msg *disgord.Message, session disgord.Session) {
 	game = currentGames[msg.GuildID]
 	game.newPlayer(msg.Author)
 	gameMutex.Unlock()
+	gameMutex.RLock()
 	var text string
 	for _, player := range game.players {
 		text += player.username + "\n"
 	}
+	gameMutex.RUnlock()
 	go msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
 			Color: 16711680,
