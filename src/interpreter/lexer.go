@@ -7,7 +7,7 @@ import (
 	"unicode"
 )
 
-var operators = []string{"+","-","=","==","*","/","(",")","**", ":=",":"}
+var operators = []string{"+","-","=","==","*","/","(",")","**", ":=",":",",","{","}"}
 var keywords = []string{"fn","if","else"}
 var breakers = []string{";","\n"," "}
 
@@ -50,7 +50,7 @@ func lex(code string,i int) (*Lexem, int){
 		}
 		i++
 		return &Lexem{
-			Type: 2,
+			Type: 3,
 			Value: str,
 		}, i 
 	}
@@ -59,7 +59,8 @@ func lex(code string,i int) (*Lexem, int){
 		var number = actual	 
 		i++
 		 for ;len(code) != i;i++{
-			if utils.Includes(breakers,string(code[i])){
+			 _, IsN := strconv.Atoi(string(code[i]))
+			if IsN != nil && string(code[i]) != "."{
 				_, err := strconv.Atoi(number)
 				if err != nil{
 					log.Fatal("Invalid number")
@@ -74,6 +75,7 @@ func lex(code string,i int) (*Lexem, int){
 	 }
 	 if !unicode.IsNumber(rune(code[i])) && !unicode.IsLetter(rune(code[i])){
 		var operator string
+		init := i 
 		for ;len(code) != i;i++{
 			if unicode.IsNumber(rune(code[i])) || unicode.IsLetter(rune(code[i])) || utils.Includes(breakers,string(code[i])){
 				break
@@ -86,6 +88,15 @@ func lex(code string,i int) (*Lexem, int){
 				Value: operator, 
 			},i
 		}else{
+			for j:=0; j < len(operator);j++{
+				if utils.Includes(operators,string(operator[j])){
+					return &Lexem{
+						Type: 5,
+						Value: operator,
+					}, init+1
+				}
+			}
+			log.Print(operator)
 			log.Fatal("Invalid operator")
 			return nil,i
 		}

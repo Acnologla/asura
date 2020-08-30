@@ -52,7 +52,14 @@ func (this *Parser) Factor() *Token{
 		this.Eat(5)
 		return expr
 	}
-	this.Eat(2)
+	if current.Type == 7{
+		this.Eat(7)
+	}else if current.Type == 3{
+		this.Eat(3)
+		return this.CreateToken(nil,"\"" + current.Value + "\"",nil)
+	}else{
+		this.Eat(2)
+	}
 	return this.CreateToken(nil,current.Value,nil)
 }
 
@@ -74,8 +81,48 @@ func (this *Parser) Expr() *Token{
 	return old
 }
 
+func (this *Parser) Compound() (tokens []*Token) {
+	for ;this.I < len(this.Lexems);{
+		result := this.Parse()
+		if result != nil{
+			if result.Value == "}"{
+				return 
+			}else{
+				tokens = append(tokens,result)
+			}
+		}
+	}
+	return
+}
+
 func (this *Parser) Parse() *Token{
 	current := this.Current()
+	if current.Type == 5 {
+		if current.Value == "}"{
+			this.Eat(5)
+			return this.CreateToken(nil,"}",nil)
+		}
+	}
+	if current.Type == 6{
+		keyword := this.Eat(6)
+		if keyword.Value == "fn"{
+			name := this.Eat(7)
+			this.Eat(5)
+			params := []string{}
+			if this.Current().Type != 5{
+				params = append(params,this.Current().Value)
+				this.Eat(7)
+				for ;this.Current().Type == 5 && this.Current().Value == ",";{
+					this.Eat(5)
+					params = append(params,this.Current().Value)
+					this.Eat(7)
+				}
+			}
+			this.Eat(5)
+			this.Eat(5)
+			return this.CreateToken(params,name.Value,this.Compound())
+		}
+	}
 	if current.Type == 7{
 		name := this.Eat(7)
 		if this.Current().Type == 5{
@@ -83,11 +130,24 @@ func (this *Parser) Parse() *Token{
 			if  operator.Value == ":="{
 				return this.CreateToken(name.Value,":=",this.Expr())
 			}
+			if operator.Value == "("{
+				var tok *Token
+				if this.Current().Type == 5 && this.Current().Value == ")"{
+					tok = this.CreateToken(name.Value,"call",nil)
+				}else{
+					params := []*Token{this.Expr()}
+					for ;this.Current().Type == 5 && this.Current().Value == ",";{
+						this.Eat(5)
+						params = append(params,this.Expr())
+					}
+					tok = this.CreateToken(name.Value,"call",params)
+				}
+				this.Eat(5)
+				return tok
+			}
 		}
 	}
-	if current.Type == 2 || current.Type == 3{
-		return this.Expr()
-	}
+	this.Eat(current.Type)
 	return nil
 }
 
@@ -102,7 +162,10 @@ func Parse(lexems []*Lexem) *Token{
 		if parser.Error{
 			return nil
 		}else{
-			finalToken.Right = append(finalToken.Right.([]*Token),parser.Parse())
+			result := parser.Parse()
+			if result != nil{
+				finalToken.Right = append(finalToken.Right.([]*Token),result)
+			}
 		}
 	}
 	return finalToken
