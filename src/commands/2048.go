@@ -12,7 +12,7 @@ import (
 )
 
 var arrows = []string{"➡", "⬇", "⬆", "⬅"}
-var numberEmojis = [10]string{":zero:", ":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine"}
+var numberEmojis = [10]string{":zero:", ":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:"}
 var emojis2048 = map[int]string{
 	0:    "<:2048_0:744682229023768737>",
 	2:    "<:284_2:744682213047795794>",
