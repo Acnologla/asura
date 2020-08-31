@@ -45,5 +45,5 @@ func main() {
 	client.On(disgord.EvtMessageReactionAdd, handler.OnReactionAdd)
 	client.On(disgord.EvtMessageReactionRemove, handler.OnReactionRemove)
 	client.On(disgord.EvtReady, onReady)
-	client.StayConnectedUntilInterrupted(context.Background())	
+	client.StayConnectedUntilInterrupted(context.Background())
 }
