@@ -2,6 +2,7 @@ package interpreter
 
 import (
 	"log"
+	"asura/src/utils"
 )
 
 type Token struct{
@@ -15,6 +16,8 @@ type Parser struct{
 	Error bool
 	I int
 }
+
+var comparators = []string{">","==","!=","<"}
 
 func (this *Parser) CreateToken(left interface{},value string,right interface{}) * Token{
 	return &Token{
@@ -36,7 +39,7 @@ func (this *Parser) Eat(lexemType int) *Lexem{
 		return &Lexem{}
 	}
 	if this.Lexems[this.I].Type != lexemType{
-		log.Fatal("Invalid type")
+		log.Fatalf("Invalid type expected: %d, got %d",lexemType,this.Lexems[this.I].Type)
 	}else{
 		this.I++
 		return this.Lexems[this.I-1]
@@ -77,6 +80,10 @@ func (this *Parser) Expr() *Token{
 	for ;this.Current().Type == 5 && (this.Current().Value == "+" || this.Current().Value == "-");{
 		op:= this.Eat(5)
 		old =  this.CreateToken(old,op.Value,this.Mult())
+	}
+	if this.Current().Type == 5 && utils.Includes(comparators,this.Current().Value){
+		oldVal := this.Eat(5)
+		return this.CreateToken(old,oldVal.Value,this.Parse())
 	}
 	return old
 }
@@ -122,32 +129,51 @@ func (this *Parser) Parse() *Token{
 			this.Eat(5)
 			return this.CreateToken(params,name.Value,this.Compound())
 		}
+		if keyword.Value == "if"{
+			condition := this.Parse()
+			this.Eat(5)
+			return this.CreateToken(condition,"if",this.Compound())
+		}
+		if keyword.Value == "ret"{
+			if this.Current().Type !=4{
+				return this.CreateToken(nil,"ret",this.Parse())
+			}else{
+				return this.CreateToken(nil,"ret",nil)
+			}
+		}
 	}
 	if current.Type == 7{
 		name := this.Eat(7)
-		if this.Current().Type == 5{
+		if this.Current().Type == 5 && this.Current().Value != ")"{
 			operator := this.Eat(5)
 			if  operator.Value == ":="{
-				return this.CreateToken(name.Value,":=",this.Expr())
+				return this.CreateToken(name.Value,":=",this.Parse())
 			}
 			if operator.Value == "("{
 				var tok *Token
 				if this.Current().Type == 5 && this.Current().Value == ")"{
 					tok = this.CreateToken(name.Value,"call",nil)
 				}else{
-					params := []*Token{this.Expr()}
+					params := []*Token{this.Parse()}
 					for ;this.Current().Type == 5 && this.Current().Value == ",";{
 						this.Eat(5)
-						params = append(params,this.Expr())
+						params = append(params,this.Parse())
 					}
 					tok = this.CreateToken(name.Value,"call",params)
 				}
 				this.Eat(5)
 				return tok
 			}
+			this.I-=2
+			return this.Expr()
 		}
+		return this.CreateToken(nil,name.Value,nil)
 	}
-	this.Eat(current.Type)
+	if current.Type == 2 || current.Type  == 3{
+		return this.Expr()
+	}else {
+		this.Eat(4)
+	}
 	return nil
 }
 

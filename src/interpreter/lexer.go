@@ -7,9 +7,9 @@ import (
 	"unicode"
 )
 
-var operators = []string{"+","-","=","==","*","/","(",")","**", ":=",":",",","{","}"}
-var keywords = []string{"fn","if","else"}
-var breakers = []string{";","\n"," "}
+var operators = []string{"+","-","=","==","*","/","(",")","**", ":=",":",",","{","}",">","<"}
+var keywords = []string{"fn","if","else","ret"}
+var breakers = []string{";","\n"," ","\t","\r"}
 
 type Lexem struct{
 	Type int
@@ -29,7 +29,7 @@ Type 7 = Identifier
 func lex(code string,i int) (*Lexem, int){
 
 	actual := string(code[i])
-	if actual == " "{
+	if actual == " " || actual == "\t" || actual == "\r"{
 		return nil, (i+1)
 	}
 	if utils.Includes(breakers,actual){
@@ -92,12 +92,10 @@ func lex(code string,i int) (*Lexem, int){
 				if utils.Includes(operators,string(operator[j])){
 					return &Lexem{
 						Type: 5,
-						Value: operator,
+						Value: string(operator[j]),
 					}, init+1
 				}
 			}
-			log.Print(operator)
-			log.Fatal("Invalid operator")
 			return nil,i
 		}
 	 }
