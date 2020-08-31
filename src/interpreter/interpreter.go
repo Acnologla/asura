@@ -17,7 +17,7 @@ func defaultValue(name string) interface{} {
 	if err != nil {
 		value, ok := localVars[name]
 		if !ok {
-			log.Fatal("Var not defined")
+			log.Fatalf("Var %s not defined",name)
 		}
 		return value
 	}
@@ -32,22 +32,29 @@ func visit(intToken interface{}) interface{} {
 			return defaultValue(str)
 		} else {
 			var ret interface{}
+			var lastVal interface{}
 			tokens := intToken.([]*Token)
 			for _, token := range tokens {
 				ret = visit(token)
 				tok, ok := ret.(*Token)
 				if ok {
+					if tok.Value == "break"{
+						return lastVal
+					}
 					if tok.Value == "ret" {
 						return ret
-						break
 					}
 				}
+				lastVal = ret
 			}
 			return ret
 		}
 	}
 	if token.Right == nil && token.Left == nil {
 		return defaultValue(token.Value)
+	}
+	if token.Value == "break"{
+		return token
 	}
 	if token.Value == "index"{
 		left := visit(token.Left)
@@ -76,6 +83,31 @@ func visit(intToken interface{}) interface{} {
 		name := token.Left.(string)
 		localVars[name] = visit(token.Right)
 	}
+	if token.Value == "for"{
+		forToken := token.Right.(*Token)
+		visit(forToken.Left)
+		var lastVal interface{}
+		for {
+			val := visit(token.Left)
+			returned, ok := val.(*Token)
+			if ok{
+				if returned.Value == "forif"{
+				bo,ok := returned.Left.(bool)
+				if ok{
+					if !bo{
+						return lastVal
+					}else{
+						val = returned.Right
+					}
+				}else{
+					val = returned.Right
+				}
+			}
+			}
+			visit(forToken.Right)
+			lastVal = val
+		}
+	}
 	if token.Value == "conditions" {
 		for _, condition := range token.Right.([]*Token) {
 			if condition.Value == "else" {
@@ -91,6 +123,31 @@ func visit(intToken interface{}) interface{} {
 					}
 				}
 			}
+		}
+	}
+	if token.Value == "forif"{
+		result := visit(&Token{
+			Value: "if",
+			Left: token.Left,
+			Right: []*Token{},
+		})
+		boo, ok := result.(bool)
+		var ret interface{}
+		if !ok {
+			ret = visit(token.Right)
+		}
+		if ok{
+			if boo{
+				ret = visit(token.Right)
+			}	
+		}
+		if result == nil{
+			boo = true
+		}
+		return &Token{
+			Value: "forif",
+			Right: ret,
+			Left: boo,
 		}
 	}
 	if token.Value == "if" {
@@ -124,6 +181,11 @@ func visit(intToken interface{}) interface{} {
 		}
 		if name == "print" {
 			fmt.Println(values...)
+			return nil
+		}
+		if name == "len"{
+			arr := values[0].([]interface{})
+			return float64(len(arr))
 		}
 		valInterface, ok := localVars[name]
 		if ok {

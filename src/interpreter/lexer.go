@@ -1,20 +1,21 @@
 package interpreter
 
 import (
-	"strconv"
-	"log"
 	"asura/src/utils"
+	"log"
+	"strconv"
 	"unicode"
 )
 
-var operators = []string{"+","-","=","==","*","/","(",")","**", ":=",":",",","{","}",">","<","[","]","."}
-var keywords = []string{"fn","if","else","ret"}
-var breakers = []string{";","\n"," ","\t","\r"}
+var operators = []string{"+", "-", "=", "==", "*", "/", "(", ")", "**", ":=", ":", ",", "{", "}", ">", "<", "[", "]", ".", "++", "--"}
+var keywords = []string{"fn", "if", "else", "ret", "for", "break"}
+var breakers = []string{";", "\n", " ", "\t", "\r"}
 
-type Lexem struct{
-	Type int
+type Lexem struct {
+	Type  int
 	Value string
 }
+
 /*
 
 Type 1 = Bool
@@ -26,106 +27,106 @@ Type 6 = Keyword
 Type 7 = Identifier
 
 */
-func lex(code string,i int) (*Lexem, int){
+func lex(code string, i int) (*Lexem, int) {
 
 	actual := string(code[i])
-	if actual == " " || actual == "\t" || actual == "\r"{
-		return nil, (i+1)
+	if actual == " " || actual == "\t" || actual == "\r" {
+		return nil, (i + 1)
 	}
-	if utils.Includes(breakers,actual){
+	if utils.Includes(breakers, actual) {
 		return &Lexem{
 			Type: 4,
-		}, (i+1)
+		}, (i + 1)
 	}
 
-	if actual == "\"" || actual == "'"{
+	if actual == "\"" || actual == "'" {
 		breaker := actual
 		var str string
 		i++
-		for ;len(code) != i;i++{
-			if string(code[i]) == breaker{
+		for ; len(code) != i; i++ {
+			if string(code[i]) == breaker {
 				break
 			}
 			str += string(code[i])
 		}
 		i++
 		return &Lexem{
-			Type: 3,
+			Type:  3,
 			Value: str,
-		}, i 
+		}, i
 	}
-	 _, err := strconv.Atoi(actual)
-	 if err == nil{
-		var number = actual	 
+	_, err := strconv.Atoi(actual)
+	if err == nil {
+		var number = actual
 		i++
-		 for ;len(code) != i;i++{
-			 _, IsN := strconv.ParseFloat(string(code[i]),64)
-			if IsN != nil && string(code[i]) != "."{
-				_, err := strconv.ParseFloat(number,64)
-				if err != nil{
+		for ; len(code) != i; i++ {
+			_, IsN := strconv.ParseFloat(string(code[i]), 64)
+			if IsN != nil && string(code[i]) != "." {
+				_, err := strconv.ParseFloat(number, 64)
+				if err != nil {
 					log.Fatal("Invalid number")
 				}
 				return &Lexem{
 					Value: number,
-					Type: 2,
-				},i 
+					Type:  2,
+				}, i
 			}
-			number += string(code[i])	 
-		 }
-	 }
-	 if !unicode.IsNumber(rune(code[i])) && !unicode.IsLetter(rune(code[i])){
+			number += string(code[i])
+		}
+	}
+	if !unicode.IsNumber(rune(code[i])) && !unicode.IsLetter(rune(code[i])) {
 		var operator string
-		init := i 
-		for ;len(code) != i;i++{
-			if unicode.IsNumber(rune(code[i])) || unicode.IsLetter(rune(code[i])) || utils.Includes(breakers,string(code[i])){
+		init := i
+		for ; len(code) != i; i++ {
+			if unicode.IsNumber(rune(code[i])) || unicode.IsLetter(rune(code[i])) || utils.Includes(breakers, string(code[i])) {
 				break
 			}
 			operator += string(code[i])
 		}
-		if utils.Includes(operators,operator){
+		if utils.Includes(operators, operator) {
 			return &Lexem{
-				Type: 5,
-				Value: operator, 
-			},i
-		}else{
-			for j:=0; j < len(operator);j++{
-				if utils.Includes(operators,string(operator[j])){
+				Type:  5,
+				Value: operator,
+			}, i
+		} else {
+			for j := len(operator) - 1; 0 < len(operator); j-- {
+				if utils.Includes(operators, string(operator[:j])) {
 					return &Lexem{
-						Type: 5,
-						Value: string(operator[j]),
-					}, init+1
+						Type:  5,
+						Value: string(operator[:j]),
+					}, init + j
 				}
 			}
-			return nil,i
+			return nil, i
 		}
-	 }
-	 var acc string
-	 for ;len(code) != i;i++{
-		if  (!unicode.IsNumber(rune(code[i])) && !unicode.IsLetter(rune(code[i]))) || utils.Includes(breakers,string(code[i])){
+	}
+	var acc string
+	for ; len(code) != i; i++ {
+		if (!unicode.IsNumber(rune(code[i])) && !unicode.IsLetter(rune(code[i]))) || utils.Includes(breakers, string(code[i])) {
 			break
 		}
 		acc += string(code[i])
 	}
-	if utils.Includes(keywords,acc){
+	if utils.Includes(keywords, acc) {
 		return &Lexem{
-			Type: 6,
+			Type:  6,
 			Value: acc,
-		},i
+		}, i
 	}
 	return &Lexem{
-		Type: 7,
+		Type:  7,
 		Value: acc,
-	},i
+	}, i
 }
 
-func Lex(code string) []*Lexem{
+func Lex(code string) []*Lexem {
 	var lexems = []*Lexem{}
 	code = code + "\n"
-	for i:=0; i < len(code)-1;{
-		lexem,value := lex(code,i)
+	for i := 0; i < len(code)-1; {
+		lexem, value := lex(code, i)
 		i = value
-		if lexem != nil{
-			lexems = append(lexems,lexem)
+		if lexem != nil {
+			lexems = append(lexems, lexem)
 		}
 	}
 	return lexems
