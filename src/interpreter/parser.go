@@ -63,6 +63,13 @@ func (this *Parser) Factor() *Token{
 	}else{
 		this.Eat(2)
 	}
+	if this.Current().Type == 5 && this.Current().Value == "["{
+		this.Eat(5)
+		tok := this.Parse()
+		newTok := this.CreateToken(current.Value,"index",tok)
+		this.Eat(5)
+		return newTok
+	}
 	return this.CreateToken(nil,current.Value,nil)
 }
 
@@ -105,6 +112,16 @@ func (this *Parser) Compound() (tokens []*Token) {
 func (this *Parser) Parse() *Token{
 	current := this.Current()
 	if current.Type == 5 {
+		if current.Value == "["{
+			this.Eat(5)
+			arr := []*Token{this.Parse()}
+			for ;this.Current().Type == 5 &&  this.Current().Value == ",";{
+				this.Eat(5)
+				arr = append(arr,this.Parse())
+			}
+			this.Eat(5)
+			return this.CreateToken(nil,"array",arr)
+		}
 		if current.Value == "}"{
 			this.Eat(5)
 			return this.CreateToken(nil,"}",nil)
@@ -132,7 +149,17 @@ func (this *Parser) Parse() *Token{
 		if keyword.Value == "if"{
 			condition := this.Parse()
 			this.Eat(5)
-			return this.CreateToken(condition,"if",this.Compound())
+			tok := this.CreateToken(condition,"if",this.Compound())
+			for ;this.Current().Type == 4;{
+				this.Eat(4)
+			}
+			if this.Current().Type == 6 && this.Current().Value == "else"{
+				this.Eat(6)
+				this.Eat(5)
+				elseToken := this.CreateToken(nil,"else",this.Compound())
+				return this.CreateToken(nil,"conditions",[]*Token{tok,elseToken})
+			}
+			return tok
 		}
 		if keyword.Value == "ret"{
 			if this.Current().Type !=4{

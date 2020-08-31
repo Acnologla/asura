@@ -7,11 +7,13 @@ import (
 )
 
 var localVars = map[string]interface{}{}
+
 func defaultValue(name string) interface{} {
 	if name[0] == '"' {
-		return name
+		name := name[:len(name)-1]
+		return name[1:]
 	}
-	i, err := strconv.Atoi(name)
+	i, err := strconv.ParseFloat(name,64)
 	if err != nil {
 		value, ok := localVars[name]
 		if !ok {
@@ -22,14 +24,13 @@ func defaultValue(name string) interface{} {
 	return i
 }
 
-
 func visit(intToken interface{}) interface{} {
-	token, ok := intToken.(*Token)	
-	if !ok{
+	token, ok := intToken.(*Token)
+	if !ok {
 		str, ok2 := intToken.(string)
-		if ok2{
+		if ok2 {
 			return defaultValue(str)
-		}else{
+		} else {
 			var ret interface{}
 			tokens := intToken.([]*Token)
 			for _, token := range tokens {
@@ -37,7 +38,7 @@ func visit(intToken interface{}) interface{} {
 				tok, ok := ret.(*Token)
 				if ok {
 					if tok.Value == "ret" {
-						ret = tok.Right
+						return ret
 						break
 					}
 				}
@@ -47,6 +48,23 @@ func visit(intToken interface{}) interface{} {
 	}
 	if token.Right == nil && token.Left == nil {
 		return defaultValue(token.Value)
+	}
+	if token.Value == "index"{
+		left := visit(token.Left)
+		right := visit(token.Right).(float64)
+		str,ok := left.(string)
+		if !ok{
+			arr := left.([]interface{})
+			return arr[int(right)]
+		}
+		return string(str[int(right)])
+	}
+	if token.Value == "array"{
+		arr := []interface{}{}
+		for _,item := range token.Right.([]*Token){
+			arr = append(arr,visit(item))
+		}
+		return arr
 	}
 	if token.Value == "ret" {
 		return &Token{
@@ -58,31 +76,48 @@ func visit(intToken interface{}) interface{} {
 		name := token.Left.(string)
 		localVars[name] = visit(token.Right)
 	}
-	if token.Value == "if"{
-		condition := token.Left.(*Token)
-		if condition.Value == "=="{
-			if visit(condition.Left) == visit(condition.Right){
-				return visit(token.Right)
-			}
-		}else if condition.Value == "!="{
-			if visit(condition.Left) != visit(condition.Right){
-				return visit(token.Right)
-			}
-		}else if condition.Value == ">"{
-			if visit(condition.Left).(int) > visit(condition.Right).(int) {
-				return visit(token.Right)
-			}
-		}else if condition.Value == "<"{
-			if visit(condition.Left).(int) < visit(condition.Right).(int){
-				return	visit(token.Right)
+	if token.Value == "conditions" {
+		for _, condition := range token.Right.([]*Token) {
+			if condition.Value == "else" {
+				return visit(condition.Right)
+			} else {
+				val := visit(condition)
+				returned, ok := val.(bool)
+				if !ok{
+					return val
+				}else{
+					if returned{
+						return val
+					}
+				}
 			}
 		}
-		return nil
+	}
+	if token.Value == "if" {
+		condition := token.Left.(*Token)
+		if condition.Value == "==" {
+			if visit(condition.Left) == visit(condition.Right) {
+				return visit(token.Right)
+			}
+		} else if condition.Value == "!=" {
+			if visit(condition.Left) != visit(condition.Right) {
+				return visit(token.Right)
+			}
+		} else if condition.Value == ">" {
+			if visit(condition.Left).(float64) > visit(condition.Right).(float64) {
+				return visit(token.Right)
+			}
+		} else if condition.Value == "<" {
+			if visit(condition.Left).(float64) < visit(condition.Right).(float64) {
+				return visit(token.Right)
+			}
+		}
+		return false
 	}
 	if token.Value == "call" {
 		name := token.Left.(string)
 		var values []interface{}
-		if token.Right != nil{
+		if token.Right != nil {
 			for _, param := range token.Right.([]*Token) {
 				values = append(values, visit(param))
 			}
@@ -117,19 +152,32 @@ func visit(intToken interface{}) interface{} {
 		}
 	}
 	if token.Value == "+" {
-		return visit(token.Left).(int) + visit(token.Right).(int)
+		first := visit(token.Left)
+		second := visit(token.Right)
+		int1,ok := first.(float64)
+		int2,ok2 := second.(float64)
+		if !ok || !ok2{
+			if ok{ 
+				first = fmt.Sprintf("%f",first.(float64))
+			}
+			if ok2{
+				second = fmt.Sprintf("%f",second.(float64))
+			}
+			return first.(string) + second.(string)
+		}
+		return int1 + int2
 	}
 	if token.Value == "-" {
-		return visit(token.Left).(int) - visit(token.Right).(int)
+		return visit(token.Left).(float64) - visit(token.Right).(float64)
 	}
 	if token.Value == "*" {
-		return visit(token.Left).(int) * visit(token.Right).(int)
+		return visit(token.Left).(float64) * visit(token.Right).(float64)
 	}
 	if token.Value == "/" {
-		return visit(token.Left).(int) / visit(token.Right).(int)
+		return visit(token.Left).(float64) / visit(token.Right).(float64)
 	}
 	_, isCompound := token.Right.([]*Token)
-	if isCompound{
+	if isCompound {
 		params, ok := token.Left.([]string)
 		if ok {
 			localVars[token.Value] = &Token{
@@ -140,6 +188,6 @@ func visit(intToken interface{}) interface{} {
 	}
 	return nil
 }
-func Interpret(token *Token) interface{}{
+func Interpret(token *Token) interface{} {
 	return visit(token.Right)
 }

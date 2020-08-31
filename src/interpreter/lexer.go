@@ -7,7 +7,7 @@ import (
 	"unicode"
 )
 
-var operators = []string{"+","-","=","==","*","/","(",")","**", ":=",":",",","{","}",">","<"}
+var operators = []string{"+","-","=","==","*","/","(",")","**", ":=",":",",","{","}",">","<","[","]","."}
 var keywords = []string{"fn","if","else","ret"}
 var breakers = []string{";","\n"," ","\t","\r"}
 
@@ -59,9 +59,9 @@ func lex(code string,i int) (*Lexem, int){
 		var number = actual	 
 		i++
 		 for ;len(code) != i;i++{
-			 _, IsN := strconv.Atoi(string(code[i]))
+			 _, IsN := strconv.ParseFloat(string(code[i]),64)
 			if IsN != nil && string(code[i]) != "."{
-				_, err := strconv.Atoi(number)
+				_, err := strconv.ParseFloat(number,64)
 				if err != nil{
 					log.Fatal("Invalid number")
 				}
