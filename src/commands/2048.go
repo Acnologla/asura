@@ -111,9 +111,9 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 	})
 	if err == nil {
 		for i := 0; i < 4; i++ {
-			utils.Try(func()error{
+			utils.Try(func() error {
 				return message.React(context.Background(), session, arrows[i])
-			},5)
+			}, 5)
 		}
 		go func() {
 			for {
@@ -131,10 +131,10 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 							Text: "Voce não jogou durante 2 minutos",
 						},
 					})
-					utils.Try(func()error{
+					utils.Try(func() error {
 						_, err := msgUpdater.Execute()
 						return err
-					},10)
+					}, 10)
 					return
 				}
 			}
@@ -172,7 +172,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 								}
 							}
 						}
-						if len(empty)  > 0{
+						if len(empty) > 0 {
 							n := empty[rand.Intn(len(empty))]
 							board[n/len(board)][n%len(board)] = 2
 						}
@@ -181,10 +181,10 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 							Title:       "2048",
 							Description: fmt.Sprintf("%s\n\n%s", drawPoints(points), drawBoard(board)),
 						})
-						utils.Try(func()error{
+						utils.Try(func() error {
 							_, err := msgUpdater.Execute()
 							return err
-						},10)
+						}, 10)
 						handler.Client.DeleteUserReaction(context.Background(), msg.ChannelID, message.ID, u, emoji.Name)
 					}
 				} else if u != message.Author.ID {

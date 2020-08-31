@@ -1,17 +1,17 @@
 package commands
 
 import (
+	"asura/src/database"
 	"asura/src/handler"
 	"context"
-	"asura/src/database"
 	"fmt"
-	"strconv"
 	"github.com/andersfylling/disgord"
+	"strconv"
 )
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:   []string{"private","privar"},
+		Aliases:   []string{"private", "privar"},
 		Run:       runPrivate,
 		Available: true,
 		Cooldown:  1,
@@ -33,9 +33,9 @@ func runPrivate(session disgord.Session, msg *disgord.Message, args []string) {
 		fmt.Println(err)
 		return
 	}
-	if acc{
-		msg.Reply(ctx, session,msg.Author.Mention() +  ", Seu perfil nao esta mais privado")
-	}else{
-		msg.Reply(ctx,session,msg.Author.Mention() + ", Seu perfil foi privado som sucesso")
+	if acc {
+		msg.Reply(ctx, session, msg.Author.Mention()+", Seu perfil nao esta mais privado")
+	} else {
+		msg.Reply(ctx, session, msg.Author.Mention()+", Seu perfil foi privado som sucesso")
 	}
 }

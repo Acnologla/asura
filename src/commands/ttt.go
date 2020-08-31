@@ -2,15 +2,15 @@ package commands
 
 import (
 	"asura/src/handler"
-	"context"
 	"asura/src/utils"
+	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:   []string{"jogodavelha", "ttt","tictactoe"},
+		Aliases:   []string{"jogodavelha", "ttt", "tictactoe"},
 		Run:       runTTT,
 		Available: true,
 		Cooldown:  8,
@@ -18,15 +18,16 @@ func init() {
 		Help:      "Jogue jogo da velha",
 	})
 }
+
 var emojis = []string{"1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣"}
 
-func text(tiles [9]int) (text string){
-	for i,tile := range tiles{
+func text(tiles [9]int) (text string) {
+	for i, tile := range tiles {
 		if tile == 1 {
 			text += ":x:"
-		}else if tile ==2{
+		} else if tile == 2 {
 			text += ":o:"
-		}else{
+		} else {
 			text += emojis[i]
 		}
 		if i == 2 || i == 5 {
@@ -36,89 +37,89 @@ func text(tiles [9]int) (text string){
 	return
 }
 
-func win(tiles [9]int) int{
-	for  i := 1; i < 3; i++ {
-        if (tiles[0] == i && tiles[1] == i && tiles[2] == i) || (tiles[3] == i && tiles[4] == i && tiles[5] == i) || (tiles[6] == i && tiles[7] == i && tiles[8] == i) || (tiles[0] == i && tiles[3] == i && tiles[6] == i) || (tiles[1] == i && tiles[4] == i && tiles[7] == i) || (tiles[2] == i && tiles[5] == i && tiles[8] == i) || (tiles[0] == i && tiles[4] == i && tiles[8] == i) || (tiles[2] == i && tiles[4] == i && tiles[6] == i){ 
+func win(tiles [9]int) int {
+	for i := 1; i < 3; i++ {
+		if (tiles[0] == i && tiles[1] == i && tiles[2] == i) || (tiles[3] == i && tiles[4] == i && tiles[5] == i) || (tiles[6] == i && tiles[7] == i && tiles[8] == i) || (tiles[0] == i && tiles[3] == i && tiles[6] == i) || (tiles[1] == i && tiles[4] == i && tiles[7] == i) || (tiles[2] == i && tiles[5] == i && tiles[8] == i) || (tiles[0] == i && tiles[4] == i && tiles[8] == i) || (tiles[2] == i && tiles[4] == i && tiles[6] == i) {
 			return i
 		}
 	}
-	if  tiles[0] !=0 && tiles[1] != 0 && tiles[2] != 0 && tiles[3] != 0 && tiles[4] != 0 && tiles[5]  != 0 && tiles[6] != 0 && tiles[7] != 0 && tiles[8] != 0{
+	if tiles[0] != 0 && tiles[1] != 0 && tiles[2] != 0 && tiles[3] != 0 && tiles[4] != 0 && tiles[5] != 0 && tiles[6] != 0 && tiles[7] != 0 && tiles[8] != 0 {
 		return 0
 	}
 	return 3
 }
 
-func playTTT(tile int, tiles *[9]int, turn int) bool{
+func playTTT(tile int, tiles *[9]int, turn int) bool {
 	if tiles[tile] != 0 {
 		return false
 	}
-	tiles[tile] = turn	
+	tiles[tile] = turn
 	return true
 }
 
 func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(msg.Mentions) == 0 {
-		msg.Reply(context.Background(), session,msg.Author.Mention() + ", Mencione alguem para jogar jogo da velha")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Mencione alguem para jogar jogo da velha")
 		return
 	}
 	user := msg.Mentions[0]
-	if user.ID == msg.Author.ID || user.Bot{
-		msg.Reply(context.Background(), session, msg.Author.Mention()+ ", Usuario invalido")
+	if user.ID == msg.Author.ID || user.Bot {
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
 		return
 	}
 	ctx := context.Background()
-	tiles:= [9]int{0,0,0,0,0,0,0,0,0}
+	tiles := [9]int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 	turn := 1
-	message, err := msg.Reply(ctx, session,":hash::x:\n\n"+text(tiles))
-	if err != nil{
+	message, err := msg.Reply(ctx, session, ":hash::x:\n\n"+text(tiles))
+	if err != nil {
 		return
 	}
-	for i :=0;i <len(emojis);i++{
-		utils.Try(func()error{
-			return message.React(ctx,session,emojis[i])
-		},5)
+	for i := 0; i < len(emojis); i++ {
+		utils.Try(func() error {
+			return message.React(ctx, session, emojis[i])
+		}, 5)
 	}
-	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji,u disgord.Snowflake) {
-		turnUser:= user
+	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
+		turnUser := user
 		letter := ":x:"
-		if turn ==1{
+		if turn == 1 {
 			turnUser = msg.Author
 			letter = ":o:"
 		}
-		if !removed && turnUser.ID == u{
-			if utils.Includes(emojis,emoji.Name){
-				tile := utils.IndexOf(emojis,emoji.Name)
-				played := playTTT(tile,&tiles,turn)
-				if played{
-					if turn == 2{
-						turn --
-					}else{
+		if !removed && turnUser.ID == u {
+			if utils.Includes(emojis, emoji.Name) {
+				tile := utils.IndexOf(emojis, emoji.Name)
+				played := playTTT(tile, &tiles, turn)
+				if played {
+					if turn == 2 {
+						turn--
+					} else {
 						turn++
 					}
 					winner := win(tiles)
 					playType := ":hash:"
-					if winner != 3{
+					if winner != 3 {
 						playType = ":crown:"
-						if letter == ":x:"{
+						if letter == ":x:" {
 							letter = ":o:"
-						}else {
+						} else {
 							letter = ":x:"
 						}
-						if winner == 0{
+						if winner == 0 {
 							letter = ":no_good:"
 						}
 						handler.DeleteHandler(message)
-						go handler.Client.DeleteAllReactions(ctx,msg.ChannelID,message.ID)
+						go handler.Client.DeleteAllReactions(ctx, msg.ChannelID, message.ID)
 					}
-					msgUpdater := handler.Client.UpdateMessage(ctx,msg.ChannelID,message.ID)
-					msgUpdater.SetContent(fmt.Sprintf("%s%s\n\n%s",playType,letter,text(tiles)))
+					msgUpdater := handler.Client.UpdateMessage(ctx, msg.ChannelID, message.ID)
+					msgUpdater.SetContent(fmt.Sprintf("%s%s\n\n%s", playType, letter, text(tiles)))
 					msgUpdater.Execute()
-					message.Unreact(ctx,session,emoji.Name)
-					handler.Client.DeleteUserReaction(ctx,msg.ChannelID,message.ID,u,emoji.Name)
+					message.Unreact(ctx, session, emoji.Name)
+					handler.Client.DeleteUserReaction(ctx, msg.ChannelID, message.ID, u, emoji.Name)
 				}
 			}
-		}else if u != message.Author.ID{
-			handler.Client.DeleteUserReaction(ctx,msg.ChannelID,message.ID,u,emoji.Name)
+		} else if u != message.Author.ID {
+			handler.Client.DeleteUserReaction(ctx, msg.ChannelID, message.ID, u, emoji.Name)
 		}
-	},60*5)
+	}, 60*5)
 }

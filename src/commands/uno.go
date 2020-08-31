@@ -9,10 +9,10 @@ import (
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
+	"github.com/sasha-s/go-deadlock"
 	"image/png"
 	"io"
 	"math/rand"
-	"github.com/sasha-s/go-deadlock"
 	"os"
 	"strings"
 	//"sync"
@@ -213,7 +213,7 @@ func (game *unoGame) start() {
 }
 
 var (
-	currentGames               = map[disgord.Snowflake]*unoGame{}
+	currentGames                   = map[disgord.Snowflake]*unoGame{}
 	gameMutex    *deadlock.RWMutex = &deadlock.RWMutex{}
 )
 
@@ -263,7 +263,7 @@ func getCards(msg *disgord.Message, session disgord.Session) {
 					p = player2
 					break
 				}
-			} 
+			}
 			gameMutex.RUnlock()
 			b := bytes.NewReader(game.drawCards(p).Bytes())
 			chanID, err := handler.Client.CreateDM(context.Background(), msg.Author.ID)
@@ -279,7 +279,7 @@ func getCards(msg *disgord.Message, session disgord.Session) {
 			gameMutex.RUnlock()
 			go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce não ta no jogo")
 		}
-	}else{
+	} else {
 		gameMutex.RUnlock()
 	}
 }
@@ -313,9 +313,9 @@ func create(msg *disgord.Message, session disgord.Session) {
 		gameMutex.Lock()
 		gameCards := append([]string{}, shuffle(cards)...)
 		currentGames[msg.GuildID] = &unoGame{
-			cards:  gameCards,
-			board:  []string{},
-			status: "p",
+			cards:    gameCards,
+			board:    []string{},
+			status:   "p",
 			lastPlay: time.Now(),
 		}
 		currentGames[msg.GuildID].newPlayer(msg.Author)
@@ -365,12 +365,14 @@ func create(msg *disgord.Message, session disgord.Session) {
 									game.lastPlay = time.Now()
 									game.refuse++
 									gameMutex.Unlock()
+									return
 								}
 							}
 						} else {
 							gameMutex.RUnlock()
 							return
-						}
+						}	
+					gameMutex.RUnlock()
 					}
 				}()
 				for _, player2 := range game.players {

@@ -3,8 +3,8 @@ package commands
 import (
 	"asura/src/handler"
 	"context"
-	"github.com/andersfylling/disgord"
 	"fmt"
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -20,13 +20,13 @@ func init() {
 
 func runUpgrades(session disgord.Session, msg *disgord.Message, args []string) {
 	var text string
-	for key,value := range upgrades{
-		text += fmt.Sprintf("[Level %d] - %s\n",value,key)
+	for key, value := range upgrades {
+		text += fmt.Sprintf("[Level %d] - %s\n", value, key)
 	}
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
-			Title: "Upgrades",
-			Color: 65535,
+			Title:       "Upgrades",
+			Color:       65535,
 			Description: text,
 		},
 	})

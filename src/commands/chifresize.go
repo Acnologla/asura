@@ -21,7 +21,7 @@ func init() {
 }
 
 func runChifresize(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg, args,session)
+	user := utils.GetUser(msg, args, session)
 	idString := strconv.FormatUint(uint64(user.ID), 10)
 	result, _ := strconv.Atoi(string(idString[3:4]))
 	random, _ := strconv.Atoi(string(idString[5]))

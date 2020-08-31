@@ -4,14 +4,14 @@ import (
 	"asura/src/handler"
 	"asura/src/utils"
 	"bytes"
-	"github.com/nfnt/resize"
 	"context"
-	"image/draw"
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
+	"github.com/nfnt/resize"
+	"image/color"
+	"image/draw"
 	"image/png"
 	"io"
-	"image/color"
 	"strings"
 )
 
@@ -27,9 +27,9 @@ func init() {
 }
 
 func runInvert(session disgord.Session, msg *disgord.Message, args []string) {
-	
+
 	// Download user image
-	url := utils.GetImageURL(msg, args,256,session)
+	url := utils.GetImageURL(msg, args, 256, session)
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
 
@@ -42,13 +42,13 @@ func runInvert(session disgord.Session, msg *disgord.Message, args []string) {
 	avatar = resize.Resize(256, 256, avatar, resize.Lanczos3)
 
 	cimg, ok := avatar.(draw.Image)
-	if !ok{
+	if !ok {
 		return
 	}
-	for i:=0; i <  256;i++{
-		for j:=0; j < 256;j++{
-			r,g,b,a := cimg.At(i,j).RGBA()
-			cimg.Set(i,j,color.RGBA{
+	for i := 0; i < 256; i++ {
+		for j := 0; j < 256; j++ {
+			r, g, b, a := cimg.At(i, j).RGBA()
+			cimg.Set(i, j, color.RGBA{
 				uint8(255 - r),
 				uint8(255 - g),
 				uint8(255 - b),
@@ -57,7 +57,7 @@ func runInvert(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 	}
 	dc := gg.NewContext(256, 256)
-	dc.DrawImage(cimg, 0,0)
+	dc.DrawImage(cimg, 0, 0)
 
 	// And here we encode it to send
 	var b bytes.Buffer

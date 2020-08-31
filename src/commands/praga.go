@@ -37,7 +37,7 @@ func runPraga(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 
 	// Download user image
-	url := utils.GetImageURL(msg, args,256,session)
+	url := utils.GetImageURL(msg, args, 256, session)
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
 
@@ -56,7 +56,7 @@ func runPraga(session disgord.Session, msg *disgord.Message, args []string) {
 	// And here we encode it to send
 	var b bytes.Buffer
 	pw := io.Writer(&b)
-	jpeg.Encode(pw, dc.Image(),&jpeg.Options{
+	jpeg.Encode(pw, dc.Image(), &jpeg.Options{
 		Quality: 80,
 	})
 

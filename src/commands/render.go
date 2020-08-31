@@ -2,16 +2,16 @@ package commands
 
 import (
 	"asura/src/handler"
-	"net/http"
-	"time"
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"github.com/anaskhan96/soup"
+	"github.com/andersfylling/disgord"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
+	"net/http"
 	"strings"
+	"time"
 )
 
 func elementScreenshot(urlstr, sel string, res *[]byte) chromedp.Tasks {
@@ -24,7 +24,7 @@ func elementScreenshot(urlstr, sel string, res *[]byte) chromedp.Tasks {
 			*res, err = page.CaptureScreenshot().
 				WithQuality(90).
 				WithClip(&page.Viewport{
-					X:     	0,
+					X:      0,
 					Y:      0,
 					Width:  1366,
 					Height: 768,
@@ -56,31 +56,31 @@ func runRender(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	hresp, err := http.Get(text)
 	if err != nil {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+ ", Site invalido")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Site invalido")
 		return
 	}
 	finalURL := hresp.Request.URL.String()
-	resp, err := soup.Get(fmt.Sprintf("https://fortiguard.com/search?q=%s&engine=1",finalURL))
+	resp, err := soup.Get(fmt.Sprintf("https://fortiguard.com/search?q=%s&engine=1", finalURL))
 	if err != nil {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+ ", Site invalido")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Site invalido")
 		return
 	}
 	doc := soup.HTMLParse(resp)
-	iprep := doc.Find("section","class","iprep")
-	if iprep.Error != nil{
-		msg.Reply(context.Background(), session, msg.Author.Mention()+ ", Site invalido")
+	iprep := doc.Find("section", "class", "iprep")
+	if iprep.Error != nil {
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Site invalido")
 		return
-	} 
+	}
 	p := iprep.Find("h2").Find("a").Text()
-	channel,err := session.GetChannel(context.Background(),msg.ChannelID)
-	if err != nil{
+	channel, err := session.GetChannel(context.Background(), msg.ChannelID)
+	if err != nil {
 		return
 	}
-	if p == "Pornography" && !channel.NSFW{
-		msg.Reply(context.Background(), session, msg.Author.Mention()+ ", Voce não pode renderizar sites pornograficos")
+	if p == "Pornography" && !channel.NSFW {
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce não pode renderizar sites pornograficos")
 		return
 	}
-	contex,_ := context.WithTimeout(context.Background(),60*time.Second)
+	contex, _ := context.WithTimeout(context.Background(), 60*time.Second)
 	ctx, cancel := chromedp.NewContext(contex)
 	defer cancel()
 	var buf []byte
@@ -94,8 +94,8 @@ func runRender(session disgord.Session, msg *disgord.Message, args []string) {
 			{bytes.NewReader(buf), "render.jpg", false},
 		},
 		Embed: &disgord.Embed{
-			Color: 65535,
-			Description: fmt.Sprintf("[**%s**](%s)",strings.Join(args, " "),finalURL),
+			Color:       65535,
+			Description: fmt.Sprintf("[**%s**](%s)", strings.Join(args, " "), finalURL),
 			Image: &disgord.EmbedImage{
 				URL: "attachment://render.jpg",
 			},
