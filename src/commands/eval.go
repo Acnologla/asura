@@ -34,7 +34,9 @@ func runEval(session disgord.Session, msg *disgord.Message, args []string) {
 				code = code[4:]
 			}
 		}	
-		eval := interpreter.Run(code)
+		eval := interpreter.Run(code,map[string]interface{}{
+			"msg": msg,
+		})
 		msg.Reply(context.Background(),session,fmt.Sprintf("```js\n%v ```",eval))
 	}
 }

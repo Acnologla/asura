@@ -231,7 +231,13 @@ func (this *Parser) Parse() *Token {
 				this.Eat(5)
 				if this.Current().Type == 5 && this.Current().Value == "."{
 					this.Eat(5)
-					return this.CreateToken(tok,"property",this.Parse())
+					tok =  this.CreateToken(tok,"property",this.Parse())
+				}
+				if this.Current().Type == 5 && this.Current().Value == "["{
+					this.Eat(5)
+					nTok := this.Parse()
+					this.Eat(5)
+					tok =  this.CreateToken(tok, "index", nTok)
 				}
 				return tok
 			}
