@@ -106,7 +106,7 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 				var username, avatar string
 				if err == nil {
 					username = user.Username
-					avatar, _ = user.AvatarURL(512, false)
+					avatar, _ = user.AvatarURL(512, true)
 				}
 				embed := &disgord.Embed{
 					Title: "Xadrez",
@@ -188,7 +188,7 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 	chessPlayers[user.ID] = gameStruct
 	board, _ := chessImage.NewRendererFromFEN(game.FEN())
 	gameImage := getGameImage(board)
-	avatar, _ := msg.Author.AvatarURL(512, false)
+	avatar, _ := msg.Author.AvatarURL(512, true)
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Files: []disgord.CreateMessageFileParams{
 			{gameImage, "chess.png", false},

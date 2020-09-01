@@ -58,7 +58,7 @@ func runTopGalos(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 		}
 	}
-	avatar, _ := msg.Author.AvatarURL(128, false)
+	avatar, _ := msg.Author.AvatarURL(128, true)
 	var footer string
 	if myPos == 0 {
 		footer = `Voce não jogou nenhuma partida de brigadegalo`

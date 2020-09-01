@@ -39,8 +39,8 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	ctx := context.Background()
 	var userinfo database.User
 	var private bool
-	avatar, _ := user.AvatarURL(512, false)
-	authorAvatar, _ := msg.Author.AvatarURL(512, false)
+	avatar, _ := user.AvatarURL(512, true)
+	authorAvatar, _ := msg.Author.AvatarURL(512, true)
 	id := strconv.FormatUint(uint64(user.ID), 10)
 	database.Database.NewRef("users/"+id).Get(ctx, &userinfo)
 	database.Database.NewRef("private/"+id).Get(ctx, &private)

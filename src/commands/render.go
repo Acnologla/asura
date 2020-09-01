@@ -88,7 +88,7 @@ func runRender(session disgord.Session, msg *disgord.Message, args []string) {
 		fmt.Println(err)
 		return
 	}
-	avatar, _ := msg.Author.AvatarURL(512, false)
+	avatar, _ := msg.Author.AvatarURL(512, true)
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Files: []disgord.CreateMessageFileParams{
 			{bytes.NewReader(buf), "render.jpg", false},

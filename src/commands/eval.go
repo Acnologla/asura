@@ -22,7 +22,7 @@ func init() {
 }
 
 func runEval(session disgord.Session, msg *disgord.Message, args []string) {
-	if msg.Author.ID != utils.StringToID("365948625676795904"){
+	if msg.Author.ID != utils.StringToID("365948625676795904") && msg.Author.ID != utils.StringToID("395542409959964672"){
 		return
 	}
 	if len(args) > 0 {
