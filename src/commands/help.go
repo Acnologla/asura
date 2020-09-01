@@ -41,7 +41,9 @@ func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 	} else {
 		commandText := ""
 		for _, command := range handler.Commands {
-			commandText += fmt.Sprintf("`%s` ", command.Aliases[0])
+			if command.Available{
+				commandText += fmt.Sprintf("`%s` ", command.Aliases[0])
+			}
 		}
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 			Embed: &disgord.Embed{
