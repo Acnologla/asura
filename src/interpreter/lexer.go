@@ -2,7 +2,6 @@ package interpreter
 
 import (
 	"asura/src/utils"
-	"log"
 	"strconv"
 	"unicode"
 )
@@ -64,7 +63,9 @@ func lex(code string, i int) (*Lexem, int) {
 			if IsN != nil && string(code[i]) != "." {
 				_, err := strconv.ParseFloat(number, 64)
 				if err != nil {
-					log.Fatal("Invalid number")
+					return &Lexem{
+						Type: 4,
+					},i
 				}
 				return &Lexem{
 					Value: number,
@@ -89,7 +90,7 @@ func lex(code string, i int) (*Lexem, int) {
 				Value: operator,
 			}, i
 		} else {
-			for j := len(operator) - 1; 0 < len(operator); j-- {
+			for j := len(operator); 0  < j; j-- {
 				if utils.Includes(operators, string(operator[:j])) {
 					return &Lexem{
 						Type:  5,

@@ -2,7 +2,7 @@ package interpreter
 
 import (
 	"asura/src/utils"
-	"log"
+	"fmt"
 )
 
 type Token struct {
@@ -13,7 +13,7 @@ type Token struct {
 
 type Parser struct {
 	Lexems []*Lexem
-	Error  bool
+	Error  string
 	I      int
 }
 
@@ -39,7 +39,7 @@ func (this *Parser) Eat(lexemType int) *Lexem {
 		return &Lexem{}
 	}
 	if this.Lexems[this.I].Type != lexemType {
-		log.Fatalf("Invalid type expected: %d, got %d\n Value: %s", lexemType, this.Lexems[this.I].Type, this.Lexems[this.I].Value)
+		this.Error = fmt.Sprintf("Invalid type expected: %d, got %d\n Value: %s", lexemType, this.Lexems[this.I].Type, this.Lexems[this.I].Value)
 	} else {
 		this.I++
 		return this.Lexems[this.I-1]
@@ -254,8 +254,8 @@ func Parse(lexems []*Lexem) *Token {
 	}
 	finalToken := parser.CreateToken(nil, "main", []*Token{})
 	for parser.I < len(lexems) {
-		if parser.Error {
-			return nil
+		if parser.Error  != ""{
+			return parser.CreateToken(parser.Error,"err",nil)
 		} else {
 			result := parser.Parse()
 			if result != nil {

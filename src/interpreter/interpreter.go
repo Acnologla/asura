@@ -5,7 +5,6 @@ import (
 	"reflect"
 	"asura/src/utils"
 	"asura/src/handler"
-	"log"
 	"context"
 	"strconv"
 )
@@ -21,7 +20,8 @@ func defaultValue(name string) interface{} {
 	if err != nil {
 		value, ok := localVars[name]
 		if !ok {
-			log.Fatalf("Var %s not defined",name)
+			fmt.Printf("Var %s not defined\n",name)
+			return nil
 		}
 		return value
 	}
@@ -53,6 +53,10 @@ func visit(intToken interface{}) interface{} {
 			}
 			return ret
 		}
+		return nil
+	}
+	if token == nil{
+		return nil
 	}
 	if token.Right == nil && token.Left == nil {
 		return defaultValue(token.Value)
