@@ -7,6 +7,14 @@ import (
 	"strings"
 )
 
+func StringToID(id string) disgord.Snowflake{
+	converted, err := strconv.Atoi(id)
+	if err == nil{
+		return disgord.NewSnowflake(uint64(converted))
+	}
+	return 0
+}
+
 func GetUser(msg *disgord.Message, args []string,session disgord.Session) *disgord.User {
 	if len(msg.Mentions) > 0 {
 		return msg.Mentions[0]
