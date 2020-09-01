@@ -30,9 +30,11 @@ func TestLexer(t *testing.T) {
 		if currentToken.Right.(*interpreter.Token).Value != "2"{
 			t.Errorf("Invalid token %d", 2)
 		}
-		result := interpreter.Interpret(token)
-		if result != nil {
-			t.Errorf("Interpreter should return nil")
-		}
+		t.Run("TestInterpreter",func (t * testing.T){
+			result := interpreter.Interpret(token,map[string]interface{}{})
+			if result != nil {
+				t.Errorf("Interpreter should return nil")
+			}
+		})
 	})
 }
