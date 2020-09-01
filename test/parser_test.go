@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestParser(t *testing.T) {
+func TestArgumentParser(t *testing.T) {
 	t.Run("Test Errored Parsing", func(t *testing.T) {
 		args := []string {"atapo", "7", "12", "<@!1239012>"}
 		if handler.ValidateNumber(args[0], 0, 10) == nil {
