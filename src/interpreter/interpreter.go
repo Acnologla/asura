@@ -2,7 +2,11 @@ package interpreter
 
 import (
 	"fmt"
+	"reflect"
+	"asura/src/utils"
+	"asura/src/handler"
 	"log"
+	"context"
 	"strconv"
 )
 
@@ -171,6 +175,26 @@ func visit(intToken interface{}) interface{} {
 		}
 		return false
 	}
+	if  token.Value == "changeArr"{
+		arr := token.Left.(*Token)
+		arrValue,isArr := visit(arr.Left).([]interface{})
+		if isArr{
+			result := visit(arr.Right).(float64)
+			arrValue[int(result)] = visit(token.Right)
+		}
+	}
+	if token.Value == "fn"{
+		return token
+	}
+	if token.Value == "property"{
+		propertyName := token.Right.(*Token)
+		left := visit(token.Left)
+		if propertyName.Right == nil && propertyName.Left == nil{
+			r:= reflect.ValueOf(left)
+			field:= reflect.Indirect(r).FieldByName(propertyName.Value)
+			return field
+		}
+	}
 	if token.Value == "call" {
 		name := token.Left.(string)
 		var values []interface{}
@@ -178,6 +202,14 @@ func visit(intToken interface{}) interface{} {
 			for _, param := range token.Right.([]*Token) {
 				values = append(values, visit(param))
 			}
+		}
+		if name == "getUser"{
+			str,ok := values[0].(string)
+			if ok{
+				user, _ := handler.Client.GetUser(context.Background(),utils.StringToID(str))
+				return user				
+			}
+			return nil
 		}
 		if name == "print" {
 			fmt.Println(values...)
@@ -209,7 +241,18 @@ func visit(intToken interface{}) interface{} {
 					}
 				}
 			}
-			localVars = oldvars
+			retToken,ok := ret.(*Token)
+			if ok{
+				if retToken.Value == "fn"{
+					return ret
+				}
+			}
+			for key,_ := range localVars{
+				_,exists := oldvars[key]
+				if !exists{
+					delete(localVars,key)
+				}
+			}
 			return ret
 		}
 	}
@@ -245,6 +288,7 @@ func visit(intToken interface{}) interface{} {
 			localVars[token.Value] = &Token{
 				Left:  params,
 				Right: token.Right,
+				Value: "fn",
 			}
 		}
 	}

@@ -50,12 +50,17 @@ func (this *Parser) Eat(lexemType int) *Lexem {
 func (this *Parser) Factor() *Token {
 	current := this.Current()
 	if current.Type == 5 && current.Value == "(" {
+		this.Eat(5)
 		expr := this.Expr()
 		this.Eat(5)
 		return expr
 	}
 	if current.Type == 7 {
 		this.Eat(7)
+		if this.Current().Type == 5 && this.Current().Value == "."{
+			this.Eat(5)
+			return this.CreateToken(current.Value,"property",this.Parse())
+		}
 	} else if current.Type == 3 {
 		this.Eat(3)
 		return this.CreateToken(nil, "\""+current.Value+"\"", nil)
@@ -67,6 +72,12 @@ func (this *Parser) Factor() *Token {
 		tok := this.Parse()
 		newTok := this.CreateToken(current.Value, "index", tok)
 		this.Eat(5)
+		this.JumpBreaks()
+		if this.Current().Type == 5 && this.Current().Value == "="{
+			this.Eat(5)
+			value := this.Parse()
+			return this.CreateToken(newTok,"changeArr",value)
+		}
 		return newTok
 	}
 	return this.CreateToken(nil, current.Value, nil)
@@ -108,6 +119,12 @@ func (this *Parser) Compound() (tokens []*Token) {
 	return
 }
 
+func (this *Parser) JumpBreaks(){
+	for this.Current().Type == 4 {
+		this.Eat(4)
+	}
+}
+
 func (this *Parser) Parse() *Token {
 	current := this.Current()
 	if current.Type == 5 {
@@ -132,7 +149,12 @@ func (this *Parser) Parse() *Token {
 			return this.CreateToken("break", "break", nil)
 		}
 		if keyword.Value == "fn" {
-			name := this.Eat(7)
+			var name string
+			if this.Current().Type == 7{
+				name = this.Eat(7).Value
+			}else{
+				name = "fn"
+			}
 			this.Eat(5)
 			params := []string{}
 			if this.Current().Type != 5 {
@@ -146,15 +168,14 @@ func (this *Parser) Parse() *Token {
 			}
 			this.Eat(5)
 			this.Eat(5)
-			return this.CreateToken(params, name.Value, this.Compound())
+			fnTok := this.CreateToken(params, name, this.Compound())
+			return fnTok
 		}
 		if keyword.Value == "if" {
 			condition := this.Parse()
 			this.Eat(5)
 			tok := this.CreateToken(condition, "if", this.Compound())
-			for this.Current().Type == 4 {
-				this.Eat(4)
-			}
+			this.JumpBreaks()
 			if this.Current().Type == 6 && this.Current().Value == "else" {
 				this.Eat(6)
 				this.Eat(5)
@@ -208,6 +229,10 @@ func (this *Parser) Parse() *Token {
 					tok = this.CreateToken(name.Value, "call", params)
 				}
 				this.Eat(5)
+				if this.Current().Type == 5 && this.Current().Value == "."{
+					this.Eat(5)
+					return this.CreateToken(tok,"property",this.Parse())
+				}
 				return tok
 			}
 			this.I -= 2
