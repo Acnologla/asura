@@ -220,16 +220,27 @@ func visit(intToken interface{}) interface{} {
 				Right: propertyName.Right,
 			}
 			str,ok := propertyName.Left.(string)
+			var isTkn *Token
 			if !ok{
 				newval := visit(propertyName.Left)
 				if newval == nil{
 					return nil
 				}
+				isTkn = propertyName.Left.(*Token)
+				if isTkn.Value != "call"{
+					isTkn = nil
+				}
 				str = newval.(string)
 			}
-			propertyName.Value = str
-			propertyName.Left = nil
-			propertyName.Right = nil
+			if  isTkn != nil{
+				propertyName.Value = "call"
+				propertyName.Left = str
+				propertyName.Right = isTkn.Right
+			}else{
+				propertyName.Value = str
+				propertyName.Left = nil
+				propertyName.Right = nil
+			}
 		}
 		if propertyName.Value == "index"{
 			acess = int(visit(propertyName.Right).(float64))
@@ -380,6 +391,8 @@ func visit(intToken interface{}) interface{} {
 				}
 			}
 			return ret
+		} else {
+			return name
 		}
 	}
 	if token.Value == "+" {
@@ -430,5 +443,33 @@ func Interpret(token *Token, params map[string]interface{}) interface{} {
 	for key,val := range params{
 		localVars[key] = val
 	}
+	//debugToken(token)
 	return visit(token.Right)
+}
+
+func debugToken(token interface{}){	
+	compound,isCompound := token.([]*Token)
+	if isCompound{
+		fmt.Println("[")
+		for _,tkn := range compound{
+			debugToken(tkn)
+			fmt.Println(",\n")
+		}
+		fmt.Println("]")
+		return 
+	}
+	tkn,isToken := token.(*Token)
+	if isToken{
+		if tkn.Left == nil && tkn.Right == nil{
+			fmt.Println(tkn.Value)
+			return
+		}
+		fmt.Printf("{%s:{\nLeft:",tkn.Value)
+		debugToken(tkn.Left)
+		fmt.Print(",\nRight:")
+		debugToken(tkn.Right)
+		fmt.Println("}\n}")
+	}else{
+		fmt.Println(token)
+	}
 }
