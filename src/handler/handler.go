@@ -96,7 +96,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 	}
 
 	botMention := fmt.Sprintf("<@!%d> ", uint64(myself.ID))
-
+	onlyBotMention := fmt.Sprintf("<@!%d>", uint64(myself.ID))
 	if strings.HasPrefix(strings.ToLower(msg.Content), "j!") || strings.HasPrefix(strings.ToLower(msg.Content), "asura ") || strings.HasPrefix(msg.Content, botMention) {
 		// I dont know if it's efficient but this is the easiest way to remove one of the three prefixes from the command.
 		var raw string
@@ -107,8 +107,8 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 			raw = msg.Content[6:]
 		case strings.HasPrefix(msg.Content, botMention):
 			raw = strings.TrimPrefix(msg.Content, botMention)
+			msg.Mentions = msg.Mentions[1:]
 		}
-
 		splited := strings.Fields(raw)
 		if len(splited) == 0 {
 			return
@@ -130,6 +130,8 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 				"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
 			})
 		}
+	}else if strings.HasPrefix(msg.Content, onlyBotMention){
+		msg.Reply(context.Background(),session,msg.Author.Mention() + ", Meu prefix é **j!** use j!comandos para ver meus comandos")
 	}
 }
 
