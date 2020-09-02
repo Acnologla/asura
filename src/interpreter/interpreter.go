@@ -281,7 +281,7 @@ func visit(intToken interface{}) interface{} {
 								val = reflect.ValueOf(int(val.Interface().(float64)))
 							}else if paramType == "Snowflake" && valtType == "string"{
 								val = reflect.ValueOf(utils.StringToID(val.Interface().(string)))
-							}else if paramType != valtType && paramType != "Context"{
+							}else if paramType != valtType && paramType != "Context" && paramType != "Session"{
 								fmt.Printf("Parameter error %s is not %s\n",paramType,valtType)
 								return nil
 							}
