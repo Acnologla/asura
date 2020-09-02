@@ -5,6 +5,7 @@ import (
 	"strings"
 	"reflect"
 	"strconv"
+	"asura/src/utils"
 )
 
 var localVars = map[string]interface{}{}
@@ -218,7 +219,15 @@ func visit(intToken interface{}) interface{} {
 				Left: propertyName.Left,
 				Right: propertyName.Right,
 			}
-			propertyName.Value = propertyName.Left.(string)
+			str,ok := propertyName.Left.(string)
+			if !ok{
+				newval := visit(propertyName.Left)
+				if newval == nil{
+					return nil
+				}
+				str = newval.(string)
+			}
+			propertyName.Value = str
 			propertyName.Left = nil
 			propertyName.Right = nil
 		}
@@ -231,7 +240,9 @@ func visit(intToken interface{}) interface{} {
 				return nil
 			}
 			field := reflect.Indirect(r).FieldByName(propertyName.Value)
-
+			if !field.IsValid(){
+				return nil
+			}
 			if recursive.Value == "property"{
 				return visit(&Token{
 					Left: &Token{
@@ -257,8 +268,10 @@ func visit(intToken interface{}) interface{} {
 							valtType := val.Type().Name()
 							if paramType == "int" && valtType == "float64"{
 								val = reflect.ValueOf(int(val.Interface().(float64)))
-							}else if paramType != valtType{
-								fmt.Println("Parameter error")
+							}else if paramType == "Snowflake" && valtType == "string"{
+								val = reflect.ValueOf(utils.StringToID(val.Interface().(string)))
+							}else if paramType != valtType && paramType != "Context"{
+								fmt.Printf("Parameter error %s is not %s\n",paramType,valtType)
 								return nil
 							}
 							values = append(values,val)
@@ -288,14 +301,14 @@ func visit(intToken interface{}) interface{} {
 					if recursive.Value == "property"{
 						return visit(&Token{
 							Left: &Token{
-								Left: results,
+								Left: results[0],
 								Value: "value",
 							},
 							Value: "property",
 							Right: recursive.Right,
 						})
 					}
-					return results
+					return results[0]
 				}
 			}
 			return nil
