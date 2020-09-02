@@ -14,21 +14,23 @@ import (
 var arrows = []string{"➡", "⬇", "⬆", "⬅"}
 var numberEmojis = [10]string{":zero:", ":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:"}
 var emojis2048 = map[int]string{
-	0:    "<:2048_0:744682229023768737>",
-	2:    "<:284_2:744682213047795794>",
-	4:    "<:248_4:744682221452918905>",
-	8:    "<:248_8:744682233855475713>",
-	16:   "<:248_16:744682222145110147>",
-	32:   "<:248_32:744682243276013650>",
-	64:   "<:248_64:744682218538008686>",
-	128:  "<:248_128:744682220559794287>",
-	256:  "<:248_256:744682236544155699>",
-	512:  "<:258_512:744682226482020482>",
-	1024: "<:248_1024:744682235164229653>",
-	2048: "<:248:744682245113249853>",
+	0:    "<:0:744682229023768737>",
+	2:    "<:2:744682213047795794>",
+	4:    "<:4:744682221452918905>",
+	8:    "<:8:744682233855475713>",
+	16:   "<:16:744682222145110147>",
+	32:   "<:32:744682243276013650>",
+	64:   "<:64:744682218538008686>",
+	128:  "<:128:744682220559794287>",
+	256:  "<:256:744682236544155699>",
+	512:  "<:512:744682226482020482>",
+	1024: "<:1024:744682235164229653>",
+	2048: "<:2048:744682245113249853>",
+	4096: "<:4096:750621450255204354>",
+	8192: "<:8192:750622586899005461>",
 }
 
-func slideLeft(board *[4][4]int, points *int) {
+func slideLeft(board []([]int), points *int) {
 	for i, _ := range board {
 		s := 0
 		for j := 1; j < len(board[i]); j++ {
@@ -52,8 +54,8 @@ func slideLeft(board *[4][4]int, points *int) {
 	}
 }
 
-func rotateBoard(board *[4][4]int, c bool) [4][4]int {
-	var rotatedBoard = [4][4]int{}
+func rotateBoard(board []([]int), c bool) []([]int) {
+	var rotatedBoard = makeBoard(len(board))
 	for i, row := range board {
 		for j := range row {
 			if c {
@@ -77,7 +79,7 @@ func init() {
 	})
 }
 
-func drawBoard(board [4][4]int) (text string) {
+func drawBoard(board []([]int)) (text string) {
 	for _, row := range board {
 		for _, tile := range row {
 			text += emojis2048[tile]
@@ -95,19 +97,38 @@ func drawPoints(points int) (text string) {
 	return
 }
 
+func makeBoard(size int) []([]int){
+	board := []([]int){}
+	for i :=0; i < size;i++{
+		row := []int{}
+		for j :=0; j <size;j++{
+			row = append(row,0)
+		}
+		board = append(board,row)
+	}
+	return board
+}
+
 func run2048(session disgord.Session, msg *disgord.Message, args []string) {
-	board := [4][4]int{}
+	size := 4
+	if len(args) > 0{
+		n, err := strconv.Atoi(args[0])
+		if err == nil{
+			if 3 > n || n > 6{
+				msg.Reply(context.Background(),session,"O Tamanho do tabuleiro deve ser entre 3 e 6")
+				return
+			}
+			size = n
+		}
+	}
+	board := makeBoard(size)
 	for i := 0; i < 2; i++ {
-		board[rand.Intn(4)][rand.Intn(4)] = 2
+		board[rand.Intn(size)][rand.Intn(size)] = 2
 	}
 	lastPlay := time.Now()
 	points := 0
 	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Embed: &disgord.Embed{
-			Title:       "2048",
-			Description: ":zero:\n\n" + drawBoard(board),
-		},
-		Content: msg.Author.Mention(),
+		Content: ":zero:\n\n" + drawBoard(board),
 	})
 	if err == nil {
 		for i := 0; i < 4; i++ {
@@ -118,19 +139,11 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 		go func() {
 			for {
 				time.Sleep(time.Second)
-
 				if time.Since(lastPlay).Seconds()/60 >= 2 {
 					handler.DeleteHandler(message)
 					handler.Client.DeleteAllReactions(context.Background(), msg.ChannelID, message.ID)
 					msgUpdater := handler.Client.UpdateMessage(context.Background(), msg.ChannelID, message.ID)
-					msgUpdater.SetEmbed(&disgord.Embed{
-						Title:       "2048",
-						Color:       16711680,
-						Description: fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), drawBoard(board)),
-						Footer: &disgord.EmbedFooter{
-							Text: "Voce não jogou durante 2 minutos",
-						},
-					})
+					msgUpdater.SetContent(fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), drawBoard(board)))
 					utils.Try(func() error {
 						_, err := msgUpdater.Execute()
 						return err
@@ -145,21 +158,21 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 					if utils.Includes(arrows, emoji.Name) {
 						var oldPoints = points
 						if emoji.Name == arrows[0] {
-							board = rotateBoard(&board, true)
-							board = rotateBoard(&board, true)
-							slideLeft(&board, &points)
-							board = rotateBoard(&board, false)
-							board = rotateBoard(&board, false)
+							board = rotateBoard(board, true)
+							board = rotateBoard(board, true)
+							slideLeft(board, &points)
+							board = rotateBoard(board, false)
+							board = rotateBoard(board, false)
 						} else if emoji.Name == arrows[1] {
-							board = rotateBoard(&board, false)
-							slideLeft(&board, &points)
-							board = rotateBoard(&board, true)
+							board = rotateBoard(board, false)
+							slideLeft(board, &points)
+							board = rotateBoard(board, true)
 						} else if emoji.Name == arrows[2] {
-							board = rotateBoard(&board, true)
-							slideLeft(&board, &points)
-							board = rotateBoard(&board, false)
+							board = rotateBoard(board, true)
+							slideLeft(board, &points)
+							board = rotateBoard(board, false)
 						} else if emoji.Name == arrows[3] {
-							slideLeft(&board, &points)
+							slideLeft(board, &points)
 						}
 						if oldPoints != points {
 							lastPlay = time.Now()
@@ -177,10 +190,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 							board[n/len(board)][n%len(board)] = 2
 						}
 						msgUpdater := handler.Client.UpdateMessage(context.Background(), msg.ChannelID, message.ID)
-						msgUpdater.SetEmbed(&disgord.Embed{
-							Title:       "2048",
-							Description: fmt.Sprintf("%s\n\n%s", drawPoints(points), drawBoard(board)),
-						})
+						msgUpdater.SetContent(fmt.Sprintf("%s\n\n%s", drawPoints(points), drawBoard(board)))
 						utils.Try(func() error {
 							_, err := msgUpdater.Execute()
 							return err
