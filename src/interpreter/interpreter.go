@@ -10,6 +10,20 @@ import (
 
 var localVars = map[string]interface{}{}
 
+func toArrInterface(value interface{}) ([]interface{}, bool){
+	s := reflect.ValueOf(value)
+		if s.Kind() != reflect.Slice {
+			print("InterfaceSlice() given a non-slice type")
+			return []interface{}{}, false
+		}
+	
+		arr := make([]interface{}, s.Len())
+	
+		for i:=0; i<s.Len(); i++ {
+			arr[i] = s.Index(i).Interface()
+		}
+		return arr,true
+}
 
 func defaultValue(name string) interface{} {
 	if name[0] == '"' {
@@ -77,7 +91,7 @@ func visit(intToken interface{}) interface{} {
 		right := visit(token.Right).(float64)
 		str, ok := left.(string)
 		if !ok {
-			arr := left.([]interface{})
+			arr, _ := toArrInterface(left)
 			if int(right) >= len(arr){
 				return nil
 			}
@@ -195,7 +209,7 @@ func visit(intToken interface{}) interface{} {
 	}
 	if token.Value == "changeArr" {
 		arr := token.Left.(*Token)
-		arrValue, isArr := visit(arr.Left).([]interface{})
+		arrValue, isArr :=  visit(arr.Left).([]interface{})
 		if isArr {
 			result := visit(arr.Right).(float64)
 			arrValue[int(result)] = visit(token.Right)
@@ -293,21 +307,28 @@ func visit(intToken interface{}) interface{} {
 					for _,val := range result{
 						results = append(results,val.Interface())
 					}
+					if len(results) == 0{
+						return nil
+					}
 					if acess >= 0 {
-						if acess >= len(results){
+						resultsArr, isArr := toArrInterface(results[0])
+						if !isArr{
+							return nil
+						}
+						if acess >= len(resultsArr){
 							return  nil
 						}
 						if recursive.Value == "property"{
 							return visit(&Token{
 								Left: &Token{
-									Left: results[acess],
+									Left: resultsArr[acess],
 									Value: "value",
 								},
 								Value: "property",
 								Right: recursive.Right,
 							})
 						}
-						return results[acess]
+						return resultsArr[acess]
 					}
 					if recursive.Value == "property"{
 						return visit(&Token{
