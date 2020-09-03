@@ -13,6 +13,7 @@ import (
 var defaultVars = map[string]interface{}{
 	"false" : false,
 	"true": true,
+	"currentUserGuilds":&disgord.GetCurrentUserGuildsParams{},
 	"getContext": func() interface{} {
 		return context.Background()
 	},

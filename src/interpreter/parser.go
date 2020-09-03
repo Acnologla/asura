@@ -185,11 +185,17 @@ func (this *Parser) Parse() *Token {
 			return tok
 		}
 		if keyword.Value == "for" {
-			first := this.Parse()
+			var first *Token
+			if this.Current().Type != 4 {
+				first = this.Parse()
+			}
 			this.Eat(4)
 			condition := this.Parse()
 			this.Eat(4)
-			third := this.Parse()
+			var third *Token
+			if this.Current().Type != 5 || this.Current().Value != "{"{
+				third = this.Parse()
+			}
 			this.Eat(5)
 			condToken := this.CreateToken(condition, "forif", this.Compound())
 			forToken := this.CreateToken(first, "forToken", third)
