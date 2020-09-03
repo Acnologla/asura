@@ -79,6 +79,19 @@ func init() {
 	})
 }
 
+func isEqual(oldBoard []([]int), board []([]int)) bool {
+	equal := true
+	for i, row := range oldBoard {
+		for j, tile := range row {
+			if tile != board[i][j] {
+				equal = false
+				break
+			}
+		}
+	}
+	return equal
+}
+
 func drawBoard(board []([]int)) (text string) {
 	for _, row := range board {
 		for _, tile := range row {
@@ -97,25 +110,25 @@ func drawPoints(points int) (text string) {
 	return
 }
 
-func makeBoard(size int) []([]int){
+func makeBoard(size int) []([]int) {
 	board := []([]int){}
-	for i :=0; i < size;i++{
+	for i := 0; i < size; i++ {
 		row := []int{}
-		for j :=0; j <size;j++{
-			row = append(row,0)
+		for j := 0; j < size; j++ {
+			row = append(row, 0)
 		}
-		board = append(board,row)
+		board = append(board, row)
 	}
 	return board
 }
 
 func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 	size := 4
-	if len(args) > 0{
+	if len(args) > 0 {
 		n, err := strconv.Atoi(args[0])
-		if err == nil{
-			if 3 > n || n > 6{
-				msg.Reply(context.Background(),session,"O Tamanho do tabuleiro deve ser entre 3 e 6")
+		if err == nil {
+			if 3 > n || n > 6 {
+				msg.Reply(context.Background(), session, "O Tamanho do tabuleiro deve ser entre 3 e 6")
 				return
 			}
 			size = n
@@ -156,7 +169,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 			if !removed {
 				if u == msg.Author.ID {
 					if utils.Includes(arrows, emoji.Name) {
-						var oldPoints = points
+						var oldBoard = append([]([]int){}, board...)
 						if emoji.Name == arrows[0] {
 							board = rotateBoard(board, true)
 							board = rotateBoard(board, true)
@@ -174,27 +187,27 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 						} else if emoji.Name == arrows[3] {
 							slideLeft(board, &points)
 						}
-						if oldPoints != points {
+						if !isEqual(oldBoard, board) {
 							lastPlay = time.Now()
-						}
-						empty := []int{}
-						for i, row := range board {
-							for j, tile := range row {
-								if tile == 0 {
-									empty = append(empty, j+(i*len(board)))
+							empty := []int{}
+							for i, row := range board {
+								for j, tile := range row {
+									if tile == 0 {
+										empty = append(empty, j+(i*len(board)))
+									}
 								}
 							}
+							if len(empty) > 0 {
+								n := empty[rand.Intn(len(empty))]
+								board[n/len(board)][n%len(board)] = 2
+							}
+							msgUpdater := handler.Client.UpdateMessage(context.Background(), msg.ChannelID, message.ID)
+							msgUpdater.SetContent(fmt.Sprintf("%s\n\n%s", drawPoints(points), drawBoard(board)))
+							utils.Try(func() error {
+								_, err := msgUpdater.Execute()
+								return err
+							}, 10)
 						}
-						if len(empty) > 0 {
-							n := empty[rand.Intn(len(empty))]
-							board[n/len(board)][n%len(board)] = 2
-						}
-						msgUpdater := handler.Client.UpdateMessage(context.Background(), msg.ChannelID, message.ID)
-						msgUpdater.SetContent(fmt.Sprintf("%s\n\n%s", drawPoints(points), drawBoard(board)))
-						utils.Try(func() error {
-							_, err := msgUpdater.Execute()
-							return err
-						}, 10)
 						handler.Client.DeleteUserReaction(context.Background(), msg.ChannelID, message.ID, u, emoji.Name)
 					}
 				} else if u != message.Author.ID {

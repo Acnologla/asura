@@ -50,8 +50,12 @@ func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
 	if err != nil {
 		return
 	}
-	message.React(ctx, session, "⬅️")
-	message.React(ctx, session, "➡️")
+	utils.Try(func() error {
+		return message.React(context.Background(), session,  "⬅️")
+	}, 3)
+	utils.Try(func() error {
+		return message.React(context.Background(), session,  "➡️")
+	}, 3)
 	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
 		if !removed && msg.Author.ID == u {
 			msgUpdater := handler.Client.UpdateMessage(ctx, msg.ChannelID, message.ID)
