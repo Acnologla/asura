@@ -121,6 +121,17 @@ func makeBoard(size int) []([]int) {
 	}
 	return board
 }
+func deepClone(board []([]int)) []([]int){
+	arr := []([]int){}
+	for _, row := range board{
+		newRow := []int{}
+		for _,tile := range row{
+			newRow = append(newRow,tile)
+		}
+		arr = append(arr,newRow)
+	}
+	return arr
+}
 
 func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 	size := 4
@@ -169,7 +180,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 			if !removed {
 				if u == msg.Author.ID {
 					if utils.Includes(arrows, emoji.Name) {
-						var oldBoard = append([]([]int){}, board...)
+						var oldBoard = deepClone(board)
 						if emoji.Name == arrows[0] {
 							board = rotateBoard(board, true)
 							board = rotateBoard(board, true)
@@ -186,7 +197,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 							board = rotateBoard(board, false)
 						} else if emoji.Name == arrows[3] {
 							slideLeft(board, &points)
-						}
+						}					
 						if !isEqual(oldBoard, board) {
 							lastPlay = time.Now()
 							empty := []int{}
