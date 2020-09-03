@@ -268,6 +268,12 @@ func visit(intToken interface{}) interface{} {
 			if !field.IsValid(){
 				return nil
 			}
+			if field.Type().Name() == "int"{
+				field = reflect.ValueOf(float64(field.Interface().(int)))
+			}
+			if field.Type().Name() == "uint"{
+				field = reflect.ValueOf(float64(field.Interface().(uint)))
+			}
 			if recursive.Value == "property"{
 				return visit(&Token{
 					Left: &Token{
@@ -305,7 +311,13 @@ func visit(intToken interface{}) interface{} {
 					result := fun.Call(values)
 					var results []interface{}
 					for _,val := range result{
-						results = append(results,val.Interface())
+						if val.Type().Name() == "int" {
+							results = append(results,reflect.ValueOf(float64(val.Interface().(int))).Interface())
+						}else if val.Type().Name() == "uint" {
+							results = append(results,reflect.ValueOf(float64(val.Interface().(uint))).Interface())
+						}else{
+							results = append(results,val.Interface())
+						}
 					}
 					if len(results) == 0{
 						return nil
