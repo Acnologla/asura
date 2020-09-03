@@ -12,9 +12,6 @@ import (
 	"time"
 )
 
-var cGuilds []*disgord.Guild
-var lastUpdated time.Time = time.Now()
-
 func init() {
 
 	handler.Register(handler.Command{
@@ -27,13 +24,6 @@ func init() {
 	})
 }
 
-func updateGuilds(session disgord.Session) {
-	guilds, err := session.GetGuilds(context.Background(), &disgord.GetCurrentUserGuildsParams{})
-	if err == nil {
-		cGuilds = guilds
-		lastUpdated = time.Now()
-	}
-}
 func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	user := utils.GetUser(msg, args, session)
 	ctx := context.Background()
@@ -49,27 +39,27 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	filteredGuilds := ""
 	count := 0
 	date := ((uint64(user.ID) >> 22) + 1420070400000) / 1000
-	/*
-		if len(cGuilds) == 0 {
-			updateGuilds(session)
+	cGuilds,_ := handler.Client.GetGuilds(context.Background(),&disgord.GetCurrentUserGuildsParams{})
+	for i, guild := range cGuilds {
+		var is bool
+		if count >= 10 {
+			break
 		}
-		if time.Since(lastUpdated).Seconds()/60 > 30 {
-			go updateGuilds(session)
-		}
-		for i, guild := range cGuilds {
-			_, is := session.GetMember(ctx,guild.ID,user.ID)
-			if count >= 8 {
+		for _,member := range guild.Members{
+			if member.User.ID == user.ID{
+				is = true
 				break
 			}
-			if is == nil {
-				filteredGuilds += guild.Name
-				count++
-				if i != len(cGuilds) {
-					filteredGuilds += "** | **"
-				}
-
+		}
+		if is{
+			filteredGuilds += guild.Name
+			count++
+			if i != len(cGuilds) {
+				filteredGuilds += "** | **"
 			}
-		}*/
+
+		}
+	}
 	if filteredGuilds == "" {
 		filteredGuilds = "Nenhum servidor compartilhado"
 	}
