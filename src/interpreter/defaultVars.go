@@ -1,19 +1,18 @@
 package interpreter
 
 import (
-	"github.com/andersfylling/disgord"
 	"asura/src/handler"
 	"asura/src/utils"
-	"reflect"
 	"context"
 	"fmt"
+	"github.com/andersfylling/disgord"
 )
 
-
 var defaultVars = map[string]interface{}{
-	"false" : false,
-	"true": true,
-	"currentUserGuilds":&disgord.GetCurrentUserGuildsParams{},
+	"false":             false,
+	"true":              true,
+	"commands": handler.Commands,
+	"currentUserGuilds": &disgord.GetCurrentUserGuildsParams{},
 	"getContext": func() interface{} {
 		return context.Background()
 	},
@@ -24,7 +23,7 @@ var defaultVars = map[string]interface{}{
 			return user
 		}
 		id, ok := values.(disgord.Snowflake)
-		if ok{
+		if ok {
 			user, _ := handler.Client.GetUser(context.Background(), id)
 			return user
 		}
@@ -35,18 +34,11 @@ var defaultVars = map[string]interface{}{
 		return nil
 	},
 	"len": func(values interface{}) interface{} {
-		s := reflect.ValueOf(values)
-		if s.Kind() != reflect.Slice {
-			print("InterfaceSlice() given a non-slice type")
-			return nil
+		arr,ok := toArrInterface(values)
+		if !ok{
+			return float64(0)
 		}
-	
-		arr := make([]interface{}, s.Len())
-	
-		for i:=0; i<s.Len(); i++ {
-			arr[i] = s.Index(i).Interface()
-		}
-		return float64(len(arr)) 
+		return float64(len(arr))
 	},
 	"getClient": func() interface{} {
 		return handler.Client

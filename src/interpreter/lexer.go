@@ -6,7 +6,7 @@ import (
 	"unicode"
 )
 
-var operators = []string{"+", "-", "=", "==", "*", "/", "(", ")", "**", ":=", ":", ",", "{", "}", ">", "<", "[", "]", ".", "++", "--"}
+var operators = []string{"+", "-", "=", "==", "*", "/", "(", ")", "**", ":=", ":", ",", "{", "}", ">", "<", "[", "]", ".", "++", "--", "!="}
 var keywords = []string{"fn", "if", "else", "ret", "for", "break"}
 var breakers = []string{";", "\n", " ", "\t", "\r"}
 
@@ -40,14 +40,14 @@ func lex(code string, i int) (*Lexem, int) {
 
 	if actual == "\"" || actual == "'" {
 		breaker := actual
-		var str string
 		i++
+		old := i
 		for ; len(code) != i; i++ {
 			if string(code[i]) == breaker {
 				break
 			}
-			str += string(code[i])
 		}
+		str := code[old:i]
 		i++
 		return &Lexem{
 			Type:  3,
@@ -65,7 +65,7 @@ func lex(code string, i int) (*Lexem, int) {
 				if err != nil {
 					return &Lexem{
 						Type: 4,
-					},i
+					}, i
 				}
 				return &Lexem{
 					Value: number,
@@ -90,7 +90,7 @@ func lex(code string, i int) (*Lexem, int) {
 				Value: operator,
 			}, i
 		} else {
-			for j := len(operator); 0  < j; j-- {
+			for j := len(operator); 0 < j; j-- {
 				if utils.Includes(operators, string(operator[:j])) {
 					return &Lexem{
 						Type:  5,

@@ -47,6 +47,70 @@ func (this *Parser) Eat(lexemType int) *Lexem {
 	return nil
 }
 
+func (this *Parser) AccID() *Token {
+	name := this.Eat(7)
+	if this.Current().Type == 5 && this.Current().Value != ")" {
+		operator := this.Eat(5)
+		if operator.Value == "." {
+			this.JumpBreaks()
+			return this.CreateToken(name.Value, "property", this.Add())
+		}
+		if operator.Value == "++" {
+			return this.CreateToken(name.Value, ":=", this.CreateToken(name.Value, "+", this.CreateToken(nil, "1", nil)))
+		}
+		if operator.Value == "--" {
+			return this.CreateToken(name.Value, ":=", this.CreateToken(name.Value, "-", this.CreateToken(nil, "1", nil)))
+		}
+		if operator.Value == ":=" {
+			return this.CreateToken(name.Value, ":=", this.Parse())
+		}
+		if operator.Value == "[" {
+			tok := this.Parse()
+			newTok := this.CreateToken(name.Value, "index", tok)
+			this.Eat(5)
+			this.JumpBreaks()
+			if this.Current().Type == 5 && this.Current().Value == "=" {
+				this.Eat(5)
+				value := this.Parse()
+				return this.CreateToken(newTok, "changeArr", value)
+			}
+			return newTok
+		}
+		if operator.Value == "(" {
+			var tok *Token
+			if this.Current().Type == 5 && this.Current().Value == ")" {
+				tok = this.CreateToken(name.Value, "call", nil)
+			} else {
+				params := []*Token{this.Parse()}
+				for this.Current().Type == 5 && this.Current().Value == "," {
+					this.Eat(5)
+					params = append(params, this.Parse())
+				}
+				tok = this.CreateToken(name.Value, "call", params)
+			}
+			this.Eat(5)
+			for this.Current().Type == 5 && (this.Current().Value == "." || this.Current().Value == "[") {
+				if this.Current().Type == 5 && this.Current().Value == "." {
+					this.Eat(5)
+					this.JumpBreaks()
+					tok = this.CreateToken(tok, "property", this.Add())
+				}
+				if this.Current().Type == 5 && this.Current().Value == "[" {
+					this.Eat(5)
+					this.JumpBreaks()
+					nTok := this.Add()
+					this.Eat(5)
+					tok = this.CreateToken(tok, "index", nTok)
+				}
+			}
+			return tok
+		}
+		this.I--
+		return this.CreateToken(nil, name.Value, nil)
+	}
+	return this.CreateToken(nil, name.Value, nil)
+}
+
 func (this *Parser) Factor() *Token {
 	current := this.Current()
 	if current.Type == 5 && current.Value == "(" {
@@ -56,29 +120,12 @@ func (this *Parser) Factor() *Token {
 		return expr
 	}
 	if current.Type == 7 {
-		this.Eat(7)
-		if this.Current().Type == 5 && this.Current().Value == "."{
-			this.Eat(5)
-			return this.CreateToken(current.Value,"property",this.Parse())
-		}
+		return this.AccID()
 	} else if current.Type == 3 {
 		this.Eat(3)
 		return this.CreateToken(nil, "\""+current.Value+"\"", nil)
 	} else {
 		this.Eat(2)
-	}
-	if this.Current().Type == 5 && this.Current().Value == "[" {
-		this.Eat(5)
-		tok := this.Parse()
-		newTok := this.CreateToken(current.Value, "index", tok)
-		this.Eat(5)
-		this.JumpBreaks()
-		if this.Current().Type == 5 && this.Current().Value == "="{
-			this.Eat(5)
-			value := this.Parse()
-			return this.CreateToken(newTok,"changeArr",value)
-		}
-		return newTok
 	}
 	return this.CreateToken(nil, current.Value, nil)
 }
@@ -92,15 +139,20 @@ func (this *Parser) Mult() *Token {
 	return old
 }
 
-func (this *Parser) Expr() *Token {
+func (this *Parser) Add() *Token {
 	old := this.Mult()
 	for this.Current().Type == 5 && (this.Current().Value == "+" || this.Current().Value == "-") {
 		op := this.Eat(5)
 		old = this.CreateToken(old, op.Value, this.Mult())
 	}
-	if this.Current().Type == 5 && utils.Includes(comparators, this.Current().Value) {
-		oldVal := this.Eat(5)
-		return this.CreateToken(old, oldVal.Value, this.Parse())
+	return old
+}
+
+func (this *Parser) Expr() * Token{
+	old := this.Add()
+	for this.Current().Type == 5 && utils.Includes(comparators, this.Current().Value){
+		op := this.Eat(5)
+		old = this.CreateToken(old,op.Value,this.Add())
 	}
 	return old
 }
@@ -119,7 +171,7 @@ func (this *Parser) Compound() (tokens []*Token) {
 	return
 }
 
-func (this *Parser) JumpBreaks(){
+func (this *Parser) JumpBreaks() {
 	for this.Current().Type == 4 {
 		this.Eat(4)
 	}
@@ -150,9 +202,9 @@ func (this *Parser) Parse() *Token {
 		}
 		if keyword.Value == "fn" {
 			var name string
-			if this.Current().Type == 7{
+			if this.Current().Type == 7 {
 				name = this.Eat(7).Value
-			}else{
+			} else {
 				name = "fn"
 			}
 			this.Eat(5)
@@ -193,7 +245,7 @@ func (this *Parser) Parse() *Token {
 			condition := this.Parse()
 			this.Eat(4)
 			var third *Token
-			if this.Current().Type != 5 || this.Current().Value != "{"{
+			if this.Current().Type != 5 || this.Current().Value != "{" {
 				third = this.Parse()
 			}
 			this.Eat(5)
@@ -209,52 +261,7 @@ func (this *Parser) Parse() *Token {
 			}
 		}
 	}
-	if current.Type == 7 {
-		name := this.Eat(7)
-		if this.Current().Type == 5 && this.Current().Value != ")" {
-			operator := this.Eat(5)
-			if operator.Value == "++" {
-				return this.CreateToken(name.Value, ":=", this.CreateToken(name.Value, "+", this.CreateToken(nil, "1", nil)))
-			}
-			if operator.Value == "--" {
-				return this.CreateToken(name.Value, ":=", this.CreateToken(name.Value, "-", this.CreateToken(nil, "1", nil)))
-			}
-			if operator.Value == ":=" {
-				return this.CreateToken(name.Value, ":=", this.Parse())
-			}
-			if operator.Value == "(" {
-				var tok *Token
-				if this.Current().Type == 5 && this.Current().Value == ")" {
-					tok = this.CreateToken(name.Value, "call", nil)
-				} else {
-					params := []*Token{this.Parse()}
-					for this.Current().Type == 5 && this.Current().Value == "," {
-						this.Eat(5)
-						params = append(params, this.Parse())
-					}
-					tok = this.CreateToken(name.Value, "call", params)
-				}
-				this.Eat(5)
-					if this.Current().Type == 5 && this.Current().Value == "."{
-						this.Eat(5)
-						tok =  this.CreateToken(tok,"property",this.Parse())
-					} 
-					if this.Current().Type == 5 && this.Current().Value == "["{
-						this.Eat(5)
-						nTok := this.Parse()
-						this.Eat(5)
-						tok =  this.CreateToken(tok, "index", nTok)
-					}
-	
-				
-				return tok
-			}
-			this.I -= 2
-			return this.Expr()
-		}
-		return this.CreateToken(nil, name.Value, nil)
-	}
-	if current.Type == 2 || current.Type == 3 {
+	if current.Type == 2 || current.Type == 3 || current.Type == 7 {
 		return this.Expr()
 	} else {
 		this.Eat(4)
@@ -268,8 +275,8 @@ func Parse(lexems []*Lexem) *Token {
 	}
 	finalToken := parser.CreateToken(nil, "main", []*Token{})
 	for parser.I < len(lexems) {
-		if parser.Error  != ""{
-			return parser.CreateToken(parser.Error,"err",nil)
+		if parser.Error != "" {
+			return parser.CreateToken(parser.Error, "err", nil)
 		} else {
 			result := parser.Parse()
 			if result != nil {
