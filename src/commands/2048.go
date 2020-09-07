@@ -55,7 +55,7 @@ func slideLeft(board []([]int), points *int) {
 }
 
 func rotateBoard(board []([]int), c bool) []([]int) {
-	var rotatedBoard = makeBoard(len(board))
+	var rotatedBoard = utils.MakeBoard(len(board))
 	for i, row := range board {
 		for j := range row {
 			if c {
@@ -79,20 +79,7 @@ func init() {
 	})
 }
 
-func isEqual(oldBoard []([]int), board []([]int)) bool {
-	equal := true
-	for i, row := range oldBoard {
-		for j, tile := range row {
-			if tile != board[i][j] {
-				equal = false
-				break
-			}
-		}
-	}
-	return equal
-}
-
-func drawBoard(board []([]int)) (text string) {
+func draw2048Board(board []([]int)) (text string) {
 	for _, row := range board {
 		for _, tile := range row {
 			text += emojis2048[tile]
@@ -110,29 +97,6 @@ func drawPoints(points int) (text string) {
 	return
 }
 
-func makeBoard(size int) []([]int) {
-	board := []([]int){}
-	for i := 0; i < size; i++ {
-		row := []int{}
-		for j := 0; j < size; j++ {
-			row = append(row, 0)
-		}
-		board = append(board, row)
-	}
-	return board
-}
-func deepClone(board []([]int)) []([]int){
-	arr := []([]int){}
-	for _, row := range board{
-		newRow := []int{}
-		for _,tile := range row{
-			newRow = append(newRow,tile)
-		}
-		arr = append(arr,newRow)
-	}
-	return arr
-}
-
 func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 	size := 4
 	if len(args) > 0 {
@@ -145,14 +109,14 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 			size = n
 		}
 	}
-	board := makeBoard(size)
+	board := utils.MakeBoard(size)
 	for i := 0; i < 2; i++ {
 		board[rand.Intn(size)][rand.Intn(size)] = 2
 	}
 	lastPlay := time.Now()
 	points := 0
 	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Content: ":zero:\n\n" + drawBoard(board),
+		Content: ":zero:\n\n" + draw2048Board(board),
 	})
 	if err == nil {
 		for i := 0; i < 4; i++ {
@@ -167,7 +131,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 					handler.DeleteHandler(message)
 					handler.Client.DeleteAllReactions(context.Background(), msg.ChannelID, message.ID)
 					msgUpdater := handler.Client.UpdateMessage(context.Background(), msg.ChannelID, message.ID)
-					msgUpdater.SetContent(fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), drawBoard(board)))
+					msgUpdater.SetContent(fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), draw2048Board(board)))
 					utils.Try(func() error {
 						_, err := msgUpdater.Execute()
 						return err
@@ -180,7 +144,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 			if !removed {
 				if u == msg.Author.ID {
 					if utils.Includes(arrows, emoji.Name) {
-						var oldBoard = deepClone(board)
+						oldBoard := utils.DeepClone(board)
 						if emoji.Name == arrows[0] {
 							board = rotateBoard(board, true)
 							board = rotateBoard(board, true)
@@ -197,8 +161,8 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 							board = rotateBoard(board, false)
 						} else if emoji.Name == arrows[3] {
 							slideLeft(board, &points)
-						}					
-						if !isEqual(oldBoard, board) {
+						}
+						if !utils.IsEqual(oldBoard, board) {
 							lastPlay = time.Now()
 							empty := []int{}
 							for i, row := range board {
@@ -213,7 +177,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 								board[n/len(board)][n%len(board)] = 2
 							}
 							msgUpdater := handler.Client.UpdateMessage(context.Background(), msg.ChannelID, message.ID)
-							msgUpdater.SetContent(fmt.Sprintf("%s\n\n%s", drawPoints(points), drawBoard(board)))
+							msgUpdater.SetContent(fmt.Sprintf("%s\n\n%s", drawPoints(points), draw2048Board(board)))
 							utils.Try(func() error {
 								_, err := msgUpdater.Execute()
 								return err

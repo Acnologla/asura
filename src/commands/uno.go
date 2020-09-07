@@ -371,8 +371,8 @@ func create(msg *disgord.Message, session disgord.Session) {
 						} else {
 							gameMutex.RUnlock()
 							return
-						}	
-					gameMutex.RUnlock()
+						}
+						gameMutex.RUnlock()
 					}
 				}()
 				for _, player2 := range game.players {

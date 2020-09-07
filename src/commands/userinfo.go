@@ -41,18 +41,18 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	date := ((uint64(user.ID) >> 22) + 1420070400000) / 1000
 	cGuilds := session.GetConnectedGuilds()
 	for i, guild := range cGuilds {
-		guil,_ := handler.Client.GetGuild(context.Background(),guild)
+		guil, _ := handler.Client.GetGuild(context.Background(), guild)
 		var is bool
 		if count >= 10 {
 			break
 		}
-		for _,member := range guil.Members{
-			if member.User.ID == user.ID{
+		for _, member := range guil.Members {
+			if member.User.ID == user.ID {
 				is = true
 				break
 			}
 		}
-		if is{
+		if is {
 			filteredGuilds += guil.Name
 			count++
 			if i != len(cGuilds) {

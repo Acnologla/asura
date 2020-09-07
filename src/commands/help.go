@@ -41,7 +41,7 @@ func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 	} else {
 		commandText := ""
 		for _, command := range handler.Commands {
-			if command.Available{
+			if command.Available {
 				commandText += fmt.Sprintf("`%s` ", command.Aliases[0])
 			}
 		}
