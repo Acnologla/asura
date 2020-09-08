@@ -11,7 +11,7 @@ import (
 var defaultVars = map[string]interface{}{
 	"false":             false,
 	"true":              true,
-	"commands": handler.Commands,
+	"commands":          &handler.Commands,
 	"currentUserGuilds": &disgord.GetCurrentUserGuildsParams{},
 	"getContext": func() interface{} {
 		return context.Background()
@@ -34,8 +34,8 @@ var defaultVars = map[string]interface{}{
 		return nil
 	},
 	"len": func(values interface{}) interface{} {
-		arr,ok := toArrInterface(values)
-		if !ok{
+		arr, ok := toArrInterface(values)
+		if !ok {
 			return float64(0)
 		}
 		return float64(len(arr))

@@ -20,6 +20,9 @@ func toArrInterface(value interface{}) ([]interface{}, bool) {
 		return arr, true
 	}
 	s := reflect.ValueOf(value)
+	if s.Kind() == reflect.Ptr{
+		s = s.Elem()
+	}
 	if s.Kind() != reflect.Slice {
 		print("InterfaceSlice() given a non-slice type")
 		return []interface{}{}, false

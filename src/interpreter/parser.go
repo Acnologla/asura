@@ -36,6 +36,9 @@ func (this *Parser) Current() *Lexem {
 
 func (this *Parser) Eat(lexemType int) *Lexem {
 	if len(this.Lexems) == this.I {
+		if lexemType != 4 {
+			this.Error = fmt.Sprintf("Invalid type expected: %d, got 4\n Value: EOF", lexemType)
+		}
 		return &Lexem{}
 	}
 	if this.Lexems[this.I].Type != lexemType {
@@ -51,9 +54,40 @@ func (this *Parser) AccID() *Token {
 	name := this.Eat(7)
 	if this.Current().Type == 5 && this.Current().Value != ")" {
 		operator := this.Eat(5)
-		if operator.Value == "." {
+		if operator.Value == "." || operator.Value == "[" {
+			var tok *Token
 			this.JumpBreaks()
-			return this.CreateToken(name.Value, "property", this.Add())
+			if operator.Value == "." {
+				tok = this.CreateToken(name.Value, "property", this.Add())
+			} else {
+				n := this.Parse()
+				tok = this.CreateToken(name.Value, "index", n)
+				this.Eat(5)
+				this.JumpBreaks()
+				if this.Current().Type == 5 && this.Current().Value == "=" {
+					this.Eat(5)
+					value := this.Parse()
+					return this.CreateToken(tok, "changeArr", value)
+				}
+			}
+			for this.Current().Type == 5 && (this.Current().Value == "." || this.Current().Value == "[") {
+				if this.Current().Value == "." {
+					this.Eat(5)
+					tok = this.CreateToken(tok, "property", this.Add())
+				} else {
+					this.Eat(5)
+					n := this.Parse()
+					tok = this.CreateToken(tok, "index", n)
+					this.Eat(5)
+					this.JumpBreaks()
+					if this.Current().Type == 5 && this.Current().Value == "=" {
+						this.Eat(5)
+						value := this.Parse()
+						return this.CreateToken(tok, "changeArr", value)
+					}
+				}
+			}
+			return tok
 		}
 		if operator.Value == "++" {
 			return this.CreateToken(name.Value, ":=", this.CreateToken(name.Value, "+", this.CreateToken(nil, "1", nil)))
@@ -63,18 +97,6 @@ func (this *Parser) AccID() *Token {
 		}
 		if operator.Value == ":=" {
 			return this.CreateToken(name.Value, ":=", this.Parse())
-		}
-		if operator.Value == "[" {
-			tok := this.Parse()
-			newTok := this.CreateToken(name.Value, "index", tok)
-			this.Eat(5)
-			this.JumpBreaks()
-			if this.Current().Type == 5 && this.Current().Value == "=" {
-				this.Eat(5)
-				value := this.Parse()
-				return this.CreateToken(newTok, "changeArr", value)
-			}
-			return newTok
 		}
 		if operator.Value == "(" {
 			var tok *Token
@@ -148,11 +170,11 @@ func (this *Parser) Add() *Token {
 	return old
 }
 
-func (this *Parser) Expr() * Token{
+func (this *Parser) Expr() *Token {
 	old := this.Add()
-	for this.Current().Type == 5 && utils.Includes(comparators, this.Current().Value){
+	for this.Current().Type == 5 && utils.Includes(comparators, this.Current().Value) {
 		op := this.Eat(5)
-		old = this.CreateToken(old,op.Value,this.Add())
+		old = this.CreateToken(old, op.Value, this.Add())
 	}
 	return old
 }
@@ -283,6 +305,9 @@ func Parse(lexems []*Lexem) *Token {
 				finalToken.Right = append(finalToken.Right.([]*Token), result)
 			}
 		}
+	}
+	if parser.Error != "" {
+		return parser.CreateToken(parser.Error, "err", nil)
 	}
 	return finalToken
 }
