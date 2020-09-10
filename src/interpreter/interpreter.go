@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"io/ioutil"
 )
 
 var localVars = map[string]interface{}{}
@@ -380,8 +381,28 @@ func visit(intToken interface{}) interface{} {
 			return nil
 		}
 	}
+	if token.Value == "import"{
+		importPath := token.Left.(string)
+		content,err := ioutil.ReadFile(fmt.Sprintf("./src/interpreter/libs/%s.acnl",importPath))
+		if err != nil{
+			fmt.Println("Invalid file")
+			return nil
+		}
+		Run(string(content),map[string]interface{}{})
+		return nil
+	}
 	if token.Value == "call" {
-		name := token.Left.(string)
+		var valFn *Token 
+		name,ok := token.Left.(string)
+		if !ok{
+			v := visit(token.Left)
+			val2, ok := v.(*Token)
+			if ok{
+				if val2.Value == "fn"{
+					valFn = val2
+				}
+			}
+		}
 		var values []interface{}
 		if token.Right != nil {
 			for _, param := range token.Right.([]*Token) {
@@ -408,6 +429,10 @@ func visit(intToken interface{}) interface{} {
 			}
 		}
 		valInterface, ok := localVars[name]
+		if valFn != nil  && !ok{
+			valInterface = valFn
+			ok = true
+		}
 		if ok {
 			val := valInterface.(*Token)
 			oldvars := map[string]interface{}{}

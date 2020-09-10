@@ -7,7 +7,7 @@ import (
 )
 
 var operators = []string{"+", "-", "=", "==", "*", "/", "(", ")", "**", ":=", ":", ",", "{", "}", ">", "<", "[", "]", ".", "++", "--", "!="}
-var keywords = []string{"fn", "if", "else", "ret", "for", "break"}
+var keywords = []string{"fn", "if", "else", "ret", "for", "break", "import"}
 var breakers = []string{";", "\n", " ", "\t", "\r"}
 
 type Lexem struct {
