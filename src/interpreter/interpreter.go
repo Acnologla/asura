@@ -3,25 +3,25 @@ package interpreter
 import (
 	"asura/src/utils"
 	"fmt"
+	"io/ioutil"
 	"reflect"
 	"strconv"
 	"strings"
-	"io/ioutil"
 )
 
 var localVars = map[string]interface{}{}
 
 func toArrInterface(value interface{}) ([]interface{}, bool) {
 	str, ok := value.(string)
-	if ok{
+	if ok {
 		arr := make([]interface{}, len(str))
-		for i :=0; i < len(str);i++{
+		for i := 0; i < len(str); i++ {
 			arr[i] = string(str[i])
 		}
 		return arr, true
 	}
 	s := reflect.ValueOf(value)
-	if s.Kind() == reflect.Ptr{
+	if s.Kind() == reflect.Ptr {
 		s = s.Elem()
 	}
 	if s.Kind() != reflect.Slice {
@@ -97,8 +97,18 @@ func visit(intToken interface{}) interface{} {
 		return token
 	}
 	if token.Value == "index" {
+		right, ok := visit(token.Right).(float64)
+		if !ok {
+			_, ok := visit(token.Right).(string)
+			if ok {
+				return visit(&Token{
+					Value: "property",
+					Left:  token.Left,
+					Right: token.Right,
+				})
+			}
+		}
 		left := visit(token.Left)
-		right := visit(token.Right).(float64)
 		str, ok := left.(string)
 		if !ok {
 			arr, _ := toArrInterface(left)
@@ -111,6 +121,13 @@ func visit(intToken interface{}) interface{} {
 			return nil
 		}
 		return string(str[int(right)])
+	}
+	if token.Value == "map" {
+		object := map[string]interface{}{}
+		for key, value := range token.Right.(map[string]*Token) {
+			object[key] = visit(value)
+		}
+		return object
 	}
 	if token.Value == "array" {
 		arr := []interface{}{}
@@ -196,36 +213,36 @@ func visit(intToken interface{}) interface{} {
 			Left:  boo,
 		}
 	}
-	if token.Value ==  "==" {
+	if token.Value == "==" {
 		if visit(token.Left) == visit(token.Right) {
 			return true
 		}
 		return false
 	}
-	if token.Value ==  "!=" {
+	if token.Value == "!=" {
 		if visit(token.Left) != visit(token.Right) {
 			return true
 		}
 		return false
 	}
-	if token.Value ==  ">" {
-		if visit(token.Left).(float64) >  visit(token.Right).(float64) {
+	if token.Value == ">" {
+		if visit(token.Left).(float64) > visit(token.Right).(float64) {
 			return true
 		}
 		return false
 	}
-	if token.Value ==  "<" {
+	if token.Value == "<" {
 		if visit(token.Left).(float64) < visit(token.Right).(float64) {
 			return true
 		}
 		return false
 	}
 	if token.Value == "if" {
-		condition,ok := visit(token.Left).(bool)
-		if !ok{
+		condition, ok := visit(token.Left).(bool)
+		if !ok {
 			return false
 		}
-		if condition{
+		if condition {
 			return visit(token.Right)
 		}
 		return false
@@ -250,6 +267,13 @@ func visit(intToken interface{}) interface{} {
 		}
 		var acess int = -1
 		var recursive Token
+		if propertyName.Value == "index" {
+			_, ok := visit(propertyName.Right).(string)
+			if ok {
+				propertyName.Value = "property"
+				acess = -2
+			}
+		}
 		if propertyName.Value == "property" {
 			recursive = Token{
 				Value: "property",
@@ -279,13 +303,24 @@ func visit(intToken interface{}) interface{} {
 				propertyName.Right = nil
 			}
 		}
-		if propertyName.Value == "index" {
+		if propertyName.Value == "index" && acess == -1 {
 			acess = int(visit(propertyName.Right).(float64))
 			propertyName = propertyName.Left.(*Token)
 		}
 		if propertyName.Right == nil && propertyName.Left == nil {
 			if left == nil {
 				return nil
+			}
+			if strings.HasPrefix(propertyName.Value, "\"") && strings.HasSuffix(propertyName.Value, "\"") {
+				propertyName.Value = propertyName.Value[1 : len(propertyName.Value)-1]
+			}
+			if reflect.Indirect(r).Type().Kind() == reflect.Map {
+				for _, e := range reflect.Indirect(r).MapKeys() {
+					if e.Interface() == reflect.ValueOf(propertyName.Value).Interface() {
+						return reflect.Indirect(r).MapIndex(e).Interface()
+					}
+					return nil
+				}
 			}
 			field := reflect.Indirect(r).FieldByName(propertyName.Value)
 			if !field.IsValid() {
@@ -312,9 +347,27 @@ func visit(intToken interface{}) interface{} {
 		if propertyName.Value == "call" {
 			name, ok := propertyName.Left.(string)
 			if ok {
-				fun := r.MethodByName(name)
+				var fun reflect.Value
+				if r.Type().Kind() == reflect.Map{
+					for _, e := range reflect.Indirect(r).MapKeys() {
+						if e.Interface() == reflect.ValueOf(name).Interface() {
+							fun = r.MapIndex(e)
+						}
+					}
+				}else{
+					fun = r.MethodByName(name)
+				}
 				if fun.IsValid() {
-					var values []reflect.Value
+					fnToken,isToken := fun.Interface().(*Token)
+					var result =  []reflect.Value{}
+					if isToken{
+						result = append(result,reflect.ValueOf(visit(&Token{
+							Value: "call",
+							Left: fnToken,
+							Right: propertyName.Right,
+						})))
+					}else{
+						var values []reflect.Value
 					if propertyName.Right != nil {
 						for i, param := range propertyName.Right.([]*Token) {
 							paramType := fun.Type().In(i).Name()
@@ -331,7 +384,8 @@ func visit(intToken interface{}) interface{} {
 							values = append(values, val)
 						}
 					}
-					result := fun.Call(values)
+						result = fun.Call(values)
+					}
 					var results []interface{}
 					for _, val := range result {
 						if val.Type().Name() == "int" {
@@ -381,24 +435,24 @@ func visit(intToken interface{}) interface{} {
 			return nil
 		}
 	}
-	if token.Value == "import"{
+	if token.Value == "import" {
 		importPath := token.Left.(string)
-		content,err := ioutil.ReadFile(fmt.Sprintf("./src/interpreter/libs/%s.acnl",importPath))
-		if err != nil{
+		content, err := ioutil.ReadFile(fmt.Sprintf("./src/interpreter/libs/%s.acnl", importPath))
+		if err != nil {
 			fmt.Println("Invalid file")
 			return nil
 		}
-		Run(string(content),map[string]interface{}{})
+		Run(string(content), map[string]interface{}{})
 		return nil
 	}
 	if token.Value == "call" {
-		var valFn *Token 
-		name,ok := token.Left.(string)
-		if !ok{
+		var valFn *Token
+		name, ok := token.Left.(string)
+		if !ok {
 			v := visit(token.Left)
 			val2, ok := v.(*Token)
-			if ok{
-				if val2.Value == "fn"{
+			if ok {
+				if val2.Value == "fn" {
 					valFn = val2
 				}
 			}
@@ -429,7 +483,7 @@ func visit(intToken interface{}) interface{} {
 			}
 		}
 		valInterface, ok := localVars[name]
-		if valFn != nil  && !ok{
+		if valFn != nil && !ok {
 			valInterface = valFn
 			ok = true
 		}

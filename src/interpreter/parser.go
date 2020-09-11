@@ -223,6 +223,25 @@ func (this *Parser) JumpBreaks() {
 func (this *Parser) Parse() *Token {
 	current := this.Current()
 	if current.Type == 5 {
+		if current.Value == "{" {
+			this.Eat(5)
+			this.JumpBreaks()
+			object := map[string]*Token{}
+			key := this.Eat(this.Current().Type)
+			this.Eat(5)
+			value := this.Parse()
+			object[key.Value] = value
+			for ;this.Current().Type == 5 && this.Current().Value == ",";{
+				this.JumpBreaks()
+				this.Eat(5)
+				key = this.Eat(this.Current().Type)
+				this.Eat(5)
+				value = this.Parse()
+				object[key.Value] = value
+			}
+			this.Eat(5)
+			return this.CreateToken(nil,"map",object)
+		}
 		if current.Value == "(" {
 			return this.Expr()
 		}
