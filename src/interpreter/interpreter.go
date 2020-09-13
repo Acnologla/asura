@@ -9,7 +9,8 @@ import (
 	"strings"
 )
 
-var localVars = map[string]interface{}{}
+var localVars = []map[string]interface{}{}
+var sf = 0
 
 func toArrInterface(value interface{}) ([]interface{}, bool) {
 	str, ok := value.(string)
@@ -35,6 +36,26 @@ func toArrInterface(value interface{}) ([]interface{}, bool) {
 	return arr, true
 }
 
+func updateSf(name string,val interface{}){
+	for i := len(localVars)-1; 0 <= i;i--{
+		_,exists := localVars[i][name]
+		if exists{
+			localVars[i][name] = val
+			break
+		}
+	}
+} 
+
+func getSf(name string) (interface{},bool){
+	for i := len(localVars)-1; 0 <= i;i--{
+		val,exists := localVars[i][name]
+		if exists{
+			return val, true
+		}
+	}
+	return nil, false
+}
+
 func defaultValue(name string) interface{} {
 	if name[0] == '"' {
 		name := name[:len(name)-1]
@@ -42,7 +63,7 @@ func defaultValue(name string) interface{} {
 	}
 	i, err := strconv.ParseFloat(name, 64)
 	if err != nil {
-		value, ok := localVars[name]
+		value, ok := getSf(name)
 		if !ok {
 			value, ok := defaultVars[name]
 			if ok {
@@ -142,9 +163,13 @@ func visit(intToken interface{}) interface{} {
 			Right: visit(token.Right),
 		}
 	}
+	if token.Value == "="{
+		name := token.Left.(string)
+		updateSf(name,visit(token.Right))
+	}
 	if token.Value == ":=" {
 		name := token.Left.(string)
-		localVars[name] = visit(token.Right)
+		localVars[sf][name] = visit(token.Right)
 	}
 	if token.Value == "for" {
 		forToken := token.Right.(*Token)
@@ -482,22 +507,20 @@ func visit(intToken interface{}) interface{} {
 				return vals
 			}
 		}
-		valInterface, ok := localVars[name]
+		valInterface, ok := getSf(name)
 		if valFn != nil && !ok {
 			valInterface = valFn
 			ok = true
 		}
 		if ok {
 			val := valInterface.(*Token)
-			oldvars := map[string]interface{}{}
-			for key, value := range localVars {
-				oldvars[key] = value
-			}
+			sf++
+			localVars = append(localVars,map[string]interface{}{})
 			for i, param := range val.Left.([]string) {
 				if i < len(values) {
-					localVars[param] = values[i]
+					localVars[sf][param] = values[i]
 				} else {
-					localVars[param] = nil
+					localVars[sf][param] = nil
 				}
 			}
 			var ret interface{}
@@ -515,15 +538,16 @@ func visit(intToken interface{}) interface{} {
 			retToken, ok := ret.(*Token)
 			if ok {
 				if retToken.Value == "fn" {
-					return ret
+					for key,val := range localVars[sf]{
+						localVars[0][key] = val
+					}
+					for key,val := range localVars[sf-1]{
+						localVars[0][key] = val
+					}
 				}
 			}
-			for key, _ := range localVars {
-				_, exists := oldvars[key]
-				if !exists {
-					delete(localVars, key)
-				}
-			}
+			sf--
+			localVars = localVars[:len(localVars)-1]
 			return ret
 		} else {
 			return name
@@ -560,11 +584,14 @@ func visit(intToken interface{}) interface{} {
 	if token.Value == "/" {
 		return visit(token.Left).(float64) / visit(token.Right).(float64)
 	}
+	if token.Value == "%"{
+		return int(visit(token.Left).(float64)) % int(visit(token.Right).(float64))
+	}
 	_, isCompound := token.Right.([]*Token)
 	if isCompound {
 		params, ok := token.Left.([]string)
 		if ok {
-			localVars[token.Value] = &Token{
+			localVars[sf][token.Value] = &Token{
 				Left:  params,
 				Right: token.Right,
 				Value: "fn",
@@ -573,9 +600,13 @@ func visit(intToken interface{}) interface{} {
 	}
 	return nil
 }
+
 func Interpret(token *Token, params map[string]interface{}) interface{} {
+	if len(localVars) == 0{
+		localVars = append(localVars,map[string]interface{}{})
+	}
 	for key, val := range params {
-		localVars[key] = val
+		localVars[0][key] = val
 	}
 	//debugToken(token)
 	return visit(token.Right)

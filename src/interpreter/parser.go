@@ -111,10 +111,13 @@ func (this *Parser) AccID() *Token {
 			}
 		}
 		if operator.Value == "++" {
-			return this.CreateToken(value, ":=", this.CreateToken(value, "+", this.CreateToken(nil, "1", nil)))
+			return this.CreateToken(value, "=", this.CreateToken(value, "+", this.CreateToken(nil, "1", nil)))
 		}
 		if operator.Value == "--" {
-			return this.CreateToken(value, ":=", this.CreateToken(value, "-", this.CreateToken(nil, "1", nil)))
+			return this.CreateToken(value, "=", this.CreateToken(value, "-", this.CreateToken(nil, "1", nil)))
+		}
+		if operator.Value == "="{
+			return this.CreateToken(value,"=",this.Parse())
 		}
 		if operator.Value == ":=" {
 			return this.CreateToken(value, ":=", this.Parse())
@@ -175,7 +178,7 @@ func (this *Parser) Factor() *Token {
 
 func (this *Parser) Mult() *Token {
 	old := this.Factor()
-	for this.Current().Type == 5 && (this.Current().Value == "*" || this.Current().Value == "/") {
+	for this.Current().Type == 5 && (this.Current().Value == "*" || this.Current().Value == "/" || this.Current().Value == "%") {
 		op := this.Eat(5)
 		old = this.CreateToken(old, op.Value, this.Factor())
 	}
