@@ -467,7 +467,7 @@ func visit(intToken interface{}) interface{} {
 			fmt.Println("Invalid file")
 			return nil
 		}
-		lexems := Lex(content)
+		lexems := Lex(string(content))
 		token := Parse(lexems)
 		visit(token.Right)
 		return nil
