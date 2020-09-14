@@ -36,20 +36,20 @@ func toArrInterface(value interface{}) ([]interface{}, bool) {
 	return arr, true
 }
 
-func updateSf(name string, val interface{}) {
-	for i := len(localVars) - 1; 0 <= i; i-- {
-		_, exists := localVars[i][name]
-		if exists {
+func updateSf(name string,val interface{}){
+	for i := len(localVars)-1; 0 <= i;i--{
+		_,exists := localVars[i][name]
+		if exists{
 			localVars[i][name] = val
 			break
 		}
 	}
-}
+} 
 
-func getSf(name string) (interface{}, bool) {
-	for i := len(localVars) - 1; 0 <= i; i-- {
-		val, exists := localVars[i][name]
-		if exists {
+func getSf(name string) (interface{},bool){
+	for i := len(localVars)-1; 0 <= i;i--{
+		val,exists := localVars[i][name]
+		if exists{
 			return val, true
 		}
 	}
@@ -163,9 +163,9 @@ func visit(intToken interface{}) interface{} {
 			Right: visit(token.Right),
 		}
 	}
-	if token.Value == "=" {
+	if token.Value == "="{
 		name := token.Left.(string)
-		updateSf(name, visit(token.Right))
+		updateSf(name,visit(token.Right))
 	}
 	if token.Value == ":=" {
 		name := token.Left.(string)
@@ -373,42 +373,42 @@ func visit(intToken interface{}) interface{} {
 			name, ok := propertyName.Left.(string)
 			if ok {
 				var fun reflect.Value
-				if r.Type().Kind() == reflect.Map {
+				if r.Type().Kind() == reflect.Map{
 					for _, e := range reflect.Indirect(r).MapKeys() {
 						if e.Interface() == reflect.ValueOf(name).Interface() {
 							fun = r.MapIndex(e)
 						}
 					}
-				} else {
+				}else{
 					fun = r.MethodByName(name)
 				}
 				if fun.IsValid() {
-					fnToken, isToken := fun.Interface().(*Token)
-					var result = []reflect.Value{}
-					if isToken {
-						result = append(result, reflect.ValueOf(visit(&Token{
+					fnToken,isToken := fun.Interface().(*Token)
+					var result =  []reflect.Value{}
+					if isToken{
+						result = append(result,reflect.ValueOf(visit(&Token{
 							Value: "call",
-							Left:  fnToken,
+							Left: fnToken,
 							Right: propertyName.Right,
 						})))
-					} else {
+					}else{
 						var values []reflect.Value
-						if propertyName.Right != nil {
-							for i, param := range propertyName.Right.([]*Token) {
-								paramType := fun.Type().In(i).Name()
-								val := reflect.ValueOf(visit(param))
-								valtType := val.Type().Name()
-								if paramType == "int" && valtType == "float64" {
-									val = reflect.ValueOf(int(val.Interface().(float64)))
-								} else if paramType == "Snowflake" && valtType == "string" {
-									val = reflect.ValueOf(utils.StringToID(val.Interface().(string)))
-								} else if paramType != valtType && paramType != "Context" && paramType != "Session" {
-									fmt.Printf("Parameter error %s is not %s\n", paramType, valtType)
-									return nil
-								}
-								values = append(values, val)
+					if propertyName.Right != nil {
+						for i, param := range propertyName.Right.([]*Token) {
+							paramType := fun.Type().In(i).Name()
+							val := reflect.ValueOf(visit(param))
+							valtType := val.Type().Name()
+							if paramType == "int" && valtType == "float64" {
+								val = reflect.ValueOf(int(val.Interface().(float64)))
+							} else if paramType == "Snowflake" && valtType == "string" {
+								val = reflect.ValueOf(utils.StringToID(val.Interface().(string)))
+							} else if paramType != valtType && paramType != "Context" && paramType != "Session" {
+								fmt.Printf("Parameter error %s is not %s\n", paramType, valtType)
+								return nil
 							}
+							values = append(values, val)
 						}
+					}
 						result = fun.Call(values)
 					}
 					var results []interface{}
@@ -467,7 +467,9 @@ func visit(intToken interface{}) interface{} {
 			fmt.Println("Invalid file")
 			return nil
 		}
-		Run(string(content), map[string]interface{}{})
+		lexems := Lex(content)
+		token := Parse(lexems)
+		visit(token.Right)
 		return nil
 	}
 	if token.Value == "call" {
@@ -515,7 +517,7 @@ func visit(intToken interface{}) interface{} {
 		if ok {
 			val := valInterface.(*Token)
 			sf++
-			localVars = append(localVars, map[string]interface{}{})
+			localVars = append(localVars,map[string]interface{}{})
 			for i, param := range val.Left.([]string) {
 				if i < len(values) {
 					localVars[sf][param] = values[i]
@@ -538,10 +540,10 @@ func visit(intToken interface{}) interface{} {
 			retToken, ok := ret.(*Token)
 			if ok {
 				if retToken.Value == "fn" {
-					for key, val := range localVars[sf] {
+					for key,val := range localVars[sf]{
 						localVars[0][key] = val
 					}
-					for key, val := range localVars[sf-1] {
+					for key,val := range localVars[sf-1]{
 						localVars[0][key] = val
 					}
 				}
@@ -584,7 +586,7 @@ func visit(intToken interface{}) interface{} {
 	if token.Value == "/" {
 		return visit(token.Left).(float64) / visit(token.Right).(float64)
 	}
-	if token.Value == "%" {
+	if token.Value == "%"{
 		return int(visit(token.Left).(float64)) % int(visit(token.Right).(float64))
 	}
 	_, isCompound := token.Right.([]*Token)
@@ -602,8 +604,8 @@ func visit(intToken interface{}) interface{} {
 }
 
 func Interpret(token *Token, params map[string]interface{}) interface{} {
-	if len(localVars) == 0 {
-		localVars = append(localVars, map[string]interface{}{})
+	if len(localVars) == 0{
+		localVars = append(localVars,map[string]interface{}{})
 	}
 	for key, val := range params {
 		localVars[0][key] = val
