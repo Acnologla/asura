@@ -103,7 +103,7 @@ func (this *Parser) AccID() *Token {
 		var value interface{} = name.Value
 		if operator.Value == "." || operator.Value == "[" {
 			tok := this.accAcess(name, operator)
-			if this.Current().Type == 5  && this.Current().Value != ")"{
+			if this.Current().Type == 5 && this.Current().Value != ")" {
 				value = tok
 				operator = this.Eat(5)
 			} else {
@@ -116,8 +116,8 @@ func (this *Parser) AccID() *Token {
 		if operator.Value == "--" {
 			return this.CreateToken(value, "=", this.CreateToken(value, "-", this.CreateToken(nil, "1", nil)))
 		}
-		if operator.Value == "="{
-			return this.CreateToken(value,"=",this.Parse())
+		if operator.Value == "=" {
+			return this.CreateToken(value, "=", this.Parse())
 		}
 		if operator.Value == ":=" {
 			return this.CreateToken(value, ":=", this.Parse())
@@ -234,7 +234,7 @@ func (this *Parser) Parse() *Token {
 			this.Eat(5)
 			value := this.Parse()
 			object[key.Value] = value
-			for ;this.Current().Type == 5 && this.Current().Value == ",";{
+			for this.Current().Type == 5 && this.Current().Value == "," {
 				this.JumpBreaks()
 				this.Eat(5)
 				key = this.Eat(this.Current().Type)
@@ -243,7 +243,7 @@ func (this *Parser) Parse() *Token {
 				object[key.Value] = value
 			}
 			this.Eat(5)
-			return this.CreateToken(nil,"map",object)
+			return this.CreateToken(nil, "map", object)
 		}
 		if current.Value == "(" {
 			return this.Expr()
@@ -268,9 +268,9 @@ func (this *Parser) Parse() *Token {
 		if keyword.Value == "break" {
 			return this.CreateToken("break", "break", nil)
 		}
-		if keyword.Value == "import"{
+		if keyword.Value == "import" {
 			val := this.Eat(3).Value
-			return this.CreateToken(val,"import",nil)
+			return this.CreateToken(val, "import", nil)
 		}
 		if keyword.Value == "fn" {
 			var name string
