@@ -9,10 +9,6 @@ jobs:
             name: Unit test
             command: go test -v ./test
     Build-and-deploy:
-      filters:
-        branches:
-          only:
-            - master
       docker:
          - image: 'circleci/golang:1.14'
       steps:
@@ -30,4 +26,7 @@ workflows:
     test_and_build:
       jobs:
          - Unit-test
-         - Build-and-deploy
+         - Build-and-deploy: 
+            filters:
+               branches:
+                  only: master
