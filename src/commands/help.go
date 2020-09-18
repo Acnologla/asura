@@ -47,7 +47,7 @@ func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 			Embed: &disgord.Embed{
-				Description: commandText,
+				Description: commandText + "\n\n[**Servidor de Suporte**](https://discord.gg/tdVWQGV)",
 				Footer: &disgord.EmbedFooter{
 					Text: "Use j!help <comando> para ver informaçoes sobre um comando",
 				},

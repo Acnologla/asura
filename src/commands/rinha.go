@@ -12,10 +12,6 @@ import (
 	"time"
 )
 
-const (
-	rinhaUserTitle  = "%s lvl %d"
-	rinhaDescAttack = "%s **%s** usou a **Galada** dando **%d** De dano!"
-)
 
 type BattleUser struct {
 	User  *disgord.User
@@ -83,10 +79,10 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		AdvLevel := utils.CalcLevel(galoAdv.Xp)
 		advLife := 100
 		authorLife := 100
-		if AdvLevel >= 10 {
+		if AdvLevel >= 9 {
 			advLife = 150
 		}
-		if authorLevel >= 10 {
+		if authorLevel >= 9 {
 			authorLife = 150
 		}
 		user := msg.Mentions[0]
@@ -162,10 +158,10 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				} else {
 					turn = 0
 				}
-				if rinhaPlayers[turn].Level >= 5 {
+				if rinhaPlayers[turn].Level >= 4 {
 					damage -= int(damage / 10)
 				}
-				if rinhaPlayers[turn].Level >= 15 && 20 > rand.Intn(100) {
+				if rinhaPlayers[turn].Level >= 14 && 20 > rand.Intn(100) {
 					damage = 0
 					currentAtack = fmt.Sprintf("%s O **%s** desviou do ataque **%s** de **%s**", rinhaEmojis[currentTurn], rinhaPlayers[turn].User.Username, atack.Name, rinhaPlayers[currentTurn].User.Username)
 
@@ -221,6 +217,11 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				edit(message, embed)
 				time.Sleep(4 * time.Second)
 			}
+		}else{
+			battleMutex.Lock()
+			delete(currentBattles, msg.Author.ID)
+			delete(currentBattles, msg.Mentions[0].ID)
+			battleMutex.Unlock()
 		}
 	} else {
 		msg.Reply(context.Background(), session, "Você tem que mencionar alguem!")
