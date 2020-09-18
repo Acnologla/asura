@@ -1,7 +1,7 @@
 workflows:
  version: 2
  jobs:
-  - Unit-test:
+  Unit-test:
    build:
       docker: 
        - image: circleci/golang:1.14
@@ -10,7 +10,7 @@ workflows:
        - run:
           name: Unit test
           command: go test -v ./test
-  - Build-And-Deploy:
+  Build-And-Deploy:
    filters:
        branches:
           only:
