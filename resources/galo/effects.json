@@ -2,13 +2,13 @@
     {
         "name": "Clone",
         "type": 1,
-        "turns": 3,
+        "turns": 5,
         "damage": [5,15]
     },
     {
-        "name": "Clone",
+        "name": "Pedrada",
         "type": 1,
-        "turns": 3,
-        "damage": [5,15]
+        "turns": 1,
+        "damage": [10,15]
     }
 ]

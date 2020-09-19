@@ -12,7 +12,7 @@ func main() {
     for j := 0; j < 100000; j++ {
         first := utils.Galo{
             Name: "João",
-            Xp: 37,
+            Xp: utils.CalcXP(5),
             Type: 1,
             Skills: []int{},
             Equipped: []int{},
@@ -20,7 +20,7 @@ func main() {
     
         sec := utils.Galo{
             Name: "João",
-            Xp: 37,
+            Xp: utils.CalcXP(5),
             Type: 2,
             Skills: []int{},
             Equipped: []int{},

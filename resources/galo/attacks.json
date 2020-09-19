@@ -94,35 +94,41 @@
         "minlevel":9
     },
     {
+        "name": "Chuva de papel",
+        "damage": [25,30],
+        "type": 1,
+        "minlevel": 5
+    },
+    {
         "name": "Papelada",
         "damage": [30,45],
         "type": 1,
         "minlevel": 5
     },
     {
-        "name": "Chuva de papel",
-        "damage": [25,50],
-        "type": 1,
-        "minlevel": 1
-    },
-    {
         "name": "Clone de papel",
-        "damage": [5,10],
+        "damage": [10,20],
         "type": 1,
-        "minlevel": 1,
-        "effect": [0.9, 0]
+        "minlevel": 5,
+        "effect": [1, 0]
     },
     {
         "name": "Chuva de pedra",
         "damage": [25,50],
         "type": 2,
-        "minlevel": 1
+        "minlevel": 5
     },
     {
         "name": "Pedrada",
         "damage": [20,25],
         "type": 2,
-        "minlevel": 1,
+        "minlevel": 5,
         "effect": [0.3, 0]
+    },
+    {
+        "name": "Tiro de pedra",
+        "damage": [35,36],
+        "type": 2,
+        "minlevel": 5
     }
 ]

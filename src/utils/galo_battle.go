@@ -139,6 +139,12 @@ func PlayBattle(battle *Battle) []SideEffect {
 		}
 	}
 
+	if attacker.Effect[0] != 0 {
+		attacker.Effect[0]-- 
+		effect_damage = randomDamage(AttackEffects[attacker.Effect[1]].Damage)
+		effects = append(effects, SideEffect{effect: SideEffected, damage: effect_damage, skill: Skills[attacker.Effect[2]]})
+	}
+
 	damage := attack_damage + critic_damage + effect_damage
 
 	if battle.FirstRound {		
