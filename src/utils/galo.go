@@ -129,7 +129,7 @@ func ChooseSkills(galo *Galo){
 func InitOldSkills(galo *Galo){
 	level := CalcLevel(galo.Xp)
 	for i := 0; i < level; i += 2 {
-		skill,id =  RaffleSkill(*galo, i, galo.Skills)
+		skill, id :=  RaffleSkill(*galo, i, galo.Skills)
 		if skill != nil {
 			galo.Skills = append(galo.Skills, id)
 		}

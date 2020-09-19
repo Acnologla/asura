@@ -12,7 +12,7 @@ func measure() {
     for j := 0; j < 100000; j++ {
         first := utils.Galo{
             Name: "Papel",
-            Xp: utils.CalcXP(5),
+            Xp: utils.CalcXP(6),
             Type: 1,
             Skills: []int{},
             Equipped: []int{},
@@ -20,14 +20,14 @@ func measure() {
     
         sec := utils.Galo{
             Name: "Pedra",
-            Xp: utils.CalcXP(5),
+            Xp: utils.CalcXP(6),
             Type: 2,
             Skills: []int{},
             Equipped: []int{},
         }
     
-        utils.ChooseSkills(&first)
-        utils.ChooseSkills(&sec)
+        utils.InitOldSkills(&first)
+        utils.InitOldSkills(&sec)
     
         battle := utils.CreateBattle(&first,&sec)
         
