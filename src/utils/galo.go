@@ -11,6 +11,14 @@ import (
 	"encoding/json"
 	"math/rand"
 )
+type AttackEffect struct {
+	Name string `json:"name"`
+	Type int `json:"type"`
+	Turns int `json:"turns"`
+	Damage [2]int `json:"damage"`
+}
+
+var AttackEffects []AttackEffect
 
 type Class struct {
 	Name string `json:"name"`
@@ -25,6 +33,7 @@ type Skill struct {
 	Damage [2]int `json:"damage"`
 	Type   int    `json:"type"`
 	MinLevel   int    `json:"minlevel"`
+	Effect [2] float64 `json:"effect"`
 }
 
 var Skills []Skill
@@ -37,7 +46,7 @@ type Galo struct {
 	Equipped []int `json:""`
 }
 
-func IdInSkills(a int, arry []int) bool {
+func IsIntInList(a int, arry []int) bool {
     for _, b := range arry {
         if b == a {
             return true
@@ -51,6 +60,8 @@ func init() {
 	json.Unmarshal([]byte(byteValue), &Skills)
 	byteValueClass, _ := ioutil.ReadFile("./resources/galo/class.json")
 	json.Unmarshal([]byte(byteValueClass), &Classes)
+	byteValueEffect, _ := ioutil.ReadFile("./resources/galo/effects.json")
+	json.Unmarshal([]byte(byteValueEffect), &AttackEffects)
 	
 }
 
@@ -67,7 +78,7 @@ func SaveGaloDB(id disgord.Snowflake, galo Galo) {
 	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Set(context.Background(), &galo)
 }
 
-func RaffleSkill(galo Galo) (*Skill, int) {
+func RaffleSkill(galo Galo, exclude []int) (*Skill, int) {
 	dontHave := []int{}
 	
 	if len(galo.Skills) == len(Skills) {
@@ -77,14 +88,14 @@ func RaffleSkill(galo Galo) (*Skill, int) {
 	level := CalcLevel(galo.Xp)
 
 	for i := 0; i < len(Skills); i++ {
-		if !IdInSkills(i, galo.Skills) && !IdInSkills(i, dontHave) && math.Abs(float64(level - Skills[i].MinLevel)) < 2 && (Skills[i].Type == 0 || Skills[i].Type == galo.Type) {
+		if !IsIntInList(i, exclude) && !IsIntInList(i, dontHave) && math.Abs(float64(level - Skills[i].MinLevel)) < 2 && (Skills[i].Type == 0 || Skills[i].Type == galo.Type) {
 			dontHave = append(dontHave, i)
 		}
 	}
 
 	if len(dontHave) == 0 {
 		for i := 0; i < len(Skills); i++ {
-			if !IdInSkills(i, galo.Skills) && !IdInSkills(i, dontHave) && Skills[i].MinLevel - level < 2 && (Skills[i].Type == 0 || Skills[i].Type == galo.Type) {
+			if !IsIntInList(i, exclude) && !IsIntInList(i, dontHave) && Skills[i].MinLevel - level < 2 && (Skills[i].Type == 0 || Skills[i].Type == galo.Type) {
 				dontHave = append(dontHave, i)
 			}
 		}
@@ -104,4 +115,15 @@ func CalcLevel(xp int) int {
 
 func CalcXP(level int) int{
 	return int(math.Pow(float64(level-1), 2)) * 30
+}
+
+func ChooseSkills(galo *Galo){
+	for i := 0; i < 10; i++ {
+		skill, id := RaffleSkill(*galo, galo.Skills)
+		if skill != nil {
+			galo.Skills = append(galo.Skills,id)
+		} else {
+			break;
+		}
+	}
 }

@@ -30,7 +30,7 @@ func main() {
 			panic("Cannot read the motherfucking envfile")
 		}
 	}
-
+	
 	// Initialize datalog services for telemetry of the application
 	telemetry.Init()
 	database.Init()
@@ -45,5 +45,6 @@ func main() {
 	client.On(disgord.EvtMessageReactionAdd, handler.OnReactionAdd)
 	client.On(disgord.EvtMessageReactionRemove, handler.OnReactionRemove)
 	client.On(disgord.EvtReady, onReady)
+
 	client.StayConnectedUntilInterrupted(context.Background())
 }

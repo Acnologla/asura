@@ -1,17 +1,5 @@
 [
     {
-        "name": "Bicada",
-        "damage": [5,16],
-        "type": 0,
-        "minlevel":1
-    },
-    {
-        "name": "Comida",
-        "damage": [2,20],
-        "type": 0,
-        "minlevel":1
-    },
-    {
         "name":"Bicada furadeira",
         "damage":[14,23],
         "type": 0,
@@ -104,5 +92,37 @@
         "damage": [58,64],
         "type": 0,
         "minlevel":9
+    },
+    {
+        "name": "Papelada",
+        "damage": [30,45],
+        "type": 1,
+        "minlevel": 5
+    },
+    {
+        "name": "Chuva de papel",
+        "damage": [25,50],
+        "type": 1,
+        "minlevel": 1
+    },
+    {
+        "name": "Clone de papel",
+        "damage": [5,10],
+        "type": 1,
+        "minlevel": 1,
+        "effect": [0.9, 0]
+    },
+    {
+        "name": "Chuva de pedra",
+        "damage": [25,50],
+        "type": 2,
+        "minlevel": 1
+    },
+    {
+        "name": "Pedrada",
+        "damage": [20,25],
+        "type": 2,
+        "minlevel": 1,
+        "effect": [0.3, 0]
     }
 ]

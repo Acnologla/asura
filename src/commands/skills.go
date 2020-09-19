@@ -78,7 +78,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				return
 			}
 
-			if utils.IdInSkills(galo.Skills[i], galo.Equipped) {
+			if utils.IsIntInList(galo.Skills[i], galo.Equipped) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 					Content: "Voce já está com essa habilidade equipada!",
 				})
