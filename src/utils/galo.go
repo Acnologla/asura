@@ -23,7 +23,7 @@ var AttackEffects []AttackEffect
 type Class struct {
 	Name string `json:"name"`
 	Desc string `json:"desc"`
-	Advantages []int `json:"advantages"`
+	Disadvantages []int `json:"disadvantages"`
 }
 
 var Classes []Class

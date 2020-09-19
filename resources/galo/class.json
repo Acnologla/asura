@@ -1,22 +1,22 @@
 [
     {
         "name": "Normal",
-        "advantages": []
+        "disadvantages": []
     },
     {
         "name": "Papel",
         "desc": "Classe advinda da vila dos galos de planta, os galos de papel tem a fama de serem molengas (por causa de seu mestre que era viciado em fazer aviões de papel, louco né?), porém, tem grande poder de mimetismo, papirocinese e criação de origamis extremamente poderosos.",
-        "advantages": [2]
+        "disadvantages": [3]
     },
     {
         "name": "Pedra",
         "desc": "A milhões de atrás, um galo insistente começou a bater sua cabeça numa pedra para esquecer de sua amada e de sua falta de poderes em relação a sua vila, após muito bater a cabeça, ele começou a adquirir habilidades de pedra e se tornou o primeiro 'Grande mestre dos galos de pedra'",
-        "advantages": [3]
+        "disadvantages": [1]
     },
     {
         "name": "Cortante",
         "desc": "A muito tempo atrás, um galo de brasilia, após sofrer diversas opressões do fazendeiro local, começou a sua revolução a partir de uma tesoura afiada encontrada no galinheiro. Depois de dominar todas as grandes artes cortantes, ele se tornou o primeiro Grande mestre cortante poligamo das secas de brasilia.",
-        "advantages": [1]
+        "disadvantages": [2]
     }
     
 ]

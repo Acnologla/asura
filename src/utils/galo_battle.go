@@ -74,7 +74,7 @@ type EffectType string
 const (
     Damaged = "Damaged"
 	Effected = "Effected"
-	Critic = "Critic"
+	NotEffective = "NotEffective"
 	SideEffected = "SideEffected"
     Killed = "Killed"
 )
@@ -83,9 +83,10 @@ type SideEffect struct {
 	effect EffectType
 	skill Skill
 	damage int
+	self bool
 }
 
-func randomDamage(damage [2]int) int {
+func Between(damage [2]int) int {
 	return rand.Intn(damage[1] - damage[0]) + damage[0]
 }
 
@@ -104,7 +105,7 @@ func PlayBattle(battle *Battle) []SideEffect {
 	var attacker *Fighter
 	var target *Fighter
 
-	if battle.Turn {
+	if !battle.Turn {
 		target = &battle.Fighters[1]
 		attacker = &battle.Fighters[0]
 	} else {
@@ -115,37 +116,37 @@ func PlayBattle(battle *Battle) []SideEffect {
 	id := attacker.Equipped[rand.Intn(len(attacker.Equipped))]
 	skill := Skills[id]
 	
-	attack_damage := randomDamage(skill.Damage)
-	critic_damage := 0
-	effect_damage := 0
+	attack_damage := Between(skill.Damage)
+	not_effective_damage := 0
 
-	effects = append(effects, SideEffect{effect: Damaged, damage: attack_damage, skill: skill})
+	effects = append(effects, SideEffect{effect: Damaged, damage: attack_damage, skill: skill, self: false})
 
-	if IsIntInList(target.Galo.Type, Classes[skill.Type].Advantages) && rand.Float64() <= 0.6 {
-		critic_damage = attack_damage/2
-		effects = append(effects, SideEffect{effect: Critic, damage: critic_damage, skill: skill})
+	if IsIntInList(target.Galo.Type, Classes[skill.Type].Disadvantages) && rand.Float64() <= 0.72 {
+		not_effective_damage = attack_damage*100/(10*(10+rand.Intn(40)))
+		effects = append(effects, SideEffect{effect: NotEffective, damage: -not_effective_damage, skill: skill, self: false})
 	}
 
 	if rand.Float64() <= skill.Effect[0] {
 		effect := AttackEffects[int(skill.Effect[1])]
 		target.Effect = [3]int{effect.Turns, int(skill.Effect[1]), id}
-		effect_damage = randomDamage(AttackEffects[target.Effect[1]].Damage)
-		effects = append(effects, SideEffect{effect: Effected, damage: effect_damage, skill: skill})
-	} else {
-		if target.Effect[0] != 0 {
-			target.Effect[0]-- 
-			effect_damage = randomDamage(AttackEffects[target.Effect[1]].Damage)
-			effects = append(effects, SideEffect{effect: SideEffected, damage: effect_damage, skill: Skills[target.Effect[2]]})
-		}
+		effects = append(effects, SideEffect{effect: Effected, damage: 0, skill: skill, self: false})
+	}
+	
+	if target.Effect[0] != 0 {
+		target.Effect[0]-- 
+		effect_damage := Between(AttackEffects[target.Effect[1]].Damage)
+		target.Life -= effect_damage
+		effects = append(effects, SideEffect{effect: SideEffected, damage: effect_damage, self: false, skill: Skills[target.Effect[2]]})
 	}
 
 	if attacker.Effect[0] != 0 {
 		attacker.Effect[0]-- 
-		effect_damage = randomDamage(AttackEffects[attacker.Effect[1]].Damage)
-		effects = append(effects, SideEffect{effect: SideEffected, damage: effect_damage, skill: Skills[attacker.Effect[2]]})
+		effect_damage := Between(AttackEffects[attacker.Effect[1]].Damage)
+		attacker.Life -= effect_damage
+		effects = append(effects, SideEffect{effect: SideEffected, damage: effect_damage, self: false, skill: Skills[target.Effect[2]]})
 	}
 
-	damage := attack_damage + critic_damage + effect_damage
+	damage := attack_damage - not_effective_damage 
 
 	if battle.FirstRound {		
 		target.Life = SaturateSub(target.Life, damage/2)
