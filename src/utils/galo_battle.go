@@ -18,6 +18,32 @@ type Battle struct {
 	FirstRound bool
 }
 
+type EffectType string
+
+const (
+    Damaged = "Damaged"
+	Effected = "Effected"
+	NotEffective = "NotEffective"
+	SideEffected = "SideEffected"
+    Killed = "Killed"
+)
+
+
+type SideEffect struct {
+	Effect EffectType
+	Skill Skill
+	Damage int
+	Self bool
+}
+
+type Round struct {
+	Effects []SideEffect
+	Attacker *Fighter
+	Target *Fighter
+	Skill *Skill
+	SkillId int
+}
+
 func CreateBattle(first *Galo, sec *Galo) Battle {
 
 	firstFighter := Fighter{
@@ -49,113 +75,115 @@ func CreateBattle(first *Galo, sec *Galo) Battle {
 }
 
 func initEquips(fighter *Fighter) {
+	skills := GetSkills(*fighter.Galo)
 
-	if len(fighter.Galo.Skills) == 0 {
-		fighter.Galo.Skills = append(fighter.Galo.Skills, 0)
+	if len(skills) == 0 {
+		skills = append(skills, 0)
 	}
 
 	for i := 0; i < len(fighter.Galo.Equipped); i++{
 		fighter.Equipped = append(fighter.Equipped, fighter.Galo.Equipped[i])
 	}
-
 	need := 5 - len(fighter.Equipped)
 
-	for i := len(fighter.Galo.Skills) - 1; i >= 0 && need != 0; i-- {
-		if !IsIntInList(fighter.Galo.Skills[i], fighter.Galo.Equipped) {
-			fighter.Equipped = append(fighter.Equipped, fighter.Galo.Skills[i])
+	for i := len(skills) - 1; i >= 0 && need != 0; i-- {
+		if !IsIntInList(skills[i], fighter.Galo.Equipped) {
+			fighter.Equipped = append(fighter.Equipped, skills[i])
 			need--
 		}
 	}
 }	
 
-
-type EffectType string
-
-const (
-    Damaged = "Damaged"
-	Effected = "Effected"
-	NotEffective = "NotEffective"
-	SideEffected = "SideEffected"
-    Killed = "Killed"
-)
-
-type SideEffect struct {
-	effect EffectType
-	skill Skill
-	damage int
-	self bool
-}
-
-func Between(damage [2]int) int {
-	return rand.Intn(damage[1] - damage[0]) + damage[0]
-}
-
-func SaturateSub(one int, two int) int {
-	if two >= one {
-		return 0
-	} else {
-		return one - two
-	}
-}
-
-func PlayBattle(battle *Battle) []SideEffect {
-
-	effects := []SideEffect{}
-
-	var attacker *Fighter
-	var target *Fighter
-
+func (battle *Battle) GetReverseTurn() int {
 	if !battle.Turn {
-		target = &battle.Fighters[1]
-		attacker = &battle.Fighters[0]
+		return 1
 	} else {
-		target = &battle.Fighters[0]
-		attacker = &battle.Fighters[1]
+		return 0
 	}
-	
-	id := attacker.Equipped[rand.Intn(len(attacker.Equipped))]
-	skill := Skills[id]
-	
-	attack_damage := Between(skill.Damage)
+} 
+
+func (battle *Battle) GetTurn() int {
+	if battle.Turn {
+		return 1
+	} else {
+		return 0
+	}
+}
+
+func (round *Round) applySkillDamage(firstTurn bool) int {
+	round.SkillId = round.Attacker.Equipped[rand.Intn(len(round.Attacker.Equipped))]
+	round.Skill = &Skills[round.SkillId]
+
+	attack_damage := Between(round.Skill.Damage)
 	not_effective_damage := 0
 
-	effects = append(effects, SideEffect{effect: Damaged, damage: attack_damage, skill: skill, self: false})
-
-	if IsIntInList(target.Galo.Type, Classes[skill.Type].Disadvantages) && rand.Float64() <= 0.72 {
-		not_effective_damage = attack_damage*100/(10*(10+rand.Intn(40)))
-		effects = append(effects, SideEffect{effect: NotEffective, damage: -not_effective_damage, skill: skill, self: false})
-	}
-
-	if rand.Float64() <= skill.Effect[0] {
-		effect := AttackEffects[int(skill.Effect[1])]
-		target.Effect = [3]int{effect.Turns, int(skill.Effect[1]), id}
-		effects = append(effects, SideEffect{effect: Effected, damage: 0, skill: skill, self: false})
+	if firstTurn {
+		attack_damage = attack_damage/2
 	}
 	
-	if target.Effect[0] != 0 {
-		target.Effect[0]-- 
-		effect_damage := Between(AttackEffects[target.Effect[1]].Damage)
-		target.Life -= effect_damage
-		effects = append(effects, SideEffect{effect: SideEffected, damage: effect_damage, self: false, skill: Skills[target.Effect[2]]})
+	round.Effects = append(round.Effects, SideEffect{Effect: Damaged, Damage: attack_damage, Skill: *round.Skill, Self: false})
+
+	if IsIntInList(round.Target.Galo.Type, Classes[round.Skill.Type].Disadvantages) && rand.Float64() <= 0.72 {
+		not_effective_damage = attack_damage/2
+		round.Effects = append(round.Effects, SideEffect{Effect: NotEffective, Damage: -not_effective_damage, Skill: *round.Skill, Self: false})
 	}
 
-	if attacker.Effect[0] != 0 {
-		attacker.Effect[0]-- 
-		effect_damage := Between(AttackEffects[attacker.Effect[1]].Damage)
-		attacker.Life -= effect_damage
-		effects = append(effects, SideEffect{effect: SideEffected, damage: effect_damage, self: false, skill: Skills[target.Effect[2]]})
-	}
+	return attack_damage - not_effective_damage 
+}
 
-	damage := attack_damage - not_effective_damage 
-
-	if battle.FirstRound {		
-		target.Life = SaturateSub(target.Life, damage/2)
+func (round *Round) applyEffects() {
+	if rand.Float64() <= round.Skill.Effect[0] {
+		effect := AttackEffects[int(round.Skill.Effect[1])]
+		round.Target.Effect = [3]int{effect.Turns, int(round.Skill.Effect[1]), round.SkillId}
+		effect_damage := Between(AttackEffects[round.Target.Effect[1]].Damage)
+		round.Target.Life -= effect_damage
+		round.Effects = append(round.Effects, SideEffect{Effect: Effected, Damage: effect_damage, Skill: *round.Skill, Self: false})
 	} else {
-		target.Life = SaturateSub(target.Life, damage)
+		if round.Target.Effect[0] != 0 {
+			round.Target.Effect[0]-- 
+			effect_damage := Between(AttackEffects[round.Target.Effect[1]].Damage)
+			round.Target.Life -= effect_damage
+			round.Effects = append(round.Effects, SideEffect{Effect: SideEffected, Damage: effect_damage, Self: false, Skill: Skills[round.Target.Effect[2]]})
+		}
+	}
+	
+	if round.Attacker.Effect[0] != 0 {
+		round.Attacker.Effect[0]-- 
+		effect_damage := Between(AttackEffects[round.Attacker.Effect[1]].Damage)
+		round.Attacker.Life -= effect_damage
+		round.Effects = append(round.Effects, SideEffect{Effect: SideEffected, Damage: effect_damage, Self: false, Skill: Skills[round.Attacker.Effect[2]]})
+	}
+}
+
+func (battle *Battle) Play() []SideEffect {
+
+	round := Round {
+		Effects: []SideEffect{},
+	}
+
+	if battle.Turn {
+        round.Target = &battle.Fighters[0]
+        round.Attacker = &battle.Fighters[1]
+    } else {
+        round.Target = &battle.Fighters[1]
+        round.Attacker = &battle.Fighters[0]
+	}
+	
+	main_damage := round.applySkillDamage(battle.FirstRound)
+	round.applyEffects()
+
+
+	round.Target.Life -= main_damage
+
+	if round.Attacker.Life <= 0 {
+		round.Attacker.Life = 0
+	}
+
+	if round.Target.Life <= 0 {
+		round.Target.Life = 0
 	}
 
 	battle.FirstRound = false
 	battle.Turn = !battle.Turn
-
-	return effects
+	return round.Effects
 }

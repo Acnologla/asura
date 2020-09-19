@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"math/rand"
 )
+
 type AttackEffect struct {
 	Name string `json:"name"`
 	Type int `json:"type"`
@@ -18,33 +19,31 @@ type AttackEffect struct {
 	Damage [2]int `json:"damage"`
 }
 
-var AttackEffects []AttackEffect
-
 type Class struct {
 	Name string `json:"name"`
 	Desc string `json:"desc"`
 	Disadvantages []int `json:"disadvantages"`
 }
 
-var Classes []Class
-
 type Skill struct {
 	Name   string `json:"name"`
 	Damage [2]int `json:"damage"`
 	Type   int    `json:"type"`
-	MinLevel   int    `json:"minlevel"`
+	Level   int    `json:"level"`
 	Effect [2] float64 `json:"effect"`
 }
-
-var Skills []Skill
 
 type Galo struct {
 	Name string `json:"name"`
 	Xp   int `json:"xp"`
 	Type int `json:"type"`
-	Skills []int `json:""`
-	Equipped []int `json:""`
+	Equipped []int `json:"equipped"`
+	Ignore bool `json:"ignore"`
 }
+
+var AttackEffects []AttackEffect
+var Classes []Class
+var Skills []Skill
 
 func IsIntInList(a int, arry []int) bool {
     for _, b := range arry {
@@ -63,49 +62,46 @@ func init() {
 	byteValueEffect, _ := ioutil.ReadFile("./resources/galo/effects.json")
 	json.Unmarshal([]byte(byteValueEffect), &AttackEffects)
 	
-}
+} 
 
 func GetGaloDB(id disgord.Snowflake) (Galo, error) {
 	var acc Galo
 	err := database.Database.NewRef(fmt.Sprintf("galo/%d",id)).Get(context.Background(), &acc);
 	if err != nil {
-		return acc, errors.New("Not bro")
+		return acc, errors.New("There's some error")
 	}
 	return acc, nil
 }
+
+func GetSkills(galo Galo) []int {
+	skills := []int{}
+	lvl := CalcLevel(galo.Xp)
+	for i := 0; i < len(Skills); i++ {
+		if Skills[i].Level > lvl || (Skills[i].Type != galo.Type && Skills[i].Type != 1) {
+			continue;
+		}
+		skills = append(skills, i)
+	}
+	return skills
+}
+
+func GetNextSkill(galo Galo) []Skill {
+	skills := []Skill{}
+	lvl := CalcLevel(galo.Xp)
+	for i := 0; i < len(Skills); i++ {
+		if Skills[i].Level == lvl+1 && (Skills[i].Type != galo.Type && Skills[i].Type != 1) {
+			skills = append(skills, Skills[i])
+		}
+	}
+	return skills
+}
+
 
 func SaveGaloDB(id disgord.Snowflake, galo Galo) {
 	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Set(context.Background(), &galo)
 }
 
-func RaffleSkill(galo Galo, level int, exclude []int) (*Skill, int) {
-	dontHave := []int{}
-	
-	if len(galo.Skills) == len(Skills) {
-		return nil, 0
-	}
-
-	for i := 0; i < len(Skills); i++ {
-		if !IsIntInList(i, exclude) && !IsIntInList(i, dontHave) && math.Abs(float64(level - Skills[i].MinLevel)) < 2 && (Skills[i].Type == 0 || Skills[i].Type == galo.Type) {
-			dontHave = append(dontHave, i)
-		}
-	}
-
-	if len(dontHave) == 0 {
-		for i := 0; i < len(Skills); i++ {
-			if !IsIntInList(i, exclude) && !IsIntInList(i, dontHave) && Skills[i].MinLevel - level < 2 && (Skills[i].Type == 0 || Skills[i].Type == galo.Type) {
-				dontHave = append(dontHave, i)
-			}
-		}
-	}
-
-	if len(dontHave) == 0 {
-		return nil, 0
-	}
-
-	random := rand.Intn(len(dontHave))
-	return &Skills[dontHave[random]], dontHave[random] 
-}
+// Math functions
 
 func CalcLevel(xp int) int {
 	return int(math.Floor(math.Sqrt(float64(xp) / 30)))+1
@@ -115,23 +111,14 @@ func CalcXP(level int) int{
 	return int(math.Pow(float64(level-1), 2)) * 30
 }
 
-func ChooseSkills(galo *Galo){
-	for i := 0; i < 10; i++ {
-		skill, id := RaffleSkill(*galo, CalcLevel(galo.Xp), galo.Skills)
-		if skill != nil {
-			galo.Skills = append(galo.Skills,id)
-		} else {
-			break;
-		}
-	}
+func Between(damage [2]int) int {
+	return rand.Intn(damage[1] - damage[0]) + damage[0]
 }
 
-func InitOldSkills(galo *Galo){
-	level := CalcLevel(galo.Xp)
-	for i := 0; i < level; i += 2 {
-		skill, id :=  RaffleSkill(*galo, i, galo.Skills)
-		if skill != nil {
-			galo.Skills = append(galo.Skills, id)
-		}
+func SaturateSub(one int, two int) int {
+	if two >= one {
+		return 0
+	} else {
+		return one - two
 	}
 }

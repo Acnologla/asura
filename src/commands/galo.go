@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"asura/src/utils"
 	"context"
+	"math/rand"
 	"fmt"
 	"github.com/andersfylling/disgord"
 )
@@ -30,10 +31,13 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	level := utils.CalcLevel(galo.Xp)
 	nextLevelXP := utils.CalcXP(level+1)
 	curLevelXP := utils.CalcXP(level)
-
+	if galo.Type == 0{
+		galoType := rand.Intn(len(utils.Classes))
+		galo.Type = galoType
+		utils.SaveGaloDB(msg.Author.ID,galo)
+	}
+	
 	var fields []*disgord.EmbedField
-
-	galo.Skills = []int{0,1,5}
 
 	for i := 0; i < len(galo.Equipped); i++ {
 		skill := utils.Skills[galo.Equipped[i]]

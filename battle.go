@@ -1,20 +1,18 @@
 package main
 
 import (
-	_ "asura/src/commands" // Initialize all commands and put them into an array
 	"asura/src/utils"
 	"fmt"
 )
 
 func measure() {
     wins := 0
-
+	empate := 0
     for j := 0; j < 100000; j++ {
         first := utils.Galo{
             Name: "Papel",
             Xp: utils.CalcXP(6),
             Type: 1,
-            Skills: []int{},
             Equipped: []int{},
         }
     
@@ -22,65 +20,74 @@ func measure() {
             Name: "Pedra",
             Xp: utils.CalcXP(6),
             Type: 2,
-            Skills: []int{},
             Equipped: []int{},
         }
     
-        utils.InitOldSkills(&first)
-        utils.InitOldSkills(&sec)
-    
-        battle := utils.CreateBattle(&first,&sec)
+		battle := utils.CreateBattle(&first,&sec)
+		
+	
         
         for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0  {
-            utils.PlayBattle(&battle)
-            //fmt.Println(effects)
-            //fmt.Println(battle.Fighters[0].Life, " vs ", battle.Fighters[1].Life)
+            battle.Play()
         }
 
-        if battle.Fighters[1].Life == 0 {
+		if battle.Fighters[1].Life == 0 && battle.Fighters[0].Life == 0 {
+			empate++;
+		} else if battle.Fighters[1].Life == 0  {
             wins++
-        } 
+		} 
+		
+		if j % 10000 == 0 {
+	
+			fmt.Printf("Executed %d\n",j)
+		}
     }
 
 	winsPercent := (wins/ 1000);
-    fmt.Printf("%d%% vs %d%%",winsPercent, 100 - winsPercent)
+    fmt.Printf("%d%% | %d%%",winsPercent, empate / 1000)
 }
 
-func one(){
+func one() {
 	first := utils.Galo{
 		Name: "Papel",
-		Xp: utils.CalcXP(5),
-		Type: 1,
-		Skills: []int{18},
-		Equipped: []int{18},
+		Xp: utils.CalcXP(6),
+		Type: 2,
+		Equipped: []int{},
 	}
 
 	sec := utils.Galo{
 		Name: "Pedra",
-		Xp: utils.CalcXP(5),
+		Xp: utils.CalcXP(6),
 		Type: 2,
-		Skills: []int{},
 		Equipped: []int{},
 	}
 
-	utils.ChooseSkills(&first)
-	utils.ChooseSkills(&sec)
-
 	battle := utils.CreateBattle(&first,&sec)
 	
+	
 	for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0  {
-		if battle.Turn {
-			fmt.Println("Turno do de Pedra2")
-		} else {
-			fmt.Println("Turno do de Papel1")
-		}
-		effects := utils.PlayBattle(&battle)
-		fmt.Println(effects)
-		fmt.Println(battle.Fighters[0].Life, " vs ", battle.Fighters[1].Life)
+		effects := battle.Play()
+		fmt.Println(effects);
+		fmt.Printf("%d x %d\n",battle.Fighters[0].Life,battle.Fighters[1].Life)
 	}
 }
-
-
 func main(){
-	measure()
+	first := utils.Galo{
+		Name: "Papel",
+		Xp: utils.CalcXP(6),
+		Type: 2,
+		Equipped: []int{},
+	}
+
+	sec := utils.Galo{
+		Name: "Pedra",
+		Xp: utils.CalcXP(6),
+		Type: 2,
+		Equipped: []int{},
+	}
+	
+	battle := utils.CreateBattle(&first,&sec)
+	battle.Play()
+
+	fmt.Println(battle.Fighters[0].Life)
 }

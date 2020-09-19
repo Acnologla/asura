@@ -20,3 +20,5 @@ func IndexOf(data []string,element string) (int) {
 	}
 	return -1   
  }
+
+ 

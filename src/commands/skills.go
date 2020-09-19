@@ -24,6 +24,8 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 
 	galo, _ := utils.GetGaloDB(user.ID)
 
+	skills := utils.GetSkills(galo)
+
 	if len(args) == 0 || (args[0] != "use" && args[0] != "remove") {
 
 		desc := ""
@@ -39,8 +41,8 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 
 		desc += "\n**Inventory**\n"
 
-		for i := 0; i < len(galo.Skills); i++ {
-			skill := utils.Skills[galo.Skills[i]]
+		for i := 0; i < len(skills); i++ {
+			skill := utils.Skills[skills[i]]
 			desc += "**" + strconv.Itoa(i) + "**. [" + strconv.Itoa(skill.Damage[0]) + " - " + strconv.Itoa(skill.Damage[1]) + "] " + skill.Name + "\n"
 		}
 
@@ -71,20 +73,20 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				return
 			}
 
-			if err != nil || i < 0 || i > len(galo.Skills) {
+			if err != nil || i < 0 || i > len(skills) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 					Content: "Voce esta usando errado bobo",
 				})
 				return
 			}
 
-			if utils.IsIntInList(galo.Skills[i], galo.Equipped) {
+			if utils.IsIntInList(skills[i], galo.Equipped) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 					Content: "Voce já está com essa habilidade equipada!",
 				})
 				return
 			}
-			galo.Equipped = append(galo.Equipped, galo.Skills[i])
+			galo.Equipped = append(galo.Equipped, skills[i])
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 				Content: "Voce equipou essa habilidade",
 			})
