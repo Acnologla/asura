@@ -78,14 +78,12 @@ func SaveGaloDB(id disgord.Snowflake, galo Galo) {
 	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Set(context.Background(), &galo)
 }
 
-func RaffleSkill(galo Galo, exclude []int) (*Skill, int) {
+func RaffleSkill(galo Galo, level int, exclude []int) (*Skill, int) {
 	dontHave := []int{}
 	
 	if len(galo.Skills) == len(Skills) {
 		return nil, 0
 	}
-
-	level := CalcLevel(galo.Xp)
 
 	for i := 0; i < len(Skills); i++ {
 		if !IsIntInList(i, exclude) && !IsIntInList(i, dontHave) && math.Abs(float64(level - Skills[i].MinLevel)) < 2 && (Skills[i].Type == 0 || Skills[i].Type == galo.Type) {
@@ -119,11 +117,21 @@ func CalcXP(level int) int{
 
 func ChooseSkills(galo *Galo){
 	for i := 0; i < 10; i++ {
-		skill, id := RaffleSkill(*galo, galo.Skills)
+		skill, id := RaffleSkill(*galo, CalcLevel(galo.Xp), galo.Skills)
 		if skill != nil {
 			galo.Skills = append(galo.Skills,id)
 		} else {
 			break;
+		}
+	}
+}
+
+func InitOldSkills(galo *Galo){
+	level := CalcLevel(galo.Xp)
+	for i := 0; i < level; i += 2 {
+		skill,id =  RaffleSkill(*galo, i, galo.Skills)
+		if skill != nil {
+			galo.Skills = append(galo.Skills, id)
 		}
 	}
 }
