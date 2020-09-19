@@ -12,6 +12,13 @@ import (
 	"math/rand"
 )
 
+type Class struct {
+	Name string `json:"name"`
+	Desc string `json:"desc"`
+	Advantages []int `json:"advantages"`
+}
+
+var Classes []Class
 
 type Skill struct {
 	Name   string `json:"name"`
@@ -42,6 +49,9 @@ func IdInSkills(a int, arry []int) bool {
 func init() {
 	byteValue, _ := ioutil.ReadFile("./resources/galo/attacks.json")
 	json.Unmarshal([]byte(byteValue), &Skills)
+	byteValueClass, _ := ioutil.ReadFile("./resources/galo/class.json")
+	json.Unmarshal([]byte(byteValueClass), &Classes)
+	
 }
 
 func GetGaloDB(id disgord.Snowflake) (Galo, error) {
