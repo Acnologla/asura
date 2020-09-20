@@ -68,7 +68,6 @@ func init() {
 	json.Unmarshal([]byte(byteValueEffect), &AttackEffects)
 	byteValueSprites, _ := ioutil.ReadFile("./resources/galo/sprites.json")
 	json.Unmarshal([]byte(byteValueSprites), &Sprites)
-	fmt.Println(Sprites)
 	
 } 
 

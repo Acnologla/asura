@@ -87,13 +87,22 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 
 		battleMutex.RUnlock()
+
+		galoAdv, _ := utils.GetGaloDB(msg.Mentions[0].ID)
+
+		if galoAdv.Ignore {
+			msg.Reply(context.Background(), session, "Este usuario não está aceitando rinhas nesse momento!")
+			return
+		}
+
 		battleMutex.Lock()
 		currentBattles[msg.Author.ID] = msg.Mentions[0].Username
 		currentBattles[msg.Mentions[0].ID] = msg.Author.Username
 		battleMutex.Unlock()
+		
 		galoAuthor, _ := utils.GetGaloDB(msg.Author.ID)
 		authorLevel := utils.CalcLevel(galoAuthor.Xp)
-		galoAdv, _ := utils.GetGaloDB(msg.Mentions[0].ID)
+
 		AdvLevel := utils.CalcLevel(galoAdv.Xp)
 		
 		if galoAuthor.Type == 0 {
