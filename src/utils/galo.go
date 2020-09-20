@@ -45,6 +45,11 @@ var AttackEffects []AttackEffect
 var Classes []Class
 var Skills []Skill
 
+
+func GetEffectFromSkill(skill Skill) AttackEffect {
+	return AttackEffects[int(skill.Effect[1])]
+}
+
 func IsIntInList(a int, arry []int) bool {
     for _, b := range arry {
         if b == a {

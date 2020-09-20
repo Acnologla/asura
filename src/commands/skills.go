@@ -101,7 +101,11 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 				Content: "Voce retirou essa habilidade",
 			})
-			galo.Equipped = append(galo.Equipped[:i], galo.Equipped[i+1:]...)
+			if len(galo.Equipped) - 1 == i {
+				galo.Equipped = galo.Equipped[:i]
+			}else{	
+				galo.Equipped = append(galo.Equipped[:i], galo.Equipped[i+1:]...)
+			}
 			utils.SaveGaloDB(user.ID, galo)
 		}
 	}

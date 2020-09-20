@@ -15,6 +15,7 @@ func StringToID(id string) disgord.Snowflake{
 	return 0
 }
 
+
 func GetUser(msg *disgord.Message, args []string,session disgord.Session) *disgord.User {
 	if len(msg.Mentions) > 0 {
 		return msg.Mentions[0]
