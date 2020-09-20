@@ -116,7 +116,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				Text: "Use j!galo para ver informaçoes sobre seu galo",
 			},
 			Image: &disgord.EmbedImage{
-				URL: fmt.Sprinf("https://raw.githubusercontent.com/Acnologla/asura/rinha-new/resources/galo/sprites/%s.png", image_tile),
+				URL: fmt.Sprintf("https://raw.githubusercontent.com/Acnologla/asura/rinha-new/resources/galo/sprites/%s.png", image_tile),
 			},
 			Description: "Iniciando a briga de galo	",
 			Fields: []*disgord.EmbedField{
@@ -173,7 +173,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 					},
 				}
 				embed.Image = &disgord.EmbedImage{
-					URL: fmt.Sprinf("https://raw.githubusercontent.com/Acnologla/asura/rinha-new/resources/galo/sprites/%s.png", image_tile)
+					URL: fmt.Sprintf("https://raw.githubusercontent.com/Acnologla/asura/rinha-new/resources/galo/sprites/%s.png", image_tile),
 				}
 				if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
 					winner := author
