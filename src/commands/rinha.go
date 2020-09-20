@@ -29,9 +29,9 @@ func edit(message *disgord.Message, embed *disgord.Embed) {
 
 func getImageTile(first *utils.Galo, sec *utils.Galo, turn int) string {
 	if turn == 0 {
-		return fmt.Sprintf("%d%d",sec.Type, turn)
+		return utils.Sprites[turn ^ 1][sec.Type-1]
 	} else {
-		return fmt.Sprintf("%d%d",first.Type, turn)
+		return utils.Sprites[turn ^ 1][first.Type-1]
 	}
 }
 
@@ -107,7 +107,6 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		user := msg.Mentions[0]
 
-		image_tile := getImageTile(&galoAuthor, &galoAdv, 0)
 
 		embed := &disgord.Embed{
 			Title: "Briga de galo",
@@ -116,7 +115,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				Text: "Use j!galo para ver informaçoes sobre seu galo",
 			},
 			Image: &disgord.EmbedImage{
-				URL: fmt.Sprintf("https://raw.githubusercontent.com/Acnologla/asura/rinha-new/resources/galo/sprites/%s.png", image_tile),
+				URL: getImageTile(&galoAuthor, &galoAdv, 0),
 			},
 			Description: "Iniciando a briga de galo	",
 			Fields: []*disgord.EmbedField{
@@ -151,9 +150,6 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 					affected = msg.Author
 				}
 
-				
-				image_tile = getImageTile(&galoAuthor, &galoAdv, turn)
-
 				for _, effect := range effects {
 					text += effectToStr(effect, affected, author, &battle)
 				}
@@ -173,7 +169,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 					},
 				}
 				embed.Image = &disgord.EmbedImage{
-					URL: fmt.Sprintf("https://raw.githubusercontent.com/Acnologla/asura/rinha-new/resources/galo/sprites/%s.png", image_tile),
+					URL: getImageTile(&galoAuthor, &galoAdv, turn),
 				}
 				if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
 					winner := author

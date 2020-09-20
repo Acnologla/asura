@@ -44,7 +44,7 @@ type Galo struct {
 var AttackEffects []AttackEffect
 var Classes []Class
 var Skills []Skill
-
+var Sprites [][]string
 
 func GetEffectFromSkill(skill Skill) AttackEffect {
 	return AttackEffects[int(skill.Effect[1])]
@@ -66,6 +66,9 @@ func init() {
 	json.Unmarshal([]byte(byteValueClass), &Classes)
 	byteValueEffect, _ := ioutil.ReadFile("./resources/galo/effects.json")
 	json.Unmarshal([]byte(byteValueEffect), &AttackEffects)
+	byteValueSprites, _ := ioutil.ReadFile("./resources/galo/sprites.json")
+	json.Unmarshal([]byte(byteValueSprites), &Sprites)
+	fmt.Println(Sprites)
 	
 } 
 
