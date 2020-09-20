@@ -31,8 +31,8 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	level := utils.CalcLevel(galo.Xp)
 	nextLevelXP := utils.CalcXP(level+1)
 	curLevelXP := utils.CalcXP(level)
-	if galo.Type == 0{
-		galoType := rand.Intn(len(utils.Classes))
+	if galo.Type == 0 {
+		galoType := 1 + rand.Intn(len(utils.Classes)-1)
 		galo.Type = galoType
 		utils.SaveGaloDB(msg.Author.ID,galo)
 	}
@@ -59,7 +59,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!skills para ver os skills e equipa-las",
 			},
-			Description: fmt.Sprintf("Level **%d**\nXP: **%d/%d**", level, galo.Xp - curLevelXP, nextLevelXP - curLevelXP),
+			Description: fmt.Sprintf("Level: **%d\n**XP: **%d/%d**\nTipo: **%s**", level, galo.Xp - curLevelXP, nextLevelXP - curLevelXP,utils.Classes[galo.Type].Name),
 			Fields:      fields,
 		},
 	})

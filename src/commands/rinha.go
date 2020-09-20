@@ -27,6 +27,14 @@ func edit(message *disgord.Message, embed *disgord.Embed) {
 	}, 5)
 }
 
+func getImageTile(first *utils.Galo, sec *utils.Galo, turn int) string {
+	if turn == 0 {
+		return fmt.Sprintf("%d%d",first.Type, turn)
+	} else {
+		return fmt.Sprintf("%d%d",sec.Type, turn)
+	}
+}
+
 func init() {
 	handler.Register(handler.Command{
 		Aliases:   []string{"rinhanova", "brigadegalo", "rinhadegalo"},
@@ -38,6 +46,24 @@ func init() {
 	})
 }
 
+func effectToStr(effect utils.SideEffect, affected *disgord.User, author *disgord.User, battle *utils.Battle) string {
+	if effect.Effect == utils.Damaged {
+		return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name, effect.Damage)
+	} else if effect.Effect == utils.Effected {
+		effect_literal := utils.GetEffectFromSkill(effect.Skill)
+		return fmt.Sprintf("**%s** Causou '%s' em **%s** dando %d de dano\n", author.Username, effect_literal.Name, affected.Username, effect.Damage)
+	} else if effect.Effect == utils.SideEffected {
+		effect_literal := utils.GetEffectFromSkill(effect.Skill)
+		if effect.Self {
+			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", affected.Username, effect.Damage, effect_literal.Name)
+		} else {
+			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", author.Username, effect.Damage, effect_literal.Name)
+		}
+	} else if effect.Effect == utils.NotEffective {
+		return fmt.Sprintf("%s **%s** Usou **%s** **%d** de dano **reduzido**\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name, effect.Damage)
+	}
+	return ""
+}
 func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(msg.Mentions) != 0 {
 		if msg.Mentions[0].ID == msg.Author.ID {
@@ -80,6 +106,9 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 			galoAdv.Type = galoType
 		}
 		user := msg.Mentions[0]
+
+		image_tile := getImageTile(&galoAuthor, &galoAdv, 0)
+
 		embed := &disgord.Embed{
 			Title: "Briga de galo",
 			Color: 16776960,
@@ -87,7 +116,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				Text: "Use j!galo para ver informaçoes sobre seu galo",
 			},
 			Image: &disgord.EmbedImage{
-				URL: "https://raw.githubusercontent.com/Acnologla/asura/rinha-new/resources/galo/sprites/Pedra.png",
+				URL: fmt.Sprinf("https://raw.githubusercontent.com/Acnologla/asura/rinha-new/resources/galo/sprites/%s.png", image_tile),
 			},
 			Description: "Iniciando a briga de galo	",
 			Fields: []*disgord.EmbedField{
@@ -122,23 +151,13 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 					affected = msg.Author
 				}
 
+				
+				image_tile = getImageTile(&galoAuthor, &galoAdv, turn)
+
 				for _, effect := range effects {
-					if effect.Effect == utils.Damaged {
-						text += fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name, effect.Damage)
-					} else if effect.Effect == utils.Effected {
-						effect_literal := utils.GetEffectFromSkill(effect.Skill)
-						text += fmt.Sprintf("**%s** Causou '%s' em **%s** dando %d de dano\n", author.Username, effect_literal.Name, affected.Username, effect.Damage)
-					} else if effect.Effect == utils.SideEffected {
-						effect_literal := utils.GetEffectFromSkill(effect.Skill)
-						if effect.Self {
-							text += fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", affected.Username, effect.Damage, effect_literal.Name)
-						} else {
-							text += fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", author.Username, effect.Damage, effect_literal.Name)
-						}
-					} else if effect.Effect == utils.NotEffective {
-						text += fmt.Sprintf("%s **%s** Usou **%s** **%d** de dano **reduzido**\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name, effect.Damage)
-					}
+					text += effectToStr(effect, affected, author, &battle)
 				}
+
 				embed.Color = rinhaColors[battle.GetReverseTurn()]
 				embed.Description = lastEffects + text
 				embed.Fields = []*disgord.EmbedField{
@@ -149,9 +168,12 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 					},
 					&disgord.EmbedField{
 						Name:   fmt.Sprintf("%s Level %d", user.Username, AdvLevel),
-						Value:  fmt.Sprintf("%d/%d\nEnvenenado", battle.Fighters[1].Life, 100),
+						Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, 100),
 						Inline: true,
 					},
+				}
+				embed.Image = &disgord.EmbedImage{
+					URL: fmt.Sprinf("https://raw.githubusercontent.com/Acnologla/asura/rinha-new/resources/galo/sprites/%s.png", image_tile)
 				}
 				if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
 					winner := author
