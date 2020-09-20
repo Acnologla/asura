@@ -29,9 +29,9 @@ func edit(message *disgord.Message, embed *disgord.Embed) {
 
 func getImageTile(first *utils.Galo, sec *utils.Galo, turn int) string {
 	if turn == 0 {
-		return fmt.Sprintf("%d%d",first.Type, turn)
-	} else {
 		return fmt.Sprintf("%d%d",sec.Type, turn)
+	} else {
+		return fmt.Sprintf("%d%d",first.Type, turn)
 	}
 }
 
