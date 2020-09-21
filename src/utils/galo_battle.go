@@ -48,14 +48,14 @@ func CreateBattle(first *Galo, sec *Galo) Battle {
 
 	firstFighter := Fighter{
 		Galo: first,
-		Life: 100,
+		Life: 100 + (CalcLevel(first.Xp) * 3),
 		Equipped: []int{},
 		Effect: [3]int{},
 	}
 
 	secFighter := Fighter{
 		Galo: sec,
-		Life: 100,
+		Life: 100  + (CalcLevel(sec.Xp) * 3),
 		Equipped: []int{},
 		Effect: [3]int{},
 	}
@@ -123,7 +123,7 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 		attack_damage = attack_damage/2
 	}
 	
-	if IsIntInList(round.Target.Galo.Type, Classes[round.Skill.Type].Disadvantages) && rand.Float64() <= 0.93 && difference < 4 {
+	if IsIntInList(round.Target.Galo.Type, Classes[round.Skill.Type].Disadvantages) && rand.Float64() <= 0.72 && difference < 4 {
 		not_effective_damage = int(float64(attack_damage)*0.4)
 	}
 

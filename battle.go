@@ -45,18 +45,9 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int) {
 }
 
 func main(){
-	measure(2,2,6,6)
-	measure(3,3,6,6)
-	measure(4,4,6,6)
-	measure(2,3,6,6)
-	measure(3,2,6,6)
-	measure(3,4,6,6)
-	measure(4,3,6,6)
-	measure(2,4,6,6)
-	measure(2,2,6,7)
-	measure(3,3,6,7)
-	measure(4,4,6,7)
-	measure(2,2,6,14)
-	measure(3,3,6,14)
-	measure(4,4,6,14)
+	class1 := 3
+	class2 := 4
+	for i := 5; i < 14; i++ {	
+		measure(class1,class2,5,i)
+	}
 }

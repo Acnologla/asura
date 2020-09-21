@@ -114,9 +114,9 @@
     },
     {
         "name": "Chuva de pedra",
-        "damage": [25,50],
+        "damage": [15,30],
         "type": 3,
-        "level": 1
+        "level": 3
     },
     {
         "name": "Pedrada",
@@ -127,7 +127,7 @@
     },
     {
         "name": "Tiro de pedra",
-        "damage": [35,36],
+        "damage": [5,36],
         "type": 3,
         "level": 7
     },
@@ -140,7 +140,7 @@
     },
     {
         "name": "Tesourada intermitente",
-        "damage": [5,35],
+        "damage": [5,30],
         "type": 4,
         "level": 5,
         "effect": [0.4, 1]
