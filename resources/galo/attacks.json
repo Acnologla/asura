@@ -3,20 +3,19 @@
         "name":"Bicada",
         "damage":[14,23],
         "type": 1,
-        "level":1,
-        "effect": [1, 0]
+        "level":1
     },
     {
         "name": "Galada",
         "damage": [10,26],
         "type": 1,
-        "level":23
+        "level":2
     },
     {
         "name": "Chute",
         "damage": [20,29],
         "type": 1,
-        "level":33
+        "level":3
     },
     {
         "name": "Investida",
@@ -96,13 +95,13 @@
     },
     {
         "name": "Chuva de papel",
-        "damage": [25,30],
+        "damage": [10,30],
         "type": 2,
         "level": 1
     },
     {
         "name": "Papelada",
-        "damage": [30,45],
+        "damage": [15,20],
         "type": 2,
         "level": 3
     },
@@ -123,13 +122,27 @@
         "name": "Pedrada",
         "damage": [20,25],
         "type": 3,
-        "level": 3,
+        "level": 4,
         "effect": [0.3, 1]
     },
     {
         "name": "Tiro de pedra",
         "damage": [35,36],
         "type": 3,
-        "level": 5
+        "level": 7
+    },
+    {
+        "name": "Chuva de tesoura",
+        "damage": [15,20],
+        "type": 4,
+        "level": 3,
+        "effect": [0.4, 1]
+    },
+    {
+        "name": "Tesourada intermitente",
+        "damage": [5,35],
+        "type": 4,
+        "level": 5,
+        "effect": [0.4, 1]
     }
 ]

@@ -117,14 +117,19 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	attack_damage := Between(round.Skill.Damage)
 	not_effective_damage := 0
 
+	difference := CalcLevel(round.Attacker.Galo.Xp) - CalcLevel(round.Target.Galo.Xp) 
+
 	if firstTurn {
 		attack_damage = attack_damage/2
 	}
 	
+	if IsIntInList(round.Target.Galo.Type, Classes[round.Skill.Type].Disadvantages) && rand.Float64() <= 0.93 && difference < 4 {
+		not_effective_damage = int(float64(attack_damage)*0.4)
+	}
+
 	round.Effects = append(round.Effects, SideEffect{Effect: Damaged, Damage: attack_damage, Skill: *round.Skill, Self: false})
 
-	if IsIntInList(round.Target.Galo.Type, Classes[round.Skill.Type].Disadvantages) && rand.Float64() <= 0.72 {
-		not_effective_damage = attack_damage/2
+	if not_effective_damage != 0 {
 		round.Effects = append(round.Effects, SideEffect{Effect: NotEffective, Damage: -not_effective_damage, Skill: *round.Skill, Self: false})
 	}
 
@@ -132,6 +137,7 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 }
 
 func (round *Round) applyEffects() {
+
 	if rand.Float64() <= round.Skill.Effect[0] {
 		effect := AttackEffects[int(round.Skill.Effect[1])]
 		round.Target.Effect = [3]int{effect.Turns, int(round.Skill.Effect[1]), round.SkillId}
@@ -142,6 +148,9 @@ func (round *Round) applyEffects() {
 		if round.Target.Effect[0] != 0 {
 			round.Target.Effect[0]-- 
 			effect_damage := Between(AttackEffects[round.Target.Effect[1]].Damage)
+			if effect_damage >= round.Target.Life {
+				effect_damage = round.Target.Life - 1
+			}
 			round.Target.Life -= effect_damage
 			round.Effects = append(round.Effects, SideEffect{Effect: SideEffected, Damage: effect_damage, Self: false, Skill: Skills[round.Target.Effect[2]]})
 		}
@@ -150,6 +159,9 @@ func (round *Round) applyEffects() {
 	if round.Attacker.Effect[0] != 0 {
 		round.Attacker.Effect[0]-- 
 		effect_damage := Between(AttackEffects[round.Attacker.Effect[1]].Damage)
+		if effect_damage >= round.Attacker.Life {
+			effect_damage = round.Attacker.Life - 1
+		}
 		round.Attacker.Life -= effect_damage
 		round.Effects = append(round.Effects, SideEffect{Effect: SideEffected, Damage: effect_damage, Self: false, Skill: Skills[round.Attacker.Effect[2]]})
 	}

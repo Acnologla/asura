@@ -32,10 +32,11 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	nextLevelXP := utils.CalcXP(level+1)
 	curLevelXP := utils.CalcXP(level)
 	if galo.Type == 0 {
-		galoType := 1 + rand.Intn(len(utils.Classes)-1)
+		galoType := 2 + rand.Intn(len(utils.Classes)-2)
 		galo.Type = galoType
-		utils.SaveGaloDB(msg.Author.ID,galo)
+		utils.SaveGaloDB(user.ID,galo)
 	}
+	
 	
 	var fields []*disgord.EmbedField
 

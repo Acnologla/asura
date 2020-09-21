@@ -96,7 +96,7 @@ func GetNextSkill(galo Galo) []Skill {
 	skills := []Skill{}
 	lvl := CalcLevel(galo.Xp)
 	for i := 0; i < len(Skills); i++ {
-		if Skills[i].Level == lvl+1 && (Skills[i].Type != galo.Type && Skills[i].Type != 1) {
+		if Skills[i].Level == lvl+1 && (Skills[i].Type == galo.Type || Skills[i].Type == 1) {
 			skills = append(skills, Skills[i])
 		}
 	}

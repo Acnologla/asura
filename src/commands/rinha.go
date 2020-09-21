@@ -60,7 +60,7 @@ func effectToStr(effect utils.SideEffect, affected *disgord.User, author *disgor
 			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", author.Username, effect.Damage, effect_literal.Name)
 		}
 	} else if effect.Effect == utils.NotEffective {
-		return fmt.Sprintf("%s **%s** Usou **%s** **%d** de dano **reduzido**\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name, effect.Damage)
+		return fmt.Sprintf("**reduzido**\n")
 	}
 	return ""
 }
