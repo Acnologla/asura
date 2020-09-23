@@ -25,7 +25,7 @@ func metricUpdate(session disgord.Session) {
 		var memory runtime.MemStats
 		runtime.ReadMemStats(&memory)
 		guilds := fmt.Sprintf(defaultMetric, "client.guilds", date, len(guildsSize))
-		ram := fmt.Sprintf(defaultMetric, "memory.rss", date, memory.Alloc/1024/1024)
+		ram := fmt.Sprintf(defaultMetric, "memory.rss", date, memory.Alloc/1000/1000)
 		series := fmt.Sprintf("%s,%s", guilds, ram)
 		realMetric := fmt.Sprintf(masterMetric, series)
 		res, err := http.Post(url, "application/json", bytes.NewBuffer([]byte(realMetric)))
