@@ -45,12 +45,10 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			guildUsage += int(unsafe.Sizeof(*emoji))
 		}
 		for _, presence := range guild.Presences {
-			guildUsage += int(unsafe.Sizeof(*(presence.User)))
 			guildUsage += int(unsafe.Sizeof(*(presence.Game)))
 			guildUsage += int(unsafe.Sizeof(*presence))
 		}
 		for _, voiceState := range guild.VoiceStates {
-			guildUsage += int(unsafe.Sizeof(*(voiceState.Member)))
 			guildUsage += int(unsafe.Sizeof(*voiceState))
 		}
 	}
