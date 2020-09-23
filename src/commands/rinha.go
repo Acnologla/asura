@@ -12,7 +12,6 @@ import (
 	"time"
 )
 
-
 type BattleUser struct {
 	User  *disgord.User
 	Galo  *database.Galo
@@ -217,7 +216,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				edit(message, embed)
 				time.Sleep(4 * time.Second)
 			}
-		}else{
+		} else {
 			battleMutex.Lock()
 			delete(currentBattles, msg.Author.ID)
 			delete(currentBattles, msg.Mentions[0].ID)
