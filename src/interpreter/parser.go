@@ -103,7 +103,7 @@ func (this *Parser) AccID() *Token {
 		var value interface{} = name.Value
 		if operator.Value == "." || operator.Value == "[" {
 			tok := this.accAcess(name, operator)
-			if this.Current().Type == 5 && this.Current().Value != ")" {
+			if this.Current().Type == 5 && this.Current().Value != ")" && this.Current().Value != "}" {
 				value = tok
 				operator = this.Eat(5)
 			} else {
