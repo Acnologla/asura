@@ -2,147 +2,79 @@
     {
         "name":"Bicada",
         "damage":[14,23],
-        "type": 1,
         "level":1
     },
     {
         "name": "Galada",
         "damage": [10,26],
-        "type": 1,
-        "level":3
+        "level":2
     },
     {
         "name": "Chute",
         "damage": [20,29],
-        "type": 1,
         "level":3
     },
     {
         "name": "Investida",
         "damage": [23,32],
-        "type": 1,
         "level":5
     },
     {
         "name": "Investida pesada",
         "damage":[26,35],
-        "type": 1,
         "level":7
     },
     {
         "name":"Voadora planar",
         "damage": [29,38],
-        "type": 1,
         "level":8
     },
     {
         "name":"Planada",
         "damage": [32,41],
-        "type": 1,
         "level":9
     },
     {
         "name": "Bicada de ferro",
         "damage": [35,44],
-        "type": 1,
         "level":11
     },
     { 
         "name": "Stomp",
         "damage":[38,47],
-        "type": 1,
         "level":12
     },
     {
         "name": "Chute dominante",
         "damage": [41,50],
-        "type": 1,
         "level":14
     },{
         "name": "Bicada suprema",
         "damage":[44,53],
-        "type": 1,
         "level": 15
     },{
         "name": "Rasteira",
         "damage": [47,56],
-        "type": 1,
         "level": 16
     },
     {
         "name": "Relampago de chutes",
         "damage": [50,56],
-        "type": 1,
         "level":18
     },
     {
         "name": "Rasteira relampago",
         "damage": [53,58],
-        "type": 1,
         "level":20
     },
     {
         "name" : "Bicada dupla",
         "damage": [55,61],
-        "type": 1,
         "level":22
     },
     {
         "name": "Chute divino",
         "damage": [58,64],
-        "type": 1,
         "level":24
-    },
-    {
-        "name": "Chuva de papel",
-        "damage": [10,30],
-        "type": 2,
-        "level": 1
-    },
-    {
-        "name": "Clone de papel",
-        "damage": [1,5],
-        "type": 2,
-        "level": 2,
-        "effect": [3, 0]
-    },
-    {
-        "name": "Papelada",
-        "damage": [15,20],
-        "type": 2,
-        "level": 3
-    },
-    {
-        "name": "Chuva de pedra",
-        "damage": [15,30],
-        "type": 3,
-        "level": 3
-    },
-    {
-        "name": "Pedrada",
-        "damage": [20,25],
-        "type": 3,
-        "level": 4,
-        "effect": [0.3, 1]
-    },
-    {
-        "name": "Tiro de pedra",
-        "damage": [5,36],
-        "type": 3,
-        "level": 7
-    },
-    {
-        "name": "Chuva de tesoura",
-        "damage": [15,20],
-        "type": 4,
-        "level": 3,
-        "effect": [0.4, 1]
-    },
-    {
-        "name": "Tesourada intermitente",
-        "damage": [5,30],
-        "type": 4,
-        "level": 5,
-        "effect": [0.4, 1]
     }
 ]

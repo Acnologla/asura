@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Chuva de pedra",
+        "damage": [15,30],
+        "level": 3
+    },
+    {
+        "name": "Pedrada",
+        "damage": [20,25],
+        "level": 4,
+        "effect": [0.3, 1]
+    },
+    {
+        "name": "Tiro de pedra",
+        "damage": [5,36],
+        "level": 7
+    }
+]

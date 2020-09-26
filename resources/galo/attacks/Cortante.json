@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Chuva de tesoura",
+        "damage": [15,20],
+        "level": 3,
+        "effect": [0.4, 1]
+    },
+    {
+        "name": "Tesourada intermitente",
+        "damage": [5,30],
+        "level": 5,
+        "effect": [0.4, 1]
+    }
+]

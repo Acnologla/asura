@@ -41,7 +41,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	var fields []*disgord.EmbedField
 
 	for i := 0; i < len(galo.Equipped); i++ {
-		skill := rinha.Skills[galo.Equipped[i]]
+		skill := rinha.Skills[galo.Type-1][galo.Equipped[i]]
 		fields = append(fields, &disgord.EmbedField{
 			Name:   skill.Name,
 			Value:  fmt.Sprintf("Dano: %d - %d", skill.Damage[0], skill.Damage[1]-1),

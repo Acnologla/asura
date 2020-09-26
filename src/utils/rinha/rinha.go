@@ -1,71 +1,93 @@
 package rinha
 
 import (
-	"math"
 	"asura/src/database"
-	"fmt"
 	"context"
-	"errors"
-	"github.com/andersfylling/disgord"
-	"io/ioutil"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"io/ioutil"
+	"math"
 	"math/rand"
+	"strings"
+	"github.com/andersfylling/disgord"
 )
 
 type Effect struct {
-	Name string `json:"name"`
-	Class int `json:"class"`
-	Type int `json:"type"`
-	Self bool `json:"self"`
+	Name   string `json:"name"`
+	Class  int    `json:"class"`
+	Type   int    `json:"type"`
+	Self   bool   `json:"self"`
 	Phrase string `json:"phrase"`
-	Turns int `json:"turns"`
-	Range [2]int `json:"range"`
+	Turns  int    `json:"turns"`
+	Range  [2]int `json:"range"`
 }
 
 type Class struct {
-	Name string `json:"name"`
-	Desc string `json:"desc"`
-	Disadvantages []int `json:"disadvantages"`
+	Name          string `json:"name"`
+	Desc          string `json:"desc"`
+	Disadvantages []int  `json:"disadvantages"`
 }
 
 type Skill struct {
-	Name   string `json:"name"`
-	Damage [2]int `json:"damage"`
-	Type   int    `json:"type"`
-	Level   int    `json:"level"`
-	Effect [2] float64 `json:"effect"`
-	Self bool `json:"self"`
+	Name   string     `json:"name"`
+	Damage [2]int     `json:"damage"`
+	Level  int        `json:"level"`
+	Effect [2]float64 `json:"effect"`
+	Self   bool       `json:"self"`
 }
 
 type Galo struct {
-	Name string `json:"name"`
-	Xp   int `json:"xp"`
-	Type int `json:"type"`
-	Equipped []int `json:"equipped"`
-	Ignore bool `json:"ignore"`
+	Name     string `json:"name"`
+	Xp       int    `json:"xp"`
+	Type     int    `json:"type"`
+	Equipped []int  `json:"equipped"`
+	Ignore   bool   `json:"ignore"`
 }
 
 var Effects []Effect
 var Classes []Class
-var Skills []Skill
+var Skills []([]Skill)
 var Sprites [][]string
 
 func init() {
-	byteValue, _ := ioutil.ReadFile("./resources/galo/attacks.json")
-	json.Unmarshal([]byte(byteValue), &Skills)
+
 	byteValueClass, _ := ioutil.ReadFile("./resources/galo/class.json")
 	json.Unmarshal([]byte(byteValueClass), &Classes)
+	for i :=0; i < len(Classes)-1;i++{
+		Skills = append(Skills,[]Skill{})
+	}
+	atacks, _ := ioutil.ReadDir("./resources/galo/attacks")
+	for _, class := range atacks {
+		byteValueAtack, _ := ioutil.ReadFile(fmt.Sprintf("./resources/galo/attacks/%s", class.Name()))
+		name := strings.Split(class.Name(),".")[0]
+		index := findClassIndex(name)
+		if index != -1{
+			skils := []Skill{}
+			json.Unmarshal([]byte(byteValueAtack), &skils)
+			Skills[index] = skils
+		}
+	}
 	byteValueEffect, _ := ioutil.ReadFile("./resources/galo/effects.json")
 	json.Unmarshal([]byte(byteValueEffect), &Effects)
 	byteValueSprites, _ := ioutil.ReadFile("./resources/galo/sprites.json")
-	json.Unmarshal([]byte(byteValueSprites), &Sprites)	
-} 
+	json.Unmarshal([]byte(byteValueSprites), &Sprites)
+}
 
-// Database manipulation 
+func findClassIndex(class string) int {
+	for i, classObj := range Classes {
+		if classObj.Name == class {
+			return i - 1
+		}
+	}
+	return -1
+}
+
+// Database manipulation
 
 func GetGaloDB(id disgord.Snowflake) (Galo, error) {
 	var acc Galo
-	err := database.Database.NewRef(fmt.Sprintf("galo/%d",id)).Get(context.Background(), &acc);
+	err := database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Get(context.Background(), &acc)
 	if err != nil {
 		return acc, errors.New("There's some error")
 	}
@@ -79,9 +101,9 @@ func SaveGaloDB(id disgord.Snowflake, galo Galo) {
 func GetSkills(galo Galo) []int {
 	skills := []int{}
 	lvl := CalcLevel(galo.Xp)
-	for i := 0; i < len(Skills); i++ {
-		if Skills[i].Level > lvl || (Skills[i].Type != galo.Type && Skills[i].Type != 1) {
-			continue;
+	for i := 0; i < len(Skills[galo.Type-1]); i++ {
+		if Skills[galo.Type-1][i].Level > lvl  {
+			continue
 		}
 		skills = append(skills, i)
 	}
@@ -91,9 +113,9 @@ func GetSkills(galo Galo) []int {
 func GetNextSkill(galo Galo) []Skill {
 	skills := []Skill{}
 	lvl := CalcLevel(galo.Xp)
-	for i := 0; i < len(Skills); i++ {
-		if Skills[i].Level == lvl+1 && (Skills[i].Type == galo.Type || Skills[i].Type == 1) {
-			skills = append(skills, Skills[i])
+	for i := 0; i < len(Skills[galo.Type-1]); i++ {
+		if Skills[galo.Type-1][i].Level == lvl+1{
+			skills = append(skills, Skills[galo.Type-1][i])
 		}
 	}
 	return skills
@@ -102,24 +124,24 @@ func GetNextSkill(galo Galo) []Skill {
 // Helper functions
 
 func IsIntInList(a int, arry []int) bool {
-    for _, b := range arry {
-        if b == a {
-            return true
-        }
-    }
-    return false
+	for _, b := range arry {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
 
 func CalcLevel(xp int) int {
-	return int(math.Floor(math.Sqrt(float64(xp) / 30)))+1
+	return int(math.Floor(math.Sqrt(float64(xp)/30))) + 1
 }
 
-func CalcXP(level int) int{
+func CalcXP(level int) int {
 	return int(math.Pow(float64(level-1), 2)) * 30
 }
 
 func Between(damage [2]int) int {
-	return rand.Intn(damage[1] - damage[0]) + damage[0]
+	return rand.Intn(damage[1]-damage[0]) + damage[0]
 }
 
 func SaturateSub(one int, two int) int {
@@ -135,4 +157,3 @@ func SaturateSub(one int, two int) int {
 func GetEffectFromSkill(skill Skill) Effect {
 	return Effects[int(skill.Effect[1])]
 }
-

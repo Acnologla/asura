@@ -29,7 +29,7 @@ type Round struct {
 
 func (round *Round) applySkillDamage(firstTurn bool) int {
 	round.SkillId = round.Attacker.Equipped[rand.Intn(len(round.Attacker.Equipped))]
-	round.Skill = &Skills[round.SkillId]
+	round.Skill = &Skills[round.Attacker.Galo.Type-1][round.SkillId]
 
 	attack_damage := 0
 
@@ -45,7 +45,7 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 		attack_damage = attack_damage/2
 	}
 	
-	if IsIntInList(round.Target.Galo.Type, Classes[round.Skill.Type].Disadvantages) && rand.Float64() <= 0.72 && difference < 4 {
+	if IsIntInList(round.Target.Galo.Type, Classes[round.Attacker.Galo.Type].Disadvantages) && rand.Float64() <= 0.72 && difference < 4 {
 		not_effective_damage = int(float64(attack_damage)*0.4)
 	}
 
@@ -85,7 +85,7 @@ func (round *Round) applyEffect(self bool, to_append bool){
 	}
 
 	if to_append {		
-		round.Results = append(round.Results, Result{Effect: Effected, Damage: effect_damage, Self: self, Skill: Skills[receiver.Effect[2]]})
+		round.Results = append(round.Results, Result{Effect: Effected, Damage: effect_damage, Self: self, Skill: Skills[receiver.Galo.Type-1][receiver.Effect[2]]})
 	}
 }
 

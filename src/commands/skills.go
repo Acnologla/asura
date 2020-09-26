@@ -34,7 +34,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			desc += "**Equipped** \n"
 
 			for i := 0; i < len(galo.Equipped); i++ {
-				skill := rinha.Skills[galo.Equipped[i]]
+				skill := rinha.Skills[galo.Type-1][galo.Equipped[i]]
 				desc += "**" + strconv.Itoa(i) + "**. [" + strconv.Itoa(skill.Damage[0]) + " - " + strconv.Itoa(skill.Damage[1]) + "] " + skill.Name + "\n"
 			}
 		}
@@ -42,7 +42,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 		desc += "\n**Inventory**\n"
 
 		for i := 0; i < len(skills); i++ {
-			skill := rinha.Skills[skills[i]]
+			skill := rinha.Skills[galo.Type-1][skills[i]]
 			desc += "**" + strconv.Itoa(i) + "**. [" + strconv.Itoa(skill.Damage[0]) + " - " + strconv.Itoa(skill.Damage[1]) + "] " + skill.Name + "\n"
 		}
 
