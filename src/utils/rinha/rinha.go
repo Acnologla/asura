@@ -12,7 +12,7 @@ import (
 	"math/rand"
 )
 
-type AttackEffect struct {
+type Effect struct {
 	Name string `json:"name"`
 	Type int `json:"type"`
 	Turns int `json:"turns"`
@@ -41,7 +41,7 @@ type Galo struct {
 	Ignore bool `json:"ignore"`
 }
 
-var AttackEffects []AttackEffect
+var Effects []Effect
 var Classes []Class
 var Skills []Skill
 var Sprites [][]string
@@ -52,7 +52,7 @@ func init() {
 	byteValueClass, _ := ioutil.ReadFile("./resources/galo/class.json")
 	json.Unmarshal([]byte(byteValueClass), &Classes)
 	byteValueEffect, _ := ioutil.ReadFile("./resources/galo/effects.json")
-	json.Unmarshal([]byte(byteValueEffect), &AttackEffects)
+	json.Unmarshal([]byte(byteValueEffect), &Effects)
 	byteValueSprites, _ := ioutil.ReadFile("./resources/galo/sprites.json")
 	json.Unmarshal([]byte(byteValueSprites), &Sprites)	
 } 
@@ -128,7 +128,7 @@ func SaturateSub(one int, two int) int {
 
 // Effect functions
 
-func GetEffectFromSkill(skill Skill) AttackEffect {
-	return AttackEffects[int(skill.Effect[1])]
+func GetEffectFromSkill(skill Skill) Effect {
+	return Effects[int(skill.Effect[1])]
 }
 

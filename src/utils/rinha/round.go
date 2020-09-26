@@ -36,7 +36,7 @@ func (round *Round) applyEffect(self bool){
 
 	receiver.Effect[0]-- 
 
-	effect_damage := Between(AttackEffects[receiver.Effect[1]].Range)
+	effect_damage := Between(Effects[receiver.Effect[1]].Range)
 	if effect_damage >= receiver.Life {
 		effect_damage = receiver.Life - 1
 	}
@@ -73,7 +73,7 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 
 func (round *Round) applyEffects() {
 	if rand.Float64() <= round.Skill.Effect[0] {
-		effect := AttackEffects[int(round.Skill.Effect[1])]
+		effect := Effects[int(round.Skill.Effect[1])]
 		round.Target.Effect = [3]int{effect.Turns, int(round.Skill.Effect[1]), round.SkillId}
 		round.applyEffect(false)
 	} else {
