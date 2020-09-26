@@ -3,12 +3,14 @@
         "name": "Origami",
         "type": 1,
         "turns": 5,
-        "damage": [3,10]
+        "self": false,
+        "range": [3,10]
     },
     {
         "name": "Sangramento",
         "type": 1,
         "turns": 2,
-        "damage": [5,20]
+        "self": false,
+        "range": [5,20]
     }
 ]

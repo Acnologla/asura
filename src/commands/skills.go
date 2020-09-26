@@ -2,7 +2,7 @@ package commands
 
 import (
 	"asura/src/handler"
-	"asura/src/utils"
+	"asura/src/utils/rinha"
 	"context"
 	"github.com/andersfylling/disgord"
 	"strconv"
@@ -22,9 +22,9 @@ func init() {
 func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 	user := msg.Author
 
-	galo, _ := utils.GetGaloDB(user.ID)
+	galo, _ := rinha.GetGaloDB(user.ID)
 
-	skills := utils.GetSkills(galo)
+	skills := rinha.GetSkills(galo)
 
 	if len(args) == 0 || (args[0] != "use" && args[0] != "remove") {
 
@@ -34,7 +34,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			desc += "**Equipped** \n"
 
 			for i := 0; i < len(galo.Equipped); i++ {
-				skill := utils.Skills[galo.Equipped[i]]
+				skill := rinha.Skills[galo.Equipped[i]]
 				desc += "**" + strconv.Itoa(i) + "**. [" + strconv.Itoa(skill.Damage[0]) + " - " + strconv.Itoa(skill.Damage[1]) + "] " + skill.Name + "\n"
 			}
 		}
@@ -42,7 +42,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 		desc += "\n**Inventory**\n"
 
 		for i := 0; i < len(skills); i++ {
-			skill := utils.Skills[skills[i]]
+			skill := rinha.Skills[skills[i]]
 			desc += "**" + strconv.Itoa(i) + "**. [" + strconv.Itoa(skill.Damage[0]) + " - " + strconv.Itoa(skill.Damage[1]) + "] " + skill.Name + "\n"
 		}
 
@@ -80,7 +80,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				return
 			}
 
-			if utils.IsIntInList(skills[i], galo.Equipped) {
+			if rinha.IsIntInList(skills[i], galo.Equipped) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 					Content: "Voce já está com essa habilidade equipada!",
 				})
@@ -90,7 +90,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 				Content: "Voce equipou essa habilidade",
 			})
-			utils.SaveGaloDB(user.ID, galo)
+			rinha.SaveGaloDB(user.ID, galo)
 		} else if args[0] == "remove" {
 			if err != nil || i < 0 || i > len(galo.Equipped) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
@@ -106,7 +106,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			}else{	
 				galo.Equipped = append(galo.Equipped[:i], galo.Equipped[i+1:]...)
 			}
-			utils.SaveGaloDB(user.ID, galo)
+			rinha.SaveGaloDB(user.ID, galo)
 		}
 	}
 }

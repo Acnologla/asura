@@ -1,4 +1,4 @@
-package utils
+package rinha
 
 import (
 	"math"
@@ -16,7 +16,7 @@ type AttackEffect struct {
 	Name string `json:"name"`
 	Type int `json:"type"`
 	Turns int `json:"turns"`
-	Damage [2]int `json:"damage"`
+	Range [2]int `json:"range"`
 }
 
 type Class struct {
@@ -46,19 +46,6 @@ var Classes []Class
 var Skills []Skill
 var Sprites [][]string
 
-func GetEffectFromSkill(skill Skill) AttackEffect {
-	return AttackEffects[int(skill.Effect[1])]
-}
-
-func IsIntInList(a int, arry []int) bool {
-    for _, b := range arry {
-        if b == a {
-            return true
-        }
-    }
-    return false
-}
-
 func init() {
 	byteValue, _ := ioutil.ReadFile("./resources/galo/attacks.json")
 	json.Unmarshal([]byte(byteValue), &Skills)
@@ -67,9 +54,10 @@ func init() {
 	byteValueEffect, _ := ioutil.ReadFile("./resources/galo/effects.json")
 	json.Unmarshal([]byte(byteValueEffect), &AttackEffects)
 	byteValueSprites, _ := ioutil.ReadFile("./resources/galo/sprites.json")
-	json.Unmarshal([]byte(byteValueSprites), &Sprites)
-	
+	json.Unmarshal([]byte(byteValueSprites), &Sprites)	
 } 
+
+// Database manipulation 
 
 func GetGaloDB(id disgord.Snowflake) (Galo, error) {
 	var acc Galo
@@ -78,6 +66,10 @@ func GetGaloDB(id disgord.Snowflake) (Galo, error) {
 		return acc, errors.New("There's some error")
 	}
 	return acc, nil
+}
+
+func SaveGaloDB(id disgord.Snowflake, galo Galo) {
+	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Set(context.Background(), &galo)
 }
 
 func GetSkills(galo Galo) []int {
@@ -103,12 +95,16 @@ func GetNextSkill(galo Galo) []Skill {
 	return skills
 }
 
+// Helper functions
 
-func SaveGaloDB(id disgord.Snowflake, galo Galo) {
-	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Set(context.Background(), &galo)
+func IsIntInList(a int, arry []int) bool {
+    for _, b := range arry {
+        if b == a {
+            return true
+        }
+    }
+    return false
 }
-
-// Math functions
 
 func CalcLevel(xp int) int {
 	return int(math.Floor(math.Sqrt(float64(xp) / 30)))+1
@@ -129,3 +125,10 @@ func SaturateSub(one int, two int) int {
 		return one - two
 	}
 }
+
+// Effect functions
+
+func GetEffectFromSkill(skill Skill) AttackEffect {
+	return AttackEffects[int(skill.Effect[1])]
+}
+

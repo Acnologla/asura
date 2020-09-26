@@ -2,7 +2,7 @@ package commands
 
 import (
 	"asura/src/handler"
-	"asura/src/utils"
+	"asura/src/utils/rinha"
 	"context"
 	"github.com/andersfylling/disgord"
 )
@@ -21,7 +21,7 @@ func init() {
 func runIgnore(session disgord.Session, msg *disgord.Message, args []string) {
 	user := msg.Author
 	
-	galo, _ := utils.GetGaloDB(user.ID)
+	galo, _ := rinha.GetGaloDB(user.ID)
 
 	if !galo.Ignore {
 		msg.Reply(context.Background(), session, "Voce não receberá mais pedidos de rinha!")
@@ -30,5 +30,5 @@ func runIgnore(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 
 	galo.Ignore = !galo.Ignore
-	utils.SaveGaloDB(user.ID, galo)
+	rinha.SaveGaloDB(user.ID, galo)
 }

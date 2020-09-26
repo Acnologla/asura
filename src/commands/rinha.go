@@ -2,6 +2,7 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/utils/rinha"
 	"asura/src/utils"
 	"context"
 	"fmt"
@@ -27,11 +28,11 @@ func edit(message *disgord.Message, embed *disgord.Embed) {
 	}, 5)
 }
 
-func getImageTile(first *utils.Galo, sec *utils.Galo, turn int) string {
+func getImageTile(first *rinha.Galo, sec *rinha.Galo, turn int) string {
 	if turn == 0 {
-		return utils.Sprites[turn ^ 1][sec.Type-1]
+		return rinha.Sprites[turn ^ 1][sec.Type-1]
 	} else {
-		return utils.Sprites[turn ^ 1][first.Type-1]
+		return rinha.Sprites[turn ^ 1][first.Type-1]
 	}
 }
 
@@ -43,23 +44,23 @@ func init() {
 		Cooldown:  10,
 		Usage:     "j!rinha <user>",
 		Help:      "Briga",
-	})
+	})	
 }
 
-func effectToStr(effect utils.SideEffect, affected *disgord.User, author *disgord.User, battle *utils.Battle) string {
-	if effect.Effect == utils.Damaged {
+func effectToStr(effect rinha.Result, affected *disgord.User, author *disgord.User, battle *rinha.Battle) string {
+	if effect.Effect == rinha.Damaged {
 		return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name, effect.Damage)
-	} else if effect.Effect == utils.Effected {
-		effect_literal := utils.GetEffectFromSkill(effect.Skill)
+	} else if effect.Effect == rinha.Effected {
+		effect_literal := rinha.GetEffectFromSkill(effect.Skill)
 		return fmt.Sprintf("**%s** Causou '%s' em **%s** dando %d de dano\n", author.Username, effect_literal.Name, affected.Username, effect.Damage)
-	} else if effect.Effect == utils.SideEffected {
-		effect_literal := utils.GetEffectFromSkill(effect.Skill)
+	} else if effect.Effect == rinha.SideEffected {
+		effect_literal := rinha.GetEffectFromSkill(effect.Skill)
 		if effect.Self {
 			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", affected.Username, effect.Damage, effect_literal.Name)
 		} else {
 			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", author.Username, effect.Damage, effect_literal.Name)
 		}
-	} else if effect.Effect == utils.NotEffective {
+	} else if effect.Effect == rinha.NotEffective {
 		return fmt.Sprintf("**reduzido**\n")
 	}
 	return ""
@@ -88,7 +89,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 
 		battleMutex.RUnlock()
 
-		galoAdv, _ := utils.GetGaloDB(msg.Mentions[0].ID)
+		galoAdv, _ := rinha.GetGaloDB(msg.Mentions[0].ID)
 
 		if galoAdv.Ignore {
 			msg.Reply(context.Background(), session, "Este usuario não está aceitando rinhas nesse momento!")
@@ -100,18 +101,18 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		currentBattles[msg.Mentions[0].ID] = msg.Author.Username
 		battleMutex.Unlock()
 		
-		galoAuthor, _ := utils.GetGaloDB(msg.Author.ID)
-		authorLevel := utils.CalcLevel(galoAuthor.Xp)
+		galoAuthor, _ := rinha.GetGaloDB(msg.Author.ID)
+		authorLevel := rinha.CalcLevel(galoAuthor.Xp)
 
-		AdvLevel := utils.CalcLevel(galoAdv.Xp)
+		AdvLevel := rinha.CalcLevel(galoAdv.Xp)
 		
 		if galoAuthor.Type == 0 {
-			galoType := rand.Intn(len(utils.Classes))
+			galoType := rand.Intn(len(rinha.Classes))
 			galoAuthor.Type = galoType
-			utils.SaveGaloDB(msg.Author.ID, galoAuthor)
+			rinha.SaveGaloDB(msg.Author.ID, galoAuthor)
 		}
 		if galoAdv.Type == 0 {
-			galoType := rand.Intn(len(utils.Classes))
+			galoType := rand.Intn(len(rinha.Classes))
 			galoAdv.Type = galoType
 		}
 		user := msg.Mentions[0]
@@ -146,7 +147,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		})
 
 		if err == nil {
-			battle := utils.CreateBattle(&galoAuthor, &galoAdv)
+			battle := rinha.CreateBattle(&galoAuthor, &galoAdv)
 			var lastEffects string
 			for {
 				effects := battle.Play()
@@ -188,15 +189,15 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 						winnerTurn = turn
 						turn = battle.GetReverseTurn()
 					}
-					xpOb := (rand.Intn(10) + 5) - (2 * (utils.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) - utils.CalcLevel(battle.Fighters[turn].Galo.Xp)))
+					xpOb := (rand.Intn(10) + 5) - (2 * (rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) - rinha.CalcLevel(battle.Fighters[turn].Galo.Xp)))
 					if 0 > xpOb {
 						xpOb = 0
 					}
 					battle.Fighters[winnerTurn].Galo.Xp += xpOb
-					utils.SaveGaloDB(winner.ID, *battle.Fighters[winnerTurn].Galo)
-					if utils.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) > utils.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp-xpOb) {
-						nextLevel := utils.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)
-						nextSkill := utils.GetNextSkill(*battle.Fighters[winnerTurn].Galo)
+					rinha.SaveGaloDB(winner.ID, *battle.Fighters[winnerTurn].Galo)
+					if rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) > rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp-xpOb) {
+						nextLevel := rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)
+						nextSkill := rinha.GetNextSkill(*battle.Fighters[winnerTurn].Galo)
 						nextSkillStr := ""
 						if len(nextSkill) != 0 {
 							nextSkillStr = fmt.Sprintf("e desbloqueando a habilidade %s", nextSkill[0].Name)
@@ -209,7 +210,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 							},
 						})
 					}
-					embed.Description += fmt.Sprintf("\nO galo de **%s** venceu e ganhou %d de XP (%d/%d)", winner.Username, xpOb, battle.Fighters[winnerTurn].Galo.Xp, utils.CalcXP(utils.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)+1))
+					embed.Description += fmt.Sprintf("\nO galo de **%s** venceu e ganhou %d de XP (%d/%d)", winner.Username, xpOb, battle.Fighters[winnerTurn].Galo.Xp, rinha.CalcXP(rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)+1))
 					edit(message, embed)
 					battleMutex.Lock()
 					delete(currentBattles, msg.Author.ID)

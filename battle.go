@@ -1,33 +1,39 @@
 package main
 
 import (
-	"asura/src/utils"
+	"asura/src/utils/rinha"
 	"fmt"
 )
 
-func measure(firstClass int, secClass int, firstLvl int, secLvl int) {
+func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, log bool) {
 	wins := 0
 	wins1 := 0
 	empate := 0
-    for j := 0; j < 100000; j++ {
-        first := utils.Galo{
+    for j := 0; j < times; j++ {
+        first := rinha.Galo{
             Name: "Papel",
-            Xp: utils.CalcXP(firstLvl),
+            Xp: rinha.CalcXP(firstLvl),
             Type: firstClass,
             Equipped: []int{},
         }
     
-        sec := utils.Galo{
+        sec := rinha.Galo{
             Name: "Pedra",
-            Xp: utils.CalcXP(secLvl),
+            Xp: rinha.CalcXP(secLvl),
             Type: secClass,
             Equipped: []int{},
         }
     
-		battle := utils.CreateBattle(&first,&sec)
+		battle := rinha.CreateBattle(&first,&sec)
         
         for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0  {
-            battle.Play()
+            if (log){
+                effects := battle.Play()
+                fmt.Println(effects)
+                fmt.Printf("%d vs %d\n",battle.Fighters[0].Life,battle.Fighters[1].Life)
+            } else {
+                battle.Play()
+            }
         }
 
 		if battle.Fighters[1].Life == 0 && battle.Fighters[0].Life == 0 {
@@ -41,13 +47,10 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int) {
     }
 
 	fmt.Println("\n------------- Analitical tests for ----------- ")
-	fmt.Printf("1: Classe: %s, Level: %d Venceu: %d%%\n2: Classe: %s, Level: %d Venceu: %d%%\n\n", utils.Classes[firstClass].Name, firstLvl, wins/1000, utils.Classes[secClass].Name, secLvl, wins1/1000)
+	fmt.Printf("1: Classe: %s, Level: %d Venceu: %d%%\n2: Classe: %s, Level: %d Venceu: %d%%\n\n", rinha.Classes[firstClass].Name, firstLvl, (wins/times)*100, rinha.Classes[secClass].Name, secLvl, wins1/times*100)
 }
 
 func main(){
-	class1 := 3
-	class2 := 4
-	for i := 5; i < 14; i++ {	
-		measure(class1,class2,5,i)
-	}
+    
+	measure(2,2,5,5,1,true)
 }
