@@ -222,7 +222,6 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				lastEffects = text
 				time.Sleep(4 * time.Second)
 			}
-
 		} else {
 			battleMutex.Lock()
 			delete(currentBattles, msg.Author.ID)

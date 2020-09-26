@@ -81,7 +81,6 @@ func (round *Round) applyEffects() {
 			round.applyEffect(false)
 		}
 	}
-	
 	if round.Attacker.Effect[0] != 0 {
 		round.applyEffect(true)
 	}
