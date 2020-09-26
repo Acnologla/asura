@@ -1,16 +1,29 @@
 [
     {
         "name": "Origami",
+        "class": 1,
+        "turns": 3,
         "type": 1,
-        "turns": 5,
         "self": false,
+        "phrase": "%s está sendo atacado por origamis! (-%d)",
         "range": [3,10]
     },
     {
         "name": "Sangramento",
-        "type": 1,
+        "class": 1,
         "turns": 2,
+        "type": 1,
         "self": false,
+        "phrase": "%s está sangrando! (-%d)",
         "range": [5,20]
+    },
+    {
+        "name": "Cura",
+        "class": 1,
+        "turns": 3,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [5,10]
     }
 ]

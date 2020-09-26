@@ -3,10 +3,11 @@ package rinha
 type EffectType string
 
 type Fighter struct {
-	Galo    *Galo
+	Galo     *Galo
 	Equipped []int
-	Life    int 
-	Effect  [3]int
+	Life     int 
+	MaxLife  int
+	Effect   [3]int
 }
 
 type Battle struct {
@@ -17,10 +18,10 @@ type Battle struct {
 }
 
 func CreateBattle(first *Galo, sec *Galo) Battle {
-
 	firstFighter := Fighter{
 		Galo: first,
 		Life: 100 + (CalcLevel(first.Xp) * 3),
+		MaxLife: 100  + (CalcLevel(first.Xp) * 3),
 		Equipped: []int{},
 		Effect: [3]int{},
 	}
@@ -28,6 +29,7 @@ func CreateBattle(first *Galo, sec *Galo) Battle {
 	secFighter := Fighter{
 		Galo: sec,
 		Life: 100  + (CalcLevel(sec.Xp) * 3),
+		MaxLife: 100  + (CalcLevel(sec.Xp) * 3),
 		Equipped: []int{},
 		Effect: [3]int{},
 	}

@@ -47,10 +47,10 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, 
     }
 
 	fmt.Println("\n------------- Analitical tests for ----------- ")
-	fmt.Printf("1: Classe: %s, Level: %d Venceu: %d%%\n2: Classe: %s, Level: %d Venceu: %d%%\n\n", rinha.Classes[firstClass].Name, firstLvl, (wins/times)*100, rinha.Classes[secClass].Name, secLvl, wins1/times*100)
+	fmt.Printf("1: Classe: %s, Level: %d Venceu: %d%%\n2: Classe: %s, Level: %d Venceu: %d%%\n\n", rinha.Classes[firstClass].Name, firstLvl, wins/(times/100), rinha.Classes[secClass].Name, secLvl, wins1/(times/100))
 }
 
 func main(){
     
-	measure(2,2,5,5,1,true)
+	measure(2,3,5,5,10000,false)
 }

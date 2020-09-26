@@ -27,29 +27,16 @@ type Round struct {
 	SkillId int
 }
 
-func (round *Round) applyEffect(self bool){
-	receiver := round.Target
-
-	if self {
-		receiver = round.Attacker
-	}
-
-	receiver.Effect[0]-- 
-
-	effect_damage := Between(Effects[receiver.Effect[1]].Range)
-	if effect_damage >= receiver.Life {
-		effect_damage = receiver.Life - 1
-	}
-	receiver.Life -= effect_damage
-	round.Results = append(round.Results, Result{Effect: Effected, Damage: effect_damage, Self: self, Skill: Skills[receiver.Effect[2]]})
-}
-
-
 func (round *Round) applySkillDamage(firstTurn bool) int {
 	round.SkillId = round.Attacker.Equipped[rand.Intn(len(round.Attacker.Equipped))]
 	round.Skill = &Skills[round.SkillId]
 
-	attack_damage := Between(round.Skill.Damage)
+	attack_damage := 0
+
+	if round.Skill.Damage[1] != 0 {
+		attack_damage = Between(round.Skill.Damage)
+	}
+
 	not_effective_damage := 0
 
 	difference := CalcLevel(round.Attacker.Galo.Xp) - CalcLevel(round.Target.Galo.Xp) 
@@ -71,19 +58,58 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	return attack_damage - not_effective_damage 
 }
 
+func (round *Round) applyEffect(self bool, to_append bool){
+	receiver := round.Target
+
+	if self {
+		receiver = round.Attacker
+	}
+
+	receiver.Effect[0]-- 
+
+	effect := Effects[receiver.Effect[1]]
+
+	effect_damage := Between(effect.Range)
+
+	if effect.Type == 1 {	
+		if effect_damage >= receiver.Life {
+			effect_damage = receiver.Life - 1
+		}
+		receiver.Life -= effect_damage
+	} else if(effect.Type == 2){
+		if effect_damage >= receiver.MaxLife {
+			receiver.Life = receiver.MaxLife
+		} else {
+			receiver.Life += effect_damage
+		}
+	}
+
+	if to_append {		
+		round.Results = append(round.Results, Result{Effect: Effected, Damage: effect_damage, Self: self, Skill: Skills[receiver.Effect[2]]})
+	}
+}
+
+
 func (round *Round) applyEffects() {
 	if rand.Float64() <= round.Skill.Effect[0] {
 		effect := Effects[int(round.Skill.Effect[1])]
-		round.Target.Effect = [3]int{effect.Turns, int(round.Skill.Effect[1]), round.SkillId}
-		round.applyEffect(false)
-	} else {
-		if round.Target.Effect[0] != 0 {
-			round.applyEffect(false)
+		if effect.Self {
+			round.Attacker.Effect = [3]int{effect.Turns, int(round.Skill.Effect[1]), round.SkillId}
+			round.applyEffect(true, false)
+		} else {	
+			round.Target.Effect = [3]int{effect.Turns, int(round.Skill.Effect[1]), round.SkillId}
+			round.applyEffect(false, false)
 		}
+	} 
+
+	if round.Target.Effect[0] != 0 {
+		round.applyEffect(false, true)
 	}
+
 	if round.Attacker.Effect[0] != 0 {
-		round.applyEffect(true)
+		round.applyEffect(true, true)
 	}
+	
 }
 
 func (battle *Battle) Play() []Result {

@@ -14,7 +14,10 @@ import (
 
 type Effect struct {
 	Name string `json:"name"`
+	Class int `json:"class"`
 	Type int `json:"type"`
+	Self bool `json:"self"`
+	Phrase string `json:"phrase"`
 	Turns int `json:"turns"`
 	Range [2]int `json:"range"`
 }
@@ -31,6 +34,7 @@ type Skill struct {
 	Type   int    `json:"type"`
 	Level   int    `json:"level"`
 	Effect [2] float64 `json:"effect"`
+	Self bool `json:"self"`
 }
 
 type Galo struct {

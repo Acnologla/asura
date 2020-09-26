@@ -9,7 +9,7 @@
         "name": "Galada",
         "damage": [10,26],
         "type": 1,
-        "level":2
+        "level":3
     },
     {
         "name": "Chute",
@@ -100,17 +100,17 @@
         "level": 1
     },
     {
+        "name": "Clone de papel",
+        "damage": [1,5],
+        "type": 2,
+        "level": 2,
+        "effect": [3, 0]
+    },
+    {
         "name": "Papelada",
         "damage": [15,20],
         "type": 2,
         "level": 3
-    },
-    {
-        "name": "Clone de papel",
-        "damage": [10,20],
-        "type": 2,
-        "level": 5,
-        "effect": [1, 0]
     },
     {
         "name": "Chuva de pedra",

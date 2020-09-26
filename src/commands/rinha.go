@@ -49,10 +49,18 @@ func init() {
 
 func effectToStr(effect rinha.Result, affected *disgord.User, author *disgord.User, battle *rinha.Battle) string {
 	if effect.Effect == rinha.Damaged {
-		return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name, effect.Damage)
+		if effect.Skill.Self {
+			return fmt.Sprintf("%s **%s** Usou **%s** em si mesmo\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name)
+		} else {
+			return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name, effect.Damage)
+		}
 	} else if effect.Effect == rinha.Effected {
 		effect_literal := rinha.GetEffectFromSkill(effect.Skill)
-		return fmt.Sprintf("**%s** Causou '%s' em **%s** dando %d de dano\n", author.Username, effect_literal.Name, affected.Username, effect.Damage)
+		if effect.Self {
+			return fmt.Sprintf(effect_literal.Phrase + "\n", author.Username, effect.Damage)
+		} else {
+			return fmt.Sprintf(effect_literal.Phrase + "\n", affected.Username, effect.Damage)
+		}
 	} else if effect.Effect == rinha.SideEffected {
 		effect_literal := rinha.GetEffectFromSkill(effect.Skill)
 		if effect.Self {
@@ -165,7 +173,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 
 				embed.Color = rinhaColors[battle.GetReverseTurn()]
-				embed.Description = lastEffects + text
+				embed.Description = lastEffects + "\n" + text
 				embed.Fields = []*disgord.EmbedField{
 					&disgord.EmbedField{
 						Name:   fmt.Sprintf("%s Level %d", msg.Author.Username, authorLevel),
