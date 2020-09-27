@@ -1,7 +1,7 @@
 [
     {
         "name": "Chuva de papel",
-        "damage": [10,30],
+        "damage": [10,27],
         "level": 1
     },
     {
@@ -84,6 +84,12 @@
         "name": "Big bang de papel",
         "damage": [60,63],
         "level": 24
+    },
+    {
+        "name": "Atordoador de papel",
+        "damage": [0,10],
+        "level": 2,
+        "effect": [1, 3]
     }
 
 ]

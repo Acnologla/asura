@@ -1,7 +1,6 @@
 [
-    {
-        "name": "Origami",
-        "class": 1,
+    { 
+        "name": "Origami", 
         "turns": 3,
         "type": 1,
         "self": false,
@@ -10,7 +9,6 @@
     },
     {
         "name": "Sangramento",
-        "class": 1,
         "turns": 2,
         "type": 1,
         "self": false,
@@ -19,11 +17,49 @@
     },
     {
         "name": "Cura",
-        "class": 1,
         "turns": 3,
         "type": 2,
         "self": true,
         "phrase": "%s se curou! (+%d)",
         "range": [5,10]
+    },
+    {
+        "name": "Stun",
+        "turns": 2,
+        "type": 3,
+        "phrase": "%s está atordoado (%d)",
+        "range": [0,0]
+    },
+    {
+        "name": "Escudo de pena",
+        "turns": 2,
+        "type": 4,
+        "self": true,
+        "phrase": "%s está com %d%% de proteção!",
+        "range": [30,50]
+    },
+    {
+        "name": "Caixa de ferro",
+        "turns": 2,
+        "type": 4,
+        "self": true,
+        "phrase": "%s está em uma prisão de ferro com %d%% de proteção!",
+        "range": [20,30]
+    },
+    {
+        "name": "Dama de ferro",
+        "turns": 3,
+        "type": 4,
+        "self": true,
+        "phrase": "%s está em uma dama de ferro com %d%% de proteção!",
+        "range": [20,30]
+    },
+    {
+        "name": "Hemorragia",
+        "turns": 3,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está sangrando! (-%d)",
+        "range": [5,20]
     }
 ]
