@@ -47,7 +47,7 @@ func init() {
 	})	
 }
 
-func effectToStr(effect rinha.Result, affected *disgord.User, author *disgord.User, battle *rinha.Battle) string {
+func effectToStr(effect *rinha.Result, affected *disgord.User, author *disgord.User, battle *rinha.Battle) string {
 	if effect.Effect == rinha.Damaged {
 		if effect.Skill.Self {
 			return fmt.Sprintf("%s **%s** Usou **%s** em si mesmo\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name)
@@ -177,12 +177,12 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				embed.Fields = []*disgord.EmbedField{
 					&disgord.EmbedField{
 						Name:   fmt.Sprintf("%s Level %d", msg.Author.Username, authorLevel),
-						Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, 100),
+						Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, battle.Fighters[0].MaxLife),
 						Inline: true,
 					},
 					&disgord.EmbedField{
 						Name:   fmt.Sprintf("%s Level %d", user.Username, AdvLevel),
-						Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, 100),
+						Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, battle.Fighters[1].MaxLife),
 						Inline: true,
 					},
 				}

@@ -7,41 +7,41 @@ type Fighter struct {
 	Equipped []int
 	Life     int 
 	MaxLife  int
-	Effect   [3]int
+	Effect   [4]int
 }
 
 type Battle struct {
 	Stopped bool
-	Fighters [2]Fighter
+	Fighters [2]*Fighter
 	Turn bool	
 	FirstRound bool
 }
 
 func CreateBattle(first *Galo, sec *Galo) Battle {
-	firstFighter := Fighter{
+	firstFighter := &Fighter{
 		Galo: first,
 		Life: 100 + (CalcLevel(first.Xp) * 3),
 		MaxLife: 100  + (CalcLevel(first.Xp) * 3),
 		Equipped: []int{},
-		Effect: [3]int{},
+		Effect: [4]int{},
 	}
 
-	secFighter := Fighter{
+	secFighter := &Fighter{
 		Galo: sec,
 		Life: 100  + (CalcLevel(sec.Xp) * 3),
 		MaxLife: 100  + (CalcLevel(sec.Xp) * 3),
 		Equipped: []int{},
-		Effect: [3]int{},
+		Effect: [4]int{},
 	}
 	
-	initEquips(&firstFighter)
-	initEquips(&secFighter)
+	initEquips(firstFighter)
+	initEquips(secFighter)
 	
 	return Battle {
 		Stopped: false,
 		Turn: false,
 		FirstRound: true,
-		Fighters: [2]Fighter{
+		Fighters: [2]*Fighter{
 			firstFighter,		
 			secFighter,
 		},

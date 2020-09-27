@@ -45,9 +45,9 @@ type Galo struct {
 	Ignore   bool   `json:"ignore"`
 }
 
-var Effects []Effect
-var Classes []Class
-var Skills []([]Skill)
+var Effects []*Effect
+var Classes []*Class
+var Skills []([]*Skill)
 var Sprites [][]string
 
 func init() {
@@ -55,7 +55,7 @@ func init() {
 	byteValueClass, _ := ioutil.ReadFile("./resources/galo/class.json")
 	json.Unmarshal([]byte(byteValueClass), &Classes)
 	for i :=0; i < len(Classes)-1;i++{
-		Skills = append(Skills,[]Skill{})
+		Skills = append(Skills,[]*Skill{})
 	}
 	atacks, _ := ioutil.ReadDir("./resources/galo/attacks")
 	for _, class := range atacks {
@@ -63,7 +63,7 @@ func init() {
 		name := strings.Split(class.Name(),".")[0]
 		index := findClassIndex(name)
 		if index != -1{
-			skils := []Skill{}
+			skils := []*Skill{}
 			json.Unmarshal([]byte(byteValueAtack), &skils)
 			Skills[index] = skils
 		}
@@ -110,8 +110,8 @@ func GetSkills(galo Galo) []int {
 	return skills
 }
 
-func GetNextSkill(galo Galo) []Skill {
-	skills := []Skill{}
+func GetNextSkill(galo Galo) []*Skill {
+	skills := []*Skill{}
 	lvl := CalcLevel(galo.Xp)
 	for i := 0; i < len(Skills[galo.Type-1]); i++ {
 		if Skills[galo.Type-1][i].Level == lvl+1{
@@ -141,6 +141,9 @@ func CalcXP(level int) int {
 }
 
 func Between(damage [2]int) int {
+	if damage[1] == damage[0] {
+		return damage[1]
+	}
 	return rand.Intn(damage[1]-damage[0]) + damage[0]
 }
 
@@ -154,6 +157,6 @@ func SaturateSub(one int, two int) int {
 
 // Effect functions
 
-func GetEffectFromSkill(skill Skill) Effect {
+func GetEffectFromSkill(skill *Skill) *Effect {
 	return Effects[int(skill.Effect[1])]
 }
