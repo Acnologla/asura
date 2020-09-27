@@ -64,7 +64,8 @@ func (this *Parser) accAcess(name *Lexem, operator *Lexem) *Token {
 	var tok *Token
 	this.JumpBreaks()
 	if operator.Value == "." {
-		tok = this.CreateToken(name.Value, "property", this.Add())
+		tok = this.CreateToken(name.Value, "property", this.CreateToken(nil,this.Current().Value,nil))
+		this.Eat(this.Current().Type)
 	} else {
 		n := this.Parse()
 		tok = this.CreateToken(name.Value, "index", n)
@@ -79,7 +80,8 @@ func (this *Parser) accAcess(name *Lexem, operator *Lexem) *Token {
 	for this.Current().Type == 5 && (this.Current().Value == "." || this.Current().Value == "[") {
 		if this.Current().Value == "." {
 			this.Eat(5)
-			tok = this.CreateToken(tok, "property", this.Add())
+			tok = this.CreateToken(tok, "property", this.CreateToken(nil,this.Current().Value,nil))
+			this.Eat(this.Current().Type)
 		} else {
 			this.Eat(5)
 			n := this.Parse()
@@ -152,6 +154,10 @@ func (this *Parser) AccID() *Token {
 			return tok
 		}
 		this.I--
+		tok,isStr := value.(*Token)
+		if isStr{
+			return tok
+		}
 		return this.CreateToken(nil, name.Value, nil)
 	}
 	return this.CreateToken(nil, name.Value, nil)
