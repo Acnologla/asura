@@ -125,8 +125,8 @@ func graphic(stat []*stats){
 	}
 
 	p.Title.Text = "Rinha classes"
-	p.X.Label.Text = "% De vitoria"
-    p.Y.Label.Text = "Level "
+    p.X.Label.Text = "Level"
+    p.Y.Label.Text = "% De vitoria "
     arr := []interface{}{}
     for _,class := range stat{
         pts := genPts(class.Wins,class.Level)
@@ -137,7 +137,7 @@ func graphic(stat []*stats){
 	if err != nil {
 		panic(err)
 	}
-	if err := p.Save(4*vg.Inch, 4*vg.Inch, "points.png"); err != nil {
+	if err := p.Save(6*vg.Inch, 6*vg.Inch, "points.png"); err != nil {
 		panic(err)
 	}
 }
