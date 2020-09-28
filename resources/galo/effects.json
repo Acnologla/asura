@@ -25,18 +25,18 @@
     },
     {
         "name": "Stun",
-        "turns": 2,
+        "turns": 1,
         "type": 3,
         "phrase": "%s está atordoado (%d)",
         "range": [0,0]
     },
     {
         "name": "Escudo de pena",
-        "turns": 2,
+        "turns": 10,
         "type": 4,
         "self": true,
         "phrase": "%s está com %d%% de proteção!",
-        "range": [30,50]
+        "range": [90,90]
     },
     {
         "name": "Caixa de ferro",
@@ -48,7 +48,7 @@
     },
     {
         "name": "Dama de ferro",
-        "turns": 3,
+        "turns": 2,
         "type": 4,
         "self": true,
         "phrase": "%s está em uma dama de ferro com %d%% de proteção!",

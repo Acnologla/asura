@@ -26,6 +26,7 @@ type Round struct {
 	Skill *Skill
 	SkillId int
 	Integrity float32
+	ShieldUser *Fighter
 	Stun bool
 }
 
@@ -36,7 +37,7 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	attack_damage := 0
 
 	if round.Skill.Damage[1] != 0 {
-		attack_damage = int(float32(Between(round.Skill.Damage)) * round.Integrity)
+		attack_damage = int(float32(Between(round.Skill.Damage)))
 	}
 
 	not_effective_damage := 0
@@ -51,6 +52,10 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 		not_effective_damage = int(float64(attack_damage)*0.4)
 	}
 
+	if round.Integrity != 0 && round.Integrity != 1 && round.ShieldUser == round.Target {
+		not_effective_damage += int(float32(attack_damage) * round.Integrity)
+	}
+
 	if not_effective_damage != 0 {
 		round.Results = append([]*Result{
 			&Result{Effect: NotEffective, Damage: -not_effective_damage, Skill: round.Skill, Self: false},
@@ -58,13 +63,13 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	}
 
 	round.Results = append([]*Result{
-		&Result{Effect: Damaged, Damage: attack_damage, Skill: round.Skill, Self: false},
+		&Result{Effect: Damaged, Damage: attack_damage - not_effective_damage, Skill: round.Skill, Self: false},
 	}, round.Results...)
 
 	return attack_damage - not_effective_damage 
 }
 
-func (round *Round) applyEffect(self bool, to_append bool) bool {
+func (round *Round) applyEffect(self bool, to_append bool) {
 	receiver := round.Target
 
 	if self {
@@ -95,15 +100,14 @@ func (round *Round) applyEffect(self bool, to_append bool) bool {
 			round.Stun = true
 		}
 		case 4: { // Defesa
-			round.Integrity = float32(effect_damage)/100
+			round.ShieldUser = receiver
+			round.Integrity = float32(effect_damage)/100 + 0.01
 		}
 	}
 
 	if to_append {		
-		round.Results = append(round.Results, &Result{Effect: Effected, Damage: effect_damage, Self: self, Skill: Skills[receiver.Galo.Type-1][receiver.Effect[2]]})
+		round.Results = append(round.Results, &Result{Effect: Effected, Damage: effect_damage, Self: self, Skill: Skills[receiver.Effect[2]-1][receiver.Effect[3]]})
 	}
-
-	return false
 }
 
 func (round *Round) applyEffects() {
@@ -111,15 +115,21 @@ func (round *Round) applyEffects() {
 		effect := Effects[int(round.Skill.Effect[1])]
 		if effect.Self {
 			round.Attacker.Effect = [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
-			round.applyEffect(true, false)
+			round.applyEffect(true, true)
 		} else {	
 			round.Target.Effect = [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
-			round.applyEffect(false, false)
+			round.applyEffect(false, true)
+			
 		}
 	}
 }
 
 func (battle *Battle) Play() []*Result {
+
+	if battle.Stun {
+		battle.Turn = !battle.Turn
+		battle.Stun = false
+	}
 
 	round := Round {
 		Results: []*Result{},
@@ -135,19 +145,17 @@ func (battle *Battle) Play() []*Result {
 	}
 
 	if round.Target.Effect[0] != 0 {
-		round.applyEffect(false, true)
+		round.applyEffect(false, true)		
 	}
 
 	if round.Attacker.Effect[0] != 0 {
 		round.applyEffect(true, true) 
-		if round.Stun {
-			battle.Turn = !battle.Turn
-		}
 	}
 
 	if round.Integrity != 0 {
 		main_damage := round.applySkillDamage(battle.FirstRound)
 		round.applyEffects()
+		battle.Stun = round.Stun
 		round.Target.Life -= main_damage
 	}
 

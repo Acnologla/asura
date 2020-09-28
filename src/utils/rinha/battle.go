@@ -15,6 +15,7 @@ type Battle struct {
 	Fighters [2]*Fighter
 	Turn bool	
 	FirstRound bool
+	Stun bool
 }
 
 func CreateBattle(first *Galo, sec *Galo) Battle {
