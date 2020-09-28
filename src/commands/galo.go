@@ -9,6 +9,8 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
+var galoColors = []int{65535,16777214,8421504,16711680}
+
 func init() {
 	handler.Register(handler.Command{
 		Aliases:   []string{"galo", "galolevel", "meugalo"},
@@ -39,13 +41,13 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	
 	
 	var fields []*disgord.EmbedField
-
-	for i := 0; i < len(galo.Equipped); i++ {
-		skill := rinha.Skills[galo.Type-1][galo.Equipped[i]]
+	skills := rinha.GetEquipedSkills(&galo)
+	for i := 0; i < len(skills); i++ {
+		skill := rinha.Skills[galo.Type-1][skills[i]]
 		fields = append(fields, &disgord.EmbedField{
 			Name:   skill.Name,
-			Value:  fmt.Sprintf("Dano: %d - %d", skill.Damage[0], skill.Damage[1]-1),
-			Inline: true,
+			Value:  rinha.SkillToString(skill),
+			Inline: false,
 		})
 	}
 
@@ -53,14 +55,14 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		Content: msg.Author.Mention(),
 		Embed: &disgord.Embed{
 			Title: "Galo do " + user.Username,
-			Color: 65535,
+			Color: galoColors[galo.Type-1],
 			Thumbnail: &disgord.EmbedThumbnail{
 				URL: "https://blogs.uai.com.br/cantodogalo/wp-content/uploads/sites/32/2017/09/galo-imagem.jpg",
 			},
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!skills para ver os skills e equipa-las",
 			},
-			Description: fmt.Sprintf("Level: **%d\n**XP: **%d/%d**\nTipo: **%s**", level, galo.Xp - curLevelXP, nextLevelXP - curLevelXP,rinha.Classes[galo.Type].Name),
+			Description: fmt.Sprintf("Level: **%d\n**XP: **%d/%d**\nTipo: **%s**\nHabilidades:", level, galo.Xp - curLevelXP, nextLevelXP - curLevelXP,rinha.Classes[galo.Type].Name),
 			Fields:      fields,
 		},
 	})

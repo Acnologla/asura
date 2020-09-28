@@ -3,9 +3,19 @@ package main
 import (
 	"asura/src/utils/rinha"
     "fmt"
+    "gonum.org/v1/plot"
+	"gonum.org/v1/plot/plotter"
+	"gonum.org/v1/plot/plotutil"
+	"gonum.org/v1/plot/vg"
     "math/rand"
     "time"
 )
+
+type stats struct{
+    Wins []int
+    Level []int
+    Type int
+}
 
 func one(firstClass int, secClass int, firstLvl int, secLvl int) {
     fmt.Printf("Only one --------\n1: Classe: %s, Level: %d\n2: Classe: %s, Level: %d\n\n", rinha.Classes[firstClass].Name, firstLvl, rinha.Classes[secClass].Name, secLvl)
@@ -53,7 +63,7 @@ func one(firstClass int, secClass int, firstLvl int, secLvl int) {
 }
 
 
-func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, log bool) {
+func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, log bool) int{
 	wins := 0
 	wins1 := 0
     empate := 0
@@ -96,10 +106,57 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, 
 
 	fmt.Println("\n------------- Analitical tests for ----------- ")
 	fmt.Printf("1: Classe: %s, Level: %d Venceu: %d%%\n2: Classe: %s, Level: %d Venceu: %d%%\n\n", rinha.Classes[firstClass].Name, firstLvl, wins/(times/100), rinha.Classes[secClass].Name, secLvl, wins1/(times/100))
+    return wins/(times/100)
 }
+
+func genPts(wins []int, level []int) plotter.XYs{
+	pts := make(plotter.XYs, 5)
+    for i:= range pts{
+        pts[i].Y = float64(wins[i])
+        pts[i].X = float64(level[i])
+    }
+    return pts
+}
+
+func graphic(stat []*stats){
+    p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	p.Title.Text = "Rinha classes"
+	p.X.Label.Text = "% De vitoria"
+    p.Y.Label.Text = "Level "
+    arr := []interface{}{}
+    for _,class := range stat{
+        pts := genPts(class.Wins,class.Level)
+        className := rinha.Classes[class.Type]
+        arr = append(arr,className.Name,pts)
+    }
+    err = plotutil.AddLinePoints(p,arr...)
+	if err != nil {
+		panic(err)
+	}
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, "points.png"); err != nil {
+		panic(err)
+	}
+}
+
 
 func main(){
     rand.Seed(time.Now().UTC().UnixNano())
-	one(2,4,3,3)
-	//measure(2,4,3,3,10000,false)
+    arr := []*stats{}
+    for i:=1; i < 5;i++{
+        arr = append(arr,&stats{
+            Type: i,
+        })
+    }
+    for i:=1;i < 27;i+=5{
+        for _,class := range arr{
+            result := measure(class.Type,1,i,i,10000,false)
+            class.Wins = append(class.Wins,result)
+            class.Level = append(class.Level,i)
+        }
+    }
+    graphic(arr)
 }

@@ -49,24 +49,27 @@ func CreateBattle(first *Galo, sec *Galo) Battle {
 	}
 }
 
-func initEquips(fighter *Fighter) {
-	skills := GetSkills(*fighter.Galo)
-
+func GetEquipedSkills(galo *Galo)[]int{
+	skills := GetSkills(*galo)
 	if len(skills) == 0 {
 		skills = append(skills, 0)
 	}
-
-	for i := 0; i < len(fighter.Galo.Equipped); i++{
-		fighter.Equipped = append(fighter.Equipped, fighter.Galo.Equipped[i])
+	equipedSkills := []int{}
+	for i := 0; i < len(galo.Equipped); i++{
+		equipedSkills = append(equipedSkills, galo.Equipped[i])
 	}
-	need := 5 - len(fighter.Equipped)
-
+	need := 5 - len(equipedSkills)
 	for i := len(skills) - 1; i >= 0 && need != 0; i-- {
-		if !IsIntInList(skills[i], fighter.Galo.Equipped) {
-			fighter.Equipped = append(fighter.Equipped, skills[i])
+		if !IsIntInList(skills[i], galo.Equipped) {
+			equipedSkills = append(equipedSkills, skills[i])
 			need--
 		}
 	}
+	return equipedSkills
+}
+
+func initEquips(fighter *Fighter) {
+	fighter.Equipped = GetEquipedSkills(fighter.Galo)
 }	
 
 func (battle *Battle) GetReverseTurn() int {

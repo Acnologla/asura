@@ -83,6 +83,15 @@ func findClassIndex(class string) int {
 	return -1
 }
 
+func SkillToString(skill *Skill) (text string){
+	text = fmt.Sprintf("Dano: %d - %d", skill.Damage[0], skill.Damage[1]-1)
+	if skill.Effect[0] != 0 || skill.Effect[1] != 0{
+		effect := Effects[int(skill.Effect[1])]
+		text += fmt.Sprintf("\nTem %d%% de Chance de causar %s",int(skill.Effect[0]*100),effect.Name)
+	}
+	return
+}
+
 // Database manipulation
 
 func GetGaloDB(id disgord.Snowflake) (Galo, error) {
