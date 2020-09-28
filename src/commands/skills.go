@@ -91,9 +91,9 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			})
 			rinha.SaveGaloDB(user.ID, galo)
 		} else if args[0] == "remove" {
-			if err != nil || i < 0 || i > len(galo.Equipped) {
+			if err != nil || i < 0 || i >= len(galo.Equipped) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
-					Content: "Voce esta usando errado bobo",
+					Content: "Voce nao esta equipado com essa habilidade",
 				})
 				return
 			}
