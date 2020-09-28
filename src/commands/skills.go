@@ -73,13 +73,12 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				return
 			}
 
-			if err != nil || i < 0 || i > len(skills) {
+			if err != nil || i < 0 || i >= len(skills) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
-					Content: "Voce esta usando errado bobo",
+					Content: "Voce não tem essa habilidade",
 				})
 				return
 			}
-
 			if rinha.IsIntInList(skills[i], galo.Equipped) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 					Content: "Voce já está com essa habilidade equipada!",
