@@ -38,7 +38,7 @@ func getImageTile(first *rinha.Galo, sec *rinha.Galo, turn int) string {
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:   []string{"rinhanova", "brigadegalo", "rinhadegalo"},
+		Aliases:   []string{"rinha", "brigadegalo", "rinhadegalo"},
 		Run:       runRinha,
 		Available: true,
 		Cooldown:  10,
@@ -108,6 +108,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		currentBattles[msg.Author.ID] = msg.Mentions[0].Username
 		currentBattles[msg.Mentions[0].ID] = msg.Author.Username
 		battleMutex.Unlock()
+		user := msg.Mentions[0]
 		
 		galoAuthor, _ := rinha.GetGaloDB(msg.Author.ID)
 		authorLevel := rinha.CalcLevel(galoAuthor.Xp)
@@ -115,15 +116,15 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		AdvLevel := rinha.CalcLevel(galoAdv.Xp)
 		
 		if galoAuthor.Type == 0 {
-			galoType := rand.Intn(len(rinha.Classes))
+			galoType := rand.Intn(len(rinha.Classes)-1)+1
 			galoAuthor.Type = galoType
 			rinha.SaveGaloDB(msg.Author.ID, galoAuthor)
 		}
 		if galoAdv.Type == 0 {
-			galoType := rand.Intn(len(rinha.Classes))
+			galoType := rand.Intn(len(rinha.Classes)-1)+1
 			galoAdv.Type = galoType
+			rinha.SaveGaloDB(user.ID,galoAdv)
 		}
-		user := msg.Mentions[0]
 
 
 		embed := &disgord.Embed{

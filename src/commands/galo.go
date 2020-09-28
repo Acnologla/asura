@@ -34,7 +34,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	nextLevelXP := rinha.CalcXP(level+1)
 	curLevelXP := rinha.CalcXP(level)
 	if galo.Type == 0 {
-		galoType := 2 + rand.Intn(len(rinha.Classes)-2)
+		galoType :=  rand.Intn(len(rinha.Classes)-1)+1
 		galo.Type = galoType
 		rinha.SaveGaloDB(user.ID,galo)
 	}
