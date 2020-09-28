@@ -38,12 +38,12 @@
     },
     {
         "name": "Furia dos papeis",
-        "damage": [30,37],
+        "damage": [30,34],
         "level": 8
     },
     {
         "name": "Papel negro",
-        "damage": [35,40],
+        "damage": [30,35],
         "level": 10
     },
     {
@@ -78,7 +78,7 @@
     {
         "name": "Catastofre",
         "damage": [10,100],
-        "level": 20
+        "level": 22
     },
     {
         "name": "Big bang de papel",

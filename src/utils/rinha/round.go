@@ -45,7 +45,7 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	difference := CalcLevel(round.Attacker.Galo.Xp) - CalcLevel(round.Target.Galo.Xp) 
 
 	if firstTurn {
-		attack_damage = attack_damage/2
+		attack_damage = attack_damage/2  - attack_damage/15
 	}
 
 	if IsIntInList(round.Target.Galo.Type, Classes[round.Attacker.Galo.Type].Disadvantages) && rand.Float64() <= 0.72 && difference < 4 {
