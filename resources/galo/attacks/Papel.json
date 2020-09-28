@@ -86,11 +86,10 @@
         "level": 24
     },
     {
-        "name": "Escudão de papel",
-        "damage": [1,1],
+        "name": "Atordoador de papel",
+        "damage": [0,10],
         "level": 2,
-        "self": true,
-        "effect": [1, 4]
+        "effect": [1, 3]
     }
 
 ]

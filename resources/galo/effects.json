@@ -36,7 +36,7 @@
         "type": 4,
         "self": true,
         "phrase": "%s está com %d%% de proteção!",
-        "range": [90,90]
+        "range": [50,50]
     },
     {
         "name": "Caixa de ferro",
