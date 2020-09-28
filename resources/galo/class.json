@@ -1,0 +1,22 @@
+[
+    {
+        "name": "BugError404NotE E E BOOM"
+    },
+    {
+        "name": "Normal",
+        "disadvantages": []
+    },
+    {
+        "name": "Papel",
+        "disadvantages": [4]
+    },
+    {
+        "name": "Pedra",
+        "disadvantages": [2]
+    },
+    {
+        "name": "Cortante",
+        "disadvantages": [3]
+    }
+    
+]

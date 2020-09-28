@@ -161,9 +161,23 @@ func visit(intToken interface{}) interface{} {
 		return &Token{
 			Value: "ret",
 			Right: visit(token.Right),
-		}
+		} 
 	}
 	if token.Value == "="{
+		val,isTokn := token.Left.(*Token)
+		if isTokn{
+			if val.Value == "property"{
+				return visit(&Token{
+					Left: val.Left,
+					Value: "property",
+					Right: &Token{
+						Left: val.Right.(*Token).Value,
+						Value: "changeObj",
+						Right: token.Right,
+					},
+				})
+			}
+		}
 		name := token.Left.(string)
 		updateSf(name,visit(token.Right))
 	}
@@ -279,6 +293,11 @@ func visit(intToken interface{}) interface{} {
 			result := visit(arr.Right).(float64)
 			arrValue[int(result)] = visit(token.Right)
 		}
+		objValue, isObj := visit(arr.Left).(map[string]interface{})
+		if isObj{
+			result := visit(arr.Right).(string)
+			objValue[result] = visit(token.Right)
+		}
 	}
 	if token.Value == "fn" {
 		return token
@@ -298,6 +317,17 @@ func visit(intToken interface{}) interface{} {
 				propertyName.Value = "property"
 				acess = -2
 			}
+		}
+		change := false
+		var old *Token
+		if propertyName.Value == "changeObj"{
+			change = true
+			old = &Token{
+				Right: propertyName.Right,
+			}
+			propertyName.Value = propertyName.Left.(string)
+			propertyName.Left = nil
+			propertyName.Right = nil 
 		}
 		if propertyName.Value == "property" {
 			recursive = Token{
@@ -342,6 +372,10 @@ func visit(intToken interface{}) interface{} {
 			if reflect.Indirect(r).Type().Kind() == reflect.Map {
 				for _, e := range reflect.Indirect(r).MapKeys() {
 					if e.Interface() == reflect.ValueOf(propertyName.Value).Interface() {
+						if change{
+							reflect.Indirect(r).SetMapIndex(e,reflect.ValueOf(visit(old.Right)))
+							return nil
+						}
 						return reflect.Indirect(r).MapIndex(e).Interface()
 					}
 					return nil
@@ -626,7 +660,7 @@ func debugToken(token interface{}) {
 		return
 	}
 	tkn, isToken := token.(*Token)
-	if isToken {
+	if isToken  && tkn != nil{
 		if tkn.Left == nil && tkn.Right == nil {
 			fmt.Println(tkn.Value)
 			return

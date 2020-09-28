@@ -19,13 +19,6 @@ type User struct {
 	Usernames []string `json:"username"`
 }
 
-type Galo struct {
-	Xp   int `json:"xp"`
-	Type int `json:"type"`
-//	Wins int `json:"wins"`
-//	Loss int `json:"loss"`
-}
-
 func Init() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -46,19 +39,11 @@ func Init() error {
 	return nil
 }
 
+
 func GetUserDB(id disgord.Snowflake) (User, error) {
 	var acc User
 	err := Database.NewRef(fmt.Sprintf("users/%d",id)).Get(context.Background(), &acc);
-	if err != nil {
-		return acc, errors.New("Not bro")
-	}
-	return acc, nil
-}
-
-func GetGaloDB(id disgord.Snowflake) (Galo, error) {
-	var acc Galo
-	err := Database.NewRef(fmt.Sprintf("galo/%d",id)).Get(context.Background(), &acc);
-	if err != nil {
+	if err != nil {	
 		return acc, errors.New("Not bro")
 	}
 	return acc, nil

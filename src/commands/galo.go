@@ -1,29 +1,17 @@
 package commands
 
 import (
-	"asura/src/database"
 	"asura/src/handler"
-	"asura/src/utils"
+	"asura/src/utils/rinha"
 	"context"
-	"encoding/json"
+	"math/rand"
 	"fmt"
 	"github.com/andersfylling/disgord"
-	"io/ioutil"
 )
 
-type skill struct {
-	Name   string `json:"name"`
-	Damage [2]int `json:"damage"`
-}
-
-var upgrades map[string]int
-var skills []skill
+var galoColors = []int{65535,16777214,8421504,16711680}
 
 func init() {
-	byteValue, _ := ioutil.ReadFile("./resources/atacks.json")
-	json.Unmarshal([]byte(byteValue), &skills)
-	up, _ := ioutil.ReadFile("./resources/upgrades.json")
-	json.Unmarshal([]byte(up), &upgrades)
 	handler.Register(handler.Command{
 		Aliases:   []string{"galo", "galolevel", "meugalo"},
 		Run:       runGalo,
@@ -36,58 +24,45 @@ func init() {
 
 func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	user := msg.Author
+
 	if len(msg.Mentions) > 0 {
 		user = msg.Mentions[0]
 	}
-	galo, _ := database.GetGaloDB(user.ID)
-	level := utils.CalcLevel(galo.Xp) + 1
-	nextLevel := utils.CalcXP(level)
-	var nextSkill string
-	if level <= len(skills)-1 {
-		nextSkill = skills[level].Name
+	
+	galo, _ := rinha.GetGaloDB(user.ID)
+	level := rinha.CalcLevel(galo.Xp)
+	nextLevelXP := rinha.CalcXP(level+1)
+	curLevelXP := rinha.CalcXP(level)
+	if galo.Type == 0 {
+		galoType :=  rand.Intn(len(rinha.Classes)-1)+1
+		galo.Type = galoType
+		rinha.SaveGaloDB(user.ID,galo)
 	}
+	
+	
 	var fields []*disgord.EmbedField
+	skills := rinha.GetEquipedSkills(&galo)
+	for i := 0; i < len(skills); i++ {
+		skill := rinha.Skills[galo.Type-1][skills[i]]
+		fields = append(fields, &disgord.EmbedField{
+			Name:   skill.Name,
+			Value:  rinha.SkillToString(skill),
+			Inline: false,
+		})
+	}
 
-	for i := 0; i < level; i++ {
-		if len(skills)-1 >= i {
-			fields = append(fields, &disgord.EmbedField{
-				Name:   skills[i].Name,
-				Value:  fmt.Sprintf("Dano: %d - %d", skills[i].Damage[0], skills[i].Damage[1]-1),
-				Inline: true,
-			})
-		}
-	}
-	var ups string
-	if level >= 5 {
-		ups = "\n"
-		for key, val := range upgrades {
-			if level >= val {
-				ups += key + "\n"
-			}
-		}
-	} else {
-		ups = "Nenhum\n"
-	}
-	if level > 10 {
-		num := level - 10
-		m := len(skills) - 10
-		if level-10 > m {
-			num = m
-		}
-		fields = fields[num:]
-	}
 	msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 		Content: msg.Author.Mention(),
 		Embed: &disgord.Embed{
 			Title: "Galo do " + user.Username,
-			Color: 65535,
+			Color: galoColors[galo.Type-1],
 			Thumbnail: &disgord.EmbedThumbnail{
 				URL: "https://blogs.uai.com.br/cantodogalo/wp-content/uploads/sites/32/2017/09/galo-imagem.jpg",
 			},
 			Footer: &disgord.EmbedFooter{
-				Text: "Use j!upgrades para ver os upgrades disponiveis",
+				Text: "Use j!skills para ver os skills e equipa-las",
 			},
-			Description: fmt.Sprintf("Level **%d**\nXP: **%d/%d**\nProxima habilidade: **%s**\nUpgrades: %sHabilidades Atuais:", level, galo.Xp, nextLevel, nextSkill, ups),
+			Description: fmt.Sprintf("Level: **%d\n**XP: **%d/%d**\nTipo: **%s**\nHabilidades:", level, galo.Xp - curLevelXP, nextLevelXP - curLevelXP,rinha.Classes[galo.Type].Name),
 			Fields:      fields,
 		},
 	})

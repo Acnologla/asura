@@ -3,7 +3,7 @@ package commands
 import (
 	"asura/src/database"
 	"asura/src/handler"
-	"asura/src/utils"
+	"asura/src/utils/rinha"
 	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
@@ -33,7 +33,7 @@ func runTopGalos(session disgord.Session, msg *disgord.Message, args []string) {
 	var myPos int
 	for i := len(result) - 1; 0 <= i; i-- {
 		if i > len(result)-11 {
-			var gal database.Galo
+			var gal rinha.Galo
 			if err := result[i].Unmarshal(&gal); err != nil {
 				continue
 			}
@@ -48,7 +48,7 @@ func runTopGalos(session disgord.Session, msg *disgord.Message, args []string) {
 			} else {
 				username = user.Username + "#" + user.Discriminator.String()
 			}
-			text += fmt.Sprintf("[%d] - %s\nLevel: %d\n", len(result)-i, username, utils.CalcLevel(gal.Xp)+1)
+			text += fmt.Sprintf("[%d] - %s\nLevel: %d\n", len(result)-i, username, rinha.CalcLevel(gal.Xp)+1)
 		} else {
 			if result[i].Key() == uid {
 				myPos = len(result) - i
