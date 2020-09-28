@@ -45,26 +45,8 @@ func battle(firstClass int, secClass int, firstLvl int, secLvl int, times int) R
             }
         }
         for battle.Fighters[0].Life > 0 && battle.Fighters[1].Life > 0  {
-            effects := battle.Play()
-            for i := 0; i < len(effects); i++ {
-                ID := effects[i].Skill.GetID()
-                if effects[i].Effect == rinha.Effected {
-                    
-                }else {
-                   if ID[1] == -1 {
-                       fmt.Println("ERR")
-                   }
-                   if ID[0] != battle.Fighters[battle.GetReverseTurn()].Galo.Type {
-                       fmt.Println(battle.Fighters[battle.GetReverseTurn()].Galo.Type, ID)
-                    } else {
-                        for i,j := range battle.Fighters[battle.GetReverseTurn()].Equipped {
-                            if j == ID[1] {
-                                result.Frequency[battle.GetReverseTurn()][i]++
-                            } 
-                        }
-                    }
-               }
-            }
+            battle.Play()
+            
         }
     
         if battle.Fighters[1].Life <= 0 && battle.Fighters[0].Life <= 0 {
@@ -90,7 +72,7 @@ func main(){
     data := []Result{}
     
     for i := 1; i < 50; i++ {
-        for j := 1; j <= 1; j++ {    
+        for j := 1; j <= 4; j++ {    
             res :=  battle(1,j,i,i,10000)
             res.Class = [2]int{1,j}
             res.Level = [2]int{i,i}
