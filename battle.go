@@ -104,13 +104,13 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, 
 		
     }
 
-	fmt.Println("\n------------- Analitical tests for ----------- ")
-	fmt.Printf("1: Classe: %s, Level: %d Venceu: %d%%\n2: Classe: %s, Level: %d Venceu: %d%%\n\n", rinha.Classes[firstClass].Name, firstLvl, wins/(times/100), rinha.Classes[secClass].Name, secLvl, wins1/(times/100))
+	//fmt.Println("\n------------- Analitical tests for ----------- ")
+	//fmt.Printf("1: Classe: %s, Level: %d Venceu: %d%%\n2: Classe: %s, Level: %d Venceu: %d%%\n\n", rinha.Classes[firstClass].Name, firstLvl, wins/(times/100), rinha.Classes[secClass].Name, secLvl, wins1/(times/100))
     return wins/(times/100)
 }
 
 func genPts(wins []int, level []int) plotter.XYs{
-	pts := make(plotter.XYs, 5)
+	pts := make(plotter.XYs, len(wins))
     for i:= range pts{
         pts[i].Y = float64(wins[i])
         pts[i].X = float64(level[i])
@@ -137,7 +137,7 @@ func graphic(stat []*stats){
 	if err != nil {
 		panic(err)
 	}
-	if err := p.Save(6*vg.Inch, 6*vg.Inch, "points.png"); err != nil {
+	if err := p.Save(9*vg.Inch, 6*vg.Inch, "points.png"); err != nil {
 		panic(err)
 	}
 }
@@ -151,9 +151,9 @@ func main(){
             Type: i,
         })
     }
-    for i:=1;i < 27;i+=5{
+    for i:=1;i < 50; i+=1{
         for _,class := range arr{
-            result := measure(class.Type,1,i,i,10000,false)
+            result := measure(class.Type,1,i,i,1000,false)
             class.Wins = append(class.Wins,result)
             class.Level = append(class.Level,i)
         }
