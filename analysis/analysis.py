@@ -8,6 +8,8 @@ from matplotlib.ticker import FormatStrFormatter
 with open('./data.json') as f:
   data = json.load(f)
 
+mpl.style.use("seaborn")
+
 lines = [
     [[],[]],
     [[],[]],
