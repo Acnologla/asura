@@ -43,6 +43,9 @@ type Galo struct {
 	Type     int    `json:"type"`
 	Equipped []int  `json:"equipped"`
 	Ignore   bool   `json:"ignore"`
+	Win      int    `json:"win"`
+	Lose     int    `json:"lose"`
+
 }
 
 var Effects []*Effect
@@ -110,6 +113,9 @@ func SaveGaloDB(id disgord.Snowflake, galo Galo) {
 func GetSkills(galo Galo) []int {
 	skills := []int{}
 	lvl := CalcLevel(galo.Xp)
+	if galo.Type == 0{
+		return skills
+	}
 	for i := 0; i < len(Skills[galo.Type-1]); i++ {
 		if Skills[galo.Type-1][i].Level > lvl  {
 			continue

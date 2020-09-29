@@ -192,9 +192,11 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 				if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
 					winner := author
+					loser := affected
 					winnerTurn := battle.GetReverseTurn()
 					if 0 >= battle.Fighters[battle.GetReverseTurn()].Life {
 						winner = affected
+						loser = author
 						winnerTurn = turn
 						turn = battle.GetReverseTurn()
 					}
@@ -202,7 +204,10 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 					if 0 > xpOb {
 						xpOb = 0
 					}
+					battle.Fighters[turn].Galo.Lose++
+					rinha.SaveGaloDB(loser.ID,*battle.Fighters[turn].Galo)
 					battle.Fighters[winnerTurn].Galo.Xp += xpOb
+					battle.Fighters[winnerTurn].Galo.Win++
 					rinha.SaveGaloDB(winner.ID, *battle.Fighters[winnerTurn].Galo)
 					if rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) > rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp-xpOb) {
 						nextLevel := rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)

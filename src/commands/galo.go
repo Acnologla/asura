@@ -62,7 +62,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!skills para ver os skills e equipa-las",
 			},
-			Description: fmt.Sprintf("Level: **%d\n**XP: **%d/%d**\nTipo: **%s**\nHabilidades:", level, galo.Xp - curLevelXP, nextLevelXP - curLevelXP,rinha.Classes[galo.Type].Name),
+			Description: fmt.Sprintf("Level: **%d** (**%d/%d**)\nTipo: **%s**\n **%d** Vitorias | **%d** Derrotas\nHabilidades:", level, galo.Xp - curLevelXP, nextLevelXP - curLevelXP,rinha.Classes[galo.Type].Name,galo.Win,galo.Lose),
 			Fields:      fields,
 		},
 	})
