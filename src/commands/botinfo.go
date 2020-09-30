@@ -63,6 +63,7 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	avatar, _ := myself.AvatarURL(512, true)
 	date := ((uint64(myself.ID) >> 22) + 1420070400000) / 1000
+	readyAt := int(time.Since(handler.ReadyAt).Minutes())
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
 			Title: "Asura",
@@ -78,10 +79,11 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			Servidores: **%d**
 			Ram usada: **%d**MB
 			Ping: **%s**
-			
+			Bot online a %d dias %d horas %d minutos
+
 			[**Convite**](https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=bot&permissions=8)
 			[**Servidor de suporte**](https://discord.gg/tdVWQGV)
-			`, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].String()),
+			`, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].String(),readyAt / 60 / 24,readyAt / 60 % 24, readyAt % 60),
 		},
 	})
 }
