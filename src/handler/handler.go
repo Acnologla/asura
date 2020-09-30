@@ -25,7 +25,7 @@ type Command struct {
 // The place that will be stored all the commands
 var Commands []Command = make([]Command, 0)
 var Client *disgord.Client
-
+var ReadyAt = time.Now()
 var Cooldowns = map[string]map[disgord.Snowflake]time.Time{}
 var CooldownMutexes = map[string]*sync.RWMutex{}
 

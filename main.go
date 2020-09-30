@@ -5,6 +5,7 @@ import (
 	"asura/src/database"
 	"asura/src/handler"
 	"asura/src/telemetry"
+	"asura/src/cache"
 	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
@@ -34,6 +35,7 @@ func main() {
 	// Initialize datalog services for telemetry of the application
 	telemetry.Init()
 	database.Init()
+	cache.Init()
 	fmt.Println("Starting bot...")
 	client := disgord.New(disgord.Config{
 		BotToken: os.Getenv("TOKEN"),
