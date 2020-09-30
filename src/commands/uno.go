@@ -9,13 +9,12 @@ import (
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
-	"github.com/sasha-s/go-deadlock"
 	"image/png"
 	"io"
 	"math/rand"
 	"os"
 	"strings"
-	//"sync"
+	"sync"
 	"time"
 )
 
@@ -214,7 +213,7 @@ func (game *unoGame) start() {
 
 var (
 	currentGames                   = map[disgord.Snowflake]*unoGame{}
-	gameMutex    *deadlock.RWMutex = &deadlock.RWMutex{}
+	gameMutex    *sync.RWMutex = &sync.RWMutex{}
 )
 
 func init() {
