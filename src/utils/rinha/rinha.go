@@ -42,7 +42,6 @@ type Galo struct {
 	Xp       int    `json:"xp"`
 	Type     int    `json:"type"`
 	Equipped []int  `json:"equipped"`
-	Ignore   bool   `json:"ignore"`
 	Win      int    `json:"win"`
 	Lose     int    `json:"lose"`
 
