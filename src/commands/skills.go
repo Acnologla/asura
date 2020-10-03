@@ -25,8 +25,8 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(user.ID)
 
 	skills := rinha.GetSkills(galo)
-	if len(skills) == 0{
-		msg.Reply(context.Background(),session,msg.Author.Mention()+", Voce ainda nao batalhou nenhuma vez")
+	if len(skills) == 0 {
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce ainda nao batalhou nenhuma vez")
 		return
 	}
 	if len(args) == 0 || (args[0] != "use" && args[0] != "remove") {
@@ -103,9 +103,9 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 				Content: "Voce retirou essa habilidade",
 			})
-			if len(galo.Equipped) - 1 == i {
+			if len(galo.Equipped)-1 == i {
 				galo.Equipped = galo.Equipped[:i]
-			}else{	
+			} else {
 				galo.Equipped = append(galo.Equipped[:i], galo.Equipped[i+1:]...)
 			}
 			rinha.SaveGaloDB(user.ID, galo)

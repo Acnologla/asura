@@ -212,7 +212,7 @@ func (game *unoGame) start() {
 }
 
 var (
-	currentGames                   = map[disgord.Snowflake]*unoGame{}
+	currentGames               = map[disgord.Snowflake]*unoGame{}
 	gameMutex    *sync.RWMutex = &sync.RWMutex{}
 )
 
@@ -396,7 +396,7 @@ func create(msg *disgord.Message, session disgord.Session) {
 		}()
 	} else if game.status == "p" {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, "O jogo em sua guilda esta em preparação, caso queira entrer use j!uno join")
+		go msg.Reply(context.Background(), session, "O jogo em sua guilda esta em preparação, caso queira entrar use j!uno join")
 	} else {
 		gameMutex.RUnlock()
 		go msg.Reply(context.Background(), session, "O jogo da sua guilda ja começou, espere ele terminar")

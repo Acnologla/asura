@@ -19,6 +19,10 @@ func init() {
 }
 
 func runEscrever(session disgord.Session, msg *disgord.Message, args []string) {
+	if len(args) == 0 {
+		msg.Reply(context.Background(),session,msg.Author.Mention()+ " diga algo para eu escrever")
+		return
+	}
 	text := ""
 	str := strings.Join(args, " ")
 	for i := 0; i < len(str); i++ {

@@ -48,7 +48,7 @@ func runTopWins(session disgord.Session, msg *disgord.Message, args []string) {
 			} else {
 				username = user.Username + "#" + user.Discriminator.String()
 			}
-			text += fmt.Sprintf("[%d] - %s\nVitorias: **%d** | Derrotas: **%d**\n", len(result)-i, username, gal.Win,gal.Lose)
+			text += fmt.Sprintf("[%d] - %s\nVitorias: **%d** | Derrotas: **%d**\n", len(result)-i, username, gal.Win, gal.Lose)
 		} else {
 			if result[i].Key() == uid {
 				myPos = len(result) - i

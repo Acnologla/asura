@@ -2,14 +2,15 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/utils"
 	"asura/src/utils/rinha"
 	"context"
-	"math/rand"
 	"fmt"
 	"github.com/andersfylling/disgord"
+	"math/rand"
 )
 
-var galoColors = []int{65535,16777214,8421504,16711680}
+var galoColors = []int{65535, 16777214, 8421504, 16711680}
 
 func init() {
 	handler.Register(handler.Command{
@@ -23,23 +24,17 @@ func init() {
 }
 
 func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
-	user := msg.Author
-
-	if len(msg.Mentions) > 0 {
-		user = msg.Mentions[0]
-	}
-	
+	user := utils.GetUser(msg,args,session)
 	galo, _ := rinha.GetGaloDB(user.ID)
 	level := rinha.CalcLevel(galo.Xp)
-	nextLevelXP := rinha.CalcXP(level+1)
+	nextLevelXP := rinha.CalcXP(level + 1)
 	curLevelXP := rinha.CalcXP(level)
 	if galo.Type == 0 {
-		galoType :=  rand.Intn(len(rinha.Classes)-1)+1
+		galoType := rand.Intn(len(rinha.Classes)-1) + 1
 		galo.Type = galoType
-		rinha.SaveGaloDB(user.ID,galo)
+		rinha.SaveGaloDB(user.ID, galo)
 	}
-	
-	
+
 	var fields []*disgord.EmbedField
 	skills := rinha.GetEquipedSkills(&galo)
 	for i := 0; i < len(skills); i++ {
@@ -62,7 +57,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!skills para ver os skills e equipa-las",
 			},
-			Description: fmt.Sprintf("Level: **%d** (**%d/%d**)\nTipo: **%s**\n **%d** Vitorias | **%d** Derrotas\nHabilidades:", level, galo.Xp - curLevelXP, nextLevelXP - curLevelXP,rinha.Classes[galo.Type].Name,galo.Win,galo.Lose),
+			Description: fmt.Sprintf("Level: **%d** (**%d/%d**)\nTipo: **%s**\n **%d** Vitorias | **%d** Derrotas\nHabilidades:", level, galo.Xp-curLevelXP, nextLevelXP-curLevelXP, rinha.Classes[galo.Type].Name, galo.Win, galo.Lose),
 			Fields:      fields,
 		},
 	})

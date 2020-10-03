@@ -37,7 +37,7 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 		for _, role := range guild.Roles {
 			guildUsage += int(unsafe.Sizeof(*role))
 		}
-		for _,channel := range guild.Channels{
+		for _, channel := range guild.Channels {
 			guildUsage += int(unsafe.Sizeof(*channel))
 		}
 		for _, emoji := range guild.Emojis {
@@ -78,12 +78,12 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			Bot criado a **%d** dias
 			Servidores: **%d**
 			Ram usada: **%d**MB
-			Ping: **%s**
+			Ping: **%dms**
 			Bot online a %d dias %d horas %d minutos
 
 			[**Convite**](https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=bot&permissions=8)
 			[**Servidor de suporte**](https://discord.gg/tdVWQGV)
-			`, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].String(),readyAt / 60 / 24,readyAt / 60 % 24, readyAt % 60),
+			`, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].Milliseconds(), readyAt/60/24, readyAt/60%24, readyAt%60),
 		},
 	})
 }
