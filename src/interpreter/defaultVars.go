@@ -17,6 +17,11 @@ var defaultVars = map[string]interface{}{
 	"getContext": func() interface{} {
 		return context.Background()
 	},
+	"reply": func(msg interface{},val interface{}) interface{}{
+		message := msg.(*disgord.Message)
+		newMsg,_ := message.Reply(context.Background(),handler.Client,val)
+		return newMsg
+	},
 	"getUser": func(values interface{}) interface{} {
 		str, ok := values.(string)
 		if ok {
