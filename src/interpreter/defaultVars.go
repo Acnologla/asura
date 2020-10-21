@@ -5,6 +5,7 @@ import (
 	"asura/src/utils"
 	"context"
 	"fmt"
+	"time"
 	"github.com/andersfylling/disgord"
 )
 
@@ -31,6 +32,10 @@ var defaultVars = map[string]interface{}{
 	},
 	"print": func(values ...interface{}) interface{} {
 		fmt.Println(values...)
+		return nil
+	},
+	"sleep": func(values interface{}) interface{}{
+		time.Sleep(time.Duration(values.(float64)) * time.Second)
 		return nil
 	},
 	"len": func(values interface{}) interface{} {

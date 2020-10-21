@@ -518,7 +518,12 @@ func visit(intToken interface{}) interface{} {
 				}
 			}
 		}
+		var await bool
 		var values []interface{}
+		if awaitTk,ok :=token.Right.(AwaitCall);ok{
+			await = true
+			token.Right = awaitTk.Params
+		}
 		if token.Right != nil {
 			for _, param := range token.Right.([]*Token) {
 				values = append(values, visit(param))
@@ -560,14 +565,37 @@ func visit(intToken interface{}) interface{} {
 				}
 			}
 			var ret interface{}
-			tokens := val.Right.([]*Token)
-			for _, token := range tokens {
-				ret = visit(token)
-				tok, ok := ret.(*Token)
-				if ok {
-					if tok.Value == "ret" {
-						ret = tok.Right
-						break
+			if async,ok := val.Right.(AsyncFn);ok{
+				retChan := make(chan interface{})
+				go func(){
+					tokens := async.Compound.([]*Token)
+					for _, token := range tokens {
+						ret = visit(token)
+						tok, ok := ret.(*Token)
+						if ok {
+							if tok.Value == "ret" {
+								ret = tok.Right
+								break
+							}
+						}
+					}
+					if await{
+						retChan <- ret
+					}
+				}()
+				if await{
+					ret = <-retChan
+				}
+			}else{
+				tokens := val.Right.([]*Token)
+				for _, token := range tokens {
+					ret = visit(token)
+					tok, ok := ret.(*Token)
+					if ok {
+						if tok.Value == "ret" {
+							ret = tok.Right
+							break
+						}
 					}
 				}
 			}
@@ -624,7 +652,8 @@ func visit(intToken interface{}) interface{} {
 		return int(visit(token.Left).(float64)) % int(visit(token.Right).(float64))
 	}
 	_, isCompound := token.Right.([]*Token)
-	if isCompound {
+	_,isAsync := token.Right.(AsyncFn)
+	if isCompound || isAsync {
 		params, ok := token.Left.([]string)
 		if ok {
 			localVars[sf][token.Value] = &Token{

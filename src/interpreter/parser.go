@@ -5,6 +5,16 @@ import (
 	"fmt"
 )
 
+type AwaitCall struct {
+	Params interface{}
+	Await bool
+}
+
+type AsyncFn struct{
+  Compound interface{}
+  Async bool
+}
+
 type Token struct {
 	Left  interface{}
 	Value string
@@ -278,8 +288,13 @@ func (this *Parser) Parse() *Token {
 			val := this.Eat(3).Value
 			return this.CreateToken(val, "import", nil)
 		}
-		if keyword.Value == "fn" {
+		if keyword.Value == "fn"  || (keyword.Value == "async" && this.Current().Value == "fn"){
 			var name string
+			var async bool
+			if keyword.Value == "async"{
+				this.Eat(6)
+				async = true
+			}
 			if this.Current().Type == 7 {
 				name = this.Eat(7).Value
 			} else {
@@ -298,8 +313,22 @@ func (this *Parser) Parse() *Token {
 			}
 			this.Eat(5)
 			this.Eat(5)
+			if async {
+				return this.CreateToken(params,name,AsyncFn{
+					Compound: this.Compound(),
+					Async: true,
+				})
+			}
 			fnTok := this.CreateToken(params, name, this.Compound())
 			return fnTok
+		}
+		if keyword.Value == "await"{
+			call := this.Parse()
+			call.Right = AwaitCall{
+				Params: call.Right,
+				Await: true,
+			}
+			return call
 		}
 		if keyword.Value == "if" {
 			condition := this.Parse()
