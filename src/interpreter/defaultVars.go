@@ -45,6 +45,13 @@ var defaultVars = map[string]interface{}{
 		}
 		return float64(len(arr))
 	},
+	"append": func (values interface{},item interface{}) interface{}{
+		arr, ok := toArrInterface(values)
+		if !ok{
+			return nil
+		}
+		return append(arr,item)
+	},
 	"getClient": func() interface{} {
 		return handler.Client
 	},
