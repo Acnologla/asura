@@ -246,6 +246,10 @@ func (this *Parser) Parse() *Token {
 			this.Eat(5)
 			this.JumpBreaks()
 			object := map[string]*Token{}
+			if this.Current().Type == 5 && this.Current().Value == "}"{
+				this.Eat(5)
+				return this.CreateToken(nil, "map", object)
+			}
 			key := this.Eat(this.Current().Type)
 			this.Eat(5)
 			value := this.Parse()
@@ -266,6 +270,10 @@ func (this *Parser) Parse() *Token {
 		}
 		if current.Value == "[" {
 			this.Eat(5)
+			if this.Current().Value == "]" && this.Current().Type == 5 {
+				this.Eat(5)
+				return this.CreateToken(nil,"array", []*Token{})
+			}
 			arr := []*Token{this.Parse()}
 			for this.Current().Type == 5 && this.Current().Value == "," {
 				this.Eat(5)
