@@ -107,18 +107,25 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 			return confirmMsg.React(context.Background(),session,"✅")
 		},5)
 		if confirmErr == nil {
+			say := false
 			handler.RegisterHandler(confirmMsg, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
 				if !removed {
 					if emoji.Name == "✅" && u == msg.Mentions[0].ID {
 						battleMutex.RLock()
 						if currentBattles[msg.Author.ID] != "" {
 							battleMutex.RUnlock()
-							msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+							if !say{
+								say = true
+								msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+							}
 							return
 						}
 						if currentBattles[msg.Mentions[0].ID] != "" {
 							battleMutex.RUnlock()
-							msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+							if !say{
+								say = true
+								msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+							}
 							return
 						}
 						battleMutex.RUnlock()
