@@ -146,7 +146,7 @@ func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 						}
 					}
 				}
-			} else {
+			} else if u != message.Author.ID  {
 				handler.Client.DeleteUserReaction(ctx, msg.ChannelID, message.ID, u, emoji.Name)
 			}
 		}, 60*20)
