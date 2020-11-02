@@ -36,6 +36,6 @@ func runPrivate(session disgord.Session, msg *disgord.Message, args []string) {
 	if acc {
 		msg.Reply(ctx, session, msg.Author.Mention()+", Seu perfil nao esta mais privado")
 	} else {
-		msg.Reply(ctx, session, msg.Author.Mention()+", Seu perfil foi privado som sucesso")
+		msg.Reply(ctx, session, msg.Author.Mention()+", Seu perfil foi privado com sucesso")
 	}
 }
