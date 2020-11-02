@@ -2,7 +2,6 @@ package interpreter
 
 import (
 	"asura/src/handler"
-	"asura/src/utils"
 	"context"
 	"fmt"
 	"time"
@@ -21,19 +20,6 @@ var defaultVars = map[string]interface{}{
 		message := msg.(*disgord.Message)
 		newMsg,_ := message.Reply(context.Background(),handler.Client,val)
 		return newMsg
-	},
-	"getUser": func(values interface{}) interface{} {
-		str, ok := values.(string)
-		if ok {
-			user, _ := handler.Client.GetUser(context.Background(), utils.StringToID(str))
-			return user
-		}
-		id, ok := values.(disgord.Snowflake)
-		if ok {
-			user, _ := handler.Client.GetUser(context.Background(), id)
-			return user
-		}
-		return nil
 	},
 	"print": func(values ...interface{}) interface{} {
 		fmt.Println(values...)
