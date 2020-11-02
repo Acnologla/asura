@@ -5,7 +5,6 @@ import (
 	"asura/src/database"
 	"asura/src/handler"
 	"asura/src/telemetry"
-	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
@@ -37,14 +36,14 @@ func main() {
 	fmt.Println("Starting bot...")
 	client := disgord.New(disgord.Config{
 		BotToken: os.Getenv("TOKEN"),
+		Intents: disgord.AllIntents(disgord.IntentGuildMembers,disgord.IntentGuildPresences),
 	})
-
+	defer client.StayConnectedUntilInterrupted()
 	handler.Client = client
-	client.On(disgord.EvtMessageCreate, handler.OnMessage)
-	client.On(disgord.EvtMessageUpdate, handler.OnMessageUpdate)
-	client.On(disgord.EvtMessageReactionAdd, handler.OnReactionAdd)
-	client.On(disgord.EvtMessageReactionRemove, handler.OnReactionRemove)
-	client.On(disgord.EvtReady, onReady)
-
-	client.StayConnectedUntilInterrupted(context.Background())
+	client.Gateway().MessageCreate(handler.OnMessage)
+	client.Gateway().MessageUpdate(handler.OnMessageUpdate)
+	client.Gateway().MessageReactionAdd(handler.OnReactionAdd)
+	client.Gateway().MessageReactionRemove(handler.OnReactionRemove)
+	client.Gateway().Ready(onReady)
+	
 }

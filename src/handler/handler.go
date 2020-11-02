@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+const Workers = 1024
+var WorkersArray = [Workers]bool{}
 // A struct that stores the information of a single "command" of the bot
 type Command struct {
 	Aliases   []string
@@ -22,8 +24,14 @@ type Command struct {
 	Available bool
 }
 
+type Msg struct{
+	Session disgord.Session
+	Msg     *disgord.Message
+}
+
 // The place that will be stored all the commands
 var Commands []Command = make([]Command, 0)
+var CommandChannel = make(chan Msg)
 var Client *disgord.Client
 var ReadyAt = time.Now()
 var Cooldowns = map[string]map[disgord.Snowflake]time.Time{}
@@ -89,7 +97,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 		return
 	}
 
-	myself, err := session.GetCurrentUser(context.Background())
+	myself, err := Client.Cache().GetCurrentUser()
 	if err != nil {
 		fmt.Printf("Unable to get current user info")
 		return
@@ -137,14 +145,33 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 
 //Handles messages and call the functions that they have to execute.
 func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
-	msg := evt.Message
-	go handleCommand(session, msg)
+	msg := Msg{
+		Msg:	evt.Message,
+		Session: session,
+	}
+	CommandChannel <- msg
 }
 
 //If you want to edit a message to make the command work again
 func OnMessageUpdate(session disgord.Session, evt *disgord.MessageUpdate) {
 	if len(evt.Message.Embeds) == 0 {
-		msg := evt.Message
-		go handleCommand(session, msg)
+		msg := Msg{
+			Msg:	evt.Message,
+			Session: session,
+		}
+		CommandChannel <- msg
+	}
+}
+
+func Worker(id int){
+	cmd := <- CommandChannel
+	WorkersArray[id] = true
+	handleCommand(cmd.Session,cmd.Msg)
+	WorkersArray[id] = false
+}
+
+func init(){
+	for i:=0; i < Workers;i++{
+		go Worker(i)
 	}
 }
