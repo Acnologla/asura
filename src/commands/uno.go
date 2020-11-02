@@ -265,9 +265,9 @@ func getCards(msg *disgord.Message, session disgord.Session) {
 			}
 			gameMutex.RUnlock()
 			b := bytes.NewReader(game.drawCards(p).Bytes())
-			chanID, err := handler.Client.CreateDM(context.Background(), msg.Author.ID)
+			chanID, err := handler.Client.User(msg.Author.ID).CreateDM()
 			if err == nil {
-				go handler.Client.SendMsg(context.Background(), chanID.ID, &disgord.CreateMessageParams{
+				go handler.Client.Channel(chanID.ID).CreateMessage(&disgord.CreateMessageParams{
 					Content: "Para jogar uma carta usa j!uno play <id da carta> ( o id é o coiso que ta encima da carta)",
 					Files: []disgord.CreateMessageFileParams{
 						{b, "uno.png", false},
@@ -376,9 +376,9 @@ func create(msg *disgord.Message, session disgord.Session) {
 				}()
 				for _, player2 := range game.players {
 					go func(p *player) {
-						chanID, err := handler.Client.CreateDM(context.Background(), p.id)
+						chanID, err := handler.Client.User(p.id).CreateDM()
 						if err == nil {
-							handler.Client.SendMsg(context.Background(), chanID.ID, &disgord.CreateMessageParams{
+							handler.Client.Channel(chanID.ID).CreateMessage(&disgord.CreateMessageParams{
 								Content: "Para jogar uma carta usa j!uno play <id da carta> ( o id é o coiso que ta encima da carta)",
 								Files: []disgord.CreateMessageFileParams{
 									{bytes.NewReader(game.drawCards(p).Bytes()), "uno.png", false},

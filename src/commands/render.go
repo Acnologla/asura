@@ -72,7 +72,7 @@ func runRender(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	p := iprep.Find("h2").Find("a").Text()
-	channel, err := session.GetChannel(context.Background(), msg.ChannelID)
+	channel, err := session.Channel(msg.ChannelID).Get()
 	if err != nil {
 		return
 	}

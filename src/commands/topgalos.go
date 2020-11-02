@@ -40,8 +40,8 @@ func runTopGalos(session disgord.Session, msg *disgord.Message, args []string) {
 			if result[i].Key() == uid {
 				myPos = len(result) - i
 			}
-			converted, _ := strconv.Atoi(result[i].Key())
-			user, err := session.GetUser(context.Background(), disgord.NewSnowflake(uint64(converted)))
+			converted := disgord.ParseSnowflakeString(result[i].Key())
+			user, err := session.User(converted).Get()
 			var username string
 			if err != nil {
 				username = "Anonimo"

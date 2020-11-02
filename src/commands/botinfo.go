@@ -26,7 +26,7 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	var memory runtime.MemStats
 	runtime.ReadMemStats(&memory)
 	ramUsage := memory.Alloc / 1000 / 1000
-	guild, err := session.GetGuild(context.Background(), msg.GuildID)
+	guild, err := session.Guild(msg.GuildID).Get()
 	guildUsage := 0
 	if err == nil {
 		guildUsage = int(unsafe.Sizeof(*guild))
@@ -57,13 +57,19 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	ping, _ := handler.Client.HeartbeatLatencies()
 	shard := disgord.ShardID(msg.GuildID, 1)
-	myself, err := session.GetCurrentUser(context.Background())
+	myself, err := handler.Client.Cache().GetCurrentUser()
 	if err != nil {
 		return
 	}
 	avatar, _ := myself.AvatarURL(512, true)
 	date := ((uint64(myself.ID) >> 22) + 1420070400000) / 1000
 	readyAt := int(time.Since(handler.ReadyAt).Minutes())
+	freeWorkers := 0
+	for _,worker := range handler.WorkersArray{
+		if !worker{
+			freeWorkers++
+		}
+	}
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
 			Title: "Asura",
@@ -75,15 +81,16 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 				Text: guildUsageText,
 			},
 			Description: fmt.Sprintf(`
+			Workers: **%d** (**%d** Livres)
 			Bot criado a **%d** dias
 			Servidores: **%d**
 			Ram usada: **%d**MB
 			Ping: **%dms**
 			Bot online a %d dias %d horas %d minutos
 
-			[**Convite**](https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=bot&permissions=8)
-			[**Servidor de suporte**](https://discord.gg/tdVWQGV)
-			`, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].Milliseconds(), readyAt/60/24, readyAt/60%24, readyAt%60),
+			**[Convite](https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=bot&permissions=8)**
+			**[Servidor de suporte](https://discord.gg/tdVWQGV)**
+			`,handler.Workers,freeWorkers ,int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].Milliseconds(), readyAt/60/24, readyAt/60%24, readyAt%60),
 		},
 	})
 }

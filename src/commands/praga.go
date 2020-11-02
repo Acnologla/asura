@@ -60,7 +60,7 @@ func runPraga(session disgord.Session, msg *disgord.Message, args []string) {
 		Quality: 80,
 	})
 
-	session.SendMsg(context.Background(), msg.ChannelID, &disgord.CreateMessageParams{
+	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Files: []disgord.CreateMessageFileParams{
 			{bytes.NewReader(b.Bytes()), "lixeira.jpg", false},
 		},

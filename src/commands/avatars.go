@@ -58,7 +58,7 @@ func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
 	}, 3)
 	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
 		if !removed && msg.Author.ID == u {
-			msgUpdater := handler.Client.UpdateMessage(ctx, msg.ChannelID, message.ID)
+			msgUpdater := session.Channel(msg.ChannelID).Message(message.ID).Update()
 			if emoji.Name == "⬅️" {
 				if count == 0 {
 					count = len(userinfo.Avatars) - 1
@@ -82,7 +82,7 @@ func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
 					},
 				})
 				msgUpdater.Execute()
-				handler.Client.DeleteUserReaction(ctx, msg.ChannelID, message.ID, u, emoji.Name)
+				session.Channel(msg.ChannelID).Message(message.ID).Reaction(emoji.Name).DeleteUser(u)
 			}
 		}
 	}, 60*10)

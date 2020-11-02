@@ -21,7 +21,7 @@ var (
 
 func edit(message *disgord.Message, embed *disgord.Embed) {
 	utils.Try(func() error {
-		msgUpdater := handler.Client.UpdateMessage(context.Background(), message.ChannelID, message.ID)
+		msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).Update()
 		msgUpdater.SetEmbed(embed)
 		_, err := msgUpdater.Execute()
 		return err
@@ -129,7 +129,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 							return
 						}
 						battleMutex.RUnlock()
-						go session.DeleteMessage(context.Background(),confirmMsg.ChannelID,confirmMsg.ID)
+						go session.Channel(confirmMsg.ChannelID).Message(confirmMsg.ID).Delete()
 						executeRinha(msg,session)
 					}
 				}

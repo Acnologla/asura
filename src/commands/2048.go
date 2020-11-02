@@ -118,6 +118,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Content: ":zero:\n\n" + draw2048Board(board),
 	})
+	mes := 	session.Channel(message.ChannelID).Message(message.ID)
 	if err == nil {
 		for i := 0; i < 4; i++ {
 			utils.Try(func() error {
@@ -129,8 +130,8 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 				time.Sleep(time.Second)
 				if time.Since(lastPlay).Seconds()/60 >= 2 {
 					handler.DeleteHandler(message)
-					handler.Client.DeleteAllReactions(context.Background(), msg.ChannelID, message.ID)
-					msgUpdater := handler.Client.UpdateMessage(context.Background(), msg.ChannelID, message.ID)
+					mes.DeleteAllReactions()
+					msgUpdater :=  mes.Update()
 					msgUpdater.SetContent(fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), draw2048Board(board)))
 					utils.Try(func() error {
 						_, err := msgUpdater.Execute()
@@ -176,17 +177,17 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 								n := empty[rand.Intn(len(empty))]
 								board[n/len(board)][n%len(board)] = 2
 							}
-							msgUpdater := handler.Client.UpdateMessage(context.Background(), msg.ChannelID, message.ID)
+							msgUpdater := mes.Update()
 							msgUpdater.SetContent(fmt.Sprintf("%s\n\n%s", drawPoints(points), draw2048Board(board)))
 							utils.Try(func() error {
 								_, err := msgUpdater.Execute()
 								return err
 							}, 10)
 						}
-						handler.Client.DeleteUserReaction(context.Background(), msg.ChannelID, message.ID, u, emoji.Name)
+						mes.Reaction(emoji.Name).DeleteUser(u)
 					}
 				} else if u != message.Author.ID {
-					handler.Client.DeleteUserReaction(context.Background(), msg.ChannelID, message.ID, u, emoji.Name)
+					mes.Reaction(emoji.Name).DeleteUser(u)
 				}
 			}
 		}, 0)

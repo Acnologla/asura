@@ -41,7 +41,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	date := ((uint64(user.ID) >> 22) + 1420070400000) / 1000
 	cGuilds := session.GetConnectedGuilds()
 	for i, guild := range cGuilds {
-		guil, _ := handler.Client.GetGuild(context.Background(), guild)
+		guil, _ := handler.Client.Guild(guild).Get()
 		var is bool
 		if count >= 10 {
 			break

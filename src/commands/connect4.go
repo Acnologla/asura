@@ -104,6 +104,7 @@ func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 			}, 5)
 		}
 		turn := 1
+		mes :=  session.Channel(message.ChannelID).Message(message.ID)
 		handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
 			turnUser := user
 			num := 2
@@ -123,7 +124,7 @@ func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 						}
 					}
 					if played {
-						msgUpdater := handler.Client.UpdateMessage(ctx, msg.ChannelID, message.ID)
+						msgUpdater := mes.Update()
 						winned := checkConnect4Win(board)
 						if winned != 0 {
 							emoji := "❌"
@@ -133,7 +134,7 @@ func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 							msgUpdater.SetContent(emoji + "\n\n" + drawConnect4Board(board))
 							msgUpdater.Execute()
 							handler.DeleteHandler(message)
-							handler.Client.DeleteAllReactions(ctx, msg.ChannelID, message.ID)
+							mes.DeleteAllReactions()
 						} else {
 							msgUpdater.SetContent(connect4Emojis[turn+1] + "\n\n" + drawConnect4Board(board))
 							if turn == 1 {
@@ -142,12 +143,12 @@ func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 								turn = 1
 							}
 							msgUpdater.Execute()
-							handler.Client.DeleteUserReaction(ctx, msg.ChannelID, message.ID, u, emoji.Name)
+							mes.Reaction(emoji.Name).DeleteUser(u)
 						}
 					}
 				}
 			} else if u != message.Author.ID  {
-				handler.Client.DeleteUserReaction(ctx, msg.ChannelID, message.ID, u, emoji.Name)
+				mes.Reaction(emoji.Name).DeleteUser(u)
 			}
 		}, 60*20)
 	}

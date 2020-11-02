@@ -79,6 +79,7 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 			return message.React(ctx, session, emojis[i])
 		}, 5)
 	}
+	mes := session.Channel(message.ChannelID).Message(message.ID)
 	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
 		turnUser := user
 		letter := ":x:"
@@ -109,17 +110,17 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 							letter = ":no_good:"
 						}
 						handler.DeleteHandler(message)
-						go handler.Client.DeleteAllReactions(ctx, msg.ChannelID, message.ID)
+						go mes.DeleteAllReactions()
 					}
-					msgUpdater := handler.Client.UpdateMessage(ctx, msg.ChannelID, message.ID)
+					msgUpdater :=  mes.Update()
 					msgUpdater.SetContent(fmt.Sprintf("%s%s\n\n%s", playType, letter, text(tiles)))
 					msgUpdater.Execute()
 					message.Unreact(ctx, session, emoji.Name)
-					handler.Client.DeleteUserReaction(ctx, msg.ChannelID, message.ID, u, emoji.Name)
+					mes.Reaction(emoji.Name).DeleteUser(u)
 				}
 			}
 		} else if u != message.Author.ID {
-			handler.Client.DeleteUserReaction(ctx, msg.ChannelID, message.ID, u, emoji.Name)
+			mes.Reaction(emoji.Name).DeleteUser(u)
 		}
 	}, 60*5)
 }
