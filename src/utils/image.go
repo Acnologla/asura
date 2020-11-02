@@ -7,7 +7,6 @@ import (
 	_ "image/png"
 	"net/http"
 	"strconv"
-	"context"
 	"strings"
 )
 
@@ -59,8 +58,8 @@ func GetImageURL(msg *disgord.Message, args []string,size int,session disgord.Se
 		return avatar
 	}
 	if len(args) > 0 {
-		converted, _ := strconv.Atoi(args[0])
-		user, err := session.GetUser(context.Background(),disgord.NewSnowflake(uint64(converted)))
+		converted :=  disgord.ParseSnowflakeString(args[0])
+		user, err := session.User(converted).Get()
 		if err == nil {
 			avatar, _ := user.AvatarURL(size, false)
 			return avatar
