@@ -19,7 +19,6 @@ func onReady(session disgord.Session, evt *disgord.Ready) {
 	go telemetry.MetricUpdate(handler.Client)
 
 }
-
 func main() {
 
 	// If it's not in production so it's good to read a ".env" file
@@ -35,8 +34,8 @@ func main() {
 	database.Init()
 	fmt.Println("Starting bot...")
 	client := disgord.New(disgord.Config{
+		RejectEvents : []string{"GUILD_MEMBER_ADD","GUILD_MEMBER_UPDATE","GUILD_MEMBER_REMOVE","PRESENCE_UPDATE","GuildMessageTyping"},
 		BotToken: os.Getenv("TOKEN"),
-		Intents: disgord.AllIntents(disgord.IntentGuildMembers,disgord.IntentGuildPresences),
 	})
 	defer client.StayConnectedUntilInterrupted()
 	handler.Client = client
