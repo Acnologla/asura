@@ -164,10 +164,11 @@ func OnMessageUpdate(session disgord.Session, evt *disgord.MessageUpdate) {
 }
 
 func Worker(id int){
-	cmd := <- CommandChannel
-	WorkersArray[id] = true
-	handleCommand(cmd.Session,cmd.Msg)
-	WorkersArray[id] = false
+	for cmd := range CommandChannel{
+		WorkersArray[id] = true
+		handleCommand(cmd.Session,cmd.Msg)
+		WorkersArray[id] = false
+	}
 }
 
 func init(){

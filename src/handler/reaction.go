@@ -13,10 +13,8 @@ var ReactionLock = &sync.RWMutex{}
 func RegisterHandler(msg *disgord.Message, callback func(bool, disgord.Emoji,disgord.Snowflake), timeout int) {
 	ReactionHandlers[msg.ID] = callback
 	if timeout != 0 {
-		go func() {
-			time.Sleep(time.Duration(timeout) * time.Second)
-			DeleteHandler(msg)
-		}()
+		time.Sleep(time.Duration(timeout) * time.Second)
+		DeleteHandler(msg)
 	}
 }
 
