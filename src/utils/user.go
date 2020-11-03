@@ -3,10 +3,15 @@ package utils
 import (
 	"github.com/andersfylling/disgord"
 	"strings"
+	"strconv"
 )
-
 func StringToID(id string) disgord.Snowflake{
-	return disgord.ParseSnowflakeString(id)
+	converted, err := strconv.Atoi(id)
+	if err == nil && converted >=0 {
+		snowflake := disgord.ParseSnowflakeString(id)
+		return snowflake
+	}
+	return 0 	
 }
 
 
@@ -15,7 +20,7 @@ func GetUser(msg *disgord.Message, args []string,session disgord.Session) *disgo
 		return msg.Mentions[0]
 	}
 	if len(args) > 0 {
-		converted := disgord.ParseSnowflakeString(args[0])
+		converted := StringToID(args[0])
 		user, err := session.User(converted).Get()
 		if err == nil {
 			return user

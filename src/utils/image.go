@@ -58,7 +58,7 @@ func GetImageURL(msg *disgord.Message, args []string,size int,session disgord.Se
 		return avatar
 	}
 	if len(args) > 0 {
-		converted :=  disgord.ParseSnowflakeString(args[0])
+		converted :=  StringToID(args[0])
 		user, err := session.User(converted).Get()
 		if err == nil {
 			avatar, _ := user.AvatarURL(size, false)

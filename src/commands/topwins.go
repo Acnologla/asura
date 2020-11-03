@@ -3,6 +3,7 @@ package commands
 import (
 	"asura/src/database"
 	"asura/src/handler"
+	"asura/src/utils"
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
@@ -40,7 +41,7 @@ func runTopWins(session disgord.Session, msg *disgord.Message, args []string) {
 			if result[i].Key() == uid {
 				myPos = len(result) - i
 			}
-			converted := disgord.ParseSnowflakeString(result[i].Key())
+			converted := utils.StringToID(result[i].Key())
 			user, err := session.User(converted).Get()
 			var username string
 			if err != nil {
