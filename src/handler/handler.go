@@ -13,7 +13,9 @@ import (
 )
 
 const Workers = 1024
+
 var WorkersArray = [Workers]bool{}
+
 // A struct that stores the information of a single "command" of the bot
 type Command struct {
 	Aliases   []string
@@ -24,7 +26,7 @@ type Command struct {
 	Available bool
 }
 
-type Msg struct{
+type Msg struct {
 	Session disgord.Session
 	Msg     *disgord.Message
 }
@@ -90,10 +92,10 @@ func checkCooldown(session disgord.Session, msg *disgord.Message, command string
 }
 
 func handleCommand(session disgord.Session, msg *disgord.Message) {
-	if msg.Author == nil{
+	if msg.Author == nil {
 		return
 	}
-	if msg.Author.Bot || uint64(msg.GuildID) == 0{
+	if msg.Author.Bot || uint64(msg.GuildID) == 0 {
 		return
 	}
 
@@ -138,15 +140,15 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 				"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
 			})
 		}
-	}else if strings.HasPrefix(msg.Content, onlyBotMention){
-		msg.Reply(context.Background(),session,msg.Author.Mention() + ", Meu prefix é **j!** use j!comandos para ver meus comandos")
+	} else if strings.HasPrefix(msg.Content, onlyBotMention) {
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Meu prefix é **j!** use j!comandos para ver meus comandos")
 	}
 }
 
 //Handles messages and call the functions that they have to execute.
 func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 	msg := Msg{
-		Msg:	evt.Message,
+		Msg:     evt.Message,
 		Session: session,
 	}
 	CommandChannel <- msg
@@ -156,23 +158,23 @@ func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 func OnMessageUpdate(session disgord.Session, evt *disgord.MessageUpdate) {
 	if len(evt.Message.Embeds) == 0 {
 		msg := Msg{
-			Msg:	evt.Message,
+			Msg:     evt.Message,
 			Session: session,
 		}
 		CommandChannel <- msg
 	}
 }
 
-func Worker(id int){
-	for cmd := range CommandChannel{
+func Worker(id int) {
+	for cmd := range CommandChannel {
 		WorkersArray[id] = true
-		handleCommand(cmd.Session,cmd.Msg)
+		handleCommand(cmd.Session, cmd.Msg)
 		WorkersArray[id] = false
 	}
 }
 
-func init(){
-	for i:=0; i < Workers;i++{
+func init() {
+	for i := 0; i < Workers; i++ {
 		go Worker(i)
 	}
 }

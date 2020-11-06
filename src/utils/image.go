@@ -51,14 +51,14 @@ func DownloadImage(url string) (image.Image, error) {
 // TODO: Remove this absurd quantity of ifs and make the function get
 // Persons without avatar
 // This function is used to get a url for an iamge that will be used
-// To a lot of functions. 
-func GetImageURL(msg *disgord.Message, args []string,size int,session disgord.Session) string {
+// To a lot of functions.
+func GetImageURL(msg *disgord.Message, args []string, size int, session disgord.Session) string {
 	if len(msg.Mentions) > 0 {
 		avatar, _ := msg.Mentions[0].AvatarURL(size, false)
 		return avatar
 	}
 	if len(args) > 0 {
-		converted :=  StringToID(args[0])
+		converted := StringToID(args[0])
 		user, err := session.User(converted).Get()
 		if err == nil {
 			avatar, _ := user.AvatarURL(size, false)

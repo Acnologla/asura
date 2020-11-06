@@ -112,7 +112,7 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 						handler.DeleteHandler(message)
 						go mes.DeleteAllReactions()
 					}
-					msgUpdater :=  mes.Update()
+					msgUpdater := mes.Update()
 					msgUpdater.SetContent(fmt.Sprintf("%s%s\n\n%s", playType, letter, text(tiles)))
 					msgUpdater.Execute()
 					message.Unreact(ctx, session, emoji.Name)

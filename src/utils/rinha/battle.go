@@ -5,57 +5,57 @@ type EffectType string
 type Fighter struct {
 	Galo     *Galo
 	Equipped []int
-	Life     int 
+	Life     int
 	MaxLife  int
 	Effect   [4]int
 }
 
 type Battle struct {
-	Stopped bool
-	Fighters [2]*Fighter
-	Turn bool	
+	Stopped    bool
+	Fighters   [2]*Fighter
+	Turn       bool
 	FirstRound bool
-	Stun bool
+	Stun       bool
 }
 
 func CreateBattle(first *Galo, sec *Galo) Battle {
 	firstFighter := &Fighter{
-		Galo: first,
-		Life: 100 + (CalcLevel(first.Xp) * 3),
-		MaxLife: 100  + (CalcLevel(first.Xp) * 3),
+		Galo:     first,
+		Life:     100 + (CalcLevel(first.Xp) * 3),
+		MaxLife:  100 + (CalcLevel(first.Xp) * 3),
 		Equipped: []int{},
-		Effect: [4]int{},
+		Effect:   [4]int{},
 	}
 
 	secFighter := &Fighter{
-		Galo: sec,
-		Life: 100  + (CalcLevel(sec.Xp) * 3),
-		MaxLife: 100  + (CalcLevel(sec.Xp) * 3),
+		Galo:     sec,
+		Life:     100 + (CalcLevel(sec.Xp) * 3),
+		MaxLife:  100 + (CalcLevel(sec.Xp) * 3),
 		Equipped: []int{},
-		Effect: [4]int{},
+		Effect:   [4]int{},
 	}
-	
+
 	initEquips(firstFighter)
 	initEquips(secFighter)
-	
-	return Battle {
-		Stopped: false,
-		Turn: false,
+
+	return Battle{
+		Stopped:    false,
+		Turn:       false,
 		FirstRound: true,
 		Fighters: [2]*Fighter{
-			firstFighter,		
+			firstFighter,
 			secFighter,
 		},
 	}
 }
 
-func GetEquipedSkills(galo *Galo)[]int{
+func GetEquipedSkills(galo *Galo) []int {
 	skills := GetSkills(*galo)
 	if len(skills) == 0 {
 		skills = append(skills, 0)
 	}
 	equipedSkills := []int{}
-	for i := 0; i < len(galo.Equipped); i++{
+	for i := 0; i < len(galo.Equipped); i++ {
 		equipedSkills = append(equipedSkills, galo.Equipped[i])
 	}
 	need := 5 - len(equipedSkills)
@@ -70,7 +70,7 @@ func GetEquipedSkills(galo *Galo)[]int{
 
 func initEquips(fighter *Fighter) {
 	fighter.Equipped = GetEquipedSkills(fighter.Galo)
-}	
+}
 
 func (battle *Battle) GetReverseTurn() int {
 	if !battle.Turn {
@@ -78,7 +78,7 @@ func (battle *Battle) GetReverseTurn() int {
 	} else {
 		return 0
 	}
-} 
+}
 
 func (battle *Battle) GetTurn() int {
 	if battle.Turn {

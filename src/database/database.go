@@ -2,13 +2,13 @@ package database
 
 import (
 	"context"
+	"errors"
 	"firebase.google.com/go"
 	"firebase.google.com/go/db"
 	"fmt"
-	"google.golang.org/api/option"
 	"github.com/andersfylling/disgord"
+	"google.golang.org/api/option"
 	"log"
-	"errors"
 	"os"
 )
 
@@ -39,11 +39,10 @@ func Init() error {
 	return nil
 }
 
-
 func GetUserDB(id disgord.Snowflake) (User, error) {
 	var acc User
-	err := Database.NewRef(fmt.Sprintf("users/%d",id)).Get(context.Background(), &acc);
-	if err != nil {	
+	err := Database.NewRef(fmt.Sprintf("users/%d", id)).Get(context.Background(), &acc)
+	if err != nil {
 		return acc, errors.New("Not bro")
 	}
 	return acc, nil

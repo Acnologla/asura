@@ -24,7 +24,7 @@ func init() {
 }
 
 func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg,args,session)
+	user := utils.GetUser(msg, args, session)
 	galo, _ := rinha.GetGaloDB(user.ID)
 	level := rinha.CalcLevel(galo.Xp)
 	nextLevelXP := rinha.CalcXP(level + 1)

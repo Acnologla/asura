@@ -2,20 +2,20 @@ package utils
 
 import (
 	"github.com/andersfylling/disgord"
-	"strings"
 	"strconv"
+	"strings"
 )
-func StringToID(id string) disgord.Snowflake{
+
+func StringToID(id string) disgord.Snowflake {
 	converted, err := strconv.Atoi(id)
-	if err == nil && converted >=0 {
+	if err == nil && converted >= 0 {
 		snowflake := disgord.ParseSnowflakeString(id)
 		return snowflake
 	}
-	return 0 	
+	return 0
 }
 
-
-func GetUser(msg *disgord.Message, args []string,session disgord.Session) *disgord.User {
+func GetUser(msg *disgord.Message, args []string, session disgord.Session) *disgord.User {
 	if len(msg.Mentions) > 0 {
 		return msg.Mentions[0]
 	}

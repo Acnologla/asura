@@ -65,8 +65,8 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	date := ((uint64(myself.ID) >> 22) + 1420070400000) / 1000
 	readyAt := int(time.Since(handler.ReadyAt).Minutes())
 	freeWorkers := 0
-	for _,worker := range handler.WorkersArray{
-		if !worker{
+	for _, worker := range handler.WorkersArray {
+		if !worker {
 			freeWorkers++
 		}
 	}
@@ -90,7 +90,7 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 
 			**[Convite](https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=bot&permissions=8)**
 			**[Servidor de suporte](https://discord.gg/tdVWQGV)**
-			`,handler.Workers,freeWorkers ,int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].Milliseconds(), readyAt/60/24, readyAt/60%24, readyAt%60),
+			`, handler.Workers, freeWorkers, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].Milliseconds(), readyAt/60/24, readyAt/60%24, readyAt%60),
 		},
 	})
 }

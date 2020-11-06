@@ -36,20 +36,20 @@ func toArrInterface(value interface{}) ([]interface{}, bool) {
 	return arr, true
 }
 
-func updateSf(name string,val interface{}){
-	for i := len(localVars)-1; 0 <= i;i--{
-		_,exists := localVars[i][name]
-		if exists{
+func updateSf(name string, val interface{}) {
+	for i := len(localVars) - 1; 0 <= i; i-- {
+		_, exists := localVars[i][name]
+		if exists {
 			localVars[i][name] = val
 			break
 		}
 	}
-} 
+}
 
-func getSf(name string) (interface{},bool){
-	for i := len(localVars)-1; 0 <= i;i--{
-		val,exists := localVars[i][name]
-		if exists{
+func getSf(name string) (interface{}, bool) {
+	for i := len(localVars) - 1; 0 <= i; i-- {
+		val, exists := localVars[i][name]
+		if exists {
 			return val, true
 		}
 	}
@@ -161,17 +161,17 @@ func visit(intToken interface{}) interface{} {
 		return &Token{
 			Value: "ret",
 			Right: visit(token.Right),
-		} 
+		}
 	}
-	if token.Value == "="{
-		val,isTokn := token.Left.(*Token)
-		if isTokn{
-			if val.Value == "property"{
+	if token.Value == "=" {
+		val, isTokn := token.Left.(*Token)
+		if isTokn {
+			if val.Value == "property" {
 				return visit(&Token{
-					Left: val.Left,
+					Left:  val.Left,
 					Value: "property",
 					Right: &Token{
-						Left: val.Right.(*Token).Value,
+						Left:  val.Right.(*Token).Value,
 						Value: "changeObj",
 						Right: token.Right,
 					},
@@ -179,7 +179,7 @@ func visit(intToken interface{}) interface{} {
 			}
 		}
 		name := token.Left.(string)
-		updateSf(name,visit(token.Right))
+		updateSf(name, visit(token.Right))
 	}
 	if token.Value == ":=" {
 		name := token.Left.(string)
@@ -294,7 +294,7 @@ func visit(intToken interface{}) interface{} {
 			arrValue[int(result)] = visit(token.Right)
 		}
 		objValue, isObj := visit(arr.Left).(map[string]interface{})
-		if isObj{
+		if isObj {
 			result := visit(arr.Right).(string)
 			objValue[result] = visit(token.Right)
 		}
@@ -320,14 +320,14 @@ func visit(intToken interface{}) interface{} {
 		}
 		change := false
 		var old *Token
-		if propertyName.Value == "changeObj"{
+		if propertyName.Value == "changeObj" {
 			change = true
 			old = &Token{
 				Right: propertyName.Right,
 			}
 			propertyName.Value = propertyName.Left.(string)
 			propertyName.Left = nil
-			propertyName.Right = nil 
+			propertyName.Right = nil
 		}
 		if propertyName.Value == "property" {
 			recursive = Token{
@@ -372,8 +372,8 @@ func visit(intToken interface{}) interface{} {
 			if reflect.Indirect(r).Type().Kind() == reflect.Map {
 				for _, e := range reflect.Indirect(r).MapKeys() {
 					if e.Interface() == reflect.ValueOf(propertyName.Value).Interface() {
-						if change{
-							reflect.Indirect(r).SetMapIndex(e,reflect.ValueOf(visit(old.Right)))
+						if change {
+							reflect.Indirect(r).SetMapIndex(e, reflect.ValueOf(visit(old.Right)))
 							return nil
 						}
 						return reflect.Indirect(r).MapIndex(e).Interface()
@@ -407,42 +407,42 @@ func visit(intToken interface{}) interface{} {
 			name, ok := propertyName.Left.(string)
 			if ok {
 				var fun reflect.Value
-				if r.Type().Kind() == reflect.Map{
+				if r.Type().Kind() == reflect.Map {
 					for _, e := range reflect.Indirect(r).MapKeys() {
 						if e.Interface() == reflect.ValueOf(name).Interface() {
 							fun = r.MapIndex(e)
 						}
 					}
-				}else{
+				} else {
 					fun = r.MethodByName(name)
 				}
 				if fun.IsValid() {
-					fnToken,isToken := fun.Interface().(*Token)
-					var result =  []reflect.Value{}
-					if isToken{
-						result = append(result,reflect.ValueOf(visit(&Token{
+					fnToken, isToken := fun.Interface().(*Token)
+					var result = []reflect.Value{}
+					if isToken {
+						result = append(result, reflect.ValueOf(visit(&Token{
 							Value: "call",
-							Left: fnToken,
+							Left:  fnToken,
 							Right: propertyName.Right,
 						})))
-					}else{
+					} else {
 						var values []reflect.Value
-					if propertyName.Right != nil {
-						for i, param := range propertyName.Right.([]*Token) {
-							paramType := fun.Type().In(i).Name()
-							val := reflect.ValueOf(visit(param))
-							valtType := val.Type().Name()
-							if paramType == "int" && valtType == "float64" {
-								val = reflect.ValueOf(int(val.Interface().(float64)))
-							} else if paramType == "Snowflake" && valtType == "string" {
-								val = reflect.ValueOf(utils.StringToID(val.Interface().(string)))
-							} else if paramType != valtType && paramType != "Context" && paramType != "Session"  && valtType != "" && paramType != ""{
-								fmt.Printf("Parameter error %s is not %s\n", paramType, valtType)
-								return nil
+						if propertyName.Right != nil {
+							for i, param := range propertyName.Right.([]*Token) {
+								paramType := fun.Type().In(i).Name()
+								val := reflect.ValueOf(visit(param))
+								valtType := val.Type().Name()
+								if paramType == "int" && valtType == "float64" {
+									val = reflect.ValueOf(int(val.Interface().(float64)))
+								} else if paramType == "Snowflake" && valtType == "string" {
+									val = reflect.ValueOf(utils.StringToID(val.Interface().(string)))
+								} else if paramType != valtType && paramType != "Context" && paramType != "Session" && valtType != "" && paramType != "" {
+									fmt.Printf("Parameter error %s is not %s\n", paramType, valtType)
+									return nil
+								}
+								values = append(values, val)
 							}
-							values = append(values, val)
 						}
-					}
 						result = fun.Call(values)
 					}
 					var results []interface{}
@@ -520,7 +520,7 @@ func visit(intToken interface{}) interface{} {
 		}
 		var await bool
 		var values []interface{}
-		if awaitTk,ok :=token.Right.(AwaitCall);ok{
+		if awaitTk, ok := token.Right.(AwaitCall); ok {
 			await = true
 			token.Right = awaitTk.Params
 		}
@@ -556,7 +556,7 @@ func visit(intToken interface{}) interface{} {
 		if ok {
 			val := valInterface.(*Token)
 			sf++
-			localVars = append(localVars,map[string]interface{}{})
+			localVars = append(localVars, map[string]interface{}{})
 			for i, param := range val.Left.([]string) {
 				if i < len(values) {
 					localVars[sf][param] = values[i]
@@ -565,9 +565,9 @@ func visit(intToken interface{}) interface{} {
 				}
 			}
 			var ret interface{}
-			if async,ok := val.Right.(AsyncFn);ok{
+			if async, ok := val.Right.(AsyncFn); ok {
 				retChan := make(chan interface{})
-				go func(){
+				go func() {
 					tokens := async.Compound.([]*Token)
 					for _, token := range tokens {
 						ret = visit(token)
@@ -579,14 +579,14 @@ func visit(intToken interface{}) interface{} {
 							}
 						}
 					}
-					if await{
+					if await {
 						retChan <- ret
 					}
 				}()
-				if await{
+				if await {
 					ret = <-retChan
 				}
-			}else{
+			} else {
 				tokens := val.Right.([]*Token)
 				for _, token := range tokens {
 					ret = visit(token)
@@ -602,10 +602,10 @@ func visit(intToken interface{}) interface{} {
 			retToken, ok := ret.(*Token)
 			if ok {
 				if retToken.Value == "fn" {
-					for key,val := range localVars[sf]{
+					for key, val := range localVars[sf] {
 						localVars[0][key] = val
 					}
-					for key,val := range localVars[sf-1]{
+					for key, val := range localVars[sf-1] {
 						localVars[0][key] = val
 					}
 				}
@@ -648,11 +648,11 @@ func visit(intToken interface{}) interface{} {
 	if token.Value == "/" {
 		return visit(token.Left).(float64) / visit(token.Right).(float64)
 	}
-	if token.Value == "%"{
+	if token.Value == "%" {
 		return int(visit(token.Left).(float64)) % int(visit(token.Right).(float64))
 	}
 	_, isCompound := token.Right.([]*Token)
-	_,isAsync := token.Right.(AsyncFn)
+	_, isAsync := token.Right.(AsyncFn)
 	if isCompound || isAsync {
 		params, ok := token.Left.([]string)
 		if ok {
@@ -667,8 +667,8 @@ func visit(intToken interface{}) interface{} {
 }
 
 func Interpret(token *Token, params map[string]interface{}) interface{} {
-	if len(localVars) == 0{
-		localVars = append(localVars,map[string]interface{}{})
+	if len(localVars) == 0 {
+		localVars = append(localVars, map[string]interface{}{})
 	}
 	for key, val := range params {
 		localVars[0][key] = val
@@ -689,7 +689,7 @@ func debugToken(token interface{}) {
 		return
 	}
 	tkn, isToken := token.(*Token)
-	if isToken  && tkn != nil{
+	if isToken && tkn != nil {
 		if tkn.Left == nil && tkn.Right == nil {
 			fmt.Println(tkn.Value)
 			return

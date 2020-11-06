@@ -25,14 +25,14 @@ func IsEqual(oldBoard []([]int), board []([]int)) bool {
 	return equal
 }
 
-func DeepClone(board []([]int)) []([]int){
+func DeepClone(board []([]int)) []([]int) {
 	arr := []([]int){}
-	for _, row := range board{
+	for _, row := range board {
 		newRow := []int{}
-		for _,tile := range row{
-			newRow = append(newRow,tile)
+		for _, tile := range row {
+			newRow = append(newRow, tile)
 		}
-		arr = append(arr,newRow)
+		arr = append(arr, newRow)
 	}
 	return arr
 }

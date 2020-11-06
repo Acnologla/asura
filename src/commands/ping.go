@@ -3,8 +3,8 @@ package commands
 import (
 	"asura/src/handler"
 	"context"
-	"github.com/andersfylling/disgord"
 	"fmt"
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -21,5 +21,5 @@ func init() {
 func runPing(session disgord.Session, msg *disgord.Message, args []string) {
 	ping, _ := handler.Client.HeartbeatLatencies()
 	shard := disgord.ShardID(msg.GuildID, 1)
-	msg.Reply(context.Background(), session, fmt.Sprintf("%dms",ping[shard].Milliseconds()))
+	msg.Reply(context.Background(), session, fmt.Sprintf("%dms", ping[shard].Milliseconds()))
 }

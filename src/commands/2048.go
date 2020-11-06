@@ -118,7 +118,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Content: ":zero:\n\n" + draw2048Board(board),
 	})
-	mes := 	session.Channel(message.ChannelID).Message(message.ID)
+	mes := session.Channel(message.ChannelID).Message(message.ID)
 	if err == nil {
 		for i := 0; i < 4; i++ {
 			utils.Try(func() error {
@@ -131,7 +131,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 				if time.Since(lastPlay).Seconds()/60 >= 2 {
 					handler.DeleteHandler(message)
 					mes.DeleteAllReactions()
-					msgUpdater :=  mes.Update()
+					msgUpdater := mes.Update()
 					msgUpdater.SetContent(fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), draw2048Board(board)))
 					utils.Try(func() error {
 						_, err := msgUpdater.Execute()

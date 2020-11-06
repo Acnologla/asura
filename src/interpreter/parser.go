@@ -7,12 +7,12 @@ import (
 
 type AwaitCall struct {
 	Params interface{}
-	Await bool
+	Await  bool
 }
 
-type AsyncFn struct{
-  Compound interface{}
-  Async bool
+type AsyncFn struct {
+	Compound interface{}
+	Async    bool
 }
 
 type Token struct {
@@ -74,7 +74,7 @@ func (this *Parser) accAcess(name *Lexem, operator *Lexem) *Token {
 	var tok *Token
 	this.JumpBreaks()
 	if operator.Value == "." {
-		tok = this.CreateToken(name.Value, "property", this.CreateToken(nil,this.Current().Value,nil))
+		tok = this.CreateToken(name.Value, "property", this.CreateToken(nil, this.Current().Value, nil))
 		this.Eat(this.Current().Type)
 	} else {
 		n := this.Parse()
@@ -90,7 +90,7 @@ func (this *Parser) accAcess(name *Lexem, operator *Lexem) *Token {
 	for this.Current().Type == 5 && (this.Current().Value == "." || this.Current().Value == "[") {
 		if this.Current().Value == "." {
 			this.Eat(5)
-			tok = this.CreateToken(tok, "property", this.CreateToken(nil,this.Current().Value,nil))
+			tok = this.CreateToken(tok, "property", this.CreateToken(nil, this.Current().Value, nil))
 			this.Eat(this.Current().Type)
 		} else {
 			this.Eat(5)
@@ -164,8 +164,8 @@ func (this *Parser) AccID() *Token {
 			return tok
 		}
 		this.I--
-		tok,isStr := value.(*Token)
-		if isStr{
+		tok, isStr := value.(*Token)
+		if isStr {
 			return tok
 		}
 		return this.CreateToken(nil, name.Value, nil)
@@ -246,7 +246,7 @@ func (this *Parser) Parse() *Token {
 			this.Eat(5)
 			this.JumpBreaks()
 			object := map[string]*Token{}
-			if this.Current().Type == 5 && this.Current().Value == "}"{
+			if this.Current().Type == 5 && this.Current().Value == "}" {
 				this.Eat(5)
 				return this.CreateToken(nil, "map", object)
 			}
@@ -272,7 +272,7 @@ func (this *Parser) Parse() *Token {
 			this.Eat(5)
 			if this.Current().Value == "]" && this.Current().Type == 5 {
 				this.Eat(5)
-				return this.CreateToken(nil,"array", []*Token{})
+				return this.CreateToken(nil, "array", []*Token{})
 			}
 			arr := []*Token{this.Parse()}
 			for this.Current().Type == 5 && this.Current().Value == "," {
@@ -296,10 +296,10 @@ func (this *Parser) Parse() *Token {
 			val := this.Eat(3).Value
 			return this.CreateToken(val, "import", nil)
 		}
-		if keyword.Value == "fn"  || (keyword.Value == "async" && this.Current().Value == "fn"){
+		if keyword.Value == "fn" || (keyword.Value == "async" && this.Current().Value == "fn") {
 			var name string
 			var async bool
-			if keyword.Value == "async"{
+			if keyword.Value == "async" {
 				this.Eat(6)
 				async = true
 			}
@@ -322,19 +322,19 @@ func (this *Parser) Parse() *Token {
 			this.Eat(5)
 			this.Eat(5)
 			if async {
-				return this.CreateToken(params,name,AsyncFn{
+				return this.CreateToken(params, name, AsyncFn{
 					Compound: this.Compound(),
-					Async: true,
+					Async:    true,
 				})
 			}
 			fnTok := this.CreateToken(params, name, this.Compound())
 			return fnTok
 		}
-		if keyword.Value == "await"{
+		if keyword.Value == "await" {
 			call := this.Parse()
 			call.Right = AwaitCall{
 				Params: call.Right,
-				Await: true,
+				Await:  true,
 			}
 			return call
 		}

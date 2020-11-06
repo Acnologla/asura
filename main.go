@@ -28,14 +28,14 @@ func main() {
 			panic("Cannot read the motherfucking envfile")
 		}
 	}
-	
+
 	// Initialize datalog services for telemetry of the application
 	telemetry.Init()
 	database.Init()
 	fmt.Println("Starting bot...")
 	client := disgord.New(disgord.Config{
-		RejectEvents : []string{"GUILD_MEMBER_ADD","GUILD_MEMBER_UPDATE","GUILD_MEMBER_REMOVE","PRESENCE_UPDATE","GuildMessageTyping"},
-		BotToken: os.Getenv("TOKEN"),
+		RejectEvents: []string{"GUILD_MEMBER_ADD", "GUILD_MEMBER_UPDATE", "GUILD_MEMBER_REMOVE", "PRESENCE_UPDATE", "GuildMessageTyping"},
+		BotToken:     os.Getenv("TOKEN"),
 	})
 	defer client.StayConnectedUntilInterrupted()
 	handler.Client = client
@@ -44,5 +44,5 @@ func main() {
 	client.Gateway().MessageReactionAdd(handler.OnReactionAdd)
 	client.Gateway().MessageReactionRemove(handler.OnReactionRemove)
 	client.Gateway().Ready(onReady)
-	
+
 }

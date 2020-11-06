@@ -6,11 +6,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/andersfylling/disgord"
 	"io/ioutil"
 	"math"
 	"math/rand"
 	"strings"
-	"github.com/andersfylling/disgord"
 )
 
 type Effect struct {
@@ -44,7 +44,6 @@ type Galo struct {
 	Equipped []int  `json:"equipped"`
 	Win      int    `json:"win"`
 	Lose     int    `json:"lose"`
-
 }
 
 var Effects []*Effect
@@ -56,15 +55,15 @@ func init() {
 
 	byteValueClass, _ := ioutil.ReadFile("./resources/galo/class.json")
 	json.Unmarshal([]byte(byteValueClass), &Classes)
-	for i :=0; i < len(Classes)-1;i++{
-		Skills = append(Skills,[]*Skill{})
+	for i := 0; i < len(Classes)-1; i++ {
+		Skills = append(Skills, []*Skill{})
 	}
 	atacks, _ := ioutil.ReadDir("./resources/galo/attacks")
 	for _, class := range atacks {
 		byteValueAtack, _ := ioutil.ReadFile(fmt.Sprintf("./resources/galo/attacks/%s", class.Name()))
-		name := strings.Split(class.Name(),".")[0]
+		name := strings.Split(class.Name(), ".")[0]
 		index := findClassIndex(name)
-		if index != -1{
+		if index != -1 {
 			skils := []*Skill{}
 			json.Unmarshal([]byte(byteValueAtack), &skils)
 			Skills[index] = skils
@@ -85,11 +84,11 @@ func findClassIndex(class string) int {
 	return -1
 }
 
-func SkillToString(skill *Skill) (text string){
+func SkillToString(skill *Skill) (text string) {
 	text = fmt.Sprintf("Dano: %d - %d", skill.Damage[0], skill.Damage[1]-1)
-	if skill.Effect[0] != 0 || skill.Effect[1] != 0{
+	if skill.Effect[0] != 0 || skill.Effect[1] != 0 {
 		effect := Effects[int(skill.Effect[1])]
-		text += fmt.Sprintf("\nTem %d%% de Chance de causar %s",int(skill.Effect[0]*100),effect.Name)
+		text += fmt.Sprintf("\nTem %d%% de Chance de causar %s", int(skill.Effect[0]*100), effect.Name)
 	}
 	return
 }
@@ -112,11 +111,11 @@ func SaveGaloDB(id disgord.Snowflake, galo Galo) {
 func GetSkills(galo Galo) []int {
 	skills := []int{}
 	lvl := CalcLevel(galo.Xp)
-	if galo.Type == 0{
+	if galo.Type == 0 {
 		return skills
 	}
 	for i := 0; i < len(Skills[galo.Type-1]); i++ {
-		if Skills[galo.Type-1][i].Level > lvl  {
+		if Skills[galo.Type-1][i].Level > lvl {
 			continue
 		}
 		skills = append(skills, i)
@@ -128,7 +127,7 @@ func GetNextSkill(galo Galo) []*Skill {
 	skills := []*Skill{}
 	lvl := CalcLevel(galo.Xp)
 	for i := 0; i < len(Skills[galo.Type-1]); i++ {
-		if Skills[galo.Type-1][i].Level == lvl+1{
+		if Skills[galo.Type-1][i].Level == lvl+1 {
 			skills = append(skills, Skills[galo.Type-1][i])
 		}
 	}

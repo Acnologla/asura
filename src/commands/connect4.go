@@ -104,7 +104,7 @@ func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 			}, 5)
 		}
 		turn := 1
-		mes :=  session.Channel(message.ChannelID).Message(message.ID)
+		mes := session.Channel(message.ChannelID).Message(message.ID)
 		handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
 			turnUser := user
 			num := 2
@@ -147,7 +147,7 @@ func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 						}
 					}
 				}
-			} else if u != message.Author.ID  {
+			} else if u != message.Author.ID {
 				mes.Reaction(emoji.Name).DeleteUser(u)
 			}
 		}, 60*20)

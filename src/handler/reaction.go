@@ -6,11 +6,10 @@ import (
 	"time"
 )
 
-
-var ReactionHandlers =  map[disgord.Snowflake]func(bool, disgord.Emoji,disgord.Snowflake){}
+var ReactionHandlers = map[disgord.Snowflake]func(bool, disgord.Emoji, disgord.Snowflake){}
 var ReactionLock = &sync.RWMutex{}
 
-func RegisterHandler(msg *disgord.Message, callback func(bool, disgord.Emoji,disgord.Snowflake), timeout int) {
+func RegisterHandler(msg *disgord.Message, callback func(bool, disgord.Emoji, disgord.Snowflake), timeout int) {
 	ReactionHandlers[msg.ID] = callback
 	if timeout != 0 {
 		time.Sleep(time.Duration(timeout) * time.Second)
@@ -28,14 +27,14 @@ func sendReaction(removed bool, id disgord.Snowflake, emoji disgord.Emoji, user 
 	ReactionLock.RLock()
 	if cb, found := ReactionHandlers[id]; found {
 		ReactionLock.RUnlock()
-		cb(removed, emoji,user)
+		cb(removed, emoji, user)
 		return
 	}
 	ReactionLock.RUnlock()
 }
 
 func OnReactionAdd(session disgord.Session, evt *disgord.MessageReactionAdd) {
-	go sendReaction(false, evt.MessageID, *evt.PartialEmoji,evt.UserID)
+	go sendReaction(false, evt.MessageID, *evt.PartialEmoji, evt.UserID)
 }
 
 func OnReactionRemove(session disgord.Session, evt *disgord.MessageReactionRemove) {

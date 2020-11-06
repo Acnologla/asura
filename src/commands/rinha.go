@@ -103,9 +103,9 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				Description: fmt.Sprintf("**%s** clique na reação abaixo para aceitar o duelo", msg.Mentions[0].Username),
 			},
 		})
-		utils.Try(func () error {
-			return confirmMsg.React(context.Background(),session,"✅")
-		},5)
+		utils.Try(func() error {
+			return confirmMsg.React(context.Background(), session, "✅")
+		}, 5)
 		if confirmErr == nil {
 			say := false
 			handler.RegisterHandler(confirmMsg, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
@@ -114,7 +114,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 						battleMutex.RLock()
 						if currentBattles[msg.Author.ID] != "" {
 							battleMutex.RUnlock()
-							if !say{
+							if !say {
 								say = true
 								msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
 							}
@@ -122,7 +122,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 						}
 						if currentBattles[msg.Mentions[0].ID] != "" {
 							battleMutex.RUnlock()
-							if !say{
+							if !say {
 								say = true
 								msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
 							}
@@ -130,7 +130,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 						}
 						battleMutex.RUnlock()
 						go session.Channel(confirmMsg.ChannelID).Message(confirmMsg.ID).Delete()
-						executeRinha(msg,session)
+						executeRinha(msg, session)
 					}
 				}
 			}, 120)
@@ -141,7 +141,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 }
 
-func executeRinha(msg *disgord.Message,session disgord.Session) {
+func executeRinha(msg *disgord.Message, session disgord.Session) {
 	galoAdv, _ := rinha.GetGaloDB(msg.Mentions[0].ID)
 	battleMutex.Lock()
 	currentBattles[msg.Author.ID] = msg.Mentions[0].Username
