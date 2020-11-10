@@ -26,10 +26,10 @@ func runChangeGalo(session disgord.Session, msg *disgord.Message, args []string)
 		Changes: -1,
 	}
 	database.Database.NewRef(fmt.Sprintf("galo/%d",msg.Author.ID)).Get(context.Background(), &galo)
-	if galo.Changes == -1 {
-		galo.Changes = 2
+	if galo.Changes == 0 {
+		galo.Changes = 3
 	}
-	if galo.Changes == 0{
+	if galo.Changes == 1{
 		msg.Reply(context.Background(),session,msg.Author.Mention()+", Acabaram suas fichas de troca")
 		return
 	}
@@ -38,6 +38,6 @@ func runChangeGalo(session disgord.Session, msg *disgord.Message, args []string)
 	galo.Type = galoType
 	galo.Equipped = []int{}
 	rinha.SaveGaloDB(msg.Author.ID, galo)
-	msg.Reply(context.Background(),session,fmt.Sprintf("%s, Seu galo virou **%s**, lhe restam **%d** fichas de troca",msg.Author.Mention(),rinha.Classes[galo.Type].Name,galo.Changes))
+	msg.Reply(context.Background(),session,fmt.Sprintf("%s, Seu galo virou **%s**, lhe restam **%d** fichas de troca",msg.Author.Mention(),rinha.Classes[galo.Type].Name,galo.Changes - 1))
 }
 

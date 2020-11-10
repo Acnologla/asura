@@ -4,6 +4,8 @@ services:
     image: registry.gitlab.com/acnologla/asura:latest
     container_name: asura
     restart: unless-stopped
+    environment:
+    - TASK_SLOT={{.Task.Slot}}
     ports:
       - "5000:4000"
   asuraservice:

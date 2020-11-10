@@ -28,7 +28,6 @@ func main() {
 			panic("Cannot read the motherfucking envfile")
 		}
 	}
-	fmt.Println(os.Getenv("TASK_SLOT"))
 	// Initialize datalog services for telemetry of the application
 	telemetry.Init()
 	database.Init()
