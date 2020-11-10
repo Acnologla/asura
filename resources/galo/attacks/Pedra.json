@@ -16,23 +16,23 @@
     },
     {
         "name": "Prisão de pedra",
-        "damage": [5,15],
+        "damage": [15,20],
         "level": 4,
-        "effect": [0.25,3]
+        "effect": [0.3,3]
     },
     {
         "name": "Soco de pedra",
-        "damage": [24,32],
+        "damage": [27,35],
         "level": 6
     },
     {
         "name": "Terremoto",
-        "damage": [5,60],
+        "damage": [10,60],
         "level": 7
     },
     {
         "name": "Chute de pedra",
-        "damage": [32,35],
+        "damage": [35,38],
         "level": 8
     },
     {
@@ -53,13 +53,13 @@
     },
     {
         "name": "Rompimento tectonico",
-        "damage": [10,20],
+        "damage": [20,30],
         "level": 15,
         "effect": [0.33,3]
     },
     {
         "name": "Pedra suprema",
-        "damage": [47,55],
+        "damage": [50,58],
         "level": 16
     },
     {
@@ -80,7 +80,7 @@
     },
     {
         "name": "Tijolada",
-        "damage": [15,25],
+        "damage": [35,45],
         "level": 25,
         "effect": [0.5, 3]
     }

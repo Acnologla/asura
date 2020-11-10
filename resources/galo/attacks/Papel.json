@@ -43,12 +43,12 @@
     },
     {
         "name": "Papel negro",
-        "damage": [30,35],
+        "damage": [33,38],
         "level": 10
     },
     {
         "name": "Chuva de papel negro",
-        "damage": [40,45],
+        "damage": [40,50],
         "level": 12
     },
     {
@@ -60,7 +60,7 @@
     },
     {
         "name": "Estrela de papel",
-        "damage": [47,50],
+        "damage": [50,60],
         "level": 15
     },
     {

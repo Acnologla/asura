@@ -61,5 +61,44 @@
         "self": false,
         "phrase": "%s está sangrando! (-%d)",
         "range": [5,20]
+    },{
+        "name": "Chamas", 
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está pegando fogo! (-%d)",
+        "range": [5,15]
+    },
+    {
+        "name": "Chamas potentes", 
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está pegando fogo! (-%d)",
+        "range": [15,25]
+    },
+    {
+        "name": "Cremação", 
+        "turns": 1,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está cremando! (-%d)",
+        "range": [30,35]
+    },
+    {
+        "name": "Hipotermia", 
+        "turns": 3,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está congelando! (-%d)",
+        "range": [9,10]
+    },
+    {
+        "name": "Zero absoluto", 
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está congelando! (-%d)",
+        "range": [14,15]
     }
 ]

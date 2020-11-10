@@ -2,8 +2,7 @@
     {
         "name": "Tesourada",
         "damage": [17,22],
-        "level": 1,
-        "effect": [0.05, 1]
+        "level": 1
     },
     {
         "name": "Tesourada intermitente",
@@ -30,57 +29,57 @@
     },
     {
         "name": "Explosão de tesouras",
-        "damage": [5,60],
+        "damage": [12,60],
         "level": 7
     },
     {
         "name": "Caixa de ferro",
-        "damage": [10,15],
+        "damage": [31,35],
         "level": 8,
         "effect": [1,5]
     },
     {
         "name": "Machadada",
-        "damage": [35,40],
+        "damage": [41,43],
         "level": 10
     },
     {
         "name": "Dama de ferro",
-        "damage": [15,20],
+        "damage": [35,40],
         "level": 12,
         "effect": [1,5]
     },
     {
         "name": "Tesourada estilo Katana",
-        "damage": [43,48],
+        "damage": [47,50],
         "level": 14 
     },
     {
         "name": "Katanada intermitente",
-        "damage": [20,25],
+        "damage": [35,38],
         "level": 15,
         "effect": [0.3, 1]
     },
     {
         "name": "Cortadora de principes",
-        "damage": [47,55],
+        "damage": [42,50],
         "level": 16,
         "effect": [1, 1]
     },
     {
         "name": "Mãos de tesoura",
-        "damage": [55,60],
+        "damage": [50,60],
         "level": 19
     },
     {
         "name": "Machadada interestelar",
-        "damage": [40,50],
+        "damage": [40,45],
         "level": 21,
         "effect":[1,6]
     },
     {
         "name": "Cem mil tesouradas",
-        "damage": [56,63],
+        "damage": [40,50],
         "level": 23,
         "effect":[1,6]
     },
