@@ -44,6 +44,7 @@ type Galo struct {
 	Equipped []int  `json:"equipped"`
 	Win      int    `json:"win"`
 	Lose     int    `json:"lose"`
+	Changes  int    `json:"changes"`
 }
 
 var Effects []*Effect
