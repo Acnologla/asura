@@ -10,7 +10,7 @@ import (
 	"math/rand"
 )
 
-var galoColors = []int{65535, 16777214, 8421504, 16711680}
+var galoColors = []int{65535, 16777214, 8421504, 16711680,16744192,255}
 
 func init() {
 	handler.Register(handler.Command{
@@ -52,7 +52,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			Title: "Galo do " + user.Username,
 			Color: galoColors[galo.Type-1],
 			Thumbnail: &disgord.EmbedThumbnail{
-				URL: "https://blogs.uai.com.br/cantodogalo/wp-content/uploads/sites/32/2017/09/galo-imagem.jpg",
+				URL: rinha.Sprites[0][galo.Type-1],
 			},
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!skills para ver os skills e equipa-las",
