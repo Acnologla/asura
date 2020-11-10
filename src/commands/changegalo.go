@@ -22,9 +22,7 @@ func init() {
 }
 
 func runChangeGalo(session disgord.Session, msg *disgord.Message, args []string) {
-	galo := rinha.Galo{
-		Changes: -1,
-	}
+	galo := rinha.Galo{}
 	database.Database.NewRef(fmt.Sprintf("galo/%d",msg.Author.ID)).Get(context.Background(), &galo)
 	if galo.Changes == 0 {
 		galo.Changes = 3
