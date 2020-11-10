@@ -71,8 +71,8 @@ func check(e error) {
 func main(){
     data := []Result{}
     
-    for i := 1; i < 25; i++ {
-        for j := 1; j <= 4; j++ {    
+    for i := 1; i <= 25; i++ {
+        for j := 1; j <= 6; j++ {    
             res :=  battle(j,1,i,i,10000)
             res.Class = [2]int{1,j}
             res.Level = [2]int{i,i}
