@@ -49,7 +49,7 @@ func runTopGalos(session disgord.Session, msg *disgord.Message, args []string) {
 			} else {
 				username = user.Username + "#" + user.Discriminator.String()
 			}
-			text += fmt.Sprintf("[%d] - %s\nLevel: %d\n", len(result)-i, username, rinha.CalcLevel(gal.Xp)+1)
+			text += fmt.Sprintf("[%d] - %s\nLevel: %d\n", len(result)-i, username, rinha.CalcLevel(gal.Xp))
 		} else {
 			if result[i].Key() == uid {
 				myPos = len(result) - i
