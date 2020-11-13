@@ -252,7 +252,8 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 					rinha.SaveGaloDB(loser.ID, *battle.Fighters[turn].Galo)
 					battle.Fighters[winnerTurn].Galo.Win++
 				}
-				battle.Fighters[winnerTurn].Galo.Xp += xpOb
+				battle.Fighters[winnerTurn].Galo.Xp    += xpOb
+				battle.Fighters[winnerTurn].Galo.Money += money
 				rinha.SaveGaloDB(winner.ID, *battle.Fighters[winnerTurn].Galo)
 				if rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) > rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp-xpOb) {
 					nextLevel := rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)
