@@ -40,14 +40,19 @@ func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 	} else {
 		commandText := ""
+		rinhaText :=  ""
 		for _, command := range handler.Commands {
 			if command.Available {
-				commandText += fmt.Sprintf("`%s` ", command.Aliases[0])
+				if command.Category == 0{
+					commandText += fmt.Sprintf("`%s` ", command.Aliases[0])
+				}else{
+					rinhaText += fmt.Sprintf("`%s` ", command.Aliases[0])
+				}
 			}
 		}
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 			Embed: &disgord.Embed{
-				Description: commandText + "\n\n[**Servidor de Suporte**](https://discord.gg/tdVWQGV)",
+				Description: commandText + "\n\n**Comandos de rinha**\n" + rinhaText +  "\n\n[**Servidor de Suporte**](https://discord.gg/tdVWQGV)",
 				Footer: &disgord.EmbedFooter{
 					Text: "Use j!help <comando> para ver informaçoes sobre um comando",
 				},

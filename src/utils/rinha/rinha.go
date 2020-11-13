@@ -22,6 +22,10 @@ const (
 	Legendary
 )
 
+func (rarity Rarity) String() string{
+	return [...]string{"Comum","Raro","Epico","Lendario"}[rarity]
+}
+
 type Effect struct {
 	Name   string `json:"name"`
 	Class  int    `json:"class"`
@@ -54,7 +58,9 @@ type Galo struct {
 	Equipped []int  `json:"equipped"`
 	Win      int    `json:"win"`
 	Lose     int    `json:"lose"`
-	Changes  int    `json:"changes"`
+	Lootbox  int    `json:"lootbox"`
+	Galos    []int  `json:"galos"`
+	Money    int    `json:"money"`
 }
 
 var Effects []*Effect

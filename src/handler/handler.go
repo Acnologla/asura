@@ -24,6 +24,7 @@ type Command struct {
 	Usage     string
 	Cooldown  int
 	Available bool
+	Category  int
 }
 
 type Msg struct {

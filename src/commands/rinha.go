@@ -44,6 +44,7 @@ func init() {
 		Cooldown:  10,
 		Usage:     "j!rinha <user>",
 		Help:      "Briga",
+		Category:  1,
 	})
 }
 
