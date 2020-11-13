@@ -13,7 +13,7 @@ func init() {
 		Aliases:   []string{"lootbox","lb"},
 		Run:       runLootbox,
 		Available: true,
-		Cooldown:  3,
+		Cooldown:  4,
 		Usage:     "j!lootbox",
 		Help:      "Abra lootboxs",
 		Category:  1,
@@ -38,7 +38,21 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(),session,"Voce tem 0 lootboxs, use `j!lootbox buy` para comprar uma")
 			return
 		}
-		//TODO open lootbox
+		result := rinha.Open()
+		if !rinha.IsIntInList(result,galo.Galos){
+			galo.Galos = append(galo.Galos,result)
+		}
+		galo.Lootbox--
+		rinha.SaveGaloDB(msg.Author.ID,galo)
+		newGalo := rinha.Classes[result]
+		msg.Reply(context.Background(),session,&disgord.Embed{
+			Color: newGalo.Rarity.Color(),
+			Title: "Lootbox open",
+			Description: "Voce abriu uma lootbox e ganhou o galo " + newGalo.Name,
+			Thumbnail: &disgord.EmbedThumbnail{
+				URL: rinha.Sprites[0][result-1],
+			},
+		})
 	}else if args[0] == "buy" || args[0] == "comprar" {
 		//TODO buy lootbox
 	}else{

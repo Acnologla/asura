@@ -226,7 +226,6 @@ func init() {
 		Help:      "Jogue uno",
 	})
 	colors := []string{"B", "R", "Y", "G"}
-	rand.Seed(time.Now().UnixNano())
 	for i := 0; i <= 9; i++ {
 		cards = append(cards, fmt.Sprintf("B%d", i), fmt.Sprintf("B%d", i))
 		cards = append(cards, fmt.Sprintf("R%d", i), fmt.Sprintf("R%d", i))

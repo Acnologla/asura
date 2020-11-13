@@ -26,6 +26,10 @@ func (rarity Rarity) String() string{
 	return [...]string{"Comum","Raro","Epico","Lendario"}[rarity]
 }
 
+func (rarity Rarity) Color() int {
+	return [...]int{13493247,255,9699539,16748544}[rarity]
+}
+
 type Effect struct {
 	Name   string `json:"name"`
 	Class  int    `json:"class"`

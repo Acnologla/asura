@@ -240,8 +240,12 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 					turn = battle.GetReverseTurn()
 				}
 				xpOb := (rand.Intn(15) + 10) - (2 * (rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) - rinha.CalcLevel(battle.Fighters[turn].Galo.Xp)))
+				money := 0
 				if 0 > xpOb {
 					xpOb = 0
+				}
+				if 2 >= rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) - rinha.CalcLevel(battle.Fighters[turn].Galo.Xp){
+					money = 5
 				}
 				if xpOb > 3 {
 					battle.Fighters[turn].Galo.Lose++
@@ -265,7 +269,7 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 						},
 					})
 				}
-				embed.Description += fmt.Sprintf("\nO galo de **%s** venceu e ganhou %d de XP (%d/%d)", winner.Username, xpOb, battle.Fighters[winnerTurn].Galo.Xp, rinha.CalcXP(rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)+1))
+				embed.Description += fmt.Sprintf("\nO galo de **%s** venceu e ganhou %d de XP (%d/%d) e %d de dinheiro", winner.Username, xpOb, battle.Fighters[winnerTurn].Galo.Xp, rinha.CalcXP(rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)+1), money)
 				edit(message, embed)
 				battleMutex.Lock()
 				delete(currentBattles, msg.Author.ID)

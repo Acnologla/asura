@@ -9,6 +9,8 @@ import (
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
 	"os"
+	"math/rand"
+	"time"
 )
 
 func onReady(session disgord.Session, evt *disgord.Ready) {
@@ -20,7 +22,7 @@ func onReady(session disgord.Session, evt *disgord.Ready) {
 
 }
 func main() {
-
+	rand.Seed(time.Now().UnixNano())
 	// If it's not in production so it's good to read a ".env" file
 	if os.Getenv("PRODUCTION") == "" {
 		err := godotenv.Load()
