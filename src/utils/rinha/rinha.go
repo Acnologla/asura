@@ -13,6 +13,15 @@ import (
 	"strings"
 )
 
+type Rarity int
+
+const (
+	Common Rarity = iota
+	Rare
+	Epic
+	Legendary
+)
+
 type Effect struct {
 	Name   string `json:"name"`
 	Class  int    `json:"class"`
@@ -27,6 +36,7 @@ type Class struct {
 	Name          string `json:"name"`
 	Desc          string `json:"desc"`
 	Disadvantages []int  `json:"disadvantages"`
+	Rarity        Rarity    `json:"rarity"`
 }
 
 type Skill struct {
@@ -159,6 +169,22 @@ func Between(damage [2]int) int {
 		return damage[1]
 	}
 	return rand.Intn(damage[1]-damage[0]) + damage[0]
+}
+
+func GetRandByType(classType Rarity) int{
+	classTypeArr := []*Class{}
+	for _, class := range Classes{
+		if class.Rarity == classType{
+			classTypeArr = append(classTypeArr, class)
+		}
+	}
+	selected := classTypeArr[rand.Intn(len(classTypeArr))]
+	for i, class := range Classes{
+		if class.Name == selected.Name{
+			return i
+		}
+	}
+	return -1
 }
 
 func SaturateSub(one int, two int) int {

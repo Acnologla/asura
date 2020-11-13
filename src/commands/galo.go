@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
-	"math/rand"
 )
 
 var galoColors = []int{65535, 16777214, 8421504, 16711680,16744192,255}
@@ -30,7 +29,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	nextLevelXP := rinha.CalcXP(level + 1)
 	curLevelXP := rinha.CalcXP(level)
 	if galo.Type == 0 {
-		galoType := rand.Intn(len(rinha.Classes)-1) + 1
+		galoType := rinha.GetRandByType(rinha.Common)
 		galo.Type = galoType
 		rinha.SaveGaloDB(user.ID, galo)
 	}

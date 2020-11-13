@@ -155,12 +155,12 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 	AdvLevel := rinha.CalcLevel(galoAdv.Xp)
 
 	if galoAuthor.Type == 0 {
-		galoType := rand.Intn(len(rinha.Classes)-1) + 1
+		galoType := rinha.GetRandByType(rinha.Common)
 		galoAuthor.Type = galoType
 		rinha.SaveGaloDB(msg.Author.ID, galoAuthor)
 	}
 	if galoAdv.Type == 0 {
-		galoType := rand.Intn(len(rinha.Classes)-1) + 1
+		galoType := rinha.GetRandByType(rinha.Common)
 		galoAdv.Type = galoType
 		rinha.SaveGaloDB(user.ID, galoAdv)
 	}

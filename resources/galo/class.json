@@ -1,29 +1,36 @@
 [
     {
-        "name": "BugError404NotE E E BOOM"
+        "name": "BugError404NotE E E BOOM",
+        "rarity": -1
     },
     {
         "name": "Normal",
-        "disadvantages": []
+        "disadvantages": [],
+        "rarity":  0
     },
     {
         "name": "Papel",
-        "disadvantages": [4,5]
+        "disadvantages": [4,5],
+        "rarity":  0
     },
     {
         "name": "Pedra",
-        "disadvantages": [2,6]
+        "disadvantages": [2,6],
+        "rarity":  0
     },
     {
         "name": "Cortante",
-        "disadvantages": [3]
+        "disadvantages": [3],
+        "rarity":  0
     },
     {
         "name": "Fogo",
-        "disadvantages": [3]
+        "disadvantages": [3],
+        "rarity":  0
     },
     {
         "name": "Gelo",
-        "disadvantages": [2]
+        "disadvantages": [2],
+        "rarity":  0
     }
 ]
