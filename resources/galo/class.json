@@ -10,7 +10,7 @@
     },
     {
         "name": "Papel",
-        "disadvantages": [4,5],
+        "disadvantages": [4,5,7],
         "rarity":  0
     },
     {
@@ -25,12 +25,17 @@
     },
     {
         "name": "Fogo",
-        "disadvantages": [3],
+        "disadvantages": [3,7],
         "rarity":  0
     },
     {
         "name": "Gelo",
-        "disadvantages": [2],
+        "disadvantages": [2,7],
         "rarity":  0
+    },
+    {
+        "name": "Magma",
+        "disadvantages": [],
+        "rarity":  1
     }
 ]

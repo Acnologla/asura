@@ -31,7 +31,7 @@
         "range": [0,0]
     },
     {
-        "name": "Escudo de pena",
+        "name": "Escudo",
         "turns": 10,
         "type": 4,
         "self": true,
@@ -100,5 +100,13 @@
         "self": false,
         "phrase": "%s está congelando! (-%d)",
         "range": [14,15]
+    },
+    {
+        "name": "Cremação suprema", 
+        "turns": 1,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está cremando! (-%d)",
+        "range": [35,43]
     }
 ]
