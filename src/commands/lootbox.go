@@ -13,7 +13,7 @@ func init() {
 		Aliases:   []string{"lootbox", "lb"},
 		Run:       runLootbox,
 		Available: true,
-		Cooldown:  3,
+		Cooldown:  2,
 		Usage:     "j!lootbox",
 		Help:      "Abra lootboxs",
 		Category:  1,
@@ -39,8 +39,11 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		result := rinha.Open()
-		if !rinha.IsIntInList(result, galo.Galos) && galo.Type != result {
-			galo.Galos = append(galo.Galos, result)
+		if !rinha.HaveGalo(result, galo.Galos) && galo.Type != result {
+			galo.Galos = append(galo.Galos, rinha.SubGalo{
+				Type: result,
+				Xp:   0,
+			})
 		}
 		galo.Lootbox--
 		rinha.SaveGaloDB(msg.Author.ID, galo)
@@ -56,6 +59,10 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 	} else if args[0] == "buy" || args[0] == "comprar" {
 		if 500 > galo.Money {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa ter 500 de dinheiro para comprar uma lootbox, use `j!lootbox` para ver seu dinheiro")
+			return
+		}
+		if len(galo.Galos) >= 5{
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce atingiu o limite maximo de galos (5) use `j!equip` para remover um galo")
 			return
 		}
 		galo.Money -= 500

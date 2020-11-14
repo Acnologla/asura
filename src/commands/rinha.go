@@ -239,7 +239,7 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 					winnerTurn = turn
 					turn = battle.GetReverseTurn()
 				}
-				xpOb := (rand.Intn(15) + 10) - (2 * (rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) - rinha.CalcLevel(battle.Fighters[turn].Galo.Xp)))
+				xpOb := (rand.Intn(15) + 15) - (2 * (rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) - rinha.CalcLevel(battle.Fighters[turn].Galo.Xp)))
 				money := 0
 				if 0 > xpOb {
 					xpOb = 0

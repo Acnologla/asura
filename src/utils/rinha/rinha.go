@@ -55,6 +55,12 @@ type Skill struct {
 	Self   bool       `json:"self"`
 }
 
+type SubGalo struct{
+	Type     int    `json:"type"`
+	Xp       int    `json:"xp"`
+
+}
+
 type Galo struct {
 	Name     string `json:"name"`
 	Xp       int    `json:"xp"`
@@ -63,7 +69,7 @@ type Galo struct {
 	Win      int    `json:"win"`
 	Lose     int    `json:"lose"`
 	Lootbox  int    `json:"lootbox"`
-	Galos    []int  `json:"galos"`
+	Galos    []SubGalo  `json:"galos"`
 	Money    int    `json:"money"`
 }
 
@@ -168,6 +174,15 @@ func IsIntInList(a int, arry []int) bool {
 
 func CalcLevel(xp int) int {
 	return int(math.Floor(math.Sqrt(float64(xp)/30))) + 1
+}
+
+func HaveGalo(galo int,galos []SubGalo) bool{
+	for _,gal := range galos{
+		if gal.Type == galo{
+			return true
+		}
+	}
+	return false
 }
 
 func CalcXP(level int) int {
