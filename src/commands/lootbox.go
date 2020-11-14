@@ -39,7 +39,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		result := rinha.Open()
-		if !rinha.IsIntInList(result, galo.Galos) {
+		if !rinha.IsIntInList(result, galo.Galos) && galo.Type != result {
 			galo.Galos = append(galo.Galos, result)
 		}
 		galo.Lootbox--
