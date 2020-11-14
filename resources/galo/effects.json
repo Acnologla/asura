@@ -108,5 +108,13 @@
         "self": false,
         "phrase": "%s está cremando! (-%d)",
         "range": [35,43]
+    },
+    {
+        "name": "Cura Potente",
+        "turns": 3,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [10,20]
     }
 ]

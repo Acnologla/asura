@@ -25,7 +25,7 @@
     },
     {
         "name": "Fogo",
-        "disadvantages": [3,7],
+        "disadvantages": [3,7,8],
         "rarity":  0
     },
     {
@@ -35,6 +35,11 @@
     },
     {
         "name": "Magma",
+        "disadvantages": [8],
+        "rarity":  1
+    },
+    {
+        "name": "Agua",
         "disadvantages": [],
         "rarity":  1
     }

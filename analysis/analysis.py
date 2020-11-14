@@ -18,6 +18,7 @@ lines = [
     [[],[]],
     [[],[]],
     [[],[]],
+    [[],[]],
 ]
 
 for x in data:
@@ -33,6 +34,7 @@ plt.legend(handles=[
   mpatches.Patch(color='pink', label='FOGO'),
   mpatches.Patch(color='cyan', label='GELO'),
   mpatches.Patch(color='black', label='MAGMA'),
+  mpatches.Patch(color='orange', label='Agua'),
 ])
 
 plt.plot(lines[0][0], lines[0][1], 'r',marker='o')
@@ -42,6 +44,7 @@ plt.plot(lines[3][0], lines[3][1], 'y',marker='o')
 plt.plot(lines[4][0], lines[4][1], 'pink',marker='o')
 plt.plot(lines[5][0], lines[5][1], 'cyan',marker='o')
 plt.plot(lines[6][0], lines[6][1], 'black',marker='o')
+plt.plot(lines[7][0], lines[7][1], 'orange',marker='o')
 plt.plot([0,25],[50,50], 'm', linestyle='--')
 ax=plt.gca()
 
