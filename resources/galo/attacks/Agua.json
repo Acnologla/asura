@@ -17,25 +17,25 @@
     },
     {
         "name": "Agua cristalina",
-        "damage": [5,8],
+        "damage": [5,10],
         "level": 4,
         "effect": [1,2],
         "self": true
     },
     {
         "name": "Tentaculos de agua",
-        "damage": [25,30],
-        "effect": [0.2,3],
+        "damage": [25,35],
+        "effect": [0.3,3],
         "level": 5
     },
     {
         "name": "Corrente de agua",
-        "damage": [32,42],
+        "damage": [32,43],
         "level": 7
     },
     {
         "name": "Feixe de agua",
-        "damage": [35,42],
+        "damage": [35,45],
         "level": 9
     },
     {

@@ -13,6 +13,7 @@ import (
 
 type stats struct{
     Wins []int
+    TotalWins int
     Level []int
     Type int
 }
@@ -146,17 +147,22 @@ func graphic(stat []*stats){
 func main(){
     rand.Seed(time.Now().UTC().UnixNano())
     arr := []*stats{}
-    for i:=1; i < 7;i++{
+    for i:=1; i < 9;i++{
         arr = append(arr,&stats{
             Type: i,
         })
     }
-    for i:=1;i < 26; i+=1{
+    for i:=1;i < 20; i+=1{
         for _,class := range arr{
             result := measure(class.Type,1,i,i,1000,false)
+            class.TotalWins += result
             class.Wins = append(class.Wins,result)
             class.Level = append(class.Level,i)
         }
     }
-    graphic(arr)
+    for _,class := range arr{
+        fmt.Printf("Classe: %s\nTotal %d%%\n",rinha.Classes[class.Type].Name, class.TotalWins/len(class.Wins))
+    }
+
+    //    graphic(arr)
 }
