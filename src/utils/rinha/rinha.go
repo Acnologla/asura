@@ -22,12 +22,12 @@ const (
 	Legendary
 )
 
-func (rarity Rarity) String() string{
-	return [...]string{"Comum","Raro","Epico","Lendario"}[rarity]
+func (rarity Rarity) String() string {
+	return [...]string{"Comum", "Raro", "Epico", "Lendario"}[rarity]
 }
 
 func (rarity Rarity) Color() int {
-	return [...]int{13493247,255,9699539,16748544}[rarity]
+	return [...]int{13493247, 255, 9699539, 16748544}[rarity]
 }
 
 type Effect struct {
@@ -44,7 +44,7 @@ type Class struct {
 	Name          string `json:"name"`
 	Desc          string `json:"desc"`
 	Disadvantages []int  `json:"disadvantages"`
-	Rarity        Rarity    `json:"rarity"`
+	Rarity        Rarity `json:"rarity"`
 }
 
 type Skill struct {
@@ -148,7 +148,7 @@ func GetNextSkill(galo Galo) []*Skill {
 	skills := []*Skill{}
 	lvl := CalcLevel(galo.Xp)
 	for i := 0; i < len(Skills[galo.Type-1]); i++ {
-		if Skills[galo.Type-1][i].Level == lvl{
+		if Skills[galo.Type-1][i].Level == lvl {
 			skills = append(skills, Skills[galo.Type-1][i])
 		}
 	}
@@ -181,16 +181,16 @@ func Between(damage [2]int) int {
 	return rand.Intn(damage[1]-damage[0]) + damage[0]
 }
 
-func GetRandByType(classType Rarity) int{
+func GetRandByType(classType Rarity) int {
 	classTypeArr := []*Class{}
-	for _, class := range Classes{
-		if class.Rarity == classType{
+	for _, class := range Classes {
+		if class.Rarity == classType {
 			classTypeArr = append(classTypeArr, class)
 		}
 	}
 	selected := classTypeArr[rand.Intn(len(classTypeArr))]
-	for i, class := range Classes{
-		if class.Name == selected.Name{
+	for i, class := range Classes {
+		if class.Name == selected.Name {
 			return i
 		}
 	}

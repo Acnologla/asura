@@ -9,7 +9,7 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-var galoColors = []int{65535, 16777214, 8421504, 16711680,16744192,255}
+var galoColors = []int{65535, 16777214, 8421504, 16711680, 16744192, 255}
 
 func init() {
 	handler.Register(handler.Command{

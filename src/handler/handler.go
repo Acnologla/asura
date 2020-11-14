@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-const Workers = 1024
+const Workers = 128
 
 var WorkersArray = [Workers]bool{}
 
