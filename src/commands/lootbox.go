@@ -38,6 +38,10 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, "Voce tem 0 lootboxs, use `j!lootbox buy` para comprar uma")
 			return
 		}
+		if len(galo.Galos) >= 5{
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce atingiu o limite maximo de galos (5) use `j!equip` para remover um galo")
+			return
+		}
 		result := rinha.Open()
 		if !rinha.HaveGalo(result, galo.Galos) && galo.Type != result {
 			galo.Galos = append(galo.Galos, rinha.SubGalo{
@@ -59,10 +63,6 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 	} else if args[0] == "buy" || args[0] == "comprar" {
 		if 500 > galo.Money {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa ter 500 de dinheiro para comprar uma lootbox, use `j!lootbox` para ver seu dinheiro")
-			return
-		}
-		if len(galo.Galos) >= 5{
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce atingiu o limite maximo de galos (5) use `j!equip` para remover um galo")
 			return
 		}
 		galo.Money -= 500

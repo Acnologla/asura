@@ -9,7 +9,6 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-var galoColors = []int{65535, 16777214, 8421504, 16711680, 16744192, 255}
 
 func init() {
 	handler.Register(handler.Command{
@@ -50,7 +49,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		Content: msg.Author.Mention(),
 		Embed: &disgord.Embed{
 			Title: "Galo do " + user.Username,
-			Color: galoColors[galo.Type-1],
+			Color: rinha.Classes[galo.Type].Rarity.Color(),
 			Thumbnail: &disgord.EmbedThumbnail{
 				URL: rinha.Sprites[0][galo.Type-1],
 			},

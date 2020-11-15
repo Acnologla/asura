@@ -132,5 +132,13 @@
         "self": false,
         "phrase": "%s esta envenenado (-%d)",
         "range": [15,20]
+    },
+    {
+        "name": "Full Heal",
+        "turns": 1,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [80,100]
     }
 ]

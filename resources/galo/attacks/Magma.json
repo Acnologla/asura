@@ -35,7 +35,7 @@
     },
     {
         "name": "Tormenta de magma",
-        "damage": [27,30],
+        "damage": [25,30],
         "level": 7
     },
     {
@@ -68,7 +68,7 @@
     },
     {
         "name": "Meteoros de magma",
-        "damage": [15,20],
+        "damage": [10,15],
         "level": 16,
         "effect":[1,9]
     },
@@ -80,13 +80,13 @@
     },
     {
         "name": "Planeta de magma",
-        "damage": [5,10],
+        "damage": [5,20],
         "level": 22,
         "effect": [1,13]
     },
     {
         "name": "Sol derretido",
-        "damage": [60,68],
+        "damage": [60,80],
         "level": 24
     }
 ]

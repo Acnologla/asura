@@ -20,7 +20,7 @@
     },
     {
         "name": "Cortante",
-        "disadvantages": [3,9],
+        "disadvantages": [3,9,10],
         "rarity":  0
     },
     {
@@ -35,7 +35,7 @@
     },
     {
         "name": "Magma",
-        "disadvantages": [8],
+        "disadvantages": [8,10],
         "rarity":  1
     },
     {
@@ -47,5 +47,10 @@
         "name": "Natureza",
         "disadvantages": [7],
         "rarity":  1
+    },
+    {
+        "name": "Luz",
+        "disadvantages": [],
+        "rarity":  2
     }
 ]
