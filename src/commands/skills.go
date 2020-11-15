@@ -16,6 +16,7 @@ func init() {
 		Cooldown:  3,
 		Usage:     "j!skills",
 		Help:      "Informação sobre seu galo",
+		Category:  1,
 	})
 }
 

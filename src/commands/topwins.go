@@ -19,6 +19,7 @@ func init() {
 		Cooldown:  15,
 		Usage:     "j!topwins",
 		Help:      "Veja os galos com mais vitorias",
+		Category:  1,
 	})
 }
 

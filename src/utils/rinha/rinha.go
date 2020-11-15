@@ -13,6 +13,23 @@ import (
 	"strings"
 )
 
+type Rarity int
+
+const (
+	Common Rarity = iota
+	Rare
+	Epic
+	Legendary
+)
+
+func (rarity Rarity) String() string {
+	return [...]string{"Comum", "Raro", "Epico", "Lendario"}[rarity]
+}
+
+func (rarity Rarity) Color() int {
+	return [...]int{13493247, 255, 9699539, 16748544}[rarity]
+}
+
 type Effect struct {
 	Name   string `json:"name"`
 	Class  int    `json:"class"`
@@ -27,6 +44,7 @@ type Class struct {
 	Name          string `json:"name"`
 	Desc          string `json:"desc"`
 	Disadvantages []int  `json:"disadvantages"`
+	Rarity        Rarity `json:"rarity"`
 }
 
 type Skill struct {
@@ -37,6 +55,12 @@ type Skill struct {
 	Self   bool       `json:"self"`
 }
 
+type SubGalo struct{
+	Type     int    `json:"type"`
+	Xp       int    `json:"xp"`
+
+}
+
 type Galo struct {
 	Name     string `json:"name"`
 	Xp       int    `json:"xp"`
@@ -44,7 +68,9 @@ type Galo struct {
 	Equipped []int  `json:"equipped"`
 	Win      int    `json:"win"`
 	Lose     int    `json:"lose"`
-	Changes  int    `json:"changes"`
+	Lootbox  int    `json:"lootbox"`
+	Galos    []SubGalo  `json:"galos"`
+	Money    int    `json:"money"`
 }
 
 var Effects []*Effect
@@ -128,7 +154,7 @@ func GetNextSkill(galo Galo) []*Skill {
 	skills := []*Skill{}
 	lvl := CalcLevel(galo.Xp)
 	for i := 0; i < len(Skills[galo.Type-1]); i++ {
-		if Skills[galo.Type-1][i].Level == lvl{
+		if Skills[galo.Type-1][i].Level == lvl {
 			skills = append(skills, Skills[galo.Type-1][i])
 		}
 	}
@@ -150,6 +176,15 @@ func CalcLevel(xp int) int {
 	return int(math.Floor(math.Sqrt(float64(xp)/30))) + 1
 }
 
+func HaveGalo(galo int,galos []SubGalo) bool{
+	for _,gal := range galos{
+		if gal.Type == galo{
+			return true
+		}
+	}
+	return false
+}
+
 func CalcXP(level int) int {
 	return int(math.Pow(float64(level-1), 2)) * 30
 }
@@ -159,6 +194,22 @@ func Between(damage [2]int) int {
 		return damage[1]
 	}
 	return rand.Intn(damage[1]-damage[0]) + damage[0]
+}
+
+func GetRandByType(classType Rarity) int {
+	classTypeArr := []*Class{}
+	for _, class := range Classes {
+		if class.Rarity == classType {
+			classTypeArr = append(classTypeArr, class)
+		}
+	}
+	selected := classTypeArr[rand.Intn(len(classTypeArr))]
+	for i, class := range Classes {
+		if class.Name == selected.Name {
+			return i
+		}
+	}
+	return -1
 }
 
 func SaturateSub(one int, two int) int {

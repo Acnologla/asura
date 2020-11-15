@@ -31,7 +31,7 @@
         "range": [0,0]
     },
     {
-        "name": "Escudo de pena",
+        "name": "Escudo",
         "turns": 10,
         "type": 4,
         "self": true,
@@ -100,5 +100,45 @@
         "self": false,
         "phrase": "%s está congelando! (-%d)",
         "range": [14,15]
+    },
+    {
+        "name": "Cremação suprema", 
+        "turns": 1,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está cremando! (-%d)",
+        "range": [35,43]
+    },
+    {
+        "name": "Cura Potente",
+        "turns": 3,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [10,20]
+    },
+    {
+        "name": "Maldição",
+        "turns": 3,
+        "type": 1,
+        "self": false,
+        "phrase": "%s esta sobre uma maldição (-%d)",
+        "range": [10,20]
+    },
+    {
+        "name": "Veneno",
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s esta envenenado (-%d)",
+        "range": [15,20]
+    },
+    {
+        "name": "Full Heal",
+        "turns": 1,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [80,100]
     }
 ]

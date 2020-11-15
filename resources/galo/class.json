@@ -1,29 +1,56 @@
 [
     {
-        "name": "BugError404NotE E E BOOM"
+        "name": "BugError404NotE E E BOOM",
+        "rarity": -1
     },
     {
         "name": "Normal",
-        "disadvantages": []
+        "disadvantages": [],
+        "rarity":  0
     },
     {
         "name": "Papel",
-        "disadvantages": [4,5]
+        "disadvantages": [4,5,7],
+        "rarity":  0
     },
     {
         "name": "Pedra",
-        "disadvantages": [2,6]
+        "disadvantages": [2,6,8],
+        "rarity":  0
     },
     {
         "name": "Cortante",
-        "disadvantages": [3]
+        "disadvantages": [3,9,10],
+        "rarity":  0
     },
     {
         "name": "Fogo",
-        "disadvantages": [3]
+        "disadvantages": [3,7,8],
+        "rarity":  0
     },
     {
         "name": "Gelo",
-        "disadvantages": [2]
+        "disadvantages": [2,7,9],
+        "rarity":  0
+    },
+    {
+        "name": "Magma",
+        "disadvantages": [8,10],
+        "rarity":  1
+    },
+    {
+        "name": "Agua",
+        "disadvantages": [9],
+        "rarity":  1
+    },
+    {
+        "name": "Natureza",
+        "disadvantages": [7],
+        "rarity":  1
+    },
+    {
+        "name": "Luz",
+        "disadvantages": [],
+        "rarity":  2
     }
 ]
