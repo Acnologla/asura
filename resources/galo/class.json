@@ -20,7 +20,7 @@
     },
     {
         "name": "Cortante",
-        "disadvantages": [3],
+        "disadvantages": [3,9],
         "rarity":  0
     },
     {
@@ -30,7 +30,7 @@
     },
     {
         "name": "Gelo",
-        "disadvantages": [2,7],
+        "disadvantages": [2,7,9],
         "rarity":  0
     },
     {
@@ -40,7 +40,12 @@
     },
     {
         "name": "Agua",
-        "disadvantages": [],
+        "disadvantages": [9],
+        "rarity":  1
+    },
+    {
+        "name": "Natureza",
+        "disadvantages": [7],
         "rarity":  1
     }
 ]

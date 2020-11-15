@@ -147,7 +147,7 @@ func graphic(stat []*stats){
 func main(){
     rand.Seed(time.Now().UTC().UnixNano())
     arr := []*stats{}
-    for i:=1; i < 9;i++{
+    for i:=1; i < len(rinha.Classes);i++{
         arr = append(arr,&stats{
             Type: i,
         })
