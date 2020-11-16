@@ -10,7 +10,7 @@ import (
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:   []string{"lootbox", "lb"},
+		Aliases:   []string{"lootbox", "lb","money","dinheiro","bal","balance"},
 		Run:       runLootbox,
 		Available: true,
 		Cooldown:  2,
@@ -19,6 +19,7 @@ func init() {
 		Category:  1,
 	})
 }
+const price = 400
 
 func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
@@ -61,11 +62,11 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			},
 		})
 	} else if args[0] == "buy" || args[0] == "comprar" {
-		if 500 > galo.Money {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa ter 500 de dinheiro para comprar uma lootbox, use `j!lootbox` para ver seu dinheiro")
+		if price > galo.Money {
+			msg.Reply(context.Background(), session,fmt.Sprintf("%s, Voce precisa ter %d de dinheiro para comprar uma lootbox, use `j!lootbox` para ver seu dinheiro",msg.Author.Mention(),price))
 			return
 		}
-		galo.Money -= 500
+		galo.Money -= price
 		galo.Lootbox++
 		rinha.SaveGaloDB(msg.Author.ID, galo)
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce comprou uma lootbox use `j!lootbox open` para abrir")
