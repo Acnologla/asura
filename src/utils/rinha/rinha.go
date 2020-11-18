@@ -4,6 +4,7 @@ import (
 	"asura/src/database"
 	"context"
 	"encoding/json"
+	"firebase.google.com/go/db"
 	"errors"
 	"fmt"
 	"github.com/andersfylling/disgord"
@@ -58,7 +59,7 @@ type Skill struct {
 type SubGalo struct{
 	Type     int    `json:"type"`
 	Xp       int    `json:"xp"`
-
+	Name     string `json:"name"`
 }
 
 type Galo struct {
@@ -129,6 +130,28 @@ func GetGaloDB(id disgord.Snowflake) (Galo, error) {
 		return acc, errors.New("There's some error")
 	}
 	return acc, nil
+}
+
+func ChangeMoney(id disgord.Snowflake, money int){
+	fn := func(tn db.TransactionNode) (interface{}, error) {
+		var galo Galo
+		err := tn.Unmarshal(&galo)
+		if err == nil{
+			if galo.Type == 0 {
+				galoType := GetRandByType(Common)
+				galo.Type = galoType
+			}
+			galo.Money += money
+			return galo, nil
+		} 
+		fmt.Println(err)
+		return nil, err
+	}
+	  database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Transaction(context.Background(),fn)
+}
+
+func UpdateGaloDB(id disgord.Snowflake, galo map[string]interface{}){
+	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Update(context.Background(), galo)
 }
 
 func SaveGaloDB(id disgord.Snowflake, galo Galo) {

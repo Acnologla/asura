@@ -51,7 +51,10 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			})
 		}
 		galo.Lootbox--
-		rinha.SaveGaloDB(msg.Author.ID, galo)
+		rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
+			"galos": galo.Galos,
+			"lootbox": galo.Lootbox,
+		})
 		newGalo := rinha.Classes[result]
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       newGalo.Rarity.Color(),
@@ -66,9 +69,11 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session,fmt.Sprintf("%s, Voce precisa ter %d de dinheiro para comprar uma lootbox, use `j!lootbox` para ver seu dinheiro",msg.Author.Mention(),price))
 			return
 		}
-		galo.Money -= price
 		galo.Lootbox++
-		rinha.SaveGaloDB(msg.Author.ID, galo)
+		rinha.ChangeMoney(msg.Author.ID, -price)
+		rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
+			"lootbox": galo.Lootbox,
+		})
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce comprou uma lootbox use `j!lootbox open` para abrir")
 	} else {
 		normal()

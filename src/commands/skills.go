@@ -93,7 +93,9 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 				Content: "Voce equipou essa habilidade",
 			})
-			rinha.SaveGaloDB(user.ID, galo)
+			rinha.UpdateGaloDB(user.ID, map[string]interface{}{
+				"equipped": galo.Equipped,
+			})
 		} else if args[0] == "remove" {
 			if err != nil || i < 0 || i >= len(galo.Equipped) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
@@ -109,7 +111,9 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			} else {
 				galo.Equipped = append(galo.Equipped[:i], galo.Equipped[i+1:]...)
 			}
-			rinha.SaveGaloDB(user.ID, galo)
+			rinha.UpdateGaloDB(user.ID, map[string]interface{}{
+				"equipped": galo.Equipped,
+			})
 		}
 	}
 }

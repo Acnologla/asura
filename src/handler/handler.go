@@ -132,7 +132,6 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 			if checkCooldown(session, msg, realCommand.Aliases[0], msg.Author.ID, realCommand.Cooldown) {
 				return
 			}
-			realCommand.Run(session, msg, args)
 			tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 			telemetry.Info(fmt.Sprintf("Command %s used by %s", realCommand.Aliases[0], tag), map[string]string{
 				"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
@@ -140,6 +139,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 				"command": realCommand.Aliases[0],
 				"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
 			})
+			realCommand.Run(session, msg, args)
 		}
 	} else if strings.HasPrefix(msg.Content, onlyBotMention) {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Meu prefix é **j!** use j!comandos para ver meus comandos")

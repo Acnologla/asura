@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
-	"os"
 	"math/rand"
+	"os"
 	"time"
 )
 
@@ -36,7 +36,7 @@ func main() {
 	fmt.Println("Starting bot...")
 	client := disgord.New(disgord.Config{
 		RejectEvents: []string{"GUILD_MEMBER_ADD", "GUILD_MEMBER_UPDATE", "GUILD_MEMBER_REMOVE", "PRESENCE_UPDATE", "GuildMessageTyping"},
-		BotToken:     os.Getenv("TOKEN"), 
+		BotToken:     os.Getenv("TOKEN"),
 	})
 	defer client.StayConnectedUntilInterrupted()
 	handler.Client = client

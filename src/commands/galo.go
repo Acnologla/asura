@@ -44,11 +44,14 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			Inline: false,
 		})
 	}
-
+	name := "Galo do " + user.Username
+	if galo.Name != ""{
+		name = galo.Name
+	}
 	msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 		Content: msg.Author.Mention(),
 		Embed: &disgord.Embed{
-			Title: "Galo do " + user.Username,
+			Title: name,
 			Color: rinha.Classes[galo.Type].Rarity.Color(),
 			Thumbnail: &disgord.EmbedThumbnail{
 				URL: rinha.Sprites[0][galo.Type-1],

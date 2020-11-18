@@ -48,26 +48,26 @@ func init() {
 	})
 }
 
-func effectToStr(effect *rinha.Result, affected *disgord.User, author *disgord.User, battle *rinha.Battle) string {
+func effectToStr(effect *rinha.Result, affected string, author string, battle *rinha.Battle) string {
 	if effect.Effect == rinha.Damaged {
 		if effect.Skill.Self {
-			return fmt.Sprintf("%s **%s** Usou **%s** em si mesmo\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name)
+			return fmt.Sprintf("%s **%s** Usou **%s** em si mesmo\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name)
 		} else {
-			return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author.Username, effect.Skill.Name, effect.Damage)
+			return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
 		}
 	} else if effect.Effect == rinha.Effected {
 		effect_literal := rinha.GetEffectFromSkill(effect.Skill)
 		if effect.Self {
-			return fmt.Sprintf(effect_literal.Phrase+"\n", author.Username, effect.Damage)
+			return fmt.Sprintf(effect_literal.Phrase+"\n", author, effect.Damage)
 		} else {
-			return fmt.Sprintf(effect_literal.Phrase+"\n", affected.Username, effect.Damage)
+			return fmt.Sprintf(effect_literal.Phrase+"\n", affected, effect.Damage)
 		}
 	} else if effect.Effect == rinha.SideEffected {
 		effect_literal := rinha.GetEffectFromSkill(effect.Skill)
 		if effect.Self {
-			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", affected.Username, effect.Damage, effect_literal.Name)
+			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", affected, effect.Damage, effect_literal.Name)
 		} else {
-			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", author.Username, effect.Damage, effect_literal.Name)
+			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", author, effect.Damage, effect_literal.Name)
 		}
 	} else if effect.Effect == rinha.NotEffective {
 		return fmt.Sprintf("**reduzido**\n")
@@ -104,10 +104,10 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				Description: fmt.Sprintf("**%s** clique na reação abaixo para aceitar o duelo", msg.Mentions[0].Username),
 			},
 		})
-		utils.Try(func() error {
-			return confirmMsg.React(context.Background(), session, "✅")
-		}, 5)
 		if confirmErr == nil {
+			utils.Try(func() error {
+				return confirmMsg.React(context.Background(), session, "✅")
+			}, 5)
 			say := false
 			handler.RegisterHandler(confirmMsg, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
 				if !removed {
@@ -165,7 +165,14 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 		galoAdv.Type = galoType
 		rinha.SaveGaloDB(user.ID, galoAdv)
 	}
-
+	authorName :=  msg.Author.Username
+	if galoAuthor.Name != ""{
+		authorName = galoAuthor.Name
+	}
+	advName := user.Username
+	if galoAdv.Name != ""{
+		advName = galoAdv.Name
+	}
 	embed := &disgord.Embed{
 		Title: "Briga de galo",
 		Color: 16776960,
@@ -178,12 +185,12 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 		Description: "Iniciando a briga de galo	",
 		Fields: []*disgord.EmbedField{
 			&disgord.EmbedField{
-				Name:   fmt.Sprintf("%s Level %d", msg.Author.Username, authorLevel),
+				Name:   fmt.Sprintf("%s Level %d", authorName, authorLevel),
 				Value:  fmt.Sprintf("%d/%d", 100, 100),
 				Inline: true,
 			},
 			&disgord.EmbedField{
-				Name:   fmt.Sprintf("%s Level %d", user.Username, AdvLevel),
+				Name:   fmt.Sprintf("%s Level %d", advName, AdvLevel),
 				Value:  fmt.Sprintf("%d/%d", 100, 100),
 				Inline: true,
 			},
@@ -201,27 +208,31 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 			effects := battle.Play()
 			var text string
 			author := msg.Author
+			aName :=  authorName
 			affected := user
+			aAffected := advName
 			turn := battle.GetTurn()
 			if turn == 0 {
 				author = user
+				aName = advName
+				aAffected = authorName
 				affected = msg.Author
 			}
 
 			for _, effect := range effects {
-				text += effectToStr(effect, affected, author, &battle)
+				text += effectToStr(effect, aAffected, aName, &battle)
 			}
 
 			embed.Color = rinhaColors[battle.GetReverseTurn()]
 			embed.Description = lastEffects + "\n" + text
 			embed.Fields = []*disgord.EmbedField{
 				&disgord.EmbedField{
-					Name:   fmt.Sprintf("%s Level %d", msg.Author.Username, authorLevel),
+					Name:   fmt.Sprintf("%s Level %d", authorName, authorLevel),
 					Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, battle.Fighters[0].MaxLife),
 					Inline: true,
 				},
 				&disgord.EmbedField{
-					Name:   fmt.Sprintf("%s Level %d", user.Username, AdvLevel),
+					Name:   fmt.Sprintf("%s Level %d", advName, AdvLevel),
 					Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, battle.Fighters[1].MaxLife),
 					Inline: true,
 				},
@@ -240,21 +251,28 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 					turn = battle.GetReverseTurn()
 				}
 				xpOb := (rand.Intn(15) + 15) - (3 * (rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) - rinha.CalcLevel(battle.Fighters[turn].Galo.Xp)))
-				money := 0
 				if 0 > xpOb {
 					xpOb = 0
 				}
+				money := 0
 				if 2 >= rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)-rinha.CalcLevel(battle.Fighters[turn].Galo.Xp) {
 					money = 5
+					rinha.ChangeMoney(winner.ID,5)
 				}
 				if xpOb > 9 {
 					battle.Fighters[turn].Galo.Lose++
-					rinha.SaveGaloDB(loser.ID, *battle.Fighters[turn].Galo)
+					rinha.UpdateGaloDB(loser.ID, map[string]interface{}{
+						"lose": battle.Fighters[turn].Galo.Lose,
+					})
 					battle.Fighters[winnerTurn].Galo.Win++
 				}
 				battle.Fighters[winnerTurn].Galo.Xp += xpOb
-				battle.Fighters[winnerTurn].Galo.Money += money
-				rinha.SaveGaloDB(winner.ID, *battle.Fighters[winnerTurn].Galo)
+				rinha.UpdateGaloDB(winner.ID, map[string]interface{}{
+					"xp":   battle.Fighters[winnerTurn].Galo.Xp,
+					"type": battle.Fighters[winnerTurn].Galo.Type,
+					"equipped": battle.Fighters[winnerTurn].Galo.Equipped,
+					"win": 	battle.Fighters[winnerTurn].Galo.Win,
+				})
 				if rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) > rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp-xpOb) {
 					nextLevel := rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp)
 					nextSkill := rinha.GetNextSkill(*battle.Fighters[winnerTurn].Galo)

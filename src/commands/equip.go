@@ -26,7 +26,14 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(args) == 0 {
 		text := ""
 		for i, otherGalo := range galo.Galos {
-			text += fmt.Sprintf("[%d] - %s (Level: **%d**) \n", i, rinha.Classes[otherGalo.Type].Name,rinha.CalcLevel(otherGalo.Xp))
+			name := rinha.Classes[otherGalo.Type].Name
+			if otherGalo.Name != ""{
+				name = otherGalo.Name
+			}
+			text += fmt.Sprintf("[%d] - %s (Level: **%d**) \n", i, name,rinha.CalcLevel(otherGalo.Xp))
+		}
+		if text == ""{
+			text = "Voce não tem nenhum galo, para conseguir galos compre lootboxs usando j!lootbox"
 		}
 		avatar, _ := msg.Author.AvatarURL(512, true)
 		msg.Reply(context.Background(), session, &disgord.Embed{
@@ -52,7 +59,9 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 						galo.Galos[i] = galo.Galos[i+1]
 					}
 					galo.Galos = galo.Galos[0:len(galo.Galos)-1]
-					rinha.SaveGaloDB(msg.Author.ID, galo)
+					rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
+						"galos": galo.Galos,
+					})
 					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce removeu o galo **%s** com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name))
 					return
 				}
@@ -61,12 +70,20 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 			old := rinha.SubGalo{
 				Xp: galo.Xp,
 				Type: galo.Type,
+				Name: galo.Name,
 			}
 			galo.Type = newGalo.Type
 			galo.Xp  = newGalo.Xp
+			galo.Name = newGalo.Name
 			galo.Galos[value] = old
 			galo.Equipped = []int{}
-			rinha.SaveGaloDB(msg.Author.ID, galo)
+			rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
+				"galos":    galo.Galos,
+				"equipped": galo.Equipped,
+				"xp":       galo.Xp,
+				"type":     galo.Type,
+				"name":     galo.Name,
+			})
 			msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou seu galo **%s** por **%s**", msg.Author.Mention(), rinha.Classes[old.Type].Name, rinha.Classes[galo.Type].Name))
 		} else {
 			msg.Reply(context.Background(), session, "Numero invalido")
