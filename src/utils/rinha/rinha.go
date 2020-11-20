@@ -264,7 +264,6 @@ func GetEffectFromSkill(skill *Skill) *Effect {
 }
 
 func init(){
-	DailyGalo = GetRand()
 	go func(){
 		for {
 			time.Sleep(time.Hour * 24)

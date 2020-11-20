@@ -17,6 +17,7 @@ func init() {
 		Available: true,
 		Cooldown:  5,
 		Usage:     "j!daily",
+		Category:  1,
 		Help:      "Receba seu bonus diario",
 	})
 }
@@ -29,10 +30,8 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	if (uint64(time.Now().Unix()) - galo.Daily) / 60 / 60 / 24 >= 1{
 		galo.Daily = uint64(time.Now().Unix())
-		//acho que foi
 		LockEvent(msg.Author.ID, "Clone de " + rinha.Classes[galoAdv.Type].Name)
 		defer UnlockEvent(msg.Author.ID)
-		
 		winner, _ := ExecuteRinha(msg,session,rinhaOptions{
 			galoAuthor: &galo,
 			galoAdv: &galoAdv,
@@ -63,7 +62,6 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 				Description: fmt.Sprintf("Parabens %s, voce perdeu. Use j!daily para tentar novamente",msg.Author.Username),
 			})
 		}
-		// defer filha da puta
 	}else{
 		need := uint64(time.Now().Unix()) - galo.Daily
 		msg.Reply(context.Background(),session,fmt.Sprintf("%s, faltam **%d** horas e **%d** minutos para voce poder usar o daily novamente", msg.Author.Mention(), 23 - (need / 60 /60), 59 -  (need/60%60)))
