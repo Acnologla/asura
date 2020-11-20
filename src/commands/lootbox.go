@@ -27,7 +27,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title:       "Lootbox",
 			Color:       65535,
-			Description: fmt.Sprintf("Lootbox: **%d**\nMoney: **%d**\n\nUse `j!lootbox buy` para comprar lootbox\nUse `j!lootbox open` para abrir lootbox", galo.Lootbox, galo.Money),
+			Description: fmt.Sprintf("Lootbox: **%d**\nMoney: **%d**\n\nUse `j!lootbox buy` para comprar lootbox\nUse `j!lootbox open` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 Gold)", galo.Lootbox, galo.Money),
 		})
 	}
 	if len(args) == 0 {

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"firebase.google.com/go/db"
 	"errors"
+	"time"
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"io/ioutil"
@@ -22,6 +23,8 @@ const (
 	Epic
 	Legendary
 )
+
+var DailyGalo int 
 
 func (rarity Rarity) String() string {
 	return [...]string{"Comum", "Raro", "Epico", "Lendario"}[rarity]
@@ -72,6 +75,7 @@ type Galo struct {
 	Lootbox  int    `json:"lootbox"`
 	Galos    []SubGalo  `json:"galos"`
 	Money    int    `json:"money"`
+	Daily    uint64    `json:"daily"`
 }
 var Effects []*Effect
 var Classes []*Class
@@ -218,6 +222,17 @@ func Between(damage [2]int) int {
 	return rand.Intn(damage[1]-damage[0]) + damage[0]
 }
 
+func GetName(username string, galo Galo) string{
+	if galo.Name == ""{
+		return username
+	}
+	return galo.Name
+}
+
+func GetRand() int {
+	return rand.Intn(len(Classes)-1) + 1
+}
+
 func GetRandByType(classType Rarity) int {
 	classTypeArr := []*Class{}
 	for _, class := range Classes {
@@ -246,4 +261,14 @@ func SaturateSub(one int, two int) int {
 
 func GetEffectFromSkill(skill *Skill) *Effect {
 	return Effects[int(skill.Effect[1])]
+}
+
+func init(){
+	DailyGalo = GetRand()
+	go func(){
+		for {
+			time.Sleep(time.Hour * 24)
+			DailyGalo = GetRand()
+		}
+	}()
 }
