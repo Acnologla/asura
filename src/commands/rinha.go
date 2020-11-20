@@ -242,7 +242,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 
 	
 	lockBattle(msg.Author.ID, msg.Mentions[0].ID, msg.Author.Username, msg.Mentions[0].Username)
-	winner, battle := ExecuteRinha(msg, session, rinhaOptions{
+	whoWin, battle := ExecuteRinha(msg, session, rinhaOptions{
 		galoAuthor: &galoAuthor,
 		galoAdv: &galoAdv,
 		authorName: authorName,
@@ -252,22 +252,21 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 	})
 	unlockBattle(msg.Author.ID, msg.Mentions[0].ID)
 	
-	if winner == -1 {
+	if whoWin == -1 {
 		return
 	}
 
 
 	if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
-		turn := battle.GetTurn()
+		winnerTurn := whoWin
+		turn := 1
 		winner := author
 		loser := adv
-		winnerTurn := battle.GetReverseTurn()
 		
-		if 0 >= battle.Fighters[battle.GetReverseTurn()].Life {
+		if whoWin == 1 {
 			winner = adv
 			loser = author
-			winnerTurn = turn
-			turn = battle.GetReverseTurn()
+			turn = 0
 		}
 
 		galoWinner := battle.Fighters[winnerTurn].Galo
