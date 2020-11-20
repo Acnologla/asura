@@ -267,10 +267,15 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 					battle.Fighters[winnerTurn].Galo.Win++
 				}
 				battle.Fighters[winnerTurn].Galo.Xp += xpOb
+				updatedGalo,_ := rinha.GetGaloDB(winner.ID)
+				if updatedGalo.Type == battle.Fighters[winnerTurn].Galo.Type && battle.Fighters[winnerTurn].Galo.Name != updatedGalo.Name {
+					battle.Fighters[winnerTurn].Galo.Name = updatedGalo.Name
+				}
 				rinha.UpdateGaloDB(winner.ID, map[string]interface{}{
+					"name": battle.Fighters[winnerTurn].Galo.Name,
 					"xp":   battle.Fighters[winnerTurn].Galo.Xp,
 					"type": battle.Fighters[winnerTurn].Galo.Type,
-					"equipped": battle.Fighters[winnerTurn].Galo.Equipped,
+					"galos": battle.Fighters[winnerTurn].Galo.Galos,
 					"win": 	battle.Fighters[winnerTurn].Galo.Win,
 				})
 				if rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) > rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp-xpOb) {
