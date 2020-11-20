@@ -24,6 +24,10 @@ func init() {
 
 func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
+	if galo.Type ==  0 {
+		msg.Reply(context.Background(),session,msg.Author.Mention()+", Voce nao tem um galo, use j!galo para criar um")
+		return
+	}
 	galoAdv := rinha.Galo{
 		Xp: galo.Xp,
 		Type: rinha.DailyGalo,
