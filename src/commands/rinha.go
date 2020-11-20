@@ -276,6 +276,7 @@ func executeRinha(msg *disgord.Message, session disgord.Session) {
 					"xp":   battle.Fighters[winnerTurn].Galo.Xp,
 					"type": battle.Fighters[winnerTurn].Galo.Type,
 					"galos": battle.Fighters[winnerTurn].Galo.Galos,
+					"equipped": battle.Fighters[winnerTurn].Galo.Equipped,
 					"win": 	battle.Fighters[winnerTurn].Galo.Win,
 				})
 				if rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp) > rinha.CalcLevel(battle.Fighters[winnerTurn].Galo.Xp-xpOb) {

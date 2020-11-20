@@ -73,7 +73,6 @@ type Galo struct {
 	Galos    []SubGalo  `json:"galos"`
 	Money    int    `json:"money"`
 }
-
 var Effects []*Effect
 var Classes []*Class
 var Skills []([]*Skill)

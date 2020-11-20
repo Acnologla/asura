@@ -137,6 +137,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 				"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
 				"user":    strconv.FormatUint(uint64(msg.Author.ID), 10),
 				"command": realCommand.Aliases[0],
+				"content": msg.Content,
 				"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
 			})
 			defer func (){
