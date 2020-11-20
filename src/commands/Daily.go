@@ -28,6 +28,13 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(),session,msg.Author.Mention()+", Voce nao tem um galo, use j!galo para criar um")
 		return
 	}
+	battleMutex.RLock()
+	if currentBattles[msg.Author.ID] != "" {
+		battleMutex.RUnlock()
+		msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+		return
+	}
+	battleMutex.RUnlock()
 	galoAdv := rinha.Galo{
 		Xp: galo.Xp,
 		Type: rinha.DailyGalo,
