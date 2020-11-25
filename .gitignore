@@ -1,3 +1,4 @@
 .env
 .vscode
 go.sum
+data.json
