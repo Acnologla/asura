@@ -6,25 +6,27 @@ import (
 	"fmt"
 	"github.com/agnivade/levenshtein"
 	"github.com/andersfylling/disgord"
+	"os"
 	"strconv"
 	"strings"
-	"os"
 	"sync"
 	"time"
 )
 
 const Workers = 128
-var DevMod    = false
-var DevIds = []disgord.Snowflake{365948625676795904,395542409959964672,364614407721844737}
 
-func isDev(id disgord.Snowflake) bool{
-	for _, devID := range DevIds{
-		if id == devID{
+var DevMod = false
+var DevIds = []disgord.Snowflake{365948625676795904, 395542409959964672, 364614407721844737}
+
+func isDev(id disgord.Snowflake) bool {
+	for _, devID := range DevIds {
+		if id == devID {
 			return true
 		}
 	}
 	return false
 }
+
 var WorkersArray = [Workers]bool{}
 
 // A struct that stores the information of a single "command" of the bot
@@ -140,8 +142,8 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 		realCommand := FindCommand(command)
 
 		if len(realCommand.Aliases) > 0 {
-			if DevMod{
-				if !isDev(msg.Author.ID){
+			if DevMod {
+				if !isDev(msg.Author.ID) {
 					return
 				}
 			}
@@ -156,8 +158,8 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 				"content": msg.Content,
 				"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
 			})
-			if !DevMod{
-				defer func (){
+			if !DevMod {
+				defer func() {
 					err := recover()
 					if err != nil {
 						stringError := err.(error).Error()
