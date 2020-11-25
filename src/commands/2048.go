@@ -118,8 +118,8 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Content: ":zero:\n\n" + draw2048Board(board),
 	})
-	mes := session.Channel(message.ChannelID).Message(message.ID)
 	if err == nil {
+		mes := session.Channel(message.ChannelID).Message(message.ID)
 		for i := 0; i < 4; i++ {
 			utils.Try(func() error {
 				return message.React(context.Background(), session, arrows[i])

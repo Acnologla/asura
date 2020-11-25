@@ -46,7 +46,9 @@ func checkConnect4Win(board []([]int)) int {
 			if board[i][j+1] == actual && board[i][j+2] == actual && board[i][j+3] == actual {
 				return 1
 			}
-			actual = board[j][i]
+		}
+		for j := 0; j < len(board)-3; j++ {
+			actual := board[j][i]
 			if actual == 0 {
 				continue
 			}
