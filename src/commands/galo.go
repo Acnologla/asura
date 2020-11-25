@@ -9,7 +9,6 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-
 func init() {
 	handler.Register(handler.Command{
 		Aliases:   []string{"galo", "galolevel", "meugalo"},
@@ -45,8 +44,12 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		})
 	}
 	name := "Galo do " + user.Username
-	if galo.Name != ""{
+	if galo.Name != "" {
 		name = galo.Name
+	}
+	clan := "Nenhum"
+	if galo.Clan != ""{
+		clan = galo.Clan
 	}
 	msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 		Content: msg.Author.Mention(),
@@ -59,7 +62,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!skills para ver os skills e equipa-las",
 			},
-			Description: fmt.Sprintf("Level: **%d** (**%d/%d**)\nTipo: **%s** (**%s**)\n **%d** Vitorias | **%d** Derrotas\nHabilidades:", level, galo.Xp-curLevelXP, nextLevelXP-curLevelXP, rinha.Classes[galo.Type].Name, rinha.Classes[galo.Type].Rarity.String(), galo.Win, galo.Lose),
+			Description: fmt.Sprintf("Level: **%d** (**%d/%d**)\nClan: **%s**\nTipo: **%s** (**%s**)\n **%d** Vitorias | **%d** Derrotas\nHabilidades:", level, galo.Xp-curLevelXP, nextLevelXP-curLevelXP, clan ,rinha.Classes[galo.Type].Name, rinha.Classes[galo.Type].Rarity.String(), galo.Win, galo.Lose),
 			Fields:      fields,
 		},
 	})

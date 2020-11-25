@@ -6,19 +6,19 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
+	"github.com/andersfylling/disgord"
+	"math/rand"
 	"sync"
 	"time"
-	"math/rand"
-	"github.com/andersfylling/disgord"
 )
 
 type rinhaOptions struct {
-	galoAuthor *rinha.Galo
-	galoAdv *rinha.Galo
+	galoAuthor  *rinha.Galo
+	galoAdv     *rinha.Galo
 	authorLevel int
-	advLevel int
-	authorName string
-	advName string
+	advLevel    int
+	authorName  string
+	advName     string
 }
 
 var (
@@ -88,7 +88,6 @@ func effectToStr(effect *rinha.Result, affected string, author string, battle *r
 	return ""
 }
 
-
 func lockBattle(authorID disgord.Snowflake, advID disgord.Snowflake, authorNick string, advNick string) {
 	battleMutex.Lock()
 	currentBattles[authorID] = advNick
@@ -115,18 +114,18 @@ func UnlockEvent(authorID disgord.Snowflake) {
 	battleMutex.Unlock()
 }
 
-func updateGaloWin(id disgord.Snowflake, galo rinha.Galo){
-	updatedGalo,_ := rinha.GetGaloDB(id)
+func updateGaloWin(id disgord.Snowflake, galo rinha.Galo) {
+	updatedGalo, _ := rinha.GetGaloDB(id)
 	if updatedGalo.Type == galo.Type && galo.Name != updatedGalo.Name {
 		galo.Name = updatedGalo.Name
 	}
 	rinha.UpdateGaloDB(id, map[string]interface{}{
-		"name": galo.Name,
-		"xp":   galo.Xp,
-		"type": galo.Type,
-		"galos": galo.Galos,
+		"name":     galo.Name,
+		"xp":       galo.Xp,
+		"type":     galo.Type,
+		"galos":    galo.Galos,
 		"equipped": galo.Equipped,
-		"win": 	galo.Win,
+		"win":      galo.Win,
 	})
 }
 
@@ -198,7 +197,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 }
 
-func sendLevelUpEmbed(msg *disgord.Message, session disgord.Session, galoWinner *rinha.Galo, user *disgord.User, xpOb int){
+func sendLevelUpEmbed(msg *disgord.Message, session disgord.Session, galoWinner *rinha.Galo, user *disgord.User, xpOb int) {
 	if rinha.CalcLevel(galoWinner.Xp) > rinha.CalcLevel(galoWinner.Xp-xpOb) {
 		nextLevel := rinha.CalcLevel(galoWinner.Xp)
 		nextSkill := rinha.GetNextSkill(*galoWinner)
@@ -217,6 +216,8 @@ func sendLevelUpEmbed(msg *disgord.Message, session disgord.Session, galoWinner 
 }
 
 func executePVP(msg *disgord.Message, session disgord.Session) {
+	lockBattle(msg.Author.ID, msg.Mentions[0].ID, msg.Author.Username, msg.Mentions[0].Username)
+	defer unlockBattle(msg.Author.ID, msg.Mentions[0].ID)
 	author := msg.Author
 	adv := msg.Mentions[0]
 
@@ -235,34 +236,30 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 	if galoAuthor.Name != "" {
 		authorName = galoAuthor.Name
 	}
-	
+
 	if galoAdv.Name != "" {
 		advName = galoAdv.Name
 	}
 
-	
-	lockBattle(msg.Author.ID, msg.Mentions[0].ID, msg.Author.Username, msg.Mentions[0].Username)
 	whoWin, battle := ExecuteRinha(msg, session, rinhaOptions{
-		galoAuthor: &galoAuthor,
-		galoAdv: &galoAdv,
-		authorName: authorName,
-		advName: advName,
+		galoAuthor:  &galoAuthor,
+		galoAdv:     &galoAdv,
+		authorName:  authorName,
+		advName:     advName,
 		authorLevel: authorLevel,
-		advLevel: advLevel,
+		advLevel:    advLevel,
 	})
-	unlockBattle(msg.Author.ID, msg.Mentions[0].ID)
-	
+
 	if whoWin == -1 {
 		return
 	}
-
 
 	if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
 		winnerTurn := whoWin
 		turn := 1
 		winner := author
 		loser := adv
-		
+
 		if whoWin == 1 {
 			winner = adv
 			loser = author
@@ -270,7 +267,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 		}
 
 		galoWinner := battle.Fighters[winnerTurn].Galo
-		galoLoser  := battle.Fighters[turn].Galo
+		galoLoser := battle.Fighters[turn].Galo
 
 		xpOb := (rand.Intn(15) + 15) - (3 * (rinha.CalcLevel(galoWinner.Xp) - rinha.CalcLevel(galoLoser.Xp)))
 
@@ -279,13 +276,28 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 		}
 
 		money := 0
-
-		if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp) {
-			money = 5
-			rinha.ChangeMoney(winner.ID,5)
+		clanMsg := ""
+		if galoWinner.Clan != ""{
+			clan := rinha.GetClan(galoWinner.Clan)
+			xpOb += int(xpOb/10)
+			level := rinha.ClanXpToLevel(clan.Xp)
+			if level >= 2{
+				xpOb += int(xpOb/10)
+			}
+			if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp){
+				if level >= 3{
+					money += 2
+				}
+				if level >= 4{
+					money += 3
+				}
+				rinha.AddClanXp(galoWinner.Clan, 1)
+				clanMsg = "\nGanhou **1** de xp para seu clan"
+			}
 		}
-
-		if xpOb > 9 {
+		if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp) {
+			money += 5
+			rinha.ChangeMoney(winner.ID, money, 0)
 			galoLoser.Lose++
 			rinha.UpdateGaloDB(loser.ID, map[string]interface{}{
 				"lose": galoLoser.Lose,
@@ -293,19 +305,20 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 			galoWinner.Win++
 		}
 
+		
+
 		galoWinner.Xp += xpOb
 		updateGaloWin(winner.ID, *galoWinner)
 		sendLevelUpEmbed(msg, session, galoWinner, winner, xpOb)
-		embed := &disgord.Embed{ Title: "Briga de galo", Color: 16776960, Description: ""}
+		embed := &disgord.Embed{Title: "Briga de galo", Color: 16776960, Description: ""}
 
 		if winnerTurn == 1 {
-			embed.Description = fmt.Sprintf("\n**%s** venceu a batalha, ganhou %d de dinheiro e %d de XP", advName, money, xpOb)
+			embed.Description = fmt.Sprintf("\n**%s** venceu a batalha, ganhou %d de dinheiro e %d de XP%s", advName, money, xpOb,clanMsg)
 		} else {
-			embed.Description = fmt.Sprintf("\n**%s** venceu a batalha, ganhou %d de dinheiro e %d de XP", authorName, money, xpOb)
+			embed.Description = fmt.Sprintf("\n**%s** venceu a batalha, ganhou %d de dinheiro e %d de XP%s", authorName, money, xpOb,clanMsg)
 		}
-		
-		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{Embed:   embed})
-		unlockBattle(msg.Author.ID, msg.Mentions[0].ID)
+
+		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{Embed: embed})
 	}
 
 }
@@ -335,7 +348,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 			},
 		},
 	}
-	
+
 	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Content: msg.Author.Mention(),
 		Embed:   embed,
@@ -353,7 +366,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 
 			authorName := options.authorName
 			affectedName := options.advName
-			
+
 			turn := battle.GetTurn()
 
 			if turn == 0 {
@@ -384,7 +397,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 			embed.Image = &disgord.EmbedImage{
 				URL: getImageTile(options.galoAuthor, options.galoAdv, turn),
 			}
-			
+
 			if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
 				winnerTurn := battle.GetReverseTurn()
 				if winnerTurn == 1 {
@@ -395,7 +408,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 				edit(message, embed)
 				return winnerTurn, &battle
 			}
-			
+
 			edit(message, embed)
 			lastEffects = text
 			time.Sleep(4 * time.Second)

@@ -27,12 +27,12 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 		text := ""
 		for i, otherGalo := range galo.Galos {
 			name := rinha.Classes[otherGalo.Type].Name
-			if otherGalo.Name != ""{
+			if otherGalo.Name != "" {
 				name = otherGalo.Name
 			}
-			text += fmt.Sprintf("[%d] - %s (Level: **%d**) \n", i, name,rinha.CalcLevel(otherGalo.Xp))
+			text += fmt.Sprintf("[%d] - %s (Level: **%d**) \n", i, name, rinha.CalcLevel(otherGalo.Xp))
 		}
-		if text == ""{
+		if text == "" {
 			text = "Voce não tem nenhum galo, para conseguir galos compre lootboxs usando j!lootbox"
 		}
 		avatar, _ := msg.Author.AvatarURL(512, true)
@@ -52,13 +52,13 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		if value >= 0 && len(galo.Galos) > value {
-			if len(args) >= 2{
-				if args[1] == "remove"{
+			if len(args) >= 2 {
+				if args[1] == "remove" {
 					gal := galo.Galos[value]
-					for i:= value; i < len(galo.Galos)-1;i++{
+					for i := value; i < len(galo.Galos)-1; i++ {
 						galo.Galos[i] = galo.Galos[i+1]
 					}
-					galo.Galos = galo.Galos[0:len(galo.Galos)-1]
+					galo.Galos = galo.Galos[0 : len(galo.Galos)-1]
 					rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
 						"galos": galo.Galos,
 					})
@@ -68,12 +68,12 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 			newGalo := galo.Galos[value]
 			old := rinha.SubGalo{
-				Xp: galo.Xp,
+				Xp:   galo.Xp,
 				Type: galo.Type,
 				Name: galo.Name,
 			}
 			galo.Type = newGalo.Type
-			galo.Xp  = newGalo.Xp
+			galo.Xp = newGalo.Xp
 			galo.Name = newGalo.Name
 			galo.Galos[value] = old
 			galo.Equipped = []int{}
