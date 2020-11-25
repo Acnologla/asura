@@ -4,15 +4,15 @@ import (
 	"asura/src/database"
 	"context"
 	"encoding/json"
-	"firebase.google.com/go/db"
 	"errors"
-	"time"
+	"firebase.google.com/go/db"
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"io/ioutil"
 	"math"
 	"math/rand"
 	"strings"
+	"time"
 )
 
 type Rarity int
@@ -24,7 +24,7 @@ const (
 	Legendary
 )
 
-var DailyGalo int 
+var DailyGalo int
 
 func (rarity Rarity) String() string {
 	return [...]string{"Comum", "Raro", "Epico", "Lendario"}[rarity]
@@ -59,24 +59,26 @@ type Skill struct {
 	Self   bool       `json:"self"`
 }
 
-type SubGalo struct{
-	Type     int    `json:"type"`
-	Xp       int    `json:"xp"`
-	Name     string `json:"name"`
+type SubGalo struct {
+	Type int    `json:"type"`
+	Xp   int    `json:"xp"`
+	Name string `json:"name"`
 }
 
 type Galo struct {
-	Name     string `json:"name"`
-	Xp       int    `json:"xp"`
-	Type     int    `json:"type"`
-	Equipped []int  `json:"equipped"`
-	Win      int    `json:"win"`
-	Lose     int    `json:"lose"`
-	Lootbox  int    `json:"lootbox"`
-	Galos    []SubGalo  `json:"galos"`
-	Money    int    `json:"money"`
+	Name     string    `json:"name"`
+	Xp       int       `json:"xp"`
+	Type     int       `json:"type"`
+	Equipped []int     `json:"equipped"`
+	Win      int       `json:"win"`
+	Lose     int       `json:"lose"`
+	Lootbox  int       `json:"lootbox"`
+	Galos    []SubGalo `json:"galos"`
+	Money    int       `json:"money"`
 	Daily    uint64    `json:"daily"`
+	Clan     string    `json:"clan"`
 }
+
 var Effects []*Effect
 var Classes []*Class
 var Skills []([]*Skill)
@@ -114,6 +116,14 @@ func findClassIndex(class string) int {
 	}
 	return -1
 }
+func SkillToStringFormated(skill *Skill) (text string) {
+	text = fmt.Sprintf("`[Dano: %d - %d]`", skill.Damage[0], skill.Damage[1]-1)
+	if skill.Effect[0] != 0 || skill.Effect[1] != 0 {
+		effect := Effects[int(skill.Effect[1])]
+		text += fmt.Sprintf("\n*Tem %d%% de Chance de causar %s*", int(skill.Effect[0]*100), effect.Name)
+	}
+	return
+}
 
 func SkillToString(skill *Skill) (text string) {
 	text = fmt.Sprintf("Dano: %d - %d", skill.Damage[0], skill.Damage[1]-1)
@@ -135,25 +145,29 @@ func GetGaloDB(id disgord.Snowflake) (Galo, error) {
 	return acc, nil
 }
 
-func ChangeMoney(id disgord.Snowflake, money int){
+func ChangeMoney(id disgord.Snowflake, money int, onlyIf int) error {
 	fn := func(tn db.TransactionNode) (interface{}, error) {
 		var galo Galo
 		err := tn.Unmarshal(&galo)
-		if err == nil{
+
+		if err == nil {
 			if galo.Type == 0 {
 				galoType := GetRandByType(Common)
 				galo.Type = galoType
 			}
-			galo.Money += money
-			return galo, nil
-		} 
+			if galo.Money >= onlyIf {
+				galo.Money += money
+				return galo, nil
+			}
+			return nil, errors.New("Dont have money")
+		}
 		fmt.Println(err)
 		return nil, err
 	}
-	  database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Transaction(context.Background(),fn)
+	return database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Transaction(context.Background(), fn)
 }
 
-func UpdateGaloDB(id disgord.Snowflake, galo map[string]interface{}){
+func UpdateGaloDB(id disgord.Snowflake, galo map[string]interface{}) {
 	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Update(context.Background(), galo)
 }
 
@@ -202,9 +216,9 @@ func CalcLevel(xp int) int {
 	return int(math.Floor(math.Sqrt(float64(xp)/30))) + 1
 }
 
-func HaveGalo(galo int,galos []SubGalo) bool{
-	for _,gal := range galos{
-		if gal.Type == galo{
+func HaveGalo(galo int, galos []SubGalo) bool {
+	for _, gal := range galos {
+		if gal.Type == galo {
 			return true
 		}
 	}
@@ -222,8 +236,8 @@ func Between(damage [2]int) int {
 	return rand.Intn(damage[1]-damage[0]) + damage[0]
 }
 
-func GetName(username string, galo Galo) string{
-	if galo.Name == ""{
+func GetName(username string, galo Galo) string {
+	if galo.Name == "" {
 		return username
 	}
 	return galo.Name
@@ -263,8 +277,8 @@ func GetEffectFromSkill(skill *Skill) *Effect {
 	return Effects[int(skill.Effect[1])]
 }
 
-func init(){
-	go func(){
+func init() {
+	go func() {
 		for {
 			time.Sleep(time.Hour * 24)
 			DailyGalo = GetRand()
