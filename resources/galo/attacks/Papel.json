@@ -72,17 +72,17 @@
     },
     {
         "name": "Papel escarlate",
-        "damage": [52,57],
+        "damage": [50,57],
         "level": 18
     },
     {
         "name": "Catastofre",
-        "damage": [10,100],
+        "damage": [5,100],
         "level": 22
     },
     {
         "name": "Big bang de papel",
-        "damage": [60,63],
+        "damage": [55,63],
         "level": 24
     }
 ]

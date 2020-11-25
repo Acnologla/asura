@@ -35,7 +35,7 @@
     },
     {
         "name": "Tormenta de magma",
-        "damage": [25,30],
+        "damage": [25,28],
         "level": 7
     },
     {
@@ -68,7 +68,7 @@
     },
     {
         "name": "Meteoros de magma",
-        "damage": [10,15],
+        "damage": [5,15],
         "level": 16,
         "effect":[1,9]
     },

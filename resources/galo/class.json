@@ -10,7 +10,7 @@
     },
     {
         "name": "Papel",
-        "disadvantages": [4,5,7],
+        "disadvantages": [4,5,7,12],
         "rarity":  0
     },
     {
@@ -25,12 +25,12 @@
     },
     {
         "name": "Fogo",
-        "disadvantages": [3,7,8],
+        "disadvantages": [3,7,8,11],
         "rarity":  0
     },
     {
         "name": "Gelo",
-        "disadvantages": [2,7,9],
+        "disadvantages": [2,7,9,11],
         "rarity":  0
     },
     {
@@ -45,12 +45,27 @@
     },
     {
         "name": "Natureza",
-        "disadvantages": [7],
+        "disadvantages": [7,12],
         "rarity":  1
     },
     {
         "name": "Luz",
-        "disadvantages": [],
+        "disadvantages": [13],
         "rarity":  2
+    },
+    {
+        "name": "Metal",
+        "disadvantages": [8,2],
+        "rarity": 0
+    },
+    {
+        "name": "Plasma",
+        "disadvantages": [11,10],
+        "rarity":  1
+    },
+    {
+        "name": "Escuridao",
+        "disadvantages": [],
+        "rarity": 2
     }
 ]
