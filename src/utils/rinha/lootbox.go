@@ -6,9 +6,9 @@ import (
 
 func Open() int {
 	value := rand.Intn(101)
-	if 4 >= value {
+	if 3 >= value {
 		return GetRandByType(Epic)
-	} else if 25 >= value {
+	} else if 24 >= value {
 		return GetRandByType(Rare)
 	} else {
 		return GetRandByType(Common)

@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"asura/src/utils/rinha"
 	"context"
+	"asura/src/telemetry"
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"strconv"
@@ -41,6 +42,14 @@ func runGiveMoney(session disgord.Session, msg *disgord.Message, args []string) 
 	}
 	err = rinha.ChangeMoney(msg.Author.ID, -value, value)
 	if err == nil {
+		user := msg.Mentions[0]
+		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
+		userTag := user.Username + "#"  + user.Discriminator.String()
+		telemetry.Debug(fmt.Sprintf("%s Gived %d money to %s", tag, value , userTag), map[string]string{
+			"value": strconv.Itoa(value),
+			"user": strconv.FormatUint(uint64(msg.Author.ID),10),
+			"reciever":  strconv.FormatUint(uint64(user.ID),10),
+		})
 		rinha.ChangeMoney(msg.Mentions[0].ID, value, 0)
 		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce deu **%d** de dinheiro a %s com sucesso", msg.Author.Mention(), value, msg.Mentions[0].Username))
 	} else {

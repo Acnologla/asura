@@ -4,8 +4,10 @@ import (
 	"asura/src/handler"
 	"asura/src/utils/rinha"
 	"context"
+	"strconv"
 	"fmt"
 	"github.com/andersfylling/disgord"
+	"asura/src/telemetry"
 )
 
 func init() {
@@ -44,7 +46,21 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce atingiu o limite maximo de galos (5) use `j!equip` para remover um galo")
 			return
 		}
+		battleMutex.RLock()
+		if currentBattles[msg.Author.ID] != "" {
+			battleMutex.RUnlock()
+			msg.Reply(context.Background(), session, "Espere sua rinha terminar antes de abrir lootboxs")
+			return
+		}
+		battleMutex.RUnlock()
 		result := rinha.Open()
+		newGalo := rinha.Classes[result]
+		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
+		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, newGalo.Name), map[string]string{
+			"galo": newGalo.Name,
+			"user": strconv.FormatUint(uint64(msg.Author.ID), 10),
+			"rarity": newGalo.Rarity.String(),
+		})
 		if !rinha.HaveGalo(result, galo.Galos) && galo.Type != result {
 			galo.Galos = append(galo.Galos, rinha.SubGalo{
 				Type: result,
@@ -56,7 +72,6 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			"galos":   galo.Galos,
 			"lootbox": galo.Lootbox,
 		})
-		newGalo := rinha.Classes[result]
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       newGalo.Rarity.Color(),
 			Title:       "Lootbox open",

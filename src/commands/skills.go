@@ -68,6 +68,13 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 			})
 			return
 		}
+		battleMutex.RLock()
+		if currentBattles[msg.Author.ID] != "" {
+			battleMutex.RUnlock()
+			msg.Reply(context.Background(), session, "Espere sua rinha terminar antes de equipar ou remover habilidades")
+			return
+		}
+		battleMutex.RUnlock()
 		i, err := strconv.Atoi(args[1])
 		if args[0] == "use" {
 			if len(galo.Equipped) >= 5 {

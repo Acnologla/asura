@@ -17,6 +17,6 @@ require (
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/notnil/chess v1.2.0
-	gonum.org/v1/plot v0.8.1 // indirect
+	gonum.org/v1/plot v0.8.1
 	google.golang.org/api v0.34.0
 )
