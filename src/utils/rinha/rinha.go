@@ -66,17 +66,19 @@ type SubGalo struct {
 }
 
 type Galo struct {
-	Name     string    `json:"name"`
-	Xp       int       `json:"xp"`
-	Type     int       `json:"type"`
-	Equipped []int     `json:"equipped"`
-	Win      int       `json:"win"`
-	Lose     int       `json:"lose"`
-	Lootbox  int       `json:"lootbox"`
-	Galos    []SubGalo `json:"galos"`
-	Money    int       `json:"money"`
-	Daily    uint64    `json:"daily"`
-	Clan     string    `json:"clan"`
+	Name          string    `json:"name"`
+	Xp            int       `json:"xp"`
+	Type          int       `json:"type"`
+	Equipped      []int     `json:"equipped"`
+	Win           int       `json:"win"`
+	Lose          int       `json:"lose"`
+	Lootbox       int       `json:"lootbox"`
+	CommonLootbox int       `json:"commonLootbox"`
+	RareLootbox   int       `json:"rareLootbox"`
+	Galos         []SubGalo `json:"galos"`
+	Money         int       `json:"money"`
+	Daily         uint64    `json:"daily"`
+	Clan          string    `json:"clan"`
 }
 
 var Effects []*Effect

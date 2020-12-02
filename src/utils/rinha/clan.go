@@ -3,12 +3,12 @@ package rinha
 import (
 	"asura/src/database"
 	"context"
+	"firebase.google.com/go/db"
+	"fmt"
 	"github.com/andersfylling/disgord"
 	"math"
 	"strings"
-	"firebase.google.com/go/db"
 	"time"
-	"fmt"
 )
 
 type Role uint
@@ -112,24 +112,22 @@ func RemoveMember(clan Clan, memberID disgord.Snowflake) []ClanMember {
 	return clan.Members
 }
 
-
-func GetBenefits(xp int) (text string){
+func GetBenefits(xp int) (text string) {
 	level := ClanXpToLevel(xp)
 	text = "10% de xp adicional por rinha ganha\n"
-	if level >= 2{
+	if level >= 2 {
 		text += "10% de xp adicional por rinha ganha\n"
 	}
-	if level >= 3{
+	if level >= 3 {
 		text += "2 de ouro adicional por rinha ganha\n"
 	}
-	if level >= 4{
+	if level >= 4 {
 		text += "3 de ouro adicionadl por rinha ganha"
 	}
 	return
 }
 
-
-func AddClanXp(clan string, xp int){
+func AddClanXp(clan string, xp int) {
 	fn := func(tn db.TransactionNode) (interface{}, error) {
 		var clan Clan
 		err := tn.Unmarshal(&clan)
