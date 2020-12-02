@@ -74,7 +74,7 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	for i := 1; i <= 25; i++ {
-		for j := 1; j <= 13; j++ {
+		for j := 1; j <= len(rinha.Classes)-1; j++ {
 			res := battle(j, 1, i, i, 10000)
 			res.Class = [2]int{1, j}
 			res.Level = [2]int{i, i}

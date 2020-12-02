@@ -1,0 +1,90 @@
+[
+    {
+        "name": "Laser",
+        "damage": [12,16],
+        "level": 1,
+        "effect": [0.5,8]
+    },
+    {
+        "name": "Foguete",
+        "damage": [18,26],
+        "level": 2
+    },
+    {
+        "name": "Pistola",
+        "damage": [10, 15],
+        "level": 3,
+        "effect": [0.6,1]
+    },
+    {
+        "name": "Rifle",
+        "damage": [15,20],
+        "level": 4,
+        "effect": [0.8, 1]
+    },
+    {
+        "name": "Sniper",
+        "damage": [10,20],
+        "level": 6,
+        "effect": [1,1]
+    },
+    {
+        "name": "Bazuca",
+        "damage": [5,15],
+        "level": 7,
+        "effect": [1,7]
+    },
+    {
+        "name": "Raio laser",
+        "damage": [15,20],
+        "level": 8,
+        "effect": [1,1]
+    },
+    {
+        "name": "Micro robos",
+        "damage": [5,10],
+        "level": 10,
+        "effect": [1,22]
+    },
+    {
+        "name": "Bomba magnetica",
+        "damage": [40,45],
+        "level": 12
+    },
+    {
+        "name": "Chuva de misseis",
+        "damage": [45,50],
+        "level": 14
+    },
+    {
+        "name": "Bomba",
+        "damage": [30,60],
+        "level": 15
+    },
+    {
+        "name": "Raio gama",
+        "damage": [48,55],
+        "level": 16
+    },
+    {
+        "name": "Bomba potente",
+        "damage": [40,60],
+        "level": 18
+    },
+    {
+        "name": "Raio de metal",
+        "damage": [51,60],
+        "level": 21
+    },
+    {
+        "name": "Empoderar",
+        "damage": [55,60],
+        "level": 23,
+        "effect": [1,4]
+    },
+    {
+        "name": "Bomba nuclear",
+        "damage": [50,70],
+        "level": 25
+    }
+]
