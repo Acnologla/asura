@@ -87,3 +87,9 @@ func GetNewLb(lootbox string, galo Galo, add bool) (string, int){
 	}
 	return "lootbox", galo.Lootbox
 }
+
+
+func Sell(rarity Rarity, xp int) int{
+	level := CalcLevel(xp)
+	return rarity.Price() * (level / 5 + 1)
+}

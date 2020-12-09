@@ -30,6 +30,10 @@ func (rarity Rarity) String() string {
 	return [...]string{"Comum", "Raro", "Epico", "Lendario"}[rarity]
 }
 
+func (rarity Rarity) Price() int {
+	return [...]int{30, 120, 300, 600}[rarity]
+}
+
 func (rarity Rarity) Color() int {
 	return [...]int{13493247, 255, 9699539, 16748544}[rarity]
 }
@@ -149,24 +153,20 @@ func GetGaloDB(id disgord.Snowflake) (Galo, error) {
 
 func ChangeMoney(id disgord.Snowflake, money int, onlyIf int) error {
 	fn := func(tn db.TransactionNode) (interface{}, error) {
-		var galo Galo
-		err := tn.Unmarshal(&galo)
+		var galoMoney int
+		err := tn.Unmarshal(&galoMoney)
 
 		if err == nil {
-			if galo.Type == 0 {
-				galoType := GetRandByType(Common)
-				galo.Type = galoType
-			}
-			if galo.Money >= onlyIf {
-				galo.Money += money
-				return galo, nil
+			if galoMoney >= onlyIf {
+				galoMoney += money
+				return galoMoney, nil
 			}
 			return nil, errors.New("Dont have money")
 		}
 		fmt.Println(err)
 		return nil, err
 	}
-	return database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Transaction(context.Background(), fn)
+	return database.Database.NewRef(fmt.Sprintf("galo/%d/money", id)).Transaction(context.Background(), fn)
 }
 
 func UpdateGaloDB(id disgord.Snowflake, galo map[string]interface{}) {

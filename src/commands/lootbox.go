@@ -65,28 +65,41 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		result := rinha.Open(lootType)
 		newGalo := rinha.Classes[result]
 		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
-		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, newGalo.Name), map[string]string{
-			"galo": newGalo.Name,
-			"user": strconv.FormatUint(uint64(msg.Author.ID), 10),
-			"rarity": newGalo.Rarity.String(),
-			"lootType": lootType,
-		})
+		extraMsg := ""
+		sold := "no"
 		if !rinha.HaveGalo(result, galo.Galos) && galo.Type != result {
 			galo.Galos = append(galo.Galos, rinha.SubGalo{
 				Type: result,
 				Xp:   0,
 			})
+		}else{
+			price := rinha.Sell(newGalo.Rarity, 0)
+			sold = "yes"
+			rinha.ChangeMoney(msg.Author.ID, price, 0)
+			extraMsg = fmt.Sprintf("\nComo voce ja tinha esse galo voce ganhou **%d** de dinheiro", price)
 		}
+		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, newGalo.Name), map[string]string{
+			"galo": newGalo.Name,
+			"user": strconv.FormatUint(uint64(msg.Author.ID), 10),
+			"rarity": newGalo.Rarity.String(),
+			"lootType": lootType,
+			"sold": sold,
+		})
 		update := map[string]interface{}{
 			"galos":   galo.Galos,
 		}
+		avatar, _ := msg.Author.AvatarURL(512, true)
 		newLb, value := rinha.GetNewLb(lootType, galo, false)
 		update[newLb] = value
 		rinha.UpdateGaloDB(msg.Author.ID, update)
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       newGalo.Rarity.Color(),
 			Title:       "Lootbox open",
-			Description: "Voce abriu uma lootbox " + lootType + " e ganhou o galo **" + newGalo.Name + "**\nRaridade: " + newGalo.Rarity.String(),
+			Footer: &disgord.EmbedFooter{
+				IconURL: avatar,
+				Text:    "Use j!equipar para equipar ou vender esse galo",
+			},
+			Description: "Voce abriu uma lootbox " + lootType + " e ganhou o galo **" + newGalo.Name + "**\nRaridade: " + newGalo.Rarity.String() + extraMsg,
 			Thumbnail: &disgord.EmbedThumbnail{
 				URL: rinha.Sprites[0][result-1],
 			},

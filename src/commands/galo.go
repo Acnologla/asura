@@ -51,6 +51,11 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	if galo.Clan != ""{
 		clan = galo.Clan
 	}
+	fields = append(fields,&disgord.EmbedField{
+		Name:   "Mais informaçoes",
+		Value:  fmt.Sprintf("**[Clique aqui]( https://acnologla.github.io/asura-galos?galo=%d)**", galo.Type - 1),
+		Inline: false,
+	})
 	msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 		Content: msg.Author.Mention(),
 		Embed: &disgord.Embed{
