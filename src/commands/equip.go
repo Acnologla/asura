@@ -47,6 +47,13 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 			},
 		})
 	} else {
+		battleMutex.RLock()
+		if currentBattles[msg.Author.ID] != "" {
+			battleMutex.RUnlock()
+			msg.Reply(context.Background(), session, "Espere sua rinha terminar para equipar ou vender galos")
+			return
+		}
+		battleMutex.RUnlock()
 		value, err := strconv.Atoi(args[0])
 		if err != nil {
 			msg.Reply(context.Background(), session, "Use j!equipar <numero do galo> para equipar um galo | use j!equipar <numero do galo> remove para vender um galo")
