@@ -30,7 +30,7 @@
     },
     {
         "name": "Gelo",
-        "disadvantages": [2,7,9],
+        "disadvantages": [2,7,9,12],
         "rarity":  0
     },
     {
@@ -60,7 +60,7 @@
     },
     {
         "name": "Plasma",
-        "disadvantages": [11,10,6],
+        "disadvantages": [11,10],
         "rarity":  1
     },
     {
