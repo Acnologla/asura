@@ -15,7 +15,7 @@
     },
     {
         "name": "Pedra",
-        "disadvantages": [2,6,8,14],
+        "disadvantages": [2,6,14],
         "rarity":  0
     },
     {
@@ -30,7 +30,7 @@
     },
     {
         "name": "Gelo",
-        "disadvantages": [2,7,9,11],
+        "disadvantages": [2,7,9],
         "rarity":  0
     },
     {
@@ -40,12 +40,12 @@
     },
     {
         "name": "Agua",
-        "disadvantages": [9],
+        "disadvantages": [9, 6 ],
         "rarity":  1
     },
     {
         "name": "Natureza",
-        "disadvantages": [7,12],
+        "disadvantages": [7,12, 5],
         "rarity":  1
     },
     {
@@ -55,12 +55,12 @@
     },
     {
         "name": "Metal",
-        "disadvantages": [8,2,14],
+        "disadvantages": [8,2,14, 9 ],
         "rarity": 0
     },
     {
         "name": "Plasma",
-        "disadvantages": [11,10],
+        "disadvantages": [11,10,6],
         "rarity":  1
     },
     {
@@ -70,7 +70,7 @@
     },
     {
         "name": "Robotico",
-        "disadvantages": [8,7],
+        "disadvantages": [8],
         "rarity": 1
     },
     {
