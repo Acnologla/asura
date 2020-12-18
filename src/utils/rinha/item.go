@@ -1,11 +1,19 @@
 package rinha
 
 import (
-	"math/rand"
 	"fmt"
+	"math/rand"
 )
 
-func GetItemByLevel(level int) int{
+type Item struct {
+	Type    int     `json:"type"`
+	Name    string  `json:"name"`
+	Level   int     `json:"level"`
+	Payload float64 `json:"payload"`
+	Effect  int     `json:"effect"`
+}
+
+func GetItemByLevel(level int) int {
 	itemTypearr := []*Item{}
 	for _, item := range Items {
 		if item.Level == level {
@@ -21,7 +29,7 @@ func GetItemByLevel(level int) int{
 	return -1
 }
 
-func LevelToString(level int) string{
+func LevelToString(level int) string {
 	return map[int]string{
 		0: "comum",
 		1: "raro",
@@ -29,9 +37,9 @@ func LevelToString(level int) string{
 	}[level]
 }
 
-func AddItem(level int,items []int) ([]int, string){
+func AddItem(level int, items []int) ([]int, string) {
 	item := GetItemByLevel(level)
-	if !IsIntInList(item, items){
+	if !IsIntInList(item, items) {
 		items = append(items, item)
 	}
 	msg := fmt.Sprintf("Ganhou um item %s\n**%s** (use **j!items** para equipar seu item)", LevelToString(level), Items[item].Name)

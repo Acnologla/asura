@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+
 	"github.com/andersfylling/disgord"
 )
 
@@ -36,7 +37,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 				Text:    msg.Author.Username,
 				IconURL: authorAvatar,
 			},
-			Color: 65535,
+			Color:       65535,
 			Description: fmt.Sprintf("Voce esta no andar **%d**\nUse j!dungeon battle para batalhar contra o chefe", galo.Dungeon),
 		})
 		return
@@ -65,18 +66,18 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	})
 	if winner == 0 {
 		diffGalo, endMsg := rinha.DungeonWin(dungeon.Level, galo)
-		update := rinha.Diff(galo,diffGalo)
+		update := rinha.Diff(galo, diffGalo)
 		update["dungeon"] = galo.Dungeon + 1
 		rinha.UpdateGaloDB(msg.Author.ID, update)
 		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, endMsg), map[string]string{
-			"user":     strconv.FormatUint(uint64(msg.Author.ID), 10),
-			"dungeonLevel": galo.Dungeon,
+			"user":         strconv.FormatUint(uint64(msg.Author.ID), 10),
+			"dungeonLevel": string(galo.Dungeon),
 		})
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       16776960,
 			Title:       "Dungeon",
-			Description: fmt.Sprintf("Parabens %s voce consegiu derrotar o boss e avançar para o andar **%d**, %s", msg.Author.Username,galo.Dungeon + 1, endMsg),
+			Description: fmt.Sprintf("Parabens %s voce consegiu derrotar o boss e avançar para o andar **%d**, %s", msg.Author.Username, galo.Dungeon+1, endMsg),
 		})
 	} else {
 		msg.Reply(context.Background(), session, &disgord.Embed{

@@ -1,13 +1,17 @@
 package rinha
 
+import "math"
+
 type EffectType string
 
 type Fighter struct {
-	Galo     *Galo
-	Equipped []int
-	Life     int
-	MaxLife  int
-	Effect   [4]int
+	Galo        *Galo
+	Equipped    []int
+	Life        int
+	ItemEffect  int
+	ItemPayload float64
+	MaxLife     int
+	Effect      [4]int
 }
 
 type Battle struct {
@@ -18,22 +22,38 @@ type Battle struct {
 	Stun       bool
 }
 
-func CreateBattle(first *Galo, sec *Galo) Battle {
-	firstFighter := &Fighter{
-		Galo:     first,
-		Life:     100 + (CalcLevel(first.Xp) * 3),
-		MaxLife:  100 + (CalcLevel(first.Xp) * 3),
-		Equipped: []int{},
-		Effect:   [4]int{},
+func checkItem(galo *Galo) (int, float64) {
+	if len(galo.Items) > 0 {
+		id := galo.Items[0]
+		item := Items[id]
+		return item.Effect, item.Payload
+	}
+	return 0, 0
+}
+
+func initFighter(galo *Galo) *Fighter {
+	life := 100 + (CalcLevel(galo.Xp) * 3)
+	itemEffect, payload := checkItem(galo)
+
+	// 3 is the ID of Item EFFECT that increase life
+	if itemEffect == 3 {
+		life = int(math.Round(float64(life) * payload))
 	}
 
-	secFighter := &Fighter{
-		Galo:     sec,
-		Life:     100 + (CalcLevel(sec.Xp) * 3),
-		MaxLife:  100 + (CalcLevel(sec.Xp) * 3),
-		Equipped: []int{},
-		Effect:   [4]int{},
+	return &Fighter{
+		Galo:        galo,
+		Life:        life,
+		MaxLife:     life,
+		ItemEffect:  itemEffect,
+		ItemPayload: payload,
+		Equipped:    []int{},
+		Effect:      [4]int{},
 	}
+}
+
+func CreateBattle(first *Galo, sec *Galo) Battle {
+	firstFighter := initFighter(first)
+	secFighter := initFighter(sec)
 
 	initEquips(firstFighter)
 	initEquips(secFighter)

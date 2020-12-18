@@ -5,17 +5,20 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"firebase.google.com/go/db"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"io/ioutil"
 	"math"
 	"math/rand"
 	"strings"
 	"time"
+
+	"firebase.google.com/go/db"
+	"github.com/andersfylling/disgord"
 )
 
 type Rarity int
+
+var DailyGalo int
 
 const (
 	Common Rarity = iota
@@ -23,8 +26,6 @@ const (
 	Epic
 	Legendary
 )
-
-var DailyGalo int
 
 func (rarity Rarity) String() string {
 	return [...]string{"Comum", "Raro", "Epico", "Lendario"}[rarity]
@@ -61,13 +62,6 @@ type Skill struct {
 	Level  int        `json:"level"`
 	Effect [2]float64 `json:"effect"`
 	Self   bool       `json:"self"`
-}
-
-type Item struct {
-	Type   int    `json:"type"`
-	Name   string `json:"name"`
-	Level  int    `json:"level"`
-	Effect int    `json:"effect"`
 }
 
 type SubGalo struct {
@@ -289,7 +283,6 @@ func SaturateSub(one int, two int) int {
 }
 
 // Effect functions
-
 func GetEffectFromSkill(skill *Skill) *Effect {
 	return Effects[int(skill.Effect[1])]
 }

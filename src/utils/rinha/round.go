@@ -1,6 +1,7 @@
 package rinha
 
 import (
+	"math"
 	"math/rand"
 )
 
@@ -66,19 +67,22 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 		&Result{Effect: Damaged, Damage: attack_damage - not_effective_damage, Skill: round.Skill, Self: false},
 	}, round.Results...)
 
-	return attack_damage - not_effective_damage
-}
+	real_damage := attack_damage - not_effective_damage
 
-func (round *Round) applyEffect(self bool, to_append bool) {
-	receiver := round.Target
-
-	if self {
-		receiver = round.Attacker
+	// 1 is the ID of ITEM EFFECT that increases damage
+	if round.Attacker.ItemEffect == 1 {
+		real_damage = int(math.Round(float64(real_damage) * round.Attacker.ItemPayload))
 	}
 
-	receiver.Effect[0]--
+	// 5 is the ID of ITEM EFFECT that increases defense of the player ( reduces the damage )
+	if round.Target.ItemEffect == 5 {
+		real_damage = int(math.Round(float64(real_damage) * round.Target.ItemPayload))
+	}
 
-	effect := Effects[receiver.Effect[1]]
+	return real_damage
+}
+
+func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect) {
 
 	effect_damage := Between(effect.Range)
 
@@ -108,6 +112,21 @@ func (round *Round) applyEffect(self bool, to_append bool) {
 			round.Integrity = float32(effect_damage)/100 + 0.01
 		}
 	}
+}
+
+func (round *Round) applyEffect(self bool, to_append bool) {
+	receiver := round.Target
+
+	if self {
+		receiver = round.Attacker
+	}
+
+	receiver.Effect[0]--
+
+	effect := Effects[receiver.Effect[1]]
+	effect_damage := Between(effect.Range)
+
+	round.applyEffectDamage(receiver, effect)
 
 	if to_append {
 		round.Results = append(round.Results, &Result{Effect: Effected, Damage: effect_damage, Self: self, Skill: Skills[receiver.Effect[2]-1][receiver.Effect[3]]})
@@ -115,15 +134,27 @@ func (round *Round) applyEffect(self bool, to_append bool) {
 }
 
 func (round *Round) applyEffects() {
-	if rand.Float64() <= round.Skill.Effect[0] {
-		effect := Effects[int(round.Skill.Effect[1])]
-		if effect.Self {
-			round.Attacker.Effect = [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
-			round.applyEffect(true, true)
-		} else {
-			round.Target.Effect = [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
-			round.applyEffect(false, true)
+	increase := 1.0
+	// 3 id is the EFFECT ID for a increase o probability of effects
+	if round.Attacker.ItemEffect == 3 {
+		increase = round.Attacker.ItemPayload
+	}
 
+	if rand.Float64() <= math.Pow(round.Skill.Effect[0], increase) {
+		effect := Effects[int(round.Skill.Effect[1])]
+		round.Target.Effect = [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
+		round.applyEffect(effect.Self, true)
+	} else {
+		// 2 id the EFFECT ID for a item effect
+		if round.Attacker.ItemEffect == 2 && rand.Float64() >= 0.6 {
+			effect := Effects[int(math.Round(round.Attacker.ItemPayload))]
+
+			round.Target.Effect = [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
+			receiver := round.Target
+
+			receiver.Effect[0]--
+			effect_damage := Between(effect.Range)
+			round.Results = append(round.Results, &Result{Effect: Effected, Damage: effect_damage, Self: false, Skill: Skills[receiver.Effect[2]-1][receiver.Effect[3]]})
 		}
 	}
 }
