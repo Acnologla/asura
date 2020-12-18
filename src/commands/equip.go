@@ -2,8 +2,8 @@ package commands
 
 import (
 	"asura/src/handler"
-	"asura/src/utils/rinha"
 	"asura/src/telemetry"
+	"asura/src/utils/rinha"
 	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
@@ -70,13 +70,13 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 					rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
 						"galos": galo.Galos,
 					})
-					price := rinha.Sell(rinha.Classes[gal.Type].Rarity,gal.Xp)
-					rinha.ChangeMoney(msg.Author.ID,price, 0)
+					price := rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp)
+					rinha.ChangeMoney(msg.Author.ID, price, 0)
 					newGalo := rinha.Classes[gal.Type]
 					tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 					telemetry.Debug(fmt.Sprintf("%s Sell %s", tag, newGalo.Name), map[string]string{
-						"galo": newGalo.Name,
-						"user": strconv.FormatUint(uint64(msg.Author.ID), 10),
+						"galo":   newGalo.Name,
+						"user":   strconv.FormatUint(uint64(msg.Author.ID), 10),
 						"rarity": newGalo.Rarity.String(),
 					})
 					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o galo **%s** por **%d** de dinheiro com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, price))

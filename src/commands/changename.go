@@ -5,8 +5,8 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"strings"
 	"github.com/andersfylling/disgord"
+	"strings"
 )
 
 func init() {
@@ -26,7 +26,7 @@ func runChangeName(session disgord.Session, msg *disgord.Message, args []string)
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Use j!changename <novo nome>")
 		return
 	}
-	text := strings.Join(args," ")
+	text := strings.Join(args, " ")
 	if len(text) > 25 || 3 > len(text) {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", O nome do seu galo deve ter entre 3 e 25 caracteres")
 		return

@@ -63,6 +63,13 @@ type Skill struct {
 	Self   bool       `json:"self"`
 }
 
+type Item struct {
+	Type   int    `json:"type"`
+	Name   string `json:"name"`
+	Level  int    `json:"level"`
+	Effect int    `json:"effect"`
+}
+
 type SubGalo struct {
 	Type int    `json:"type"`
 	Xp   int    `json:"xp"`
@@ -83,8 +90,12 @@ type Galo struct {
 	Money         int       `json:"money"`
 	Daily         uint64    `json:"daily"`
 	Clan          string    `json:"clan"`
+	Dungeon       int       `json:"dungeon"`
+	Items         []int     `json:"items"`
 }
 
+var Dungeon []*Room
+var Items []*Item
 var Effects []*Effect
 var Classes []*Class
 var Skills []([]*Skill)
@@ -112,6 +123,10 @@ func init() {
 	json.Unmarshal([]byte(byteValueEffect), &Effects)
 	byteValueSprites, _ := ioutil.ReadFile("./resources/galo/sprites.json")
 	json.Unmarshal([]byte(byteValueSprites), &Sprites)
+	byteValueDungeon, _ := ioutil.ReadFile("./resources/galo/dungeon.json")
+	json.Unmarshal([]byte(byteValueDungeon), &Dungeon)
+	byteValueItems, _ := ioutil.ReadFile("./resources/galo/items.json")
+	json.Unmarshal([]byte(byteValueItems), &Items)
 }
 
 func findClassIndex(class string) int {

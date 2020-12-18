@@ -59,7 +59,7 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 				"daily": galo.Daily,
 			})
 			rinha.ChangeMoney(msg.Author.ID, money, 0)
-			updateGaloWin(msg.Author.ID, galo)
+			updateGaloWin(msg.Author.ID, xpOb, galo.Win)
 			sendLevelUpEmbed(msg, session, &galo, msg.Author, xpOb)
 			msg.Reply(context.Background(), session, &disgord.Embed{
 				Color:       16776960,

@@ -36,15 +36,15 @@ func runTopClans(session disgord.Session, msg *disgord.Message, args []string) {
 				continue
 			}
 			name := result[i].Key()
-			text += fmt.Sprintf("[%d] - %s (%d/15)\nLevel: %d (%d XP)\n", len(result)-i, name, len(clan.Members) ,rinha.ClanXpToLevel(clan.Xp), clan.Xp)
-		} 
+			text += fmt.Sprintf("[%d] - %s (%d/15)\nLevel: %d (%d XP)\n", len(result)-i, name, len(clan.Members), rinha.ClanXpToLevel(clan.Xp), clan.Xp)
+		}
 	}
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Content: msg.Author.Mention(),
 		Embed: &disgord.Embed{
 			Description: text,
-			Color: 65535,
-			Title: "Topclans",
+			Color:       65535,
+			Title:       "Topclans",
 		},
 	})
 }

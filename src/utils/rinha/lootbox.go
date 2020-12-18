@@ -32,64 +32,62 @@ func OpenCommon() int {
 	return GetRandByType(Common)
 }
 
-func Open(lootType string) int{
-	if lootType == "comum"{
+func Open(lootType string) int {
+	if lootType == "comum" {
 		return OpenCommon()
 	}
-	if lootType == "rara"{
+	if lootType == "rara" {
 		return OpenRare()
 	}
 	return OpenNormal()
 }
 
-
-func GetPrice(lootType string) int{
-	if lootType == "comum"{
+func GetPrice(lootType string) int {
+	if lootType == "comum" {
 		return 100
 	}
-	if lootType == "rara"{
+	if lootType == "rara" {
 		return 800
 	}
 	return 400
 }
 
-func HaveLootbox(galo Galo, lootbox string) bool{
-	if lootbox == "comum"{
-		return galo.CommonLootbox > 0 
+func HaveLootbox(galo Galo, lootbox string) bool {
+	if lootbox == "comum" {
+		return galo.CommonLootbox > 0
 	}
-	if lootbox == "rara"{
+	if lootbox == "rara" {
 		return galo.RareLootbox > 0
 	}
 	return galo.Lootbox > 0
 }
 
-func GetNewLb(lootbox string, galo Galo, add bool) (string, int){
-	if lootbox == "comum"{
-		if add{
+func GetNewLb(lootbox string, galo Galo, add bool) (string, int) {
+	if lootbox == "comum" {
+		if add {
 			galo.CommonLootbox++
-		}else{
+		} else {
 			galo.CommonLootbox--
 		}
-		return "commonLootbox", galo.CommonLootbox 
+		return "commonLootbox", galo.CommonLootbox
 	}
-	if lootbox == "rara"{
-		if add{
+	if lootbox == "rara" {
+		if add {
 			galo.RareLootbox++
-		}else{
+		} else {
 			galo.RareLootbox--
 		}
-		return "rareLootbox", galo.RareLootbox 
+		return "rareLootbox", galo.RareLootbox
 	}
-	if add{
+	if add {
 		galo.Lootbox++
-	}else{
+	} else {
 		galo.Lootbox--
 	}
 	return "lootbox", galo.Lootbox
 }
 
-
-func Sell(rarity Rarity, xp int) int{
+func Sell(rarity Rarity, xp int) int {
 	level := CalcLevel(xp)
-	return rarity.Price() * (level / 5 + 1)
+	return rarity.Price() * (level/5 + 1)
 }

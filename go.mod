@@ -5,6 +5,7 @@ go 1.14
 require (
 	cloud.google.com/go/firestore v1.3.0 // indirect
 	firebase.google.com/go v3.13.0+incompatible
+	github.com/acnologla/interpreter v0.0.0-20201213223129-6a55692d2db7
 	github.com/agnivade/levenshtein v1.1.0
 	github.com/anaskhan96/soup v1.2.4
 	github.com/andersfylling/disgord v0.21.0

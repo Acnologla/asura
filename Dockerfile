@@ -40,6 +40,5 @@ CMD chromium-browser --headless --disable-gpu --remote-debugging-port=9222 --dis
 
 COPY --from=builder /build/main /dist
 COPY --from=builder /build/resources /dist/resources
-COPY --from=builder /build/src/interpreter/libs /dist/src/interpreter/libs
 
 ENTRYPOINT ./main 

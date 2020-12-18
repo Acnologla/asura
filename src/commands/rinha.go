@@ -114,18 +114,11 @@ func UnlockEvent(authorID disgord.Snowflake) {
 	battleMutex.Unlock()
 }
 
-func updateGaloWin(id disgord.Snowflake, galo rinha.Galo) {
+func updateGaloWin(id disgord.Snowflake, xp int, win int) {
 	updatedGalo, _ := rinha.GetGaloDB(id)
-	if updatedGalo.Type == galo.Type && galo.Name != updatedGalo.Name {
-		galo.Name = updatedGalo.Name
-	}
 	rinha.UpdateGaloDB(id, map[string]interface{}{
-		"name":     galo.Name,
-		"xp":       galo.Xp,
-		"type":     galo.Type,
-		"galos":    galo.Galos,
-		"equipped": galo.Equipped,
-		"win":      galo.Win,
+		"xp":  updatedGalo.Xp + xp,
+		"win": win,
 	})
 }
 
@@ -277,18 +270,18 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 
 		money := 0
 		clanMsg := ""
-		if galoWinner.Clan != ""{
+		if galoWinner.Clan != "" {
 			clan := rinha.GetClan(galoWinner.Clan)
-			xpOb += int(xpOb/10)
+			xpOb += int(xpOb / 10)
 			level := rinha.ClanXpToLevel(clan.Xp)
-			if level >= 2{
-				xpOb += int(xpOb/10)
+			if level >= 2 {
+				xpOb += int(xpOb / 10)
 			}
-			if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp){
-				if level >= 3{
+			if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp) {
+				if level >= 3 {
 					money += 2
 				}
-				if level >= 4{
+				if level >= 4 {
 					money += 3
 				}
 				rinha.AddClanXp(galoWinner.Clan, 1)
@@ -305,17 +298,15 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 			galoWinner.Win++
 		}
 
-		
-
 		galoWinner.Xp += xpOb
-		updateGaloWin(winner.ID, *galoWinner)
+		updateGaloWin(winner.ID, xpOb, galoWinner.Win)
 		sendLevelUpEmbed(msg, session, galoWinner, winner, xpOb)
 		embed := &disgord.Embed{Title: "Briga de galo", Color: 16776960, Description: ""}
 
 		if winnerTurn == 1 {
-			embed.Description = fmt.Sprintf("\n**%s** venceu a batalha, ganhou %d de dinheiro e %d de XP%s", advName, money, xpOb,clanMsg)
+			embed.Description = fmt.Sprintf("\n**%s** venceu a batalha, ganhou %d de dinheiro e %d de XP%s", advName, money, xpOb, clanMsg)
 		} else {
-			embed.Description = fmt.Sprintf("\n**%s** venceu a batalha, ganhou %d de dinheiro e %d de XP%s", authorName, money, xpOb,clanMsg)
+			embed.Description = fmt.Sprintf("\n**%s** venceu a batalha, ganhou %d de dinheiro e %d de XP%s", authorName, money, xpOb, clanMsg)
 		}
 
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{Embed: embed})

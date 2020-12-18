@@ -2,13 +2,13 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/telemetry"
 	"asura/src/utils/rinha"
 	"context"
-	"strconv"
-	"strings"
 	"fmt"
 	"github.com/andersfylling/disgord"
-	"asura/src/telemetry"
+	"strconv"
+	"strings"
 )
 
 func init() {
@@ -23,14 +23,13 @@ func init() {
 	})
 }
 
-
 func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	normal := func() {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title:       "Lootbox",
 			Color:       65535,
-			Description: fmt.Sprintf("Money: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 Gold)",galo.Money, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox),
+			Description: fmt.Sprintf("Money: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 Gold)", galo.Money, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox),
 		})
 	}
 	if len(args) == 0 {
@@ -38,16 +37,16 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	if args[0] == "open" || args[0] == "abrir" {
-		if 2 > len(args){
+		if 2 > len(args) {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa decidir o tipo de lootbox para abrir\nj!lootbox open <tipo>")
 			return
 		}
 		lootType := strings.ToLower(args[1])
-		if lootType != "comum" && lootType != "rara" && lootType != "normal"{
+		if lootType != "comum" && lootType != "rara" && lootType != "normal" {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Tipo de caixa invalido, use j!lootbox para ver os tipos")
 			return
 		}
-		if !rinha.HaveLootbox(galo, lootType){
+		if !rinha.HaveLootbox(galo, lootType) {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem essa lootbox\nuse j!lootbox para ver suas lootbox")
 			return
 		}
@@ -72,29 +71,29 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 				Type: result,
 				Xp:   0,
 			})
-		}else{
+		} else {
 			price := rinha.Sell(newGalo.Rarity, 0)
 			sold = "yes"
 			rinha.ChangeMoney(msg.Author.ID, price, 0)
 			extraMsg = fmt.Sprintf("\nComo voce ja tinha esse galo voce ganhou **%d** de dinheiro", price)
 		}
 		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, newGalo.Name), map[string]string{
-			"galo": newGalo.Name,
-			"user": strconv.FormatUint(uint64(msg.Author.ID), 10),
-			"rarity": newGalo.Rarity.String(),
+			"galo":     newGalo.Name,
+			"user":     strconv.FormatUint(uint64(msg.Author.ID), 10),
+			"rarity":   newGalo.Rarity.String(),
 			"lootType": lootType,
-			"sold": sold,
+			"sold":     sold,
 		})
 		update := map[string]interface{}{
-			"galos":   galo.Galos,
+			"galos": galo.Galos,
 		}
 		avatar, _ := msg.Author.AvatarURL(512, true)
 		newLb, value := rinha.GetNewLb(lootType, galo, false)
 		update[newLb] = value
 		rinha.UpdateGaloDB(msg.Author.ID, update)
 		msg.Reply(context.Background(), session, &disgord.Embed{
-			Color:       newGalo.Rarity.Color(),
-			Title:       "Lootbox open",
+			Color: newGalo.Rarity.Color(),
+			Title: "Lootbox open",
 			Footer: &disgord.EmbedFooter{
 				IconURL: avatar,
 				Text:    "Use j!equipar para equipar ou vender esse galo",
@@ -105,15 +104,22 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			},
 		})
 	} else if args[0] == "buy" || args[0] == "comprar" {
-		if 2 > len(args){
+		if 2 > len(args) {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa decidir o tipo de lootbox para comprar\nj!lootbox buy <tipo>")
 			return
 		}
 		lootType := strings.ToLower(args[1])
-		if lootType != "comum" && lootType != "rara" && lootType != "normal"{
+		if lootType != "comum" && lootType != "rara" && lootType != "normal" {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Tipo de caixa invalido, use j!lootbox para ver os tipos")
 			return
 		}
+		battleMutex.RLock()
+		if currentBattles[msg.Author.ID] != "" {
+			battleMutex.RUnlock()
+			msg.Reply(context.Background(), session, "Espere sua rinha terminar antes de comprar lootboxs")
+			return
+		}
+		battleMutex.RUnlock()
 		price := rinha.GetPrice(lootType)
 		err := rinha.ChangeMoney(msg.Author.ID, -price, price)
 		if err != nil {
@@ -121,12 +127,12 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		update := map[string]interface{}{
-			"galos":   galo.Galos,
+			"galos": galo.Galos,
 		}
 		newLb, value := rinha.GetNewLb(lootType, galo, true)
 		update[newLb] = value
 		rinha.UpdateGaloDB(msg.Author.ID, update)
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce comprou uma lootbox " + lootType + " use `j!lootbox open "+ lootType +  "` para abrir")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce comprou uma lootbox "+lootType+" use `j!lootbox open "+lootType+"` para abrir")
 	} else {
 		normal()
 	}

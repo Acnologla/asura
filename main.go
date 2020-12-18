@@ -37,7 +37,7 @@ func main() {
 	database.Init()
 	fmt.Println("Starting bot...")
 	client := disgord.New(disgord.Config{
-		RejectEvents: []string{"GUILD_MEMBER_ADD", "GUILD_MEMBER_UPDATE", "GUILD_MEMBER_REMOVE", "PRESENCE_UPDATE", "GuildMessageTyping"},
+		RejectEvents: []string{"PRESENCE_UPDATE", "GuildMessageTyping"},
 		BotToken:     os.Getenv("TOKEN"),
 	})
 	defer client.StayConnectedUntilInterrupted()

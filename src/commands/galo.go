@@ -48,12 +48,12 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		name = galo.Name
 	}
 	clan := "Nenhum"
-	if galo.Clan != ""{
+	if galo.Clan != "" {
 		clan = galo.Clan
 	}
-	fields = append(fields,&disgord.EmbedField{
+	fields = append(fields, &disgord.EmbedField{
 		Name:   "Mais informaçoes",
-		Value:  fmt.Sprintf("**[Clique aqui]( https://acnologla.github.io/asura-galos?galo=%d)**", galo.Type - 1),
+		Value:  fmt.Sprintf("**[Clique aqui]( https://acnologla.github.io/asura-galos?galo=%d)**", galo.Type-1),
 		Inline: false,
 	})
 	msg.Reply(context.Background(), session, disgord.CreateMessageParams{
@@ -67,7 +67,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!skills para ver os skills e equipa-las",
 			},
-			Description: fmt.Sprintf("Level: **%d** (**%d/%d**)\nClan: **%s**\nTipo: **%s** (**%s**)\n **%d** Vitorias | **%d** Derrotas\nHabilidades:", level, galo.Xp-curLevelXP, nextLevelXP-curLevelXP, clan ,rinha.Classes[galo.Type].Name, rinha.Classes[galo.Type].Rarity.String(), galo.Win, galo.Lose),
+			Description: fmt.Sprintf("Level: **%d** (**%d/%d**)\nClan: **%s**\nTipo: **%s** (**%s**)\n **%d** Vitorias | **%d** Derrotas\nHabilidades:", level, galo.Xp-curLevelXP, nextLevelXP-curLevelXP, clan, rinha.Classes[galo.Type].Name, rinha.Classes[galo.Type].Rarity.String(), galo.Win, galo.Lose),
 			Fields:      fields,
 		},
 	})

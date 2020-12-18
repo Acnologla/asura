@@ -120,8 +120,8 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 								return
 							}
 							invited, _ := rinha.GetGaloDB(user.ID)
-							if invited.Clan != ""{
-								msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario esta em outro clan (" + invited.Clan + ")")
+							if invited.Clan != "" {
+								msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario esta em outro clan ("+invited.Clan+")")
 								return
 							}
 							clan.Members = append(clan.Members, rinha.ClanMember{
@@ -187,7 +187,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!clan invite <usuario> para convidar alguem | Use j!clan remove <usuario> para remover alguem",
 			},
-			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/15):\n %s", level, clan.Xp, rinha.ClanLevelToXp(level),benefits ,len(clan.Members), memberMsg),
+			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/15):\n %s", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), memberMsg),
 		})
 	}
 }
