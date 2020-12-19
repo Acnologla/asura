@@ -49,7 +49,18 @@ func AddItem(level int, items []int) ([]int, string) {
 func ItemToString(item *Item) string{
 	if item.Effect == 1{
 		return fmt.Sprintf("Aumenta o dano dos seus ataques em **%d%%** ", int(math.Round((item.Payload - 1) * 100)))
-	}else{
-		return ""
 	}
+	if item.Effect == 2{
+		return fmt.Sprintf("Tem chance de causar **%s**", Effects[int(item.Payload)].Name)
+	}
+	if item.Effect == 3{
+		return fmt.Sprintf("Aumenta a probabilidade dos seus efeitos em **%d%%**", int(math.Round((item.Payload - 1) * 100)) )
+	}
+	if item.Effect == 4{
+		return fmt.Sprintf("Aumenta sua vida maxima em **%d%%**", int(math.Round((item.Payload - 1) * 100)) )
+	}
+	if item.Effect == 5{
+		return fmt.Sprintf("Bloqueia **%d%%** de dano", int(math.Round((1 - item.Payload) * 100)) )
+	}
+	return ""
 }

@@ -27,7 +27,7 @@
         "name": "Armadura",
         "effect": 5,
         "level": 0,
-        "payload": 1.1
+        "payload": 0.9
     },
     {
         "name": "Poção de cura",
@@ -75,7 +75,7 @@
         "name": "Armadura de diamante",
         "effect": 5,
         "level": 1,
-        "payload": 1.25
+        "payload": 0.75
     },
     {
         "name": "Machado divino",

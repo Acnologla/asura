@@ -3,6 +3,7 @@ package rinha
 import (
 	"math"
 	"math/rand"
+	"fmt"
 )
 
 const (
@@ -76,7 +77,9 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 
 	// 5 is the ID of ITEM EFFECT that increases defense of the player ( reduces the damage )
 	if round.Target.ItemEffect == 5 {
+		fmt.Println(real_damage)
 		real_damage = int(math.Round(float64(real_damage) * round.Target.ItemPayload))
+		fmt.Println(real_damage)
 	}
 
 	return real_damage
@@ -140,7 +143,9 @@ func (round *Round) applyEffects() {
 	if round.Attacker.ItemEffect == 3 {
 		increase = round.Attacker.ItemPayload
 	}
-
+	fmt.Println(increase)
+	fmt.Println(round.Skill.Effect[0])
+	fmt.Println(math.Pow(round.Skill.Effect[0], increase))
 	if rand.Float64() <= math.Pow(round.Skill.Effect[0], increase) {
 		effect := Effects[int(round.Skill.Effect[1])]
 		effect_phy := [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
@@ -152,9 +157,9 @@ func (round *Round) applyEffects() {
 		round.applyEffect(effect.Self, true)
 	} else {
 		// 2 id the EFFECT ID for a item effect
-		if round.Attacker.ItemEffect == 2 && rand.Float64() >= 0.6 {
+		if round.Attacker.ItemEffect == 2 && rand.Float64() >= 0.5 {
 			effect := Effects[int(math.Round(round.Attacker.ItemPayload))]
-
+			fmt.Println(effect)
 			round.Target.Effect = [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
 			receiver := round.Target
 

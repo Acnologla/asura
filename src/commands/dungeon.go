@@ -77,7 +77,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       16776960,
 			Title:       "Dungeon",
-			Description: fmt.Sprintf("Parabens %s voce consegiu derrotar o boss e avançar para o andar **%d**, %s", msg.Author.Username, galo.Dungeon+1, endMsg),
+			Description: fmt.Sprintf("Parabens %s voce consegiu derrotar o boss e avançar para o andar **%d** %s", msg.Author.Username, galo.Dungeon+1, endMsg),
 		})
 	} else {
 		msg.Reply(context.Background(), session, &disgord.Embed{
