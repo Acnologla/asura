@@ -6,10 +6,11 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"math/rand"
 	"sync"
 	"time"
+
+	"github.com/andersfylling/disgord"
 )
 
 type rinhaOptions struct {
@@ -71,17 +72,11 @@ func effectToStr(effect *rinha.Result, affected string, author string, battle *r
 		}
 		return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
 	} else if effect.Effect == rinha.Effected {
-		effectLiteral := rinha.GetEffectFromSkill(effect.Skill)
+		effectLiteral := rinha.Effects[effect.EffectID]
 		if effect.Self {
 			return fmt.Sprintf(effectLiteral.Phrase+"\n", author, effect.Damage)
 		}
 		return fmt.Sprintf(effectLiteral.Phrase+"\n", affected, effect.Damage)
-	} else if effect.Effect == rinha.SideEffected {
-		effectLiteral := rinha.GetEffectFromSkill(effect.Skill)
-		if effect.Self {
-			return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", affected, effect.Damage, effectLiteral.Name)
-		}
-		return fmt.Sprintf("**%s** Tomou **%d** de dano de '%s'\n", author, effect.Damage, effectLiteral.Name)
 	} else if effect.Effect == rinha.NotEffective {
 		return fmt.Sprintf("**reduzido**\n")
 	}
