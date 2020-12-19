@@ -201,5 +201,19 @@
         "type": 1,
         "phrase": "%s esta sobre acido (-%d)",
         "range": [20,35]
+    },
+    {
+        "name": "Choque",
+        "turns": 5,
+        "type": 1,
+        "phrase": "%s esta sobre choque (-%d)",
+        "range": [6,15]
+    },
+    {
+        "name": "Choque forte",
+        "turns": 5,
+        "type": 1,
+        "phrase": "%s esta sobre choque (-%d)",
+        "range": [15,25]
     }
 ]

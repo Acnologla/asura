@@ -10,7 +10,7 @@
     },
     {
         "name": "Papel",
-        "disadvantages": [4,5,7,12],
+        "disadvantages": [4,5,7,12, 17],
         "rarity":  0
     },
     {
@@ -20,7 +20,7 @@
     },
     {
         "name": "Cortante",
-        "disadvantages": [3,9,10],
+        "disadvantages": [3,9,10, 17],
         "rarity":  0
     },
     {
@@ -77,9 +77,15 @@
         "name": "Arcano",
         "disadvantages": [],
         "rarity": 2
-    },{
+    },
+    {
         "name": "Acido",
-        "disadvantages": [9,4],
+        "disadvantages": [9,4,17],
         "rarity": 0
+    },
+    {
+        "name": "Eletrico",
+        "disadvantages": [12],
+        "rarity": 1
     }
 ]

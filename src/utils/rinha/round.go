@@ -143,7 +143,7 @@ func (round *Round) applyEffect(id int, self bool, to_append bool) {
 }
 
 func (round *Round) applyEffects() {
-	increase := 1.0
+	increase := 0.0
 	// 3 id is the EFFECT ID for a increase o probability of effects
 	if round.Attacker.ItemEffect == 3 {
 		increase = round.Attacker.ItemPayload
