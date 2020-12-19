@@ -1,0 +1,97 @@
+[
+    {
+        "name": "Acido",
+        "damage": [8,19],
+        "level": 1,
+        "effect": [0.3, 23]
+    },
+    {
+        "name": "Faca envenenada",
+        "damage": [1,5],
+        "level": 2,
+        "effect": [0.3, 16]
+    },
+    {
+        "name": "Punhos de acido",
+        "damage": [13,22],
+        "level": 3
+    },
+    {
+        "name": "Acido sulfurico",
+        "damage": [8,15],
+        "level": 4,
+        "effect": [1, 23]
+    },
+    {
+        "name": "Jato de acido",
+        "damage": [11,17],
+        "effect": [1, 23],
+        "level": 5
+    },
+    {
+        "name": "Seringa com veneno",
+        "damage": [1,5],
+        "level": 6,
+        "effect": [1,16]
+    },
+    {
+        "name": "Poço de veneno",
+        "damage": [10,20],
+        "level": 7,
+        "effect": [0.5, 16]
+    },
+    {
+        "name": "Acido forte",
+        "damage": [5,7],
+        "effect": [1,24],
+        "level": 8
+    },
+    {
+        "name": "Chuva acida",
+        "damage": [20,25],
+        "level": 9,
+        "effect": [1,23]
+    },
+    {
+        "name": "Pilar acido",
+        "damage": [30,35],
+        "level": 11,
+        "effect": [1,23]
+    },
+    {
+        "name": "Acido fluorantimônico",
+        "damage": [22,25],
+        "level": 12,
+        "effect": [1,24]
+    },
+    {
+        "name": "Acidez",
+        "damage": [25,28],
+        "level": 14,
+        "effect": [1,24]
+    },
+    {
+        "name": "Arma envenenada",
+        "damage": [30, 35],
+        "level": 16,
+        "effect":[1, 16]
+    },
+    {
+        "name": "Rio acido",
+        "damage": [40,49],
+        "level": 18,
+        "effect": [1,23]
+    },
+    {
+        "name": "Oceano acido",
+        "damage": [40,45],
+        "level": 22,
+        "effect": [1, 24]
+    },
+    {
+        "name": "Acido divino",
+        "damage": [1,5],
+        "level": 24,
+        "effect": [1,25]
+    }
+]
