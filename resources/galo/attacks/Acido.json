@@ -1,19 +1,19 @@
 [
     {
         "name": "Acido",
-        "damage": [8,19],
+        "damage": [12,20],
         "level": 1,
         "effect": [0.3, 23]
     },
     {
         "name": "Faca envenenada",
-        "damage": [1,5],
+        "damage": [5,10],
         "level": 2,
         "effect": [0.3, 16]
     },
     {
         "name": "Punhos de acido",
-        "damage": [13,22],
+        "damage": [14,22],
         "level": 3
     },
     {
@@ -66,25 +66,25 @@
     },
     {
         "name": "Acidez",
-        "damage": [25,28],
+        "damage": [23,28],
         "level": 14,
         "effect": [1,24]
     },
     {
         "name": "Arma envenenada",
-        "damage": [30, 35],
+        "damage": [10, 20],
         "level": 16,
         "effect":[1, 16]
     },
     {
         "name": "Rio acido",
-        "damage": [40,49],
+        "damage": [20,35],
         "level": 18,
         "effect": [1,23]
     },
     {
         "name": "Oceano acido",
-        "damage": [40,45],
+        "damage": [30,35],
         "level": 22,
         "effect": [1, 24]
     },

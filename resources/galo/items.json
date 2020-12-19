@@ -3,6 +3,96 @@
         "name": "Garras",
         "effect": 1,
         "level": 0,
-        "payload": 1.2 
+        "payload": 1.1
+    },
+    {
+        "name": "Tocha",
+        "effect": 2,
+        "level": 0,
+        "payload": 8
+    },
+    {
+        "name": "Amplificador",
+        "effect": 3,
+        "level": 0,
+        "payload": 1.1
+    },
+    {
+        "name": "Reforçado de crista",
+        "effect": 4,
+        "level": 0,
+        "payload": 1.1
+    },
+    {
+        "name": "Armadura",
+        "effect": 5,
+        "level": 0,
+        "payload": 1.1
+    },
+    {
+        "name": "Poção de cura",
+        "effect": 2,
+        "level": 0,
+        "payload": 2
+    },
+    {
+        "name": "Espinho gelido",
+        "effect": 2,
+        "level": 0,
+        "payload": 11
+    },
+    {
+        "name": "Pote de ácido",
+        "effect": 2,
+        "level": 0,
+        "payload": 23
+    },
+    {
+        "name": "Espada",
+        "effect": 1,
+        "level": 1,
+        "payload": 1.25
+    },
+    {
+        "name": "Faca envenada",
+        "effect": 2,
+        "level": 1,
+        "payload": 16
+    },
+    {
+        "name": "Amplificador potente",
+        "effect": 3,
+        "level": 1,
+        "payload": 1.20
+    },
+    {
+        "name": "Rosa da vida",
+        "effect": 4,
+        "level": 1,
+        "payload": 1.25
+    },
+    {
+        "name": "Armadura de diamante",
+        "effect": 5,
+        "level": 1,
+        "payload": 1.25
+    },
+    {
+        "name": "Machado divino",
+        "effect": 1,
+        "level": 2,
+        "payload": 1.50
+    },
+    {
+        "name": "Canhao de plasma",
+        "effect": 2,
+        "level": 2,
+        "payload": 20
+    },
+    {
+        "name": "Elixir da vida eterna",
+        "effect": 4,
+        "level": 2,
+        "payload": 1.50
     }
 ]

@@ -35,8 +35,8 @@ func initFighter(galo *Galo) *Fighter {
 	life := 100 + (CalcLevel(galo.Xp) * 3)
 	itemEffect, payload := checkItem(galo)
 
-	// 3 is the ID of Item EFFECT that increase life
-	if itemEffect == 3 {
+	// 4 is the ID of Item EFFECT that increase life
+	if itemEffect == 4 {
 		life = int(math.Round(float64(life) * payload))
 	}
 

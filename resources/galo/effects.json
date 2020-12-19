@@ -200,6 +200,6 @@
         "turns": 3,
         "type": 1,
         "phrase": "%s esta sobre acido (-%d)",
-        "range": [30,45]
+        "range": [20,35]
     }
 ]

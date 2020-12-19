@@ -15,7 +15,7 @@
     },
     {
         "name": "Pedra",
-        "disadvantages": [2,6,14],
+        "disadvantages": [2,6,14,16],
         "rarity":  0
     },
     {
@@ -55,7 +55,7 @@
     },
     {
         "name": "Metal",
-        "disadvantages": [8,2,14, 9 ],
+        "disadvantages": [8,2,14, 9],
         "rarity": 0
     },
     {
@@ -79,7 +79,7 @@
         "rarity": 2
     },{
         "name": "Acido",
-        "disadvantages": [],
+        "disadvantages": [9,4],
         "rarity": 0
     }
 ]
