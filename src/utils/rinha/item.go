@@ -3,10 +3,10 @@ package rinha
 import (
 	"fmt"
 	"math/rand"
+	"math"
 )
 
 type Item struct {
-	Type    int     `json:"type"`
 	Name    string  `json:"name"`
 	Level   int     `json:"level"`
 	Payload float64 `json:"payload"`
@@ -44,4 +44,12 @@ func AddItem(level int, items []int) ([]int, string) {
 	}
 	msg := fmt.Sprintf("Ganhou um item %s\n**%s** (use **j!items** para equipar seu item)", LevelToString(level), Items[item].Name)
 	return items, msg
+}
+
+func ItemToString(item *Item) string{
+	if item.Effect == 1{
+		return fmt.Sprintf("Aumenta o dano dos seus ataques em **%d%%** ", int(math.Round((item.Payload - 1) * 100)))
+	}else{
+		return ""
+	}
 }

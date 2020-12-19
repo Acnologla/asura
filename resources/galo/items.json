@@ -1,8 +1,8 @@
 [
     {
-        "type": 0,
         "name": "Garras",
-        "effect": 5,
-        "level": 0
+        "effect": 1,
+        "level": 0,
+        "payload": 1.2 
     }
 ]
