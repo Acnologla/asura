@@ -124,6 +124,7 @@ func (round *Round) applyEffect(self bool, to_append bool) {
 	receiver.Effect[0]--
 
 	effect := Effects[receiver.Effect[1]]
+
 	effect_damage := Between(effect.Range)
 
 	round.applyEffectDamage(receiver, effect)
@@ -142,7 +143,12 @@ func (round *Round) applyEffects() {
 
 	if rand.Float64() <= math.Pow(round.Skill.Effect[0], increase) {
 		effect := Effects[int(round.Skill.Effect[1])]
-		round.Target.Effect = [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
+		effect_phy := [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
+		if effect.Self {
+			round.Attacker.Effect = effect_phy
+		} else {
+			round.Target.Effect = effect_phy
+		}
 		round.applyEffect(effect.Self, true)
 	} else {
 		// 2 id the EFFECT ID for a item effect
@@ -154,6 +160,7 @@ func (round *Round) applyEffects() {
 
 			receiver.Effect[0]--
 			effect_damage := Between(effect.Range)
+
 			round.Results = append(round.Results, &Result{Effect: Effected, Damage: effect_damage, Self: false, Skill: Skills[receiver.Effect[2]-1][receiver.Effect[3]]})
 		}
 	}
