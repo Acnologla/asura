@@ -50,9 +50,11 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			break
 		}
 		for _, member := range guil.Members {
-			if member.User.ID == user.ID {
-				is = true
-				break
+			if member.User != nil{
+				if member.User.ID == user.ID {
+					is = true
+					break
+				}
 			}
 		}
 		if is {
