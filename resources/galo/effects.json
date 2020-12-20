@@ -215,5 +215,12 @@
         "type": 1,
         "phrase": "%s esta sobre choque (-%d)",
         "range": [15,25]
+    },
+    {
+        "name": "Atração gravitacional",
+        "turns": 2,
+        "type": 1,
+        "phrase": "%s esta sobre atração gravitacional (-%d)",
+        "range": [1,30]
     }
 ]

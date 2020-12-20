@@ -87,5 +87,10 @@
         "name": "Eletrico",
         "disadvantages": [12],
         "rarity": 1
+    },
+    {
+        "name": "Gravidade",
+        "disadvantages": [],
+        "rarity": 2
     }
 ]
