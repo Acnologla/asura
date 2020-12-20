@@ -24,8 +24,11 @@ func init() {
 func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	if len(args) == 0 {
-		equipped := rinha.Items[galo.Items[0]]
-		text := fmt.Sprintf("**Item equipado**\n %s (Raridade: **%s**)\n%s\n\n**Inventory**\n", equipped.Name, rinha.LevelToString(equipped.Level), rinha.ItemToString(equipped))
+		text := ""
+		if len(galo.Items) > 0{
+			equipped := rinha.Items[galo.Items[0]]
+			text = fmt.Sprintf("**Item equipado**\n %s (Raridade: **%s**)\n%s\n\n**Inventory**\n", equipped.Name, rinha.LevelToString(equipped.Level), rinha.ItemToString(equipped))
+		}
 		for i, item := range galo.Items {
 			name := rinha.Items[item]
 			text += fmt.Sprintf("[%d] - %s (Raridade: **%s**) \n%s\n", i, name.Name, rinha.LevelToString(name.Level), rinha.ItemToString(name))
