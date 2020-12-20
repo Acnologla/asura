@@ -1,7 +1,7 @@
 package test
 
 import (
-	"asura/src/interpreter"
+	"github.com/acnologla/interpreter"
 	"testing"
 )
 
