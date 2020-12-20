@@ -148,7 +148,6 @@ func (round *Round) applyEffects() {
 	if round.Attacker.ItemEffect == 3 {
 		increase = round.Attacker.ItemPayload
 	}
-
 	if round.Skill.Effect[0] != 0 && rand.Float64() <= round.Skill.Effect[0]+increase {
 		effect := Effects[int(round.Skill.Effect[1])]
 		effect_phy := [4]int{effect.Turns, int(round.Skill.Effect[1]), round.Attacker.Galo.Type, round.SkillId}
@@ -159,7 +158,7 @@ func (round *Round) applyEffects() {
 		}
 		round.applyEffect(int(round.Skill.Effect[1]), effect.Self, true)
 	} else {
-		if round.Attacker.ItemEffect == 2 && rand.Float64() >= 0 {
+		if round.Attacker.ItemEffect == 2 && rand.Float64() >= 0.7 {
 			id := int(math.Round(round.Attacker.ItemPayload))
 			effect := Effects[id]
 			effect_phy := [4]int{effect.Turns, id, round.Attacker.Galo.Type, round.SkillId}

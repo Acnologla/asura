@@ -15,7 +15,7 @@
         "name": "Amplificador",
         "effect": 3,
         "level": 0,
-        "payload": 1.1
+        "payload": 0.1
     },
     {
         "name": "Reforçado de crista",
@@ -63,7 +63,7 @@
         "name": "Amplificador potente",
         "effect": 3,
         "level": 1,
-        "payload": 1.20
+        "payload": 0.20
     },
     {
         "name": "Rosa da vida",

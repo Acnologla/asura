@@ -31,10 +31,13 @@ func checkItem(galo *Galo) (int, float64) {
 	return 0, 0
 }
 
-func initFighter(galo *Galo) *Fighter {
+func initFighter(galo *Galo, noItems bool) *Fighter {
 	life := 100 + (CalcLevel(galo.Xp) * 3)
-	itemEffect, payload := checkItem(galo)
-
+	var itemEffect int 
+	var payload float64
+	if !noItems{
+		itemEffect, payload = checkItem(galo)
+	}
 	// 4 is the ID of Item EFFECT that increase life
 	if itemEffect == 4 {
 		life = int(math.Round(float64(life) * payload))
@@ -51,9 +54,9 @@ func initFighter(galo *Galo) *Fighter {
 	}
 }
 
-func CreateBattle(first *Galo, sec *Galo) Battle {
-	firstFighter := initFighter(first)
-	secFighter := initFighter(sec)
+func CreateBattle(first *Galo, sec *Galo, noItems bool) Battle {
+	firstFighter := initFighter(first, noItems)
+	secFighter := initFighter(sec, noItems)
 
 	initEquips(firstFighter)
 	initEquips(secFighter)

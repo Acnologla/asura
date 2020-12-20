@@ -20,6 +20,7 @@ type rinhaOptions struct {
 	advLevel    int
 	authorName  string
 	advName     string
+	noItems     bool
 }
 
 var (
@@ -341,7 +342,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 	})
 
 	if err == nil {
-		battle := rinha.CreateBattle(options.galoAuthor, options.galoAdv)
+		battle := rinha.CreateBattle(options.galoAuthor, options.galoAdv, options.noItems)
 		var lastEffects string
 
 		for {

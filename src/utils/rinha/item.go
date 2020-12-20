@@ -54,7 +54,7 @@ func ItemToString(item *Item) string{
 		return fmt.Sprintf("Tem chance de causar **%s**", Effects[int(item.Payload)].Name)
 	}
 	if item.Effect == 3{
-		return fmt.Sprintf("Aumenta a probabilidade dos seus efeitos em **%d%%**", int(math.Round((item.Payload - 1) * 100)) )
+		return fmt.Sprintf("Aumenta a probabilidade dos seus efeitos em **%d%%**", int(math.Round((item.Payload) * 100)) )
 	}
 	if item.Effect == 4{
 		return fmt.Sprintf("Aumenta sua vida maxima em **%d%%**", int(math.Round((item.Payload - 1) * 100)) )
