@@ -42,6 +42,9 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	cGuilds := session.GetConnectedGuilds()
 	for i, guild := range cGuilds {
 		guil, _ := handler.Client.Guild(guild).Get()
+		if guil == nil{
+			continue
+		}
 		var is bool
 		if count >= 10 {
 			break
