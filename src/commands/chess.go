@@ -169,7 +169,10 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	user := msg.Mentions[0]
-	if chessPlayers[msg.Author.ID] != nil {
+	if msg.Author.ID == user.ID {
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
+		return
+	} else if chessPlayers[msg.Author.ID] != nil {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce ja esta em uma partida de xadrez")
 		return
 	} else if chessPlayers[user.ID] != nil {
