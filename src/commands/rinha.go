@@ -344,11 +344,9 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 	if err == nil {
 		battle := rinha.CreateBattle(options.galoAuthor, options.galoAdv, options.noItems)
 		var lastEffects string
-
+		round := 0
 		for {
-
 			effects := battle.Play()
-
 			var text string
 
 			authorName := options.authorName
@@ -364,7 +362,17 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 			for _, effect := range effects {
 				text += effectToStr(effect, affectedName, authorName, &battle)
 			}
-
+			if round >= 35{
+                if battle.Fighters[1].Life >= battle.Fighters[0].Life{
+                    text += "\n"+ options.authorName + " Foi executado"
+					battle.Fighters[0].Life = 0
+					battle.Turn = false
+                }else{
+                    battle.Fighters[1].Life = 0
+					text +=  "\n"+  options.advName + " Foi executado"
+					battle.Turn = true
+                }
+            }
 			embed.Color = rinhaColors[battle.GetReverseTurn()]
 			embed.Description = lastEffects + "\n" + text
 
@@ -387,6 +395,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 
 			if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
 				winnerTurn := battle.GetReverseTurn()
+				
 				if winnerTurn == 1 {
 					embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.advName)
 				} else {
@@ -398,6 +407,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 
 			edit(message, embed)
 			lastEffects = text
+			round++
 			time.Sleep(4 * time.Second)
 		}
 	} else {
