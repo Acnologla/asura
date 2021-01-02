@@ -42,7 +42,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	cGuilds := session.GetConnectedGuilds()
 	for i, guild := range cGuilds {
 		guil, _ := handler.Client.Guild(guild).Get()
-		if guil == nil{
+		if guil == nil {
 			continue
 		}
 		var is bool
@@ -50,7 +50,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			break
 		}
 		for _, member := range guil.Members {
-			if member.User != nil{
+			if member.User != nil {
 				if member.User.ID == user.ID {
 					is = true
 					break

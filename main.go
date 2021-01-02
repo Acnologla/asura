@@ -47,5 +47,5 @@ func main() {
 	client.Gateway().MessageReactionAdd(handler.OnReactionAdd)
 	client.Gateway().MessageReactionRemove(handler.OnReactionRemove)
 	client.Gateway().Ready(onReady)
-	
+
 }

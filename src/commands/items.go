@@ -25,7 +25,7 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	if len(args) == 0 {
 		text := ""
-		if len(galo.Items) > 0{
+		if len(galo.Items) > 0 {
 			equipped := rinha.Items[galo.Items[0]]
 			text = fmt.Sprintf("**Item equipado**\n %s (Raridade: **%s**)\n%s\n\n**Inventory**\n", equipped.Name, rinha.LevelToString(equipped.Level), rinha.ItemToString(equipped))
 		}
@@ -65,7 +65,7 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 			galo.Items[0] = newItem
 			galo.Items[value] = old
 			rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-				"items":    galo.Items,
+				"items": galo.Items,
 			})
 			msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), rinha.Items[newItem].Name))
 		} else {

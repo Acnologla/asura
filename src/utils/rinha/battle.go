@@ -33,9 +33,9 @@ func checkItem(galo *Galo) (int, float64) {
 
 func initFighter(galo *Galo, noItems bool) *Fighter {
 	life := 100 + (CalcLevel(galo.Xp) * 3)
-	var itemEffect int 
+	var itemEffect int
 	var payload float64
-	if !noItems{
+	if !noItems {
 		itemEffect, payload = checkItem(galo)
 	}
 	// 4 is the ID of Item EFFECT that increase life
