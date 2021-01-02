@@ -4,6 +4,24 @@ import (
 	"math/rand"
 )
 
+var lootChances = [][3]int{
+	{50},
+	{240, 50},
+	{450, 100},
+}
+
+func _Open(lootType int) int{
+	lootChance := lootChances[lootType]
+	value := rand.Intn(1000) + 1
+	for i := len(lootChance)-1;i >= 0;i--{
+		randValue := lootChance[i]
+		if randValue >= value && value != 0 {
+			return GetRandByType(Rarity(i+1))
+		}
+	}
+	return GetRandByType(Common)
+}
+
 func OpenRare() int {
 	value := rand.Intn(1001)
 	if 99 >= value {
