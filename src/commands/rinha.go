@@ -149,37 +149,21 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 			},
 		})
 		if confirmErr == nil {
-			utils.Try(func() error {
-				return confirmMsg.React(context.Background(), session, "✅")
-			}, 5)
-			say := false
-			handler.RegisterHandler(confirmMsg, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
-				if !removed {
-					if emoji.Name == "✅" && u == msg.Mentions[0].ID {
-						battleMutex.RLock()
-						if currentBattles[msg.Author.ID] != "" {
-							battleMutex.RUnlock()
-							if !say {
-								say = true
-								msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
-							}
-							return
-						}
-						if currentBattles[msg.Mentions[0].ID] != "" {
-							battleMutex.RUnlock()
-							if !say {
-								say = true
-								msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
-							}
-							return
-						}
-						battleMutex.RUnlock()
-						go session.Channel(confirmMsg.ChannelID).Message(confirmMsg.ID).Delete()
-
-						executePVP(msg, session)
-					}
+			utils.Confirm(confirmMsg, msg.Mentions[0].ID, func() {
+				battleMutex.RLock()
+				if currentBattles[msg.Author.ID] != "" {
+					battleMutex.RUnlock()
+					msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+					return
 				}
-			}, 120)
+				if currentBattles[msg.Mentions[0].ID] != "" {
+					battleMutex.RUnlock()
+					msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+					return
+				}
+				battleMutex.RUnlock()
+				executePVP(msg, session)
+			})
 		}
 	} else {
 		msg.Reply(context.Background(), session, "Voce precisa mencionar alguem")
@@ -362,17 +346,17 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 			for _, effect := range effects {
 				text += effectToStr(effect, affectedName, authorName, &battle)
 			}
-			if round >= 35{
-                if battle.Fighters[1].Life >= battle.Fighters[0].Life{
-                    text += "\n"+ options.authorName + " Foi executado"
+			if round >= 35 {
+				if battle.Fighters[1].Life >= battle.Fighters[0].Life {
+					text += "\n" + options.authorName + " Foi executado"
 					battle.Fighters[0].Life = 0
 					battle.Turn = false
-                }else{
-                    battle.Fighters[1].Life = 0
-					text +=  "\n"+  options.advName + " Foi executado"
+				} else {
+					battle.Fighters[1].Life = 0
+					text += "\n" + options.advName + " Foi executado"
 					battle.Turn = true
-                }
-            }
+				}
+			}
 			embed.Color = rinhaColors[battle.GetReverseTurn()]
 			embed.Description = lastEffects + "\n" + text
 
@@ -395,7 +379,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 
 			if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
 				winnerTurn := battle.GetReverseTurn()
-				
+
 				if winnerTurn == 1 {
 					embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.advName)
 				} else {

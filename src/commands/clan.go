@@ -103,42 +103,33 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					},
 				})
 				if confirmErr == nil {
-					utils.Try(func() error {
-						return confirmMsg.React(context.Background(), session, "✅")
-					}, 5)
-					done := false
-					handler.RegisterHandler(confirmMsg, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
-						if emoji.Name == "✅" && !removed && u == user.ID && !done {
-							done = true
-							clan = rinha.GetClan(galo.Clan)
-							if rinha.IsInClan(clan, user.ID) {
-								msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")
-								return
-							}
-							if len(clan.Members) >= 15 {
-								msg.Reply(context.Background(), session, msg.Author.Mention()+", Este clan ja esta cheio\nRemova algum usuario usando j!clan remove @user")
-								return
-							}
-							invited, _ := rinha.GetGaloDB(user.ID)
-							if invited.Clan != "" {
-								msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario esta em outro clan ("+invited.Clan+")")
-								return
-							}
-							clan.Members = append(clan.Members, rinha.ClanMember{
-								ID:   uint64(user.ID),
-								Role: rinha.Member,
-							})
-							rinha.UpdateClan(galo.Clan, map[string]interface{}{
-								"members": clan.Members,
-							})
-							rinha.UpdateGaloDB(user.ID, map[string]interface{}{
-								"clan": galo.Clan,
-							})
-							handler.DeleteHandler(confirmMsg)
-							go session.Channel(confirmMsg.ChannelID).Message(confirmMsg.ID).Delete()
-							msg.Reply(context.Background(), session, user.Mention()+", Voce entrou para o clan **"+galo.Clan+"** com sucesso")
+					utils.Confirm(confirmMsg, msg.Mentions[0].ID, func() {
+						clan = rinha.GetClan(galo.Clan)
+						if rinha.IsInClan(clan, user.ID) {
+							msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")
+							return
 						}
-					}, 20)
+						if len(clan.Members) >= 15 {
+							msg.Reply(context.Background(), session, msg.Author.Mention()+", Este clan ja esta cheio\nRemova algum usuario usando j!clan remove @user")
+							return
+						}
+						invited, _ := rinha.GetGaloDB(user.ID)
+						if invited.Clan != "" {
+							msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario esta em outro clan ("+invited.Clan+")")
+							return
+						}
+						clan.Members = append(clan.Members, rinha.ClanMember{
+							ID:   uint64(user.ID),
+							Role: rinha.Member,
+						})
+						rinha.UpdateClan(galo.Clan, map[string]interface{}{
+							"members": clan.Members,
+						})
+						rinha.UpdateGaloDB(user.ID, map[string]interface{}{
+							"clan": galo.Clan,
+						})
+						msg.Reply(context.Background(), session, user.Mention()+", Voce entrou para o clan **"+galo.Clan+"** com sucesso")
+					})
 				}
 				return
 			}
