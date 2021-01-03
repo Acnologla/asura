@@ -51,7 +51,7 @@ func (cache *Cache) MessageUpdate(data []byte) (*disgord.MessageUpdate, error){
         oldMsg.Lock()
         oldMsgCopy := oldMsg.Message
         go OnMessageUpdate(&oldMsgCopy, msg.Message)
-        oldMsg.Message = *msg.Message
+        oldMsg.Message = *(disgord.DeepCopy(msg.Message).(*disgord.Message))
         oldMsg.Date = time.Now()
         oldMsg.Unlock()
     }
