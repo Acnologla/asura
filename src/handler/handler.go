@@ -182,7 +182,7 @@ func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 
 //If you want to edit a message to make the command work again
 func OnMessageUpdate(old *disgord.Message, new *disgord.Message) {
-	if len(new.Embeds) == 0 && old.Pinned == new.Pinned{ 
+	if len(new.Embeds) == 0 && old.Pinned == new.Pinned {
 		CommandChannel <- new
 	}
 }

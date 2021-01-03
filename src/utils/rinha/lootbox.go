@@ -10,13 +10,13 @@ var lootChances = [][3]int{
 	{450, 100},
 }
 
-func _Open(lootType int) int{
+func _Open(lootType int) int {
 	lootChance := lootChances[lootType]
 	value := rand.Intn(1000) + 1
-	for i := len(lootChance)-1;i >= 0;i--{
+	for i := len(lootChance) - 1; i >= 0; i-- {
 		randValue := lootChance[i]
 		if randValue >= value && value != 0 {
-			return GetRandByType(Rarity(i+1))
+			return GetRandByType(Rarity(i + 1))
 		}
 	}
 	return GetRandByType(Common)

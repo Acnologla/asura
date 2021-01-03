@@ -17,7 +17,7 @@ import (
 func onReady() {
 	myself, err := handler.Client.Cache().GetCurrentUser()
 	handler.Client.UpdateStatusString("Use j!comandos para ver meus comandos")
-	if err == nil{
+	if err == nil {
 		telemetry.Info(fmt.Sprintf("%s Started", myself.Username), map[string]string{
 			"eventType": "ready",
 		})
@@ -39,13 +39,13 @@ func main() {
 	telemetry.Init()
 	database.Init()
 	fmt.Println("Starting bot...")
-	cache := disgord.NewCacheLFUImmutable(0,0,0,0)
+	cache := disgord.NewCacheLFUImmutable(0, 0, 0, 0)
 	client := disgord.New(disgord.Config{
-		RejectEvents: []string{disgord.EvtPresenceUpdate, disgord.EvtTypingStart },
+		RejectEvents: []string{disgord.EvtPresenceUpdate, disgord.EvtTypingStart},
 		BotToken:     os.Getenv("TOKEN"),
 		Cache: &handler.Cache{
 			CacheLFUImmutable: cache.(*disgord.CacheLFUImmutable),
-			Messages: map[disgord.Snowflake]*handler.Message{},
+			Messages:          map[disgord.Snowflake]*handler.Message{},
 		},
 	})
 	defer client.Gateway().StayConnectedUntilInterrupted()
