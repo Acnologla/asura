@@ -40,14 +40,9 @@ type Command struct {
 	Category  int
 }
 
-type Msg struct {
-	Session disgord.Session
-	Msg     *disgord.Message
-}
-
 // The place that will be stored all the commands
 var Commands []Command = make([]Command, 0)
-var CommandChannel = make(chan Msg)
+var CommandChannel = make(chan *disgord.Message)
 var Client *disgord.Client
 var ReadyAt = time.Now()
 var Cooldowns = map[string]map[disgord.Snowflake]time.Time{}
@@ -182,28 +177,20 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 
 //Handles messages and call the functions that they have to execute.
 func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
-	msg := Msg{
-		Msg:     evt.Message,
-		Session: session,
-	}
-	CommandChannel <- msg
+	CommandChannel <- evt.Message
 }
 
 //If you want to edit a message to make the command work again
-func OnMessageUpdate(session disgord.Session, evt *disgord.MessageUpdate) {
-	if len(evt.Message.Embeds) == 0 {
-		msg := Msg{
-			Msg:     evt.Message,
-			Session: session,
-		}
-		CommandChannel <- msg
+func OnMessageUpdate(old *disgord.Message, new *disgord.Message) {
+	if len(new.Embeds) == 0 && old.Pinned == new.Pinned{ 
+		CommandChannel <- new
 	}
 }
 
 func Worker(id int) {
-	for cmd := range CommandChannel {
+	for msg := range CommandChannel {
 		WorkersArray[id] = true
-		handleCommand(cmd.Session, cmd.Msg)
+		handleCommand(Client, msg)
 		WorkersArray[id] = false
 	}
 }

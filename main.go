@@ -14,11 +14,14 @@ import (
 	"time"
 )
 
-func onReady(session disgord.Session, evt *disgord.Ready) {
+func onReady() {
+	myself, err := handler.Client.Cache().GetCurrentUser()
 	handler.Client.UpdateStatusString("Use j!comandos para ver meus comandos")
-	telemetry.Info(fmt.Sprintf("%s Started", evt.User.Username), map[string]string{
-		"eventType": "ready",
-	})
+	if err == nil{
+		telemetry.Info(fmt.Sprintf("%s Started", myself.Username), map[string]string{
+			"eventType": "ready",
+		})
+	}
 	go telemetry.MetricUpdate(handler.Client)
 
 }
@@ -36,16 +39,20 @@ func main() {
 	telemetry.Init()
 	database.Init()
 	fmt.Println("Starting bot...")
+	cache := disgord.NewCacheLFUImmutable(0,0,0,0)
 	client := disgord.New(disgord.Config{
-		RejectEvents: []string{"PRESENCE_UPDATE", "GuildMessageTyping"},
+		RejectEvents: []string{disgord.EvtPresenceUpdate, disgord.EvtTypingStart },
 		BotToken:     os.Getenv("TOKEN"),
+		Cache: &handler.Cache{
+			CacheLFUImmutable: cache.(*disgord.CacheLFUImmutable),
+			Messages: map[disgord.Snowflake]*handler.Message{},
+		},
 	})
-	defer client.StayConnectedUntilInterrupted()
+	defer client.Gateway().StayConnectedUntilInterrupted()
 	handler.Client = client
 	client.Gateway().MessageCreate(handler.OnMessage)
-	client.Gateway().MessageUpdate(handler.OnMessageUpdate)
 	client.Gateway().MessageReactionAdd(handler.OnReactionAdd)
 	client.Gateway().MessageReactionRemove(handler.OnReactionRemove)
-	client.Gateway().Ready(onReady)
+	client.Gateway().BotReady(onReady)
 
 }
