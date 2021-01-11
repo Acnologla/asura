@@ -7,12 +7,13 @@ import (
 	"asura/src/database"
 	"bytes"
 	"context"
+	"os"
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
 	"image/png"
+	"image/jpeg"
 	"io"
-	"os"
 	"strings"
 	"strconv"
 )
@@ -30,7 +31,7 @@ func init() {
 }
 
 func GetGalosImages(galo *rinha.Galo) []string{
-	images := []string{}
+	images := []string{rinha.Sprites[0][galo.Type-1]}
 	for _, userGalo := range galo.Galos{
 		images = append(images, rinha.Sprites[0][userGalo.Type -1])
 	}
@@ -64,20 +65,17 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	radius := 70.0
 	// Resize the images
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
-	
-	file, err := os.Open("resources/wall.png")
-	
+	file, err := os.Open("resources/wall.jpg")
+
 	if err != nil {
 		return
 	}
-
 	defer file.Close()
-	img, err := png.Decode(file)
+	img, err := jpeg.Decode(file)
 
 	if err != nil {
 		return
 	}
-
 	dc := gg.NewContext(600, 430)
 
 	dc.DrawRoundedRectangle(0, 0, 600, 430, 10)
@@ -87,7 +85,6 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.Clip()
 	dc.DrawImage(img,0,0)
 	dc.ResetClip()
-
 	dc.DrawRoundedRectangle(0, 0, 600, 430, 10)
 	dc.Clip()
 
@@ -139,12 +136,16 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 
 	dc.DrawString("Clan", 10, 280)
 	dc.DrawString("Money", 10, 310)
-	dc.DrawStringAnchored(galo.Clan, 190, 280, 1, 0)
+	clan := "Nenhum"
+	if galo.Clan != ""{
+		clan = galo.Clan
+	}
+	dc.DrawStringAnchored(clan, 190, 280, 1, 0)
 	dc.DrawStringAnchored(strconv.Itoa(galo.Money), 190, 310, 1, 0)
 
 	dc.SetRGB(1, 1, 1)
-	err = dc.LoadFontFace("./resources/Raleway-Light.ttf", 25)
-	dc.DrawStringAnchored(msg.Author.Username, 300, 195, 1, 0.5)
+	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
+	dc.DrawStringAnchored(msg.Author.Username, 310, 195, 1, 0.5)
 
 	dc.SetRGB(0.3,0.3,0.3)
 	dc.DrawLine(10,320,190,320)
@@ -163,7 +164,14 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 		dc.DrawRectangle(float64(220 + i*75), 265, 55, 55)
 		dc.Fill()
 	}
-
+	for i, userGalo := range GetGalosImages(&galo){
+		if i > 4 {
+			break
+		}
+		userGaloImg, _  := utils.DownloadImage(userGalo)
+		userGaloImg = resize.Resize(55,55, userGaloImg, resize.Lanczos3)
+		dc.DrawImage(userGaloImg, 220 + i*75, 265)
+	}
 	// And here we encode it to send
 	var b bytes.Buffer
 	pw := io.Writer(&b)

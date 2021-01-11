@@ -8,11 +8,10 @@ import (
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
 	"image/png"
+	"image/jpeg"
 	"io"
-	"fmt"
 	"bytes"
 	"os"
-	"strings"
 	"github.com/andersfylling/disgord"
 )
 
@@ -32,9 +31,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	user := utils.GetUser(msg, args, session)
 	galo, _ := rinha.GetGaloDB(user.ID)
 
-	url, _ := user.AvatarURL(128, false)
-	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
-	avatar, err := utils.DownloadImage(replacer.Replace(url))
+	avatar, err := utils.DownloadImage(rinha.Sprites[0][galo.Type-1])
 
 	if err != nil {
 		msg.Reply(context.Background(), session, "Invalid image")
@@ -50,14 +47,14 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	// Resize the images
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
 	
-	file, err := os.Open("resources/wall.png")
+	file, err := os.Open("resources/wall.jpg")
 	
 	if err != nil {
 		return
 	}
 
 	defer file.Close()
-	img, err := png.Decode(file)
+	img, err := jpeg.Decode(file)
 
 	if err != nil {
 		return
@@ -104,14 +101,15 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 
 
 	err = dc.LoadFontFace("./resources/Raleway-Light.ttf", 14)
-
 	dc.SetRGB(0,0,0)
-	dc.DrawString("Clan", 10, 230)
-	dc.DrawStringAnchored("Imortais", 310, 230, 1, 0)
+	dc.DrawString("Tipo", 10, 230)
+	dc.DrawString("Vida", 10, 250)
+	dc.DrawString("Item", 10, 270)
+//	dc.DrawStringAnchored("Imortais", 310, 230, 1, 0)
 	
 
 	dc.SetRGB(1, 1, 1)
-	err = dc.LoadFontFace("./resources/Raleway-Light.ttf", 22)
+	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 22)
 	dc.DrawStringAnchored(name, 320/2, 160, 0.5, 0.5)
 
 	// And here we encode it to send

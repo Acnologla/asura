@@ -85,7 +85,7 @@ type Galo struct {
 	Daily         uint64    `json:"daily"`
 	Clan          string    `json:"clan"`
 	Dungeon       int       `json:"dungeon"`
-	DungeonReset  int       `json:"dungeonreset"`
+//	DungeonReset  int       `json:"dungeonreset"`
 	Items         []int     `json:"items"`
 }
 

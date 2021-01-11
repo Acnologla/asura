@@ -50,10 +50,11 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	battleMutex.RUnlock()
 	if len(rinha.Dungeon) == galo.Dungeon {
-		galo.Dungeon = 0
+		return
+/*		galo.Dungeon = 0
 		galo.DungeonReset += 1
 		msg.Reply(context.Background(), session, "Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!")
-		
+*/		
 	}
 
 	dungeon := rinha.Dungeon[galo.Dungeon]
@@ -67,7 +68,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		authorName:  rinha.GetName(msg.Author.Username, galo),
 		advName:     "Boss " + rinha.Classes[galoAdv.Type].Name,
 		authorLevel: rinha.CalcLevel(galo.Xp),
-		advLevel:    rinha.CalcLevel(galoAdv.Xp*(galo.DungeonReset*2+1)),
+		advLevel:    rinha.CalcLevel(galoAdv.Xp),
 		noItems:     true,
 	})
 	if winner == 0 {
