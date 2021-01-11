@@ -22,9 +22,11 @@ import (
 var downloadedSprites = []image.Image{}
 
 func init() {
-	for _, sprite := range rinha.Sprites[0]{
-		img, _ := utils.DownloadImage(sprite)
-		downloadedSprites = append(downloadedSprites, resize.Resize(55,55, img, resize.Lanczos3))
+	if len(rinha.Sprites) > 0 {
+		for _, sprite := range rinha.Sprites[0]{
+			img, _ := utils.DownloadImage(sprite)
+			downloadedSprites = append(downloadedSprites, resize.Resize(55,55, img, resize.Lanczos3))
+		}
 	}
 	handler.Register(handler.Command{
 		Aliases:   []string{"perfil", "profile"},

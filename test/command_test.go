@@ -1,7 +1,6 @@
 package test
 
 import (
-	_ "asura/src/utils/rinha"
 	_ "asura/src/commands"
 	"asura/src/handler"
 	"testing"
