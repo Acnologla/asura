@@ -11,6 +11,8 @@ import (
 	"image/jpeg"
 	"io"
 	"bytes"
+	"fmt"
+	"strconv"
 	"os"
 	"github.com/andersfylling/disgord"
 )
@@ -20,7 +22,7 @@ func init() {
 		Aliases:   []string{"galo", "galolevel", "meugalo"},
 		Run:       runGalo,
 		Available: true,
-		Cooldown:  3,
+		Cooldown:  7,
 		Usage:     "j!galo",
 		Help:      "Informação sobre seu galo",
 		Category:  1,
@@ -30,6 +32,7 @@ func init() {
 func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	user := utils.GetUser(msg, args, session)
 	galo, _ := rinha.GetGaloDB(user.ID)
+	skills := rinha.GetEquipedSkills(&galo)
 
 	avatar, err := utils.DownloadImage(rinha.Sprites[0][galo.Type-1])
 
@@ -60,7 +63,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 
-	dc := gg.NewContext(320, 430)
+	dc := gg.NewContext(320, 450)
 
 	dc.DrawRoundedRectangle(0, 0, 320, 630, 10)
 	dc.Fill()
@@ -91,25 +94,50 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.SetRGB(0.3, 0.3, 0.3)
 
 	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 13)
-	dc.DrawString("INFO", 10, 205)
-	dc.DrawLine(10,210,310,210)
-	dc.Stroke()
-
-	dc.DrawString("ATAQUES", 10, 295)
-	dc.DrawLine(10,300,310,300)
+	dc.SetRGB255(196, 196, 196)
+	dc.DrawRoundedRectangle(10,195,300, 20, 10)
+	dc.Fill()
+	dc.SetRGB255(208, 80, 80)
+	level := rinha.CalcLevel(galo.Xp)
+	curLevelXP := float64(rinha.CalcXP(level))
+	nextLevelXp := float64(rinha.CalcXP(level + 1))
+	percentage := (float64(galo.Xp- int(curLevelXP)) * 100) / (nextLevelXp-curLevelXP)
+	dc.DrawRoundedRectangle(10,195, 300 * (percentage / 100), 20, 10)
+	dc.Fill()
+	dc.SetRGB(0.3, 0.3, 0.3)
+	dc.DrawStringAnchored("HABILIDADES EQUIPADAS",320/2, 295, 0.5, 0.5)
+	dc.DrawLine(10,310,310,310)
 	dc.Stroke()
 
 
 	err = dc.LoadFontFace("./resources/Raleway-Light.ttf", 14)
+	dc.SetRGB255(255, 255, 255)
+	dc.DrawStringAnchored(fmt.Sprintf("%d/%d", galo.Xp-int(curLevelXP),  int(nextLevelXp-curLevelXP)), 320/2, 203.5, 0.5, 0.5)
 	dc.SetRGB(0,0,0)
-	dc.DrawString("Tipo", 10, 230)
-	dc.DrawString("Vida", 10, 250)
+	dc.DrawString("Tipo", 10, 240)
+	dc.DrawString("Level", 10, 255)
 	dc.DrawString("Item", 10, 270)
-//	dc.DrawStringAnchored("Imortais", 310, 230, 1, 0)
-	
+
+	dc.DrawStringAnchored(rinha.Classes[galo.Type].Name, 310, 240, 1, 0)
+	dc.DrawStringAnchored(strconv.Itoa(rinha.CalcLevel(galo.Xp)), 310, 255, 1 , 0)
+	if len(galo.Items) > 0 {
+		dc.DrawStringAnchored(rinha.Items[galo.Items[0]].Name, 310, 270, 1 , 0)
+	}else{
+		dc.DrawStringAnchored("Nenhum", 310, 270, 1 , 0)
+
+	}
+
+
+	for i, skill := range skills{
+		rinhaSkill := rinha.Skills[galo.Type - 1][skill]
+		margin := float64(335+(25 * i))
+		text, _ := rinha.SkillToString(rinhaSkill)
+		dc.DrawString(text, 10, margin)
+		dc.DrawStringAnchored(fmt.Sprintf("Dano: %d - %d", rinhaSkill.Damage[0], rinhaSkill.Damage[1] - 1), 310, margin, 1 , 0)
+	}
 
 	dc.SetRGB(1, 1, 1)
-	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 22)
+	err = dc.LoadFontFace("./resources/Raleway-Light.ttf", 22)
 	dc.DrawStringAnchored(name, 320/2, 160, 0.5, 0.5)
 
 	// And here we encode it to send
@@ -119,7 +147,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Files: []disgord.CreateMessageFileParams{
-			{bytes.NewReader(b.Bytes()), "profile.jpg", false},
+			{bytes.NewReader(b.Bytes()), "galo.jpg", false},
 		},
 	})
 }

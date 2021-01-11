@@ -12,39 +12,39 @@ import (
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
 	"image/png"
+	"image"
 	"image/jpeg"
 	"io"
 	"strings"
 	"strconv"
 )
 
+var downloadedSprites = []image.Image{}
+
 func init() {
+	for _, sprite := range rinha.Sprites[0]{
+		img, _ := utils.DownloadImage(sprite)
+		downloadedSprites = append(downloadedSprites, resize.Resize(55,55, img, resize.Lanczos3))
+	}
 	handler.Register(handler.Command{
 		Aliases:   []string{"perfil", "profile"},
 		Run:       runProfile,
 		Available: true,
-		Cooldown:  15,
+		Cooldown:  10,
 		Usage:     "j!profile @user",
 		Help:      "Veja o perfil",
 		Category: 1,
 	})
 }
 
-func GetGalosImages(galo *rinha.Galo) []string{
-	images := []string{rinha.Sprites[0][galo.Type-1]}
-	for _, userGalo := range galo.Galos{
-		images = append(images, rinha.Sprites[0][userGalo.Type -1])
-	}
-	return images
-}
 
 
 func GetClanPos(clanName string) int{
 	q := database.Database.NewRef("clan").OrderByChild("xp")
 	result, _ := q.GetOrdered(context.Background())
-	for i, clanJSON := range result{
-		if clanName ==  clanJSON.Key(){
-			return i + 1
+	for  i := len(result) - 1; 0 <= i; i-- {
+		if clanName ==  result[i].Key(){
+			return len(result) - i
 		}
 	} 
 	return 0
@@ -145,7 +145,7 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 
 	dc.SetRGB(1, 1, 1)
 	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
-	dc.DrawStringAnchored(msg.Author.Username, 310, 195, 1, 0.5)
+	dc.DrawString(user.Username, 185, 204)
 
 	dc.SetRGB(0.3,0.3,0.3)
 	dc.DrawLine(10,320,190,320)
@@ -164,13 +164,13 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 		dc.DrawRectangle(float64(220 + i*75), 265, 55, 55)
 		dc.Fill()
 	}
-	for i, userGalo := range GetGalosImages(&galo){
-		if i > 4 {
+	dc.DrawImage(downloadedSprites[galo.Type-1], 220 , 265)
+	for i := range galo.Galos{
+		if i == 4 {
 			break
 		}
-		userGaloImg, _  := utils.DownloadImage(userGalo)
-		userGaloImg = resize.Resize(55,55, userGaloImg, resize.Lanczos3)
-		dc.DrawImage(userGaloImg, 220 + i*75, 265)
+		userGaloImg := downloadedSprites[galo.Galos[i].Type - 1]
+		dc.DrawImage(userGaloImg, 220 + (i+1)*75, 265)
 	}
 	// And here we encode it to send
 	var b bytes.Buffer

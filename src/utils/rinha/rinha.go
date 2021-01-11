@@ -141,11 +141,11 @@ func SkillToStringFormated(skill *Skill) (text string) {
 	return
 }
 
-func SkillToString(skill *Skill) (text string) {
-	text = fmt.Sprintf("Dano: %d - %d", skill.Damage[0], skill.Damage[1]-1)
+func SkillToString(skill *Skill) (text string, effectText string) {
+	text = skill.Name
 	if skill.Effect[0] != 0 || skill.Effect[1] != 0 {
 		effect := Effects[int(skill.Effect[1])]
-		text += fmt.Sprintf("\nTem %d%% de Chance de causar %s", int(skill.Effect[0]*100), effect.Name)
+		effectText = fmt.Sprintf("\n %d%% de causar %s", int(skill.Effect[0]*100), effect.Name)
 	}
 	return
 }
