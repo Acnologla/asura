@@ -84,5 +84,10 @@
         "name": "Big bang de papel",
         "damage": [55,63],
         "level": 24
+    },
+    {
+        "name": "Universo de papel",
+        "damage": [65,90],
+        "level": 30
     }
 ]

@@ -84,5 +84,10 @@
         "damage": [50,83],
         "level": 24,
         "effect": [1,28]
+    },
+    {
+        "name": "Repulsão avassaladora",
+        "damage": [50,160],
+        "level": 30
     }
 ]

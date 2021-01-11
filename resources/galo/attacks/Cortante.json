@@ -88,5 +88,11 @@
         "damage": [25,35],
         "level": 25,
         "effect": [1, 6]
+    },
+    {
+        "name": "Escalibur",
+        "damage": [55,80],
+        "level": 30,
+        "effect": [1, 1]
     }
 ]

@@ -37,7 +37,7 @@ func battle(firstClass int, secClass int, firstLvl int, secLvl int, times int) R
 			Equipped: []int{},
 		}
 
-		battle := rinha.CreateBattle(&first, &sec)
+		battle := rinha.CreateBattle(&first, &sec, false)
 
 		result.Skills = [2][5][2]int{}
 
@@ -73,7 +73,7 @@ func main() {
 	data := []Result{}
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	for i := 1; i <= 25; i++ {
+	for i := 1; i <= 30; i++ {
 		for j := 1; j <= len(rinha.Classes)-1; j++ {
 			res := battle(j, 1, i, i, 10000)
 			res.Class = [2]int{1, j}

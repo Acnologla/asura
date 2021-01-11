@@ -88,5 +88,10 @@
         "name": "Raio divino",
         "damage": [60,75],
         "level": 24
+    },
+    {
+        "name": "Raio negro",
+        "damage": [65,85],
+        "level": 30
     }
 ]

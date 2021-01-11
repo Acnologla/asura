@@ -84,5 +84,10 @@
         "name": "Buraco negro",
         "damage": [60,80],
         "level": 25
+    },
+    {
+        "name": "Hiper Buraco negro",
+        "damage": [70, 90],
+        "level": 30
     }
 ]

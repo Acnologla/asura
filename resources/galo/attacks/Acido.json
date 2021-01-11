@@ -93,5 +93,11 @@
         "damage": [1,5],
         "level": 24,
         "effect": [1,25]
+    },
+    {
+        "name": "Chuva de veneno",
+        "damage": [10, 30],
+        "level": 30,
+        "effect": [1, 16]
     }
 ]

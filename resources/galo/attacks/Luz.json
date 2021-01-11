@@ -88,5 +88,10 @@
         "name": "Genki dama",
         "damage": [1,150],
         "level": 25
+    },
+    {
+        "name": "Prisma empoderado",
+        "damage": [60, 90],
+        "level": 30
     }
 ]

@@ -87,5 +87,11 @@
         "damage": [30,40],
         "level": 25,
         "effect": [1,7]
+    },
+    {
+        "name": "Escudo divino",
+        "damage": [20,30],
+        "level": 30,
+        "effect": [1,29]
     }
 ]

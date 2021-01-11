@@ -88,5 +88,11 @@
         "name": "Sol derretido",
         "damage": [60,80],
         "level": 24
+    },
+    {
+        "name": "Estrela magmatica",
+        "damage": [60,70],
+        "level": 30,
+        "effect":[1,9]
     }
 ]

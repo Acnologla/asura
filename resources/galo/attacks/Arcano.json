@@ -82,13 +82,19 @@
         "self":  true
     },
     {
-        "name": "Aura arcana",
-        "damage": [50,60],
+        "name": "Gravidade",
+        "damage": [25, 30],
+        "effect": [1,28],
         "level": 23
     },
     {
-        "name": "Cataclisma",
-        "damage": [65,75],
+        "name": "Aura arcana",
+        "damage": [55,70],
         "level": 25
+    },
+    {
+        "name": "Cataclisma",
+        "damage": [50, 80],
+        "level": 30
     }
 ]

@@ -83,5 +83,10 @@
         "damage": [35,45],
         "level": 25,
         "effect": [0.5, 3]
+    },
+    {
+        "name": "Meteoros",
+        "damage": [50,75],
+        "level": 30
     }
 ]

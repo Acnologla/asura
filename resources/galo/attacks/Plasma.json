@@ -95,5 +95,10 @@
         "level": 24,
         "effect": [1,20]
 
+    },
+    {
+        "name": "Explosão de poder",
+        "damage": [50,80],
+        "level": 30
     }
 ]

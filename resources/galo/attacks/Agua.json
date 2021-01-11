@@ -91,5 +91,10 @@
         "damage": [35,80],
         "level": 25,
         "effect": [0.5, 3]
+    },
+    {
+        "name": "Agua espiritual",
+        "damage": [60,90],
+        "level": 30
     }
 ]

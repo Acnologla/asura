@@ -87,5 +87,11 @@
         "name": "Sol",
         "damage": [58,65],
         "level": 24
+    },
+    {
+        "name": "Estrela",
+        "damage": [20, 30],
+        "level": 30,
+        "effect": [1,9]
     }
 ]

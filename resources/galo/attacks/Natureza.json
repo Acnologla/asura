@@ -91,5 +91,10 @@
         "level": 25,
         "self": true,
         "effect": [1, 14]
+    },
+    {
+        "name": "Fruto anjelical",
+        "damage": [70,90],
+        "level": 30
     }
 ]

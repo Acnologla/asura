@@ -222,5 +222,13 @@
         "type": 1,
         "phrase": "%s esta sobre atração gravitacional (-%d)",
         "range": [1,30]
+    },
+    {
+        "name": "Escudo divino",
+        "turns": 2,
+        "type": 4,
+        "self": true,
+        "phrase": "%s está com %d%% de proteção!",
+        "range": [70,90]
     }
 ]

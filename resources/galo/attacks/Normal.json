@@ -81,5 +81,10 @@
         "damage": [35,45],
         "level":24,
         "effect": [1,4]
+    },
+    {
+        "name": "Bicada dos deuses",
+        "damage": [50, 70],
+        "level":30
     }
 ]

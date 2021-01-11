@@ -84,6 +84,12 @@
         "payload": 1.50
     },
     {
+        "name": "Amplificador espiritual",
+        "effect": 3,
+        "level": 2,
+        "payload": 0.2
+    },
+    {
         "name": "Canhao de plasma",
         "effect": 2,
         "level": 2,
@@ -94,5 +100,11 @@
         "effect": 4,
         "level": 2,
         "payload": 1.50
+    },
+    {
+        "name": "Armadura de obisidiana",
+        "effect": 5,
+        "level": 2,
+        "payload": 0.5
     }
 ]

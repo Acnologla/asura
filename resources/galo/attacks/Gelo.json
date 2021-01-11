@@ -87,5 +87,11 @@
         "damage": [40,45],
         "level": 25,
         "effect": [1, 12]
+    },
+    {
+        "name": "Meteoro gelido",
+        "damage": [10,30],
+        "level": 30,
+        "effect": [0.6, 3]
     }
 ]
