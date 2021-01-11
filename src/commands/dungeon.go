@@ -52,6 +52,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(rinha.Dungeon) == galo.Dungeon {
 		galo.Dungeon = 0
 		galo.DungeonReset += 1
+		msg.Reply(context.Background(), session, "Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!")
 		rinha.UpdateGaloDB(msg.Author.ID, galo)
 	}
 
