@@ -55,6 +55,9 @@ func GetClanPos(clanName string) int{
 func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	// Download user image
 	user := utils.GetUser(msg,args,session)
+	if user.Bot{
+		return
+	}
 	url, _ := user.AvatarURL(128, false)
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
@@ -121,7 +124,11 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.Stroke()
 
 	galo, _ := rinha.GetGaloDB(user.ID)
-
+	if galo.Type == 0 {
+		galoType := rinha.GetRandByType(rinha.Common)
+		galo.Type = galoType
+		rinha.SaveGaloDB(user.ID, galo)
+	}
 	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 16)
 	dc.DrawStringAnchored("WINS", 260, 380, 0.5, 0.5)
 	dc.DrawStringAnchored("LOSES", 350, 380, 0.5, 0.5)

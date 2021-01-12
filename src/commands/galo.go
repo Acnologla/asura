@@ -31,9 +31,16 @@ func init() {
 
 func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	user := utils.GetUser(msg, args, session)
+	if user.Bot {
+		return
+	}
 	galo, _ := rinha.GetGaloDB(user.ID)
+	if galo.Type == 0 {
+		galoType := rinha.GetRandByType(rinha.Common)
+		galo.Type = galoType
+		rinha.SaveGaloDB(user.ID, galo)
+	}
 	skills := rinha.GetEquipedSkills(&galo)
-
 	avatar, err := utils.DownloadImage(rinha.Sprites[0][galo.Type-1])
 
 	if err != nil {
@@ -102,8 +109,10 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	curLevelXP := float64(rinha.CalcXP(level))
 	nextLevelXp := float64(rinha.CalcXP(level + 1))
 	percentage := (float64(galo.Xp- int(curLevelXP)) * 100) / (nextLevelXp-curLevelXP)
-	dc.DrawRoundedRectangle(10,195, 300 * (percentage / 100), 20, 10)
-	dc.Fill()
+	if percentage >= 3 {
+		dc.DrawRoundedRectangle(10,195, 300 * (percentage / 100), 20, 10)
+		dc.Fill()
+	}
 	dc.SetRGB(0.3, 0.3, 0.3)
 	dc.DrawStringAnchored("HABILIDADES EQUIPADAS",320/2, 295, 0.5, 0.5)
 	dc.DrawLine(10,310,310,310)
