@@ -72,6 +72,13 @@ func DungeonWin(level int, galo Galo) (Galo, string) {
 			galo.RareLootbox++
 			msg = "Ganhou uma caixa rara"
 		}
+	}else if level == 5 {
+		if 49 >= value {
+			galo.Items, msg = AddItem(3, galo.Items)
+		} else {
+			galo.RareLootbox++
+			msg = "Ganhou uma caixa rara"
+		}
 	}
 	return galo, msg
 }

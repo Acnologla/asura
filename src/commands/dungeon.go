@@ -50,29 +50,42 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	battleMutex.RUnlock()
 	if len(rinha.Dungeon) == galo.Dungeon {
-		return
-/*		galo.Dungeon = 0
+		galo.Dungeon = 0
 		galo.DungeonReset += 1
-		msg.Reply(context.Background(), session, "Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!")
-*/		
+		msg.Reply(context.Background(), session, "Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!")		
 	}
 
 	dungeon := rinha.Dungeon[galo.Dungeon]
 	galoAdv := dungeon.Boss
 	LockEvent(msg.Author.ID, "Boss "+rinha.Classes[galoAdv.Type].Name)
 	defer UnlockEvent(msg.Author.ID)
-
+	multiplier := 1
+	if galo.DungeonReset != 0 {
+		multiplier = 2 * galo.DungeonReset
+	}
 	winner, _ := ExecuteRinha(msg, session, rinhaOptions{
 		galoAuthor:  &galo,
 		galoAdv:     &galoAdv,
 		authorName:  rinha.GetName(msg.Author.Username, galo),
 		advName:     "Boss " + rinha.Classes[galoAdv.Type].Name,
 		authorLevel: rinha.CalcLevel(galo.Xp),
-		advLevel:    rinha.CalcLevel(galoAdv.Xp),
+		advLevel:    rinha.CalcLevel(galoAdv.Xp) * multiplier,
 		noItems:     true,
 	})
 	if winner == 0 {
 		diffGalo, endMsg := rinha.DungeonWin(dungeon.Level, galo)
+		if galo.DungeonReset != 0 {
+			rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
+				"dungeon": galo.Dungeon + 1,
+				"dungeonreset": galo.DungeonReset,
+			})
+			msg.Reply(context.Background(), session, &disgord.Embed{
+				Color:       16776960,
+				Title:       "Dungeon",
+				Description: fmt.Sprintf("Parabens %s voce consegiu derrotar o boss e avançar para o andar **%d**", msg.Author.Username, galo.Dungeon+1),
+			})
+			return
+		}
 		update := rinha.Diff(galo, diffGalo)
 		update["dungeon"] = galo.Dungeon + 1
 		rinha.UpdateGaloDB(msg.Author.ID, update)

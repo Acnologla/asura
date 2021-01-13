@@ -106,5 +106,17 @@
         "effect": 5,
         "level": 2,
         "payload": 0.5
+    },
+    {
+        "name": "Escalibur",
+        "effect": 1,
+        "level": 3,
+        "payload": 1.75
+    },
+    {
+        "name": "Imortalidade",
+        "effect": 4,
+        "level": 3,
+        "payload": 1.75
     }
 ]

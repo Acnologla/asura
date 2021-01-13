@@ -34,6 +34,7 @@ func LevelToString(level int) string {
 		0: "comum",
 		1: "raro",
 		2: "epico",
+		3: "lendario",
 	}[level]
 }
 

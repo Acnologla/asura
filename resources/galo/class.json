@@ -92,5 +92,10 @@
         "name": "Gravidade",
         "disadvantages": [],
         "rarity": 2
+    },
+    {
+        "name": "Infinito",
+        "disadvantages": [],
+        "rarity": 3
     }
 ]
