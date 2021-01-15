@@ -68,7 +68,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		galoAdv:     &galoAdv,
 		authorName:  rinha.GetName(msg.Author.Username, galo),
 		advName:     "Boss " + rinha.Classes[galoAdv.Type].Name,
-		authorLevel: rinha.CalcLevel(galo.Xp),
+		authorLevel: rinha.CalcLevel(galo.Xp)*multiplier,
 		advLevel:    rinha.CalcLevel(galoAdv.Xp) * multiplier,
 		noItems:     true,
 	})
