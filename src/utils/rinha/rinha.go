@@ -288,6 +288,11 @@ func GetEffectFromSkill(skill *Skill) *Effect {
 	return Effects[int(skill.Effect[1])]
 }
 
+// Effect functions
+func GetEffectFromIndex(idx int) *Effect {
+	return Effects[idx]
+}
+
 func init() {
 	go func() {
 		for {

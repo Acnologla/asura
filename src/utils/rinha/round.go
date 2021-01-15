@@ -69,15 +69,22 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 		real_damage = int(math.Round(float64(real_damage) * round.Target.ItemPayload))
 	}
 
+
+	self := false
+
+	if GetEffectFromIndex(round.Target.Effect[1]).Type == 5 && round.Target.Effect[0] > 0 {
+		self = true
+	}
+
 	if not_effective_damage != 0 {
 		real_not_effective := int(math.Round(float64(not_effective_damage) * round.Target.ItemPayload))
 		round.Results = append([]*Result{
-			&Result{Effect: NotEffective, Damage: -real_not_effective, Skill: round.Skill, Self: false, EffectID: 0},
+			&Result{Effect: NotEffective, Damage: -real_not_effective, Skill: round.Skill, Self: self, EffectID: 0},
 		}, round.Results...)
 	}
 
 	round.Results = append([]*Result{
-		&Result{Effect: Damaged, Damage: real_damage, Skill: round.Skill, Self: false, EffectID: 0},
+		&Result{Effect: Damaged, Damage: real_damage, Skill: round.Skill, Self: self, EffectID: 0},
 	}, round.Results...)
 
 	return real_damage
@@ -204,7 +211,11 @@ func (battle *Battle) Play() []*Result {
 		main_damage := round.applySkillDamage(battle.FirstRound)
 		round.applyEffects()
 		battle.Stun = round.Stun
-		round.Target.Life -= main_damage
+		if GetEffectFromIndex(round.Target.Effect[1]).Type == 5 && round.Target.Effect[0] > 0 {
+			round.Attacker.Life -= main_damage
+		} else {
+			round.Target.Life -= main_damage
+		}
 	}
 
 	if round.Attacker.Life <= 0 {

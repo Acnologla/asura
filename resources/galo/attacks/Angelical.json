@@ -1,0 +1,93 @@
+[
+    {
+        "name": "Esfera celestial",
+        "damage": [19,24],
+        "level": 1
+    },
+    {
+        "name": "Fogo santo",
+        "damage": [21,25],
+        "level": 2
+    },
+    {
+        "name": "Relampago divino",
+        "damage": [30,45],
+        "level": 3,
+        "self": true
+    },
+    {
+        "name": "Lamina angelical",
+        "damage": [20,50],
+        "level": 4,
+        "self": true
+    },
+    {
+        "name": "Bola de luz",
+        "damage": [25,45],
+        "level": 5
+    },
+    {
+        "name": "Luz radiante",
+        "damage": [35,55],
+        "level": 7
+    },
+    {
+        "name": "Lança magica",
+        "damage": [38,55],
+        "level": 9
+    },
+    {
+        "name": "Revelação",
+        "damage": [38,60],
+        "level": 10
+    },
+    {
+        "name": "Luz cristalizada",
+        "damage": [45, 60],
+        "level": 12
+    },
+    {
+        "name": "Furia celestial",
+        "damage": [45,65],
+        "level": 13
+    },
+    {
+        "name": "Incendio santo",
+        "damage": [53,70],
+        "level": 15
+    },
+    {
+        "name": "Luz cristalizada",
+        "damage": [56,80],
+        "level": 17
+    },
+    {
+        "name": "Terremoto fraco",
+        "damage": [46,75],
+        "effect": [0.5, 3],
+        "self": true,
+        "level": 19
+    },
+    {
+        "name": "Terremoto divino",
+        "damage": [30,70],
+        "effect": [1, 3],
+        "self": true,
+        "level": 21
+    },
+    {
+        "name": "Devastação planetaria",
+        "damage": [80,100],
+        "level": 22
+    },
+    {
+        "name": "Lança de Miguel",
+        "damage": [80,120],
+        "level": 25
+    },
+    {
+        "name": "Enxame de mil lanças",
+        "damage": [80, 150],
+        "level": 30
+    }
+]
