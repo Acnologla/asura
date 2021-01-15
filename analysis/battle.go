@@ -151,7 +151,7 @@ func main() {
 		})
 	}
 
-	for i := 1; i < 31; i += 1 {
+	for i := 1; i < 32; i += 1 {
 		for _, class := range arr {
 			result := measure(class.Type, 1, i, i, 10000, false)
 			class.TotalWins += result
