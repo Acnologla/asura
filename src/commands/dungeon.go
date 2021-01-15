@@ -63,12 +63,13 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	if galo.DungeonReset != 0 {
 		multiplier = 2 * galo.DungeonReset
 	}
+	galoAdv.Xp *= multiplier
 	winner, _ := ExecuteRinha(msg, session, rinhaOptions{
 		galoAuthor:  &galo,
 		galoAdv:     &galoAdv,
 		authorName:  rinha.GetName(msg.Author.Username, galo),
 		advName:     "Boss " + rinha.Classes[galoAdv.Type].Name,
-		authorLevel: rinha.CalcLevel(galo.Xp)*multiplier,
+		authorLevel: rinha.CalcLevel(galo.Xp),
 		advLevel:    rinha.CalcLevel(galoAdv.Xp) * multiplier,
 		noItems:     true,
 	})
