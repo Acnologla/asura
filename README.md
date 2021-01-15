@@ -4,6 +4,3 @@
 
 ## :alembic:  Qual a magia do bot?
 Asura é um bot feito para ajudar os servidores do discord a ficarem mais divertidos.
-
-## :heavy_check_mark: Para fazer:
-- [x] Base do bot (conexão com database, telemetria e handling de comandos)
