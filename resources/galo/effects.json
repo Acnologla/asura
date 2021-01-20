@@ -236,7 +236,7 @@
         "turns": 1,
         "type": 5,
         "self": true,
-        "phrase": "%s irá refletir o proximo ataque!",
+        "phrase": "%s irá refletir o proximo ataque! (%d)",
         "range": [0,0]
     }
 ]
