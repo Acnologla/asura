@@ -108,7 +108,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 						level := rinha.ClanXpToLevel(clan.Xp)
 						maxMembers := 15
 						if level >= 3{
-							maxMembers = 21
+							maxMembers = 20
 						}
 						if rinha.IsInClan(clan, user.ID) {
 							msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")

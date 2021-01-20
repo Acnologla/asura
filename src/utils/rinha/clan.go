@@ -119,7 +119,7 @@ func GetBenefits(xp int) (text string) {
 		text += "10% de xp adicional por rinha ganha\n"
 	}
 	if level >= 3 {
-		text += "6 membros adicionais\n"
+		text += "5 membros adicionais\n"
 	}
 	if level >= 4 {
 		text += "2 de ouro adicional por rinha ganha\n"
