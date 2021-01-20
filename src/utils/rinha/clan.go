@@ -58,11 +58,11 @@ func Format(text string) string {
 }
 
 func ClanXpToLevel(xp int) int {
-	return int(math.Floor(math.Sqrt(float64(xp)/1000))) + 1
+	return int(math.Floor(math.Sqrt(float64(xp)/2500))) + 1
 
 }
 func ClanLevelToXp(level int) int {
-	return int(math.Pow(float64(level), 2)) * 1000
+	return int(math.Pow(float64(level), 2)) * 2500
 }
 
 func GetMember(clan Clan, id disgord.Snowflake) ClanMember {
@@ -119,9 +119,12 @@ func GetBenefits(xp int) (text string) {
 		text += "10% de xp adicional por rinha ganha\n"
 	}
 	if level >= 3 {
-		text += "2 de ouro adicional por rinha ganha\n"
+		text += "5 membros adicionais\n"
 	}
 	if level >= 4 {
+		text += "2 de ouro adicionadl por rinha ganha"
+	}
+	if level >= 5 {
 		text += "3 de ouro adicionadl por rinha ganha"
 	}
 	return

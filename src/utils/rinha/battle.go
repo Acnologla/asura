@@ -20,6 +20,8 @@ type Battle struct {
 	Turn       bool
 	FirstRound bool
 	Stun       bool
+	ReflexType int
+	ReflexSkill int
 }
 
 func checkItem(galo *Galo) (int, float64) {

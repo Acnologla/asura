@@ -18,6 +18,7 @@ type Result struct {
 	Skill    *Skill
 	Damage   int
 	Self     bool
+	Reflected bool
 }
 
 type Round struct {
@@ -29,11 +30,18 @@ type Round struct {
 	Integrity  float32
 	ShieldUser *Fighter
 	Stun       bool
+	Reflex     bool
 }
 
 func (round *Round) applySkillDamage(firstTurn bool) int {
-	round.SkillId = round.Attacker.Equipped[rand.Intn(len(round.Attacker.Equipped))]
-	round.Skill = Skills[round.Attacker.Galo.Type-1][round.SkillId]
+	reflected := false
+	if round.SkillId == 0 {
+		round.SkillId = round.Attacker.Equipped[rand.Intn(len(round.Attacker.Equipped))]
+		round.Skill = Skills[round.Attacker.Galo.Type-1][round.SkillId]
+	}else{
+		reflected = true
+		round.Skill = Skills[round.Target.Galo.Type-1][round.SkillId]
+	}
 
 	attack_damage := 0
 
@@ -69,22 +77,15 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 		real_damage = int(math.Round(float64(real_damage) * round.Target.ItemPayload))
 	}
 
-
-	self := false
-
-	if GetEffectFromIndex(round.Target.Effect[1]).Type == 5 && round.Target.Effect[0] > 0 {
-		self = true
-	}
-
 	if not_effective_damage != 0 {
 		real_not_effective := int(math.Round(float64(not_effective_damage) * round.Target.ItemPayload))
 		round.Results = append([]*Result{
-			&Result{Effect: NotEffective, Damage: -real_not_effective, Skill: round.Skill, Self: self, EffectID: 0},
+			&Result{Effect: NotEffective, Damage: -real_not_effective, Skill: round.Skill, Self: false, EffectID: 0},
 		}, round.Results...)
 	}
 
 	round.Results = append([]*Result{
-		&Result{Effect: Damaged, Damage: real_damage, Skill: round.Skill, Self: self, EffectID: 0},
+		&Result{Reflected: reflected,Effect: Damaged, Damage: real_damage, Skill: round.Skill, Self: false, EffectID: 0},
 	}, round.Results...)
 
 	return real_damage
@@ -118,6 +119,10 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect) {
 		{ // Defesa
 			round.ShieldUser = receiver
 			round.Integrity = float32(effect_damage)/100 + 0.01
+		}
+	case 5:
+		{
+			round.Reflex = true
 		}
 	}
 }
@@ -180,15 +185,24 @@ func (round *Round) applyEffects() {
 }
 
 func (battle *Battle) Play() []*Result {
-
 	if battle.Stun {
 		battle.Turn = !battle.Turn
 		battle.Stun = false
+	}else if battle.ReflexType == 3{
+		battle.ReflexType = 0
+		battle.Turn = !battle.Turn
 	}
+
 
 	round := Round{
 		Results:   []*Result{},
 		Integrity: 1,
+	}
+
+
+	if battle.ReflexType == 2{
+		round.SkillId = battle.ReflexSkill
+		battle.ReflexType = 3
 	}
 
 	if battle.Turn {
@@ -209,13 +223,18 @@ func (battle *Battle) Play() []*Result {
 
 	if round.Integrity != 0 {
 		main_damage := round.applySkillDamage(battle.FirstRound)
+		if battle.ReflexType == 1{
+			battle.ReflexSkill = round.SkillId
+			battle.ReflexType = 2
+			battle.Turn = !battle.Turn
+			return []*Result{}
+		}
 		round.applyEffects()
 		battle.Stun = round.Stun
-		if GetEffectFromIndex(round.Target.Effect[1]).Type == 5 && round.Target.Effect[0] > 0 {
-			round.Attacker.Life -= main_damage
-		} else {
-			round.Target.Life -= main_damage
+		if round.Reflex{
+			battle.ReflexType = 1
 		}
+		round.Target.Life -= main_damage
 	}
 
 	if round.Attacker.Life <= 0 {

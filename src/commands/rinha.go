@@ -71,6 +71,9 @@ func effectToStr(effect *rinha.Result, affected string, author string, battle *r
 		if effect.Skill.Self {
 			return fmt.Sprintf("%s **%s** Usou **%s** em si mesmo\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name)
 		}
+		if effect.Reflected{
+			return fmt.Sprintf("%s **%s** Refletiu o ataque **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
+		}
 		return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
 	} else if effect.Effect == rinha.Effected {
 		effectLiteral := rinha.Effects[effect.EffectID]
@@ -258,10 +261,10 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 				xpOb += int(xpOb / 10)
 			}
 			if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp) {
-				if level >= 3 {
+				if level >= 4 {
 					money += 2
 				}
-				if level >= 4 {
+				if level >= 5 {
 					money += 3
 				}
 				rinha.AddClanXp(galoWinner.Clan, 1)
@@ -277,7 +280,9 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 			})
 			galoWinner.Win++
 		}
-
+		if xpOb > 38{
+			xpOb = 38
+		}
 		galoWinner.Xp += xpOb
 		updateGaloWin(winner.ID, xpOb, galoWinner.Win)
 		sendLevelUpEmbed(msg, session, galoWinner, winner, xpOb)
