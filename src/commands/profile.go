@@ -6,6 +6,7 @@ import (
 	"asura/src/utils/rinha"
 	"asura/src/database"
 	"bytes"
+	"fmt"
 	"context"
 	"os"
 	"github.com/andersfylling/disgord"
@@ -173,12 +174,22 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 		dc.DrawRectangle(float64(220 + i*75), 265, 55, 55)
 		dc.Fill()
 	}
+	color := rinha.Classes[galo.Type].Rarity.Color()
+
+	dc.SetHexColor(fmt.Sprintf("%06x", color))
+	dc.DrawRectangle(218,263,59,59)
+	dc.Fill()
 	dc.DrawImage(downloadedSprites[galo.Type-1], 220 , 265)
+
 	for i := range galo.Galos{
 		if i == 4 {
 			break
 		}
+		color = rinha.Classes[galo.Galos[i].Type].Rarity.Color()
+		dc.SetHexColor(fmt.Sprintf("%06x", color))
 		userGaloImg := downloadedSprites[galo.Galos[i].Type - 1]
+		dc.DrawRectangle(float64(218 + (i + 1)*75),263,59,59)
+		dc.Fill()
 		dc.DrawImage(userGaloImg, 220 + (i+1)*75, 265)
 	}
 	// And here we encode it to send

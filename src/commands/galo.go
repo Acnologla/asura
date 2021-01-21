@@ -88,7 +88,9 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.Fill()
 
 	dc.DrawCircle(160, 70, radius+3)
-	dc.SetRGB(1, 1, 1)
+//	dc.SetRGB(1, 1, 1)
+    color := rinha.Classes[galo.Type].Rarity.Color()
+	dc.SetHexColor(fmt.Sprintf("%06x", color))
 	dc.Fill()
 	dc.SetRGB(0, 0, 0)
 	dc.DrawCircle(160, 70, radius)
