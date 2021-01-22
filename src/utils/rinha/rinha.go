@@ -87,6 +87,7 @@ type Galo struct {
 	Dungeon       int       `json:"dungeon"`
 	DungeonReset  int       `json:"dungeonreset"`
 	Items         []int     `json:"items"`
+	Missions      [3]Mission    `json:"missions"`
 }
 
 var Dungeon []*Room
