@@ -36,7 +36,7 @@ func runChangeName(session disgord.Session, msg *disgord.Message, args []string)
 		rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
 			"name": text,
 		})
-		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou o nome do seu galo para **%s** com sucesso\nCustou 100 de dinheiro", msg.Author.Mention(), text))
+		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou o nome do seu galo para `%s` com sucesso\nCustou 100 de dinheiro", msg.Author.Mention(), text))
 	} else {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa ter 100 de dinheiro para trocar o nome do seu galo\nUse j!lootbox para ver seu dinheiro")
 		return
