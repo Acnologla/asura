@@ -1,12 +1,12 @@
 [
     {
         "name": "Esfera celestial",
-        "damage": [19,30],
+        "damage": [20,30],
         "level": 1
     },
     {
         "name": "Fogo santo",
-        "damage": [21,35],
+        "damage": [22,35],
         "level": 2
     },
     {
@@ -17,7 +17,7 @@
     {
         "name": "Reflexão",
         "damage": [15,25],
-        "effect": [0.6, 30],
+        "effect": [0.7, 30],
         "level": 4,
         "self": true
     },

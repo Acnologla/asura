@@ -11,7 +11,6 @@ import (
 	"math/rand"
 	"strings"
 	"time"
-
 	"firebase.google.com/go/db"
 	"github.com/andersfylling/disgord"
 )
@@ -25,18 +24,19 @@ const (
 	Rare
 	Epic
 	Legendary
+	Special
 )
 
 func (rarity Rarity) String() string {
-	return [...]string{"Comum", "Raro", "Epico", "Lendario"}[rarity]
+	return [...]string{"Comum", "Raro", "Epico", "Lendario", "Especial"}[rarity]
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 120, 300, 600}[rarity]
+	return [...]int{30, 130, 360, 1500, 500}[rarity]
 }
 
 func (rarity Rarity) Color() int {
-	return [...]int{13493247, 255, 9699539, 16748544}[rarity]
+	return [...]int{13493247, 255, 9699539, 16748544, 16728128}[rarity]
 }
 
 type Effect struct {
