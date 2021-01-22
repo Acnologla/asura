@@ -79,7 +79,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			rinha.ChangeMoney(msg.Author.ID, price, 0)
 			extraMsg = fmt.Sprintf("\nComo voce ja tinha esse galo voce ganhou **%d** de dinheiro", price)
 		}
-		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, newGalo.Name), map[string]string{
+		telemetry.Debug(fmt.Sprintf("%s %s", tag, newGalo.Name), map[string]string{
 			"galo":     newGalo.Name,
 			"user":     strconv.FormatUint(uint64(msg.Author.ID), 10),
 			"rarity":   newGalo.Rarity.String(),

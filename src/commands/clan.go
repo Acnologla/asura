@@ -63,6 +63,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				members := rinha.RemoveMember(clan, msg.Author.ID)
 				if len(members) == 0 {
 					rinha.DeleteClan(galo.Clan)
+					rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
+						"clan": "",
+					})
 					msg.Reply(context.Background(), session, msg.Author.Mention()+", O clan **"+galo.Clan+"** foi deletado com sucesso")
 					return
 				}
@@ -138,6 +141,27 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 				return
 			}
+			if strings.ToLower(args[0]) == "admin"{
+				user := utils.GetUser(msg, args[1:], session)
+				if user.ID == msg.Author.ID || user.Bot {
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
+					return
+				}
+				if role.Role != rinha.Owner {
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Apenas donos podem promover as pessoas a administrador")
+					return
+				}
+				if !rinha.IsInClan(clan, user.ID) {
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario nao esta no clan")
+					return
+				}
+				members := rinha.PromoteMember(clan, user.ID)
+				rinha.UpdateClan(galo.Clan, map[string]interface{}{
+					"members": members,
+				})
+				msg.Reply(context.Background(), session, msg.Author.Mention()+", O usuario **"+user.Username+"** foi promovido com sucesso")
+				return
+			}
 			if strings.ToLower(args[0]) == "remove" {
 				user := utils.GetUser(msg, args[1:], session)
 				if user.ID == msg.Author.ID || user.Bot {
@@ -173,7 +197,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 		for _, member := range clan.Members {
 			user, err := handler.Client.User(disgord.Snowflake(member.ID)).Get()
 			if err == nil {
-				memberMsg += fmt.Sprintf("[**%s**] %s\n", member.Role.ToString(), user.Username)
+				memberMsg += fmt.Sprintf("[**%s**] %s (**%d** XP)\n", member.Role.ToString(), user.Username, member.Xp)
 			}
 		}
 		benefits := rinha.GetBenefits(clan.Xp)
@@ -181,7 +205,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 			Title: galo.Clan,
 			Color: 65535,
 			Footer: &disgord.EmbedFooter{
-				Text: "Use j!clan invite <usuario> para convidar alguem | Use j!clan remove <usuario> para remover alguem",
+				Text: "Use j!clan invite <user> para convidar | j!clan remove <user> para remover | j!clan admin <user> para promover membros",
 			},
 			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/15):\n %s", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), memberMsg),
 		})

@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+const allowedChars = "abcdefghijklmnopqrstuvwxyz123456789 -_"
+
 type Role uint
 
 const (
@@ -26,6 +28,7 @@ func (role Role) ToString() string {
 type ClanMember struct {
 	ID   uint64 `json:"id"`
 	Role Role   `json:"role"`
+	Xp   uint   `json:"xp"`
 }
 
 type Clan struct {
@@ -54,8 +57,15 @@ func CreateClan(name string, owner disgord.Snowflake) {
 }
 
 func Format(text string) string {
-	return strings.TrimSpace(strings.ToLower(text))
+	str :=  strings.TrimSpace(strings.ToLower(text))
+	for _, char := range str{
+		if !includesString(char, allowedChars){
+			str = strings.Replace(str,string(char), "", 1)
+		}
+	}
+	return str
 }
+
 
 func ClanXpToLevel(xp int) int {
 	return int(math.Floor(math.Sqrt(float64(xp)/2000))) + 1
@@ -100,6 +110,15 @@ func FindMemberIndex(clan Clan, memberID disgord.Snowflake) int {
 	return -1
 }
 
+func PromoteMember(clan Clan, memberID disgord.Snowflake) []ClanMember {
+	index := FindMemberIndex(clan, memberID)
+	if index == -1 {
+		return clan.Members
+	}
+	clan.Members[index].Role = Admin
+	return clan.Members
+}
+
 func RemoveMember(clan Clan, memberID disgord.Snowflake) []ClanMember {
 	index := FindMemberIndex(clan, memberID)
 	if index == -1 {
@@ -129,13 +148,28 @@ func GetBenefits(xp int) (text string) {
 	}
 	return
 }
+func includesString(strOne rune, strTwo  string) bool {
+	for _, char := range strTwo{
+		if char == strOne{
+			return true
+		}
+	}
+	return false
+} 
 
-func AddClanXp(clan string, xp int) {
+func AddClanXp(clan string, id disgord.Snowflake ,xp int) {
 	fn := func(tn db.TransactionNode) (interface{}, error) {
 		var clan Clan
 		err := tn.Unmarshal(&clan)
 		if err == nil {
 			clan.Xp += xp
+			for i, member := range clan.Members{
+				if member.ID == uint64(id){
+					member.Xp += uint(xp)
+					clan.Members[i] = member	
+					break
+				}
+			}
 			return clan, nil
 		}
 		fmt.Println(err)
