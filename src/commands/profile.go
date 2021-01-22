@@ -1,32 +1,32 @@
 package commands
 
 import (
+	"asura/src/database"
 	"asura/src/handler"
 	"asura/src/utils"
 	"asura/src/utils/rinha"
-	"asura/src/database"
 	"bytes"
-	"fmt"
 	"context"
-	"os"
+	"fmt"
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
-	"image/png"
 	"image"
 	"image/jpeg"
+	"image/png"
 	"io"
-	"strings"
+	"os"
 	"strconv"
+	"strings"
 )
 
 var downloadedSprites = []image.Image{}
 
 func init() {
 	if len(rinha.Sprites) > 0 {
-		for _, sprite := range rinha.Sprites[0]{
+		for _, sprite := range rinha.Sprites[0] {
 			img, _ := utils.DownloadImage(sprite)
-			downloadedSprites = append(downloadedSprites, resize.Resize(55,55, img, resize.Lanczos3))
+			downloadedSprites = append(downloadedSprites, resize.Resize(55, 55, img, resize.Lanczos3))
 		}
 	}
 	handler.Register(handler.Command{
@@ -36,27 +36,25 @@ func init() {
 		Cooldown:  10,
 		Usage:     "j!profile @user",
 		Help:      "Veja o perfil",
-		Category: 1,
+		Category:  1,
 	})
 }
 
-
-
-func GetClanPos(clanName string) int{
+func GetClanPos(clanName string) int {
 	q := database.Database.NewRef("clan").OrderByChild("xp")
 	result, _ := q.GetOrdered(context.Background())
-	for  i := len(result) - 1; 0 <= i; i-- {
-		if clanName ==  result[i].Key(){
+	for i := len(result) - 1; 0 <= i; i-- {
+		if clanName == result[i].Key() {
 			return len(result) - i
 		}
-	} 
+	}
 	return 0
 }
 
 func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	// Download user image
-	user := utils.GetUser(msg,args,session)
-	if user.Bot{
+	user := utils.GetUser(msg, args, session)
+	if user.Bot {
 		return
 	}
 	url, _ := user.AvatarURL(128, false)
@@ -89,16 +87,16 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 
 	dc.DrawRoundedRectangle(0, 0, 600, 200, 10)
 	dc.Clip()
-	dc.DrawImage(img,0,0)
+	dc.DrawImage(img, 0, 0)
 	dc.ResetClip()
 	dc.DrawRoundedRectangle(0, 0, 600, 430, 10)
 	dc.Clip()
 
-	dc.SetRGB(0.8,0.31,0.31)
+	dc.SetRGB(0.8, 0.31, 0.31)
 	dc.DrawRectangle(0, 170, 600, 50)
 	dc.Fill()
 
-	dc.SetRGB(0.9,0.9,0.9)
+	dc.SetRGB(0.9, 0.9, 0.9)
 	dc.DrawRectangle(0, 220, 200, 220)
 	dc.Fill()
 
@@ -117,11 +115,11 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 
 	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 13)
 	dc.DrawString("GALOS", 220, 245)
-	dc.DrawLine(220,250,580,250)
+	dc.DrawLine(220, 250, 580, 250)
 	dc.Stroke()
 
 	dc.DrawString("INFO", 220, 345)
-	dc.DrawLine(220,350,580,350)
+	dc.DrawLine(220, 350, 580, 350)
 	dc.Stroke()
 
 	galo, _ := rinha.GetGaloDB(user.ID)
@@ -139,7 +137,7 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
 	dc.DrawStringAnchored(strconv.Itoa(galo.Win), 260, 400, 0.5, 0.5)
 	dc.DrawStringAnchored(strconv.Itoa(galo.Lose), 350, 400, 0.5, 0.5)
-	dc.DrawStringAnchored("#" + strconv.Itoa(GetClanPos(galo.Clan)), 440, 400, 0.5, 0.5)
+	dc.DrawStringAnchored("#"+strconv.Itoa(GetClanPos(galo.Clan)), 440, 400, 0.5, 0.5)
 	dc.DrawStringAnchored(strconv.Itoa(len(galo.Galos)+1), 530, 400, 0.5, 0.5)
 
 	err = dc.LoadFontFace("./resources/Raleway-Light.ttf", 13)
@@ -147,7 +145,7 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.DrawString("Clan", 10, 280)
 	dc.DrawString("Money", 10, 310)
 	clan := "Nenhum"
-	if galo.Clan != ""{
+	if galo.Clan != "" {
 		clan = galo.Clan
 	}
 	dc.DrawStringAnchored(clan, 190, 280, 1, 0)
@@ -157,40 +155,40 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
 	dc.DrawString(user.Username, 185, 204)
 
-	dc.SetRGB(0.3,0.3,0.3)
-	dc.DrawLine(10,320,190,320)
+	dc.SetRGB(0.3, 0.3, 0.3)
+	dc.DrawLine(10, 320, 190, 320)
 	dc.Stroke()
 
 	dc.SetRGB(0.7, 0.7, 0.7)
 	for i := 0; i < 4; i++ {
 		for j := 0; j < 2; j++ {
-			dc.DrawRectangle(float64(10 + i*47), float64(332 + j*47), 40, 40)
+			dc.DrawRectangle(float64(10+i*47), float64(332+j*47), 40, 40)
 			dc.Fill()
 		}
 	}
 
 	dc.SetRGB(0.9, 0.9, 0.9)
 	for i := 0; i < 5; i++ {
-		dc.DrawRectangle(float64(220 + i*75), 265, 55, 55)
+		dc.DrawRectangle(float64(220+i*75), 265, 55, 55)
 		dc.Fill()
 	}
 	color := rinha.Classes[galo.Type].Rarity.Color()
 
 	dc.SetHexColor(fmt.Sprintf("%06x", color))
-	dc.DrawRectangle(218,263,59,59)
+	dc.DrawRectangle(218, 263, 59, 59)
 	dc.Fill()
-	dc.DrawImage(downloadedSprites[galo.Type-1], 220 , 265)
+	dc.DrawImage(downloadedSprites[galo.Type-1], 220, 265)
 
-	for i := range galo.Galos{
+	for i := range galo.Galos {
 		if i == 4 {
 			break
 		}
 		color = rinha.Classes[galo.Galos[i].Type].Rarity.Color()
 		dc.SetHexColor(fmt.Sprintf("%06x", color))
-		userGaloImg := downloadedSprites[galo.Galos[i].Type - 1]
-		dc.DrawRectangle(float64(218 + (i + 1)*75),263,59,59)
+		userGaloImg := downloadedSprites[galo.Galos[i].Type-1]
+		dc.DrawRectangle(float64(218+(i+1)*75), 263, 59, 59)
 		dc.Fill()
-		dc.DrawImage(userGaloImg, 220 + (i+1)*75, 265)
+		dc.DrawImage(userGaloImg, 220+(i+1)*75, 265)
 	}
 	// And here we encode it to send
 	var b bytes.Buffer

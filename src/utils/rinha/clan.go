@@ -57,15 +57,14 @@ func CreateClan(name string, owner disgord.Snowflake) {
 }
 
 func Format(text string) string {
-	str :=  strings.TrimSpace(strings.ToLower(text))
-	for _, char := range str{
-		if !includesString(char, allowedChars){
-			str = strings.Replace(str,string(char), "", 1)
+	str := strings.TrimSpace(strings.ToLower(text))
+	for _, char := range str {
+		if !includesString(char, allowedChars) {
+			str = strings.Replace(str, string(char), "", 1)
 		}
 	}
 	return str
 }
-
 
 func ClanXpToLevel(xp int) int {
 	return int(math.Floor(math.Sqrt(float64(xp)/2000))) + 1
@@ -148,25 +147,25 @@ func GetBenefits(xp int) (text string) {
 	}
 	return
 }
-func includesString(strOne rune, strTwo  string) bool {
-	for _, char := range strTwo{
-		if char == strOne{
+func includesString(strOne rune, strTwo string) bool {
+	for _, char := range strTwo {
+		if char == strOne {
 			return true
 		}
 	}
 	return false
-} 
+}
 
-func AddClanXp(clan string, id disgord.Snowflake ,xp int) {
+func AddClanXp(clan string, id disgord.Snowflake, xp int) {
 	fn := func(tn db.TransactionNode) (interface{}, error) {
 		var clan Clan
 		err := tn.Unmarshal(&clan)
 		if err == nil {
 			clan.Xp += xp
-			for i, member := range clan.Members{
-				if member.ID == uint64(id){
+			for i, member := range clan.Members {
+				if member.ID == uint64(id) {
 					member.Xp += uint(xp)
-					clan.Members[i] = member	
+					clan.Members[i] = member
 					break
 				}
 			}

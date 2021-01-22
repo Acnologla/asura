@@ -110,14 +110,14 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 						clan = rinha.GetClan(galo.Clan)
 						level := rinha.ClanXpToLevel(clan.Xp)
 						maxMembers := 15
-						if level >= 3{
+						if level >= 3 {
 							maxMembers = 20
 						}
 						if rinha.IsInClan(clan, user.ID) {
 							msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")
 							return
 						}
-						if len(clan.Members) >=  maxMembers {
+						if len(clan.Members) >= maxMembers {
 							msg.Reply(context.Background(), session, msg.Author.Mention()+", Este clan ja esta cheio\nRemova algum usuario usando j!clan remove @user")
 							return
 						}
@@ -141,7 +141,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 				return
 			}
-			if strings.ToLower(args[0]) == "admin"{
+			if strings.ToLower(args[0]) == "admin" {
 				user := utils.GetUser(msg, args[1:], session)
 				if user.ID == msg.Author.ID || user.Bot {
 					msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")

@@ -71,7 +71,7 @@ func effectToStr(effect *rinha.Result, affected string, author string, battle *r
 		if effect.Skill.Self {
 			return fmt.Sprintf("%s **%s** Usou **%s** em si mesmo\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name)
 		}
-		if effect.Reflected{
+		if effect.Reflected {
 			return fmt.Sprintf("%s **%s** Refletiu o ataque **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
 		}
 		return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
@@ -267,7 +267,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 				if level >= 5 {
 					money += 3
 				}
-				rinha.AddClanXp(galoWinner.Clan,winner.ID,1)
+				rinha.AddClanXp(galoWinner.Clan, winner.ID, 1)
 				clanMsg = "\nGanhou **1** de xp para seu clan"
 			}
 		}
@@ -280,7 +280,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 			})
 			galoWinner.Win++
 		}
-		if xpOb > 38{
+		if xpOb > 38 {
 			xpOb = 38
 		}
 		galoWinner.Xp += xpOb

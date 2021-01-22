@@ -7,10 +7,10 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"time"
 	"github.com/andersfylling/disgord"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func init() {
@@ -96,16 +96,16 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		embed := &disgord.Embed{
 			Title: "Abrindo lootbox",
 		}
-		message, err :=  msg.Reply(context.Background(), session, embed)
+		message, err := msg.Reply(context.Background(), session, embed)
 		if err == nil {
 			embed.Description = "Selecionando galo..."
-			for i:=0; i < 6;i++{
+			for i := 0; i < 6; i++ {
 				rand := rinha.GetRand()
-				if i == 5{
+				if i == 5 {
 					embed.Title = "Lootbox open"
 					rand = result
-					embed.Description =  "Voce abriu uma lootbox " + lootType + " e ganhou o galo **" + newGalo.Name + "**\nRaridade: " + newGalo.Rarity.String() + extraMsg
-					embed.Footer =  &disgord.EmbedFooter{
+					embed.Description = "Voce abriu uma lootbox " + lootType + " e ganhou o galo **" + newGalo.Name + "**\nRaridade: " + newGalo.Rarity.String() + extraMsg
+					embed.Footer = &disgord.EmbedFooter{
 						IconURL: avatar,
 						Text:    "Use j!equipar para equipar ou vender esse galo",
 					}

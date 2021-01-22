@@ -24,7 +24,7 @@ func GetUser(msg *disgord.Message, args []string, session disgord.Session) *disg
 	if len(args) > 0 {
 		converted := StringToID(args[0])
 		user, err := session.User(converted).Get()
-		if err == nil && converted != 0  {
+		if err == nil && converted != 0 {
 			return user
 		} else {
 			members, err := session.Guild(msg.GuildID).GetMembers(&disgord.GetMembersParams{

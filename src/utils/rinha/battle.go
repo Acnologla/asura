@@ -15,12 +15,12 @@ type Fighter struct {
 }
 
 type Battle struct {
-	Stopped    bool
-	Fighters   [2]*Fighter
-	Turn       bool
-	FirstRound bool
-	Stun       bool
-	ReflexType int
+	Stopped     bool
+	Fighters    [2]*Fighter
+	Turn        bool
+	FirstRound  bool
+	Stun        bool
+	ReflexType  int
 	ReflexSkill int
 }
 

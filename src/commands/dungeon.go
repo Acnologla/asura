@@ -52,7 +52,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(rinha.Dungeon) == galo.Dungeon {
 		galo.Dungeon = 0
 		galo.DungeonReset += 1
-		msg.Reply(context.Background(), session, "Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!")		
+		msg.Reply(context.Background(), session, "Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!")
 	}
 
 	dungeon := rinha.Dungeon[galo.Dungeon]
@@ -63,16 +63,16 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	if galo.DungeonReset != 0 {
 		multiplier = 2 * galo.DungeonReset
 	}
-	
-	AdvLVL := rinha.CalcLevel(galoAdv.Xp)  * multiplier
+
+	AdvLVL := rinha.CalcLevel(galoAdv.Xp) * multiplier
 
 	ngaloAdv := rinha.Galo{
-		Xp: rinha.CalcXP(AdvLVL)+1,
+		Xp:   rinha.CalcXP(AdvLVL) + 1,
 		Type: galoAdv.Type,
 	}
 	winner, _ := ExecuteRinha(msg, session, rinhaOptions{
 		galoAuthor:  &galo,
-		galoAdv: &ngaloAdv,
+		galoAdv:     &ngaloAdv,
 		authorName:  rinha.GetName(msg.Author.Username, galo),
 		advName:     "Boss " + rinha.Classes[galoAdv.Type].Name,
 		authorLevel: rinha.CalcLevel(galo.Xp),
@@ -83,7 +83,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		diffGalo, endMsg := rinha.DungeonWin(dungeon.Level, galo)
 		if galo.DungeonReset != 0 {
 			rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-				"dungeon": galo.Dungeon + 1,
+				"dungeon":      galo.Dungeon + 1,
 				"dungeonreset": galo.DungeonReset,
 			})
 			msg.Reply(context.Background(), session, &disgord.Embed{

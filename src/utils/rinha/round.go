@@ -13,11 +13,11 @@ const (
 )
 
 type Result struct {
-	Effect   EffectType
-	EffectID int
-	Skill    *Skill
-	Damage   int
-	Self     bool
+	Effect    EffectType
+	EffectID  int
+	Skill     *Skill
+	Damage    int
+	Self      bool
 	Reflected bool
 }
 
@@ -38,7 +38,7 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	if round.SkillId == 0 {
 		round.SkillId = round.Attacker.Equipped[rand.Intn(len(round.Attacker.Equipped))]
 		round.Skill = Skills[round.Attacker.Galo.Type-1][round.SkillId]
-	}else{
+	} else {
 		reflected = true
 		round.Skill = Skills[round.Target.Galo.Type-1][round.SkillId]
 	}
@@ -85,7 +85,7 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	}
 
 	round.Results = append([]*Result{
-		&Result{Reflected: reflected,Effect: Damaged, Damage: real_damage, Skill: round.Skill, Self: false, EffectID: 0},
+		&Result{Reflected: reflected, Effect: Damaged, Damage: real_damage, Skill: round.Skill, Self: false, EffectID: 0},
 	}, round.Results...)
 
 	return real_damage
@@ -188,19 +188,17 @@ func (battle *Battle) Play() []*Result {
 	if battle.Stun {
 		battle.Turn = !battle.Turn
 		battle.Stun = false
-	}else if battle.ReflexType == 3{
+	} else if battle.ReflexType == 3 {
 		battle.ReflexType = 0
 		battle.Turn = !battle.Turn
 	}
-
 
 	round := Round{
 		Results:   []*Result{},
 		Integrity: 1,
 	}
 
-
-	if battle.ReflexType == 2{
+	if battle.ReflexType == 2 {
 		round.SkillId = battle.ReflexSkill
 		battle.ReflexType = 3
 	}
@@ -223,7 +221,7 @@ func (battle *Battle) Play() []*Result {
 
 	if round.Integrity != 0 {
 		main_damage := round.applySkillDamage(battle.FirstRound)
-		if battle.ReflexType == 1{
+		if battle.ReflexType == 1 {
 			battle.ReflexSkill = round.SkillId
 			battle.ReflexType = 2
 			battle.Turn = !battle.Turn
@@ -231,7 +229,7 @@ func (battle *Battle) Play() []*Result {
 		}
 		round.applyEffects()
 		battle.Stun = round.Stun
-		if round.Reflex{
+		if round.Reflex {
 			battle.ReflexType = 1
 		}
 		round.Target.Life -= main_damage
