@@ -44,10 +44,10 @@ func MissionsToString(id disgord.Snowflake, galo Galo) string {
 			text += fmt.Sprintf("Batalhar contra %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*2, mission.Progress, (mission.Level+1)*2, 20+5*mission.Level, 30*(mission.Level+1))
 		case WinGalo:
 			className := Classes[mission.Adv].Name
-			text += fmt.Sprintf("Vencer contra galo do tipo %s (0/1)\nMoney: **30**\nXp:  **90**", className)
+			text += fmt.Sprintf("Vencer contra galo do tipo %s (0/1)\nMoney: **25**\nXp:  **80**", className)
 		case FightGalo:
 			className := Classes[mission.Adv].Name
-			text += fmt.Sprintf("Batalhar contra 3 galos do tipo %s (%d/3)\nMoney: **30**\nXp:  **90**", className, mission.Progress)
+			text += fmt.Sprintf("Batalhar contra 3 galos do tipo %s (%d/3)\nMoney: **25**\nXp:  **80**", className, mission.Progress)
 		}
 		text += "\n"
 	}
@@ -65,6 +65,9 @@ func RemoveMission(missions []Mission, i int) []Mission {
 }
 
 func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg *disgord.Message) {
+	tempGalo,_ := GetGaloDB(id)
+	galo.Missions = tempGalo.Missions
+	galo.LastMission = tempGalo.LastMission
 	if len(galo.Missions) == 3 {
 		galo.LastMission = uint64(time.Now().Unix())
 		UpdateGaloDB(id, map[string]interface{}{
@@ -106,16 +109,16 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 		case WinGalo:
 			if winner && galoAdv.Type == mission.Adv {
 				mission.Progress++
-				xp += 90
-				money += 30
+				xp += 80
+				money += 25
 				done = true
 			}
 		case FightGalo:
 			if galoAdv.Type == mission.Adv {
 				mission.Progress++
 				if mission.Progress == 3 {
-					xp += 90
-					money += 30
+					xp += 80
+					money += 25
 					done = true
 				}
 			}
@@ -123,11 +126,17 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 		if mission.Progress != old {
 			if done {
 				toRemove = append(toRemove, i)
-				msg.Reply(context.Background(), handler.Client, fmt.Sprintf("<@%d> voce completou uma missão e recebeu **%d** de money e **%d** de xp", id, money, xp))
 			} else {
 				galo.Missions[i] = mission
 			}
 		}
+	}
+	if len(toRemove) > 0 {
+		text := "missão"
+		if len(toRemove) > 1{
+			text = "missoes"
+		}
+		msg.Reply(context.Background(), handler.Client, fmt.Sprintf("<@%d> voce completou **%d** %s e recebeu **%d** de money e **%d** de xp", id,len(toRemove),text ,money, xp))
 	}
 	for i := len(toRemove) - 1; i >= 0; i-- {
 		galo.Missions = RemoveMission(galo.Missions, toRemove[i])

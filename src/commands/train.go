@@ -58,7 +58,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       16711680,
 			Title:       "Train",
-			Description: fmt.Sprintf("Parabens %s, voce perdeu. Use j!daily para train novamente", msg.Author.Username),
+			Description: fmt.Sprintf("Parabens %s, voce perdeu. Use j!train para treinar novamente", msg.Author.Username),
 		})
 	}
 
