@@ -147,7 +147,7 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 func MissionUpdate(id disgord.Snowflake, galo Galo, xp int, money int) {
 	update := map[string]interface{}{
 		"missions": galo.Missions,
-	})
+	}
 	if xp != 0 {
 		ChangeMoney(id, money, 0)
 		update["xp"] =  galo.Xp + xp
