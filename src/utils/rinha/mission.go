@@ -95,7 +95,7 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 				mission.Progress++
 				if mission.Progress == mission.Level+1 {
 					xp += 30 * (mission.Level + 1)
-					money += 20 + (5 * mission.Level)
+					money += 15 + (5 * mission.Level)
 					done = true
 				}
 			}
@@ -103,7 +103,7 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 			mission.Progress++
 			if mission.Progress == (mission.Level+1)*2 {
 				xp += 30 * (mission.Level + 1)
-				money += 20 + (5 * mission.Level)
+				money += 15 + (5 * mission.Level)
 				done = true
 			}
 		case WinGalo:
@@ -145,13 +145,14 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 }
 
 func MissionUpdate(id disgord.Snowflake, galo Galo, xp int, money int) {
-	if galo.Xp != xp {
+	update := map[string]interface{}{
+		"missions": galo.Missions,
+	})
+	if xp != 0 {
 		ChangeMoney(id, money, 0)
-		UpdateGaloDB(id, map[string]interface{}{
-			"xp":       galo.Xp + xp,
-			"missions": galo.Missions,
-		})
+		update["xp"] =  galo.Xp + xp
 	}
+	updateGaloWin(id,update)
 }
 
 func CreateMission(galo Galo) Mission {
