@@ -12,12 +12,9 @@ import (
 	"math"
 	"math/rand"
 	"strings"
-	"time"
 )
 
 type Rarity int
-
-var DailyGalo int
 
 const (
 	Common Rarity = iota
@@ -71,24 +68,24 @@ type SubGalo struct {
 }
 
 type Galo struct {
-	Name          string     `json:"name"`
-	Xp            int        `json:"xp"`
-	Type          int        `json:"type"`
-	Equipped      []int      `json:"equipped"`
-	Win           int        `json:"win"`
-	Lose          int        `json:"lose"`
-	Lootbox       int        `json:"lootbox"`
-	CommonLootbox int        `json:"commonLootbox"`
-	RareLootbox   int        `json:"rareLootbox"`
-	Galos         []SubGalo  `json:"galos"`
-	Money         int        `json:"money"`
-	Daily         uint64     `json:"daily"`
-	Clan          string     `json:"clan"`
-	Dungeon       int        `json:"dungeon"`
-	DungeonReset  int        `json:"dungeonreset"`
-	Items         []int      `json:"items"`
-	Missions      [3]Mission `json:"missions"`
-	LastMission   uint64     `json:"lastMission"`
+	Name          string    `json:"name"`
+	Xp            int       `json:"xp"`
+	Type          int       `json:"type"`
+	Equipped      []int     `json:"equipped"`
+	Win           int       `json:"win"`
+	Lose          int       `json:"lose"`
+	Lootbox       int       `json:"lootbox"`
+	CommonLootbox int       `json:"commonLootbox"`
+	RareLootbox   int       `json:"rareLootbox"`
+	Galos         []SubGalo `json:"galos"`
+	Money         int       `json:"money"`
+	//	Daily         uint64     `json:"daily"`
+	Clan         string     `json:"clan"`
+	Dungeon      int        `json:"dungeon"`
+	DungeonReset int        `json:"dungeonreset"`
+	Items        []int      `json:"items"`
+	Missions     []Mission `json:"missions"`
+	LastMission  uint64     `json:"lastMission"`
 }
 
 var Dungeon []*Room
@@ -293,13 +290,4 @@ func GetEffectFromSkill(skill *Skill) *Effect {
 // Effect functions
 func GetEffectFromIndex(idx int) *Effect {
 	return Effects[idx]
-}
-
-func init() {
-	go func() {
-		for {
-			time.Sleep(time.Hour * 24)
-			DailyGalo = GetRand()
-		}
-	}()
 }

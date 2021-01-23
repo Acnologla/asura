@@ -5,7 +5,6 @@ import (
 	"asura/src/database"
 	"asura/src/handler"
 	"asura/src/telemetry"
-	"asura/src/utils/rinha"
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
@@ -27,7 +26,6 @@ func onReady() {
 }
 func main() {
 	rand.Seed(time.Now().UnixNano())
-	rinha.DailyGalo = rinha.GetRand()
 	// If it's not in production so it's good to read a ".env" file
 	if os.Getenv("PRODUCTION") == "" {
 		err := godotenv.Load()

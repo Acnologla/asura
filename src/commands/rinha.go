@@ -285,6 +285,8 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 		}
 		galoWinner.Xp += xpOb
 		updateGaloWin(winner.ID, xpOb, galoWinner.Win)
+		rinha.CompleteMission(winner.ID, *galoWinner, *galoLoser, true, msg)
+		rinha.CompleteMission(loser.ID, *galoLoser, *galoWinner, false, msg)
 		sendLevelUpEmbed(msg, session, galoWinner, winner, xpOb)
 		embed := &disgord.Embed{Title: "Briga de galo", Color: 16776960, Description: ""}
 

@@ -24,7 +24,7 @@ func _Open(lootType int) int {
 
 func OpenRare() int {
 	value := rand.Intn(1001)
-	if 4 >= value {
+	if 3 >= value {
 		return GetRandByType(Legendary)
 	} else if 99 >= value {
 		return GetRandByType(Epic)
