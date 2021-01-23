@@ -39,9 +39,9 @@ func MissionsToString(id disgord.Snowflake, galo Galo) string {
 	for _, mission := range galo.Missions {
 		switch mission.Type {
 		case Win:
-			text += fmt.Sprintf("Vencer %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", mission.Level+1, mission.Progress, mission.Level+1, 20+5*mission.Level, 30*(mission.Level+1))
+			text += fmt.Sprintf("Vencer %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", mission.Level+1, mission.Progress, mission.Level+1, 15+5*mission.Level, 30*(mission.Level+1))
 		case Fight:
-			text += fmt.Sprintf("Batalhar contra %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*2, mission.Progress, (mission.Level+1)*2, 20+5*mission.Level, 30*(mission.Level+1))
+			text += fmt.Sprintf("Batalhar contra %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*2, mission.Progress, (mission.Level+1)*2, 15+5*mission.Level, 30*(mission.Level+1))
 		case WinGalo:
 			className := Classes[mission.Adv].Name
 			text += fmt.Sprintf("Vencer contra galo do tipo %s (0/1)\nMoney: **25**\nXp:  **80**", className)
