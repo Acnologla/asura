@@ -80,12 +80,12 @@ type Galo struct {
 	Galos         []SubGalo `json:"galos"`
 	Money         int       `json:"money"`
 	//	Daily         uint64     `json:"daily"`
-	Clan         string     `json:"clan"`
-	Dungeon      int        `json:"dungeon"`
-	DungeonReset int        `json:"dungeonreset"`
-	Items        []int      `json:"items"`
+	Clan         string    `json:"clan"`
+	Dungeon      int       `json:"dungeon"`
+	DungeonReset int       `json:"dungeonreset"`
+	Items        []int     `json:"items"`
 	Missions     []Mission `json:"missions"`
-	LastMission  uint64     `json:"lastMission"`
+	LastMission  uint64    `json:"lastMission"`
 }
 
 var Dungeon []*Room

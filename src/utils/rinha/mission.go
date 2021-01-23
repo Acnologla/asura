@@ -1,12 +1,12 @@
 package rinha
 
 import (
+	"asura/src/handler"
+	"context"
 	"fmt"
+	"github.com/andersfylling/disgord"
 	"math/rand"
 	"time"
-	"asura/src/handler"
-	"github.com/andersfylling/disgord"
-	"context"
 )
 
 type MissionType int
@@ -25,7 +25,7 @@ type Mission struct {
 	Adv      int
 }
 
-func MissionsToString(id disgord.Snowflake,galo Galo) string {
+func MissionsToString(id disgord.Snowflake, galo Galo) string {
 	missions := PopulateMissions(galo)
 	if len(missions) > len(galo.Missions) {
 		galo.Missions = missions
@@ -65,7 +65,7 @@ func RemoveMission(missions []Mission, i int) []Mission {
 }
 
 func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg *disgord.Message) {
-	if len(galo.Missions) == 3{
+	if len(galo.Missions) == 3 {
 		galo.LastMission = uint64(time.Now().Unix())
 		UpdateGaloDB(id, map[string]interface{}{
 			"lastMission": galo.LastMission,
@@ -129,7 +129,7 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 			}
 		}
 	}
-	for i := len(toRemove)-1;i >= 0;i--{
+	for i := len(toRemove) - 1; i >= 0; i-- {
 		galo.Missions = RemoveMission(galo.Missions, toRemove[i])
 	}
 	MissionUpdate(id, galo, xp, money)
@@ -149,13 +149,13 @@ func CreateMission(galo Galo) Mission {
 	missionType := MissionType(rand.Intn(4))
 	level := rand.Intn(3)
 	galoAdv := 0
-	if missionType == FightGalo || missionType == WinGalo{
+	if missionType == FightGalo || missionType == WinGalo {
 		galoAdv = GetRand()
 	}
 	return Mission{
 		Type:  missionType,
 		Level: level,
-		Adv: galoAdv,
+		Adv:   galoAdv,
 	}
 }
 
