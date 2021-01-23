@@ -152,7 +152,7 @@ func MissionUpdate(id disgord.Snowflake, galo Galo, xp int, money int) {
 		ChangeMoney(id, money, 0)
 		update["xp"] =  galo.Xp + xp
 	}
-	updateGaloWin(id,update)
+	UpdateGaloDB(id,update)
 }
 
 func CreateMission(galo Galo) Mission {
