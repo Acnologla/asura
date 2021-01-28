@@ -121,7 +121,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 					_, err := msgUpdater.Execute()
 					return err
 				}, 3)
-				time.Sleep(time.Millisecond * 2500)
+				time.Sleep(time.Millisecond * 3500)
 			}
 		}
 	} else if args[0] == "buy" || args[0] == "comprar" {
