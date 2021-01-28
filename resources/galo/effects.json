@@ -238,5 +238,28 @@
         "self": true,
         "phrase": "%s irá refletir o proximo ataque! (%d)",
         "range": [0,0]
+    },
+    {
+        "name": "Cremação solar", 
+        "turns": 1,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está cremando! (-%d)",
+        "range": [45,60]
+    },
+    {
+        "name": "Fragilidade",
+        "turns": 4,
+        "type": 6,
+        "phrase": "%s esta fragilizado! (%d)",
+        "range": [50,50]
+    },
+    {
+        "name": "Possessão", 
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está sendo possuido! (-%d)",
+        "range": [20,35]
     }
 ]

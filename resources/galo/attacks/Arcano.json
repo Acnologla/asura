@@ -76,21 +76,22 @@
     },
     {
         "name": "Luz",
-        "damage": [1,10],
+        "damage": [1,5],
         "level": 21,
         "effect": [1,17],
         "self":  true
     },
     {
         "name": "Gravidade",
-        "damage": [25, 30],
+        "damage": [20, 30],
         "effect": [1,28],
         "level": 23
     },
     {
-        "name": "Aura arcana",
-        "damage": [55,70],
-        "level": 25
+        "name": "Sol",
+        "damage": [1,2],
+        "level": 25,
+        "effect": [1,31]
     },
     {
         "name": "Cataclisma",
