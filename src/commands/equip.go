@@ -62,16 +62,17 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 		if value >= 0 && len(galo.Galos) > value {
 			if len(args) >= 2 {
 				if args[1] == "remove" || args[1] == "vender" {
-					gal := galo.Galos[value]
+					var gal rinha.SubGalo
 					var price int
-					rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
-						for i := value; i < len(gal.Galos)-1; i++ {
-							gal.Galos[i] = gal.Galos[i+1]
+					rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+						gal = galo.Galos[value]
+						for i := value; i < len(galo.Galos)-1; i++ {
+							galo.Galos[i] = galo.Galos[i+1]
 						}
 						price = rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp)
-						gal.Money+= price
-						gal.Galos = gal.Galos[0 : len(gal.Galos)-1]
-						return gal, nil
+						galo.Money+= price
+						galo.Galos = galo.Galos[0 : len(galo.Galos)-1]
+						return galo, nil
 					})
 					newGalo := rinha.Classes[gal.Type]
 					tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
