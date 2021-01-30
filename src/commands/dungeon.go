@@ -80,11 +80,11 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		noItems:     true,
 	})
 	if winner == 0 {
-		diffGalo, endMsg := rinha.DungeonWin(dungeon.Level, galo)
 		if galo.DungeonReset != 0 {
-			rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-				"dungeon":      galo.Dungeon + 1,
-				"dungeonreset": galo.DungeonReset,
+			rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+				gal.Dungeon = galo.Dungeon + 1
+				gal.DungeonReset = galo.DungeonReset
+				return gal, nil
 			})
 			msg.Reply(context.Background(), session, &disgord.Embed{
 				Color:       16776960,
@@ -93,11 +93,15 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 			})
 			return
 		}
-		update := rinha.Diff(galo, diffGalo)
-		update["dungeon"] = galo.Dungeon + 1
-		rinha.UpdateGaloDB(msg.Author.ID, update)
+		var endMsg string
+		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+			diffGalo, endMsg2 := rinha.DungeonWin(dungeon.Level, gal)
+			endMsg = endMsg2
+			diffGalo.Dungeon = gal.Dungeon + 1
+			return diffGalo, nil
+		})
 		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
-		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, endMsg), map[string]string{
+		telemetry.Debug(fmt.Sprintf("%s %s", tag, endMsg), map[string]string{
 			"user":         strconv.FormatUint(uint64(msg.Author.ID), 10),
 			"dungeonLevel": string(galo.Dungeon),
 		})

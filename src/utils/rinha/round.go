@@ -22,17 +22,17 @@ type Result struct {
 }
 
 type Round struct {
-	Results    []*Result
-	Attacker   *Fighter
-	Target     *Fighter
-	Skill      *Skill
-	SkillId    int
-	Integrity  float32
-	ShieldUser   *Fighter
+	Results       []*Result
+	Attacker      *Fighter
+	Target        *Fighter
+	Skill         *Skill
+	SkillId       int
+	Integrity     float32
+	ShieldUser    *Fighter
 	FragilityUser *Fighter
-	Fragility  float32
-	Stun       bool
-	Reflex     bool
+	Fragility     float32
+	Stun          bool
+	Reflex        bool
 }
 
 func (round *Round) applySkillDamage(firstTurn bool) int {
@@ -62,10 +62,10 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	if IsIntInList(round.Target.Galo.Type, Classes[round.Attacker.Galo.Type].Disadvantages) && rand.Float64() <= 0.72 && difference < 4 {
 		not_effective_damage = int(float64(attack_damage) * 0.4)
 	}
-	if round.FragilityUser != nil && round.Fragility != 0{
-		if round.FragilityUser == round.Target{
+	if round.FragilityUser != nil && round.Fragility != 0 {
+		if round.FragilityUser == round.Target {
 			attack_damage = int(float32(attack_damage) * (1 + round.Fragility))
-		}		
+		}
 	}
 	if round.Integrity != 0 && round.Integrity != 1 && round.ShieldUser == round.Target {
 		not_effective_damage += int(float32(attack_damage) * round.Integrity)
@@ -106,17 +106,17 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect) int {
 			if effect_damage >= receiver.Life {
 				effect_damage = receiver.Life - 1
 			}
-			receiver.Life -= effect_damage 
+			receiver.Life -= effect_damage
 		}
 	case 2:
 		{
 			if effect_damage >= receiver.MaxLife {
 				receiver.Life = receiver.MaxLife
 			} else {
-				if round.FragilityUser == receiver{
-					effect_damage =	int(float32(effect_damage) * round.Fragility)
+				if round.FragilityUser == receiver {
+					effect_damage = int(float32(effect_damage) * round.Fragility)
 				}
-				receiver.Life += effect_damage 
+				receiver.Life += effect_damage
 			}
 		}
 	case 3:
@@ -151,7 +151,6 @@ func (round *Round) applyEffect(id int, self bool, to_append bool) {
 	}
 
 	receiver.Effect[0]--
-
 
 	effect_damage := round.applyEffectDamage(receiver, effect)
 

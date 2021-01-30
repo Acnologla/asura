@@ -4,9 +4,9 @@ import (
 	"asura/src/handler"
 	"context"
 	"github.com/andersfylling/disgord"
+	"image"
 	"strconv"
 	"strings"
-	"image"
 )
 
 func StringToID(id string) disgord.Snowflake {
@@ -18,10 +18,10 @@ func StringToID(id string) disgord.Snowflake {
 	return 0
 }
 
-func DownloadAvatar(id disgord.Snowflake, size int, gif bool) (image.Image, error){
+func DownloadAvatar(id disgord.Snowflake, size int, gif bool) (image.Image, error) {
 	user, _ := handler.Client.User(id).Get(disgord.IgnoreCache)
 	avatar, _ := user.AvatarURL(size, gif)
-	avatar = strings.Replace(avatar, ".webp" , ".png", 1)
+	avatar = strings.Replace(avatar, ".webp", ".png", 1)
 	return DownloadImage(avatar)
 }
 

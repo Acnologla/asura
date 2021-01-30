@@ -60,14 +60,14 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		if value >= 0 && len(galo.Items) > value {
-			newItem := galo.Items[value]
-			old := galo.Items[0]
-			galo.Items[0] = newItem
-			galo.Items[value] = old
-			rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-				"items": galo.Items,
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error ) {
+				newItem := galo.Items[value]
+				old := galo.Items[0]
+				galo.Items[0] = newItem
+				galo.Items[value] = old
+				msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), rinha.Items[newItem].Name))
+				return galo, nil
 			})
-			msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), rinha.Items[newItem].Name))
 		} else {
 			msg.Reply(context.Background(), session, "Numero invalido")
 

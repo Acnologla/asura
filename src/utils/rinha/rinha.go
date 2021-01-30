@@ -162,24 +162,32 @@ func GetGaloDB(id disgord.Snowflake) (Galo, error) {
 
 func ChangeMoney(id disgord.Snowflake, money int, onlyIf int) error {
 	fn := func(tn db.TransactionNode) (interface{}, error) {
-		var galoMoney int
-		err := tn.Unmarshal(&galoMoney)
-
+		var galo Galo
+		err := tn.Unmarshal(&galo)
 		if err == nil {
-			if galoMoney >= onlyIf {
-				galoMoney += money
-				return galoMoney, nil
+			if galo.Money >= onlyIf {
+				galo.Money += money
+				return galo, nil
 			}
 			return nil, errors.New("Dont have money")
 		}
 		fmt.Println(err)
 		return nil, err
 	}
-	return database.Database.NewRef(fmt.Sprintf("galo/%d/money", id)).Transaction(context.Background(), fn)
+	return database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Transaction(context.Background(), fn)
 }
 
-func UpdateGaloDB(id disgord.Snowflake, galo map[string]interface{}) {
-	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Update(context.Background(), galo)
+func UpdateGaloDB(id disgord.Snowflake, callback func(galo Galo) (Galo, error)) {
+	fn := func(tn db.TransactionNode) (interface{}, error) {
+		var galo Galo
+		err := tn.Unmarshal(&galo)
+		if err == nil {
+			return callback(galo)
+		}
+		fmt.Println(err)
+		return nil, err
+	}
+	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Transaction(context.Background(), fn)
 }
 
 func SaveGaloDB(id disgord.Snowflake, galo Galo) {

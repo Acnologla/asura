@@ -11,7 +11,7 @@ func Try(callback func() error, limit int) {
 		if err == nil {
 			break
 		}
-		if !strings.Contains(err.Error(), "rate limite"){
+		if !strings.Contains(err.Error(), "rate limite") {
 			break
 		}
 		time.Sleep(time.Second)

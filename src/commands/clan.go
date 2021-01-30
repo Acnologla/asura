@@ -43,8 +43,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					return
 				}
 				rinha.CreateClan(text, msg.Author.ID)
-				rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-					"clan": text,
+				rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+					gal.Clan = text
+					return gal, nil
 				})
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", Clan **"+text+"** criado com sucesso\nUse **j!clan invite <usuario>** para convidar membros")
 				return
@@ -63,8 +64,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				members := rinha.RemoveMember(clan, msg.Author.ID)
 				if len(members) == 0 {
 					rinha.DeleteClan(galo.Clan)
-					rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-						"clan": "",
+					rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+						gal.Clan = ""
+						return gal, nil
 					})
 					msg.Reply(context.Background(), session, msg.Author.Mention()+", O clan **"+galo.Clan+"** foi deletado com sucesso")
 					return
@@ -75,8 +77,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				rinha.UpdateClan(galo.Clan, map[string]interface{}{
 					"members": members,
 				})
-				rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-					"clan": "",
+				rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+					gal.Clan = ""
+					return gal, nil
 				})
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce saiu do clan **"+galo.Clan+"** com sucesso")
 				return
@@ -133,8 +136,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 						rinha.UpdateClan(galo.Clan, map[string]interface{}{
 							"members": clan.Members,
 						})
-						rinha.UpdateGaloDB(user.ID, map[string]interface{}{
-							"clan": galo.Clan,
+						rinha.UpdateGaloDB(user.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+							gal.Clan = galo.Clan
+							return gal, nil
 						})
 						msg.Reply(context.Background(), session, user.Mention()+", Voce entrou para o clan **"+galo.Clan+"** com sucesso")
 					})
@@ -185,8 +189,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				rinha.UpdateClan(galo.Clan, map[string]interface{}{
 					"members": members,
 				})
-				rinha.UpdateGaloDB(user.ID, map[string]interface{}{
-					"clan": "",
+				rinha.UpdateGaloDB(user.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+					gal.Clan = ""
+					return gal, nil
 				})
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", O usuario **"+user.Username+"** foi removido com sucesso")
 				return

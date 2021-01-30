@@ -33,8 +33,9 @@ func runChangeName(session disgord.Session, msg *disgord.Message, args []string)
 	}
 	err := rinha.ChangeMoney(msg.Author.ID, -100, 100)
 	if err == nil {
-		rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-			"name": text,
+		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+			gal.Name = text
+			return gal, nil
 		})
 		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou o nome do seu galo para `%s` com sucesso\nCustou 100 de dinheiro", msg.Author.Mention(), text))
 	} else {

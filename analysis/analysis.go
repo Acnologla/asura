@@ -69,10 +69,15 @@ func check(e error) {
 	}
 }
 
+func battleGalo(level, galoType, advLevel, advType int) {
+	fmt.Println(battle(galoType, advType, level, advLevel, 10000))
+}
+
 func main() {
 	data := []Result{}
 	rand.Seed(time.Now().UTC().UnixNano())
-
+	//	battleGalo(30,7,37,23)
+	//	return
 	for i := 1; i <= 30; i++ {
 		for j := 1; j <= len(rinha.Classes)-1; j++ {
 			res := battle(j, 1, i, i, 10000)

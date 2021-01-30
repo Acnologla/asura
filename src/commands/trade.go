@@ -87,7 +87,7 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 			message := handler.CreateMessageCollector(msg.ChannelID, func(message *disgord.Message) bool {
 				return message.Author.ID == msg.Author.ID
 			})
-			if message == nil{
+			if message == nil {
 				return
 			}
 			i, err := strconv.Atoi(message.Content)
@@ -111,7 +111,7 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 			message = handler.CreateMessageCollector(msg.ChannelID, func(message *disgord.Message) bool {
 				return message.Author.ID == user.ID
 			})
-			if message == nil{
+			if message == nil {
 				return
 			}
 			j, err := strconv.Atoi(message.Content)
@@ -125,17 +125,18 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 			session.Channel(secondTradeMsg.ChannelID).Message(secondTradeMsg.ID).Delete()
 			secondItem := galoAdv.Items[j]
-			if rinha.Items[secondItem].Level != rinha.Items[firstItem].Level{
+			if rinha.Items[secondItem].Level != rinha.Items[firstItem].Level {
 				msg.Reply(context.Background(), session, message.Author.Mention()+", numero invalido.\nTroca cancelada")
 				return
 			}
-			galo.Items[i] = secondItem
 			galoAdv.Items[j] = firstItem
-			rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-				"items": galo.Items,
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error){
+				galo.Items[i] = secondItem				
+				return galo, nil
 			})
-			rinha.UpdateGaloDB(user.ID, map[string]interface{}{
-				"items": galoAdv.Items,
+			rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error){
+				galo.Items[j] = firstItem
+				return galo, nil
 			})
 			msg.Reply(context.Background(), session, fmt.Sprintf("%s voce trocou o item **%s** pelo item **%s** com sucesso", msg.Author.Mention(), rinha.Items[firstItem].Name, rinha.Items[secondItem].Name))
 		})

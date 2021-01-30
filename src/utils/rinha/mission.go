@@ -28,11 +28,10 @@ type Mission struct {
 func MissionsToString(id disgord.Snowflake, galo Galo) string {
 	missions := PopulateMissions(galo)
 	if len(missions) > len(galo.Missions) {
-		galo.Missions = missions
-		galo.LastMission = uint64(time.Now().Unix())
-		UpdateGaloDB(id, map[string]interface{}{
-			"lastMission": galo.LastMission,
-			"missions":    galo.Missions,
+		UpdateGaloDB(id, func(galo Galo) (Galo, error){
+			galo.Missions = missions
+			galo.LastMission = uint64(time.Now().Unix())
+			return galo, nil
 		})
 	}
 	text := ""
@@ -65,22 +64,21 @@ func RemoveMission(missions []Mission, i int) []Mission {
 }
 
 func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg *disgord.Message) {
-	tempGalo,_ := GetGaloDB(id)
+	tempGalo, _ := GetGaloDB(id)
 	galo.Missions = tempGalo.Missions
 	galo.LastMission = tempGalo.LastMission
 	if len(galo.Missions) == 3 {
-		galo.LastMission = uint64(time.Now().Unix())
-		UpdateGaloDB(id, map[string]interface{}{
-			"lastMission": galo.LastMission,
+		UpdateGaloDB(id, func(galo Galo) (Galo, error){
+			galo.LastMission = uint64(time.Now().Unix())
+			return galo, nil
 		})
 	}
 	missions := PopulateMissions(galo)
 	if len(missions) > len(galo.Missions) {
-		galo.Missions = missions
-		galo.LastMission = uint64(time.Now().Unix())
-		UpdateGaloDB(id, map[string]interface{}{
-			"lastMission": galo.LastMission,
-			"missions":    galo.Missions,
+		UpdateGaloDB(id, func(galo Galo) (Galo, error){
+			galo.Missions = missions
+			galo.LastMission = uint64(time.Now().Unix())
+			return galo, nil
 		})
 	}
 	xp := 0
@@ -133,10 +131,10 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 	}
 	if len(toRemove) > 0 {
 		text := "missão"
-		if len(toRemove) > 1{
+		if len(toRemove) > 1 {
 			text = "missoes"
 		}
-		msg.Reply(context.Background(), handler.Client, fmt.Sprintf("<@%d> voce completou **%d** %s e recebeu **%d** de money e **%d** de xp", id,len(toRemove),text ,money, xp))
+		msg.Reply(context.Background(), handler.Client, fmt.Sprintf("<@%d> voce completou **%d** %s e recebeu **%d** de money e **%d** de xp", id, len(toRemove), text, money, xp))
 	}
 	for i := len(toRemove) - 1; i >= 0; i-- {
 		galo.Missions = RemoveMission(galo.Missions, toRemove[i])
@@ -145,14 +143,16 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 }
 
 func MissionUpdate(id disgord.Snowflake, galo Galo, xp int, money int) {
-	update := map[string]interface{}{
-		"missions": galo.Missions,
-	}
+	UpdateGaloDB(id, func(gal Galo) (Galo, error){
+		gal.Missions = galo.Missions
+		if xp != 0 {
+			gal.Xp += xp
+		}
+		return galo, nil
+	})
 	if xp != 0 {
 		ChangeMoney(id, money, 0)
-		update["xp"] =  galo.Xp + xp
 	}
-	UpdateGaloDB(id,update)
 }
 
 func CreateMission(galo Galo) Mission {

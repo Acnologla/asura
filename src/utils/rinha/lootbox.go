@@ -82,29 +82,27 @@ func HaveLootbox(galo Galo, lootbox string) bool {
 	return galo.Lootbox > 0
 }
 
-func GetNewLb(lootbox string, galo Galo, add bool) (string, int) {
+func GetNewLb(lootbox string, galo Galo, add bool) (Galo) {
 	if lootbox == "comum" {
 		if add {
 			galo.CommonLootbox++
 		} else {
 			galo.CommonLootbox--
 		}
-		return "commonLootbox", galo.CommonLootbox
-	}
-	if lootbox == "rara" {
+	}else if lootbox == "rara" {
 		if add {
 			galo.RareLootbox++
 		} else {
 			galo.RareLootbox--
 		}
-		return "rareLootbox", galo.RareLootbox
+	}else{
+		if add {
+			galo.Lootbox++
+		} else {
+			galo.Lootbox--
+		}
 	}
-	if add {
-		galo.Lootbox++
-	} else {
-		galo.Lootbox--
-	}
-	return "lootbox", galo.Lootbox
+	return galo
 }
 
 func Sell(rarity Rarity, xp int) int {

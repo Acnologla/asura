@@ -9,23 +9,6 @@ type Room struct {
 	Level int  `json:"level"`
 }
 
-func Diff(galo Galo, diffGalo Galo) map[string]interface{} {
-	diff := map[string]interface{}{}
-	if galo.CommonLootbox != diffGalo.CommonLootbox {
-		diff["commonLootbox"] = diffGalo.CommonLootbox
-	}
-	if galo.Lootbox != diffGalo.Lootbox {
-		diff["lootbox"] = diffGalo.Lootbox
-	}
-	if galo.RareLootbox != diffGalo.RareLootbox {
-		diff["rareLootbox"] = diffGalo.RareLootbox
-	}
-	if len(galo.Items) != len(diffGalo.Items) {
-		diff["items"] = diffGalo.Items
-	}
-	return diff
-}
-
 func DungeonWin(level int, galo Galo) (Galo, string) {
 	value := rand.Intn(101)
 	msg := ""

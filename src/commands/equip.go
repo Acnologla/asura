@@ -63,12 +63,12 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 			if len(args) >= 2 {
 				if args[1] == "remove" || args[1] == "vender" {
 					gal := galo.Galos[value]
-					for i := value; i < len(galo.Galos)-1; i++ {
-						galo.Galos[i] = galo.Galos[i+1]
-					}
-					galo.Galos = galo.Galos[0 : len(galo.Galos)-1]
-					rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-						"galos": galo.Galos,
+					rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+						for i := value; i < len(gal.Galos)-1; i++ {
+							gal.Galos[i] = gal.Galos[i+1]
+						}
+						gal.Galos = gal.Galos[0 : len(gal.Galos)-1]
+						return gal, nil
 					})
 					price := rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp)
 					rinha.ChangeMoney(msg.Author.ID, price, 0)
@@ -83,25 +83,22 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 					return
 				}
 			}
-			newGalo := galo.Galos[value]
-			old := rinha.SubGalo{
-				Xp:   galo.Xp,
-				Type: galo.Type,
-				Name: galo.Name,
-			}
-			galo.Type = newGalo.Type
-			galo.Xp = newGalo.Xp
-			galo.Name = newGalo.Name
-			galo.Galos[value] = old
-			galo.Equipped = []int{}
-			rinha.UpdateGaloDB(msg.Author.ID, map[string]interface{}{
-				"galos":    galo.Galos,
-				"equipped": galo.Equipped,
-				"xp":       galo.Xp,
-				"type":     galo.Type,
-				"name":     galo.Name,
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+				newGalo := galo.Galos[value]
+				old := rinha.SubGalo{
+					Xp:   galo.Xp,
+					Type: galo.Type,
+					Name: galo.Name,
+				}
+				galo.Type = newGalo.Type
+				galo.Xp = newGalo.Xp
+				galo.Name = newGalo.Name
+				galo.Galos[value] = old
+				galo.Equipped = []int{}
+				msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou seu galo **%s** por **%s**", msg.Author.Mention(), rinha.Classes[old.Type].Name, rinha.Classes[galo.Type].Name))
+				return galo, nil
 			})
-			msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou seu galo **%s** por **%s**", msg.Author.Mention(), rinha.Classes[old.Type].Name, rinha.Classes[galo.Type].Name))
+
 		} else {
 			msg.Reply(context.Background(), session, "Numero invalido")
 

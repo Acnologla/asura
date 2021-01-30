@@ -68,31 +68,30 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 		extraMsg := ""
 		sold := "no"
-		if !rinha.HaveGalo(result, galo.Galos) && galo.Type != result {
-			galo.Galos = append(galo.Galos, rinha.SubGalo{
-				Type: result,
-				Xp:   0,
-			})
-		} else {
-			price := rinha.Sell(newGalo.Rarity, 0)
-			sold = "yes"
-			rinha.ChangeMoney(msg.Author.ID, price, 0)
-			extraMsg = fmt.Sprintf("\nComo voce ja tinha esse galo voce ganhou **%d** de dinheiro", price)
-		}
-		telemetry.Debug(fmt.Sprintf("%s %s", tag, newGalo.Name), map[string]string{
+		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, newGalo.Name), map[string]string{
 			"galo":     newGalo.Name,
 			"user":     strconv.FormatUint(uint64(msg.Author.ID), 10),
 			"rarity":   newGalo.Rarity.String(),
 			"lootType": lootType,
 			"sold":     sold,
 		})
-		update := map[string]interface{}{
-			"galos": galo.Galos,
-		}
+		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+			galo = rinha.GetNewLb(lootType, galo, false)
+			if !rinha.HaveGalo(result, galo.Galos) && galo.Type != result {
+				galo.Galos = append(galo.Galos, rinha.SubGalo{
+					Type: result,
+					Xp:   0,
+				})
+			} else {
+				price := rinha.Sell(newGalo.Rarity, 0)
+				sold = "yes"
+				rinha.ChangeMoney(msg.Author.ID, price, 0)
+				extraMsg = fmt.Sprintf("\nComo voce ja tinha esse galo voce ganhou **%d** de dinheiro", price)
+			}
+			return galo, nil
+		})
 		avatar, _ := msg.Author.AvatarURL(512, true)
-		newLb, value := rinha.GetNewLb(lootType, galo, false)
-		update[newLb] = value
-		rinha.UpdateGaloDB(msg.Author.ID, update)
+
 		embed := &disgord.Embed{
 			Title: "Abrindo lootbox",
 		}
@@ -147,12 +146,9 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce precisa ter %d de dinheiro para comprar uma lootbox %s, use `j!lootbox` para ver seu dinheiro", msg.Author.Mention(), price, lootType))
 			return
 		}
-		update := map[string]interface{}{
-			"galos": galo.Galos,
-		}
-		newLb, value := rinha.GetNewLb(lootType, galo, true)
-		update[newLb] = value
-		rinha.UpdateGaloDB(msg.Author.ID, update)
+		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+			return rinha.GetNewLb(lootType, galo, true), nil
+		})
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce comprou uma lootbox "+lootType+" use `j!lootbox open "+lootType+"` para abrir")
 	} else {
 		normal()

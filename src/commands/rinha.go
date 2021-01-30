@@ -114,10 +114,10 @@ func UnlockEvent(authorID disgord.Snowflake) {
 }
 
 func updateGaloWin(id disgord.Snowflake, xp int, win int) {
-	updatedGalo, _ := rinha.GetGaloDB(id)
-	rinha.UpdateGaloDB(id, map[string]interface{}{
-		"xp":  updatedGalo.Xp + xp,
-		"win": win,
+	rinha.UpdateGaloDB(id, func(galo rinha.Galo) (rinha.Galo, error){
+		galo.Xp += xp
+		galo.Win = win
+		return galo, nil
 	})
 }
 
@@ -275,8 +275,9 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 			money += 5
 			rinha.ChangeMoney(winner.ID, money, 0)
 			galoLoser.Lose++
-			rinha.UpdateGaloDB(loser.ID, map[string]interface{}{
-				"lose": galoLoser.Lose,
+			rinha.UpdateGaloDB(loser.ID, func(galo rinha.Galo) (rinha.Galo, error){
+				galo.Lose =  galoLoser.Lose
+				return galo, nil
 			})
 			galoWinner.Win++
 		}

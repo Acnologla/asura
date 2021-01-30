@@ -96,12 +96,12 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				})
 				return
 			}
-			galo.Equipped = append(galo.Equipped, skills[i])
+			rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error){
+				galo.Equipped = append(galo.Equipped, skills[i])
+				return galo, nil
+			})
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 				Content: "Voce equipou essa habilidade",
-			})
-			rinha.UpdateGaloDB(user.ID, map[string]interface{}{
-				"equipped": galo.Equipped,
 			})
 		} else if args[0] == "remove" {
 			if err != nil || i < 0 || i >= len(galo.Equipped) {
@@ -110,16 +110,16 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				})
 				return
 			}
+			rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error){
+				if len(galo.Equipped)-1 == i {
+					galo.Equipped = galo.Equipped[:i]
+				} else {
+					galo.Equipped = append(galo.Equipped[:i], galo.Equipped[i+1:]...)
+				}
+				return galo, nil
+			})
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 				Content: "Voce retirou essa habilidade",
-			})
-			if len(galo.Equipped)-1 == i {
-				galo.Equipped = galo.Equipped[:i]
-			} else {
-				galo.Equipped = append(galo.Equipped[:i], galo.Equipped[i+1:]...)
-			}
-			rinha.UpdateGaloDB(user.ID, map[string]interface{}{
-				"equipped": galo.Equipped,
 			})
 		}
 	}
