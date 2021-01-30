@@ -148,7 +148,7 @@ func MissionUpdate(id disgord.Snowflake, galo Galo, xp int, money int) {
 		if xp != 0 {
 			gal.Xp += xp
 		}
-		return galo, nil
+		return gal, nil
 	})
 	if xp != 0 {
 		ChangeMoney(id, money, 0)
