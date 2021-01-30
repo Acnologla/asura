@@ -68,13 +68,6 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 		extraMsg := ""
 		sold := "no"
-		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, newGalo.Name), map[string]string{
-			"galo":     newGalo.Name,
-			"user":     strconv.FormatUint(uint64(msg.Author.ID), 10),
-			"rarity":   newGalo.Rarity.String(),
-			"lootType": lootType,
-			"sold":     sold,
-		})
 		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 			galo = rinha.GetNewLb(lootType, galo, false)
 			if !rinha.HaveGalo(result, galo.Galos) && galo.Type != result {
@@ -85,10 +78,17 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			} else {
 				price := rinha.Sell(newGalo.Rarity, 0)
 				sold = "yes"
-				rinha.ChangeMoney(msg.Author.ID, price, 0)
+				galo.Money += price
 				extraMsg = fmt.Sprintf("\nComo voce ja tinha esse galo voce ganhou **%d** de dinheiro", price)
 			}
 			return galo, nil
+		})
+		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, newGalo.Name), map[string]string{
+			"galo":     newGalo.Name,
+			"user":     strconv.FormatUint(uint64(msg.Author.ID), 10),
+			"rarity":   newGalo.Rarity.String(),
+			"lootType": lootType,
+			"sold":     sold,
 		})
 		avatar, _ := msg.Author.AvatarURL(512, true)
 
