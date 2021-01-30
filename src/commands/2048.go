@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
-	"math/rand"
 	"strconv"
 	"time"
 )
@@ -111,7 +110,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	board := utils.MakeBoard(size)
 	for i := 0; i < 2; i++ {
-		board[rand.Intn(size)][rand.Intn(size)] = 2
+		board[utils.RandInt(size)][utils.RandInt(size)] = 2
 	}
 	lastPlay := time.Now()
 	points := 0
@@ -174,7 +173,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 								}
 							}
 							if len(empty) > 0 {
-								n := empty[rand.Intn(len(empty))]
+								n := empty[utils.RandInt(len(empty))]
 								board[n/len(board)][n%len(board)] = 2
 							}
 							msgUpdater := mes.Update()

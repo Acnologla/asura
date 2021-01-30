@@ -3,7 +3,8 @@ package rinha
 import (
 	"fmt"
 	"math"
-	"math/rand"
+	"asura/src/utils"
+
 )
 
 type Item struct {
@@ -20,7 +21,7 @@ func GetItemByLevel(level int) int {
 			itemTypearr = append(itemTypearr, item)
 		}
 	}
-	selected := itemTypearr[rand.Intn(len(itemTypearr))]
+	selected := itemTypearr[utils.RandInt(len(itemTypearr))]
 	for i, item := range Items {
 		if item.Name == selected.Name {
 			return i

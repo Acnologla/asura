@@ -1,7 +1,7 @@
 package rinha
 
 import (
-	"math/rand"
+	"asura/src/utils"
 )
 
 type Room struct {
@@ -10,7 +10,7 @@ type Room struct {
 }
 
 func DungeonWin(level int, galo Galo) (Galo, string) {
-	value := rand.Intn(101)
+	value := utils.RandInt(101)
 	msg := ""
 	if level == 0 {
 		if 3 >= value {

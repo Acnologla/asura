@@ -2,6 +2,7 @@ package rinha
 
 import (
 	"math"
+	"asura/src/utils"
 	"math/rand"
 )
 
@@ -38,7 +39,7 @@ type Round struct {
 func (round *Round) applySkillDamage(firstTurn bool) int {
 	reflected := false
 	if round.SkillId == 0 {
-		round.SkillId = round.Attacker.Equipped[rand.Intn(len(round.Attacker.Equipped))]
+		round.SkillId = round.Attacker.Equipped[utils.RandInt(len(round.Attacker.Equipped))]
 		round.Skill = Skills[round.Attacker.Galo.Type-1][round.SkillId]
 	} else {
 		reflected = true

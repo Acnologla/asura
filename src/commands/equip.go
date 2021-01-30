@@ -63,15 +63,16 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 			if len(args) >= 2 {
 				if args[1] == "remove" || args[1] == "vender" {
 					gal := galo.Galos[value]
+					var price int
 					rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 						for i := value; i < len(gal.Galos)-1; i++ {
 							gal.Galos[i] = gal.Galos[i+1]
 						}
+						price = rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp)
+						gal.Money+= price
 						gal.Galos = gal.Galos[0 : len(gal.Galos)-1]
 						return gal, nil
 					})
-					price := rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp)
-					rinha.ChangeMoney(msg.Author.ID, price, 0)
 					newGalo := rinha.Classes[gal.Type]
 					tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 					telemetry.Debug(fmt.Sprintf("%s Sell %s", tag, newGalo.Name), map[string]string{

@@ -1,7 +1,8 @@
 package rinha
 
 import (
-	"math/rand"
+	"asura/src/utils"
+
 )
 
 var lootChances = [][3]int{
@@ -12,7 +13,7 @@ var lootChances = [][3]int{
 
 func _Open(lootType int) int {
 	lootChance := lootChances[lootType]
-	value := rand.Intn(1000) + 1
+	value := utils.RandInt(1000) + 1
 	for i := len(lootChance) - 1; i >= 0; i-- {
 		randValue := lootChance[i]
 		if randValue >= value && value != 0 {
@@ -23,7 +24,7 @@ func _Open(lootType int) int {
 }
 
 func OpenRare() int {
-	value := rand.Intn(1001)
+	value := utils.RandInt(1001)
 	if 3 >= value {
 		return GetRandByType(Legendary)
 	} else if 99 >= value {
@@ -35,7 +36,7 @@ func OpenRare() int {
 }
 
 func OpenNormal() int {
-	value := rand.Intn(101)
+	value := utils.RandInt(101)
 	if 4 >= value {
 		return GetRandByType(Epic)
 	} else if 24 >= value {
@@ -45,7 +46,7 @@ func OpenNormal() int {
 }
 
 func OpenCommon() int {
-	value := rand.Intn(101)
+	value := utils.RandInt(101)
 	if 4 >= value {
 		return GetRandByType(Rare)
 	}

@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
-	"math/rand"
+	"asura/src/utils"
 	"time"
 )
 
@@ -156,8 +156,8 @@ func MissionUpdate(id disgord.Snowflake, galo Galo, xp int, money int) {
 }
 
 func CreateMission(galo Galo) Mission {
-	missionType := MissionType(rand.Intn(4))
-	level := rand.Intn(3)
+	missionType := MissionType(utils.RandInt(4))
+	level := utils.RandInt(3)
 	galoAdv := 0
 	if missionType == FightGalo || missionType == WinGalo {
 		galoAdv = GetRand()

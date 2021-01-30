@@ -10,8 +10,8 @@ import (
 	"github.com/andersfylling/disgord"
 	"io/ioutil"
 	"math"
-	"math/rand"
 	"strings"
+	"asura/src/utils"
 )
 
 type Rarity int
@@ -252,7 +252,7 @@ func Between(damage [2]int) int {
 	if damage[1] == damage[0] {
 		return damage[1]
 	}
-	return rand.Intn(damage[1]-damage[0]) + damage[0]
+	return utils.RandInt(damage[1]-damage[0]) + damage[0]
 }
 
 func GetName(username string, galo Galo) string {
@@ -263,7 +263,7 @@ func GetName(username string, galo Galo) string {
 }
 
 func GetRand() int {
-	return rand.Intn(len(Classes)-1) + 1
+	return utils.RandInt(len(Classes)-1) + 1
 }
 
 func GetRandByType(classType Rarity) int {
@@ -273,7 +273,7 @@ func GetRandByType(classType Rarity) int {
 			classTypeArr = append(classTypeArr, class)
 		}
 	}
-	selected := classTypeArr[rand.Intn(len(classTypeArr))]
+	selected := classTypeArr[utils.RandInt(len(classTypeArr))]
 	for i, class := range Classes {
 		if class.Name == selected.Name {
 			return i

@@ -6,10 +6,8 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"math/rand"
 	"sync"
 	"time"
-
 	"github.com/andersfylling/disgord"
 )
 
@@ -245,7 +243,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 		galoWinner := battle.Fighters[winnerTurn].Galo
 		galoLoser := battle.Fighters[turn].Galo
 
-		xpOb := (rand.Intn(15) + 12) - (3 * (rinha.CalcLevel(galoWinner.Xp) - rinha.CalcLevel(galoLoser.Xp)))
+		xpOb := (utils.RandInt(15) + 12) - (3 * (rinha.CalcLevel(galoWinner.Xp) - rinha.CalcLevel(galoLoser.Xp)))
 
 		if 0 > xpOb {
 			xpOb = 0

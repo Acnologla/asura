@@ -118,5 +118,17 @@
         "effect": 4,
         "level": 3,
         "payload": 1.75
+    },
+    {
+        "name": "Maldição fragilizadora",
+        "effect": 2,
+        "level": 3,
+        "payload": 32
+    },
+    {
+        "name": "Armadura da divindade",
+        "effect": 5,
+        "level": 3,
+        "payload": 0.25
     }
 ]
