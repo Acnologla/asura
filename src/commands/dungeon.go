@@ -59,10 +59,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	galoAdv := dungeon.Boss
 	LockEvent(msg.Author.ID, "Boss "+rinha.Classes[galoAdv.Type].Name)
 	defer UnlockEvent(msg.Author.ID)
-	multiplier := 1
-	if galo.DungeonReset != 0 {
-		multiplier = 2 * galo.DungeonReset
-	}
+	multiplier := 1 + galo.DungeonReset
 
 	AdvLVL := rinha.CalcLevel(galoAdv.Xp) * multiplier
 
@@ -80,7 +77,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		noItems:     true,
 	})
 	if winner == 0 {
-		if galo.DungeonReset != 0 {
+		if galo.DungeonReset != 0  && galo.Dungeon + 1 != len(rinha.Dungeon){
 			rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 				gal.Dungeon = galo.Dungeon + 1
 				gal.DungeonReset = galo.DungeonReset

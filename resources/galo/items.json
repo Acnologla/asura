@@ -130,5 +130,11 @@
         "effect": 5,
         "level": 3,
         "payload": 0.25
+    },
+    {
+        "name": "Amplificador divino",
+        "effect": 3,
+        "level": 3,
+        "payload": 0.25
     }
 ]

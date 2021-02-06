@@ -261,5 +261,45 @@
         "self": false,
         "phrase": "%s está sendo possuido! (-%d)",
         "range": [20,35]
+    },
+    {
+        "name": "Roubar vida",
+        "turns": 1,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [15,15]
+    },
+    {
+        "name": "Roubar vida",
+        "turns": 1,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [30,30]
+    },
+    {
+        "name": "Hemorragia interna",
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está sangrando! (-%d)",
+        "range": [15,25]
+    },
+    {
+        "name": "Roubar vida",
+        "turns": 1,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [40,40]
+    },
+    {
+        "name": "Roubar vida",
+        "turns": 1,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [50, 50]
     }
 ]

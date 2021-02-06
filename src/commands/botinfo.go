@@ -89,6 +89,7 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			Bot online a %d dias %d horas %d minutos
 
 			**[Convite](https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=bot&permissions=8)**
+			**[Website](https://acnologla.github.io/asura-site/)**
 			**[Servidor de suporte](https://discord.gg/tdVWQGV)**
 			`, handler.Workers, freeWorkers, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].Milliseconds(), readyAt/60/24, readyAt/60%24, readyAt%60),
 		},

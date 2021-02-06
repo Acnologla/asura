@@ -2,7 +2,9 @@ package rinha
 
 import (
 	"asura/src/database"
+	"asura/src/utils"
 	"context"
+	"time"
 	"encoding/json"
 	"errors"
 	"firebase.google.com/go/db"
@@ -11,7 +13,6 @@ import (
 	"io/ioutil"
 	"math"
 	"strings"
-	"asura/src/utils"
 )
 
 type Rarity int
@@ -86,6 +87,7 @@ type Galo struct {
 	Items        []int     `json:"items"`
 	Missions     []Mission `json:"missions"`
 	LastMission  uint64    `json:"lastMission"`
+	Vip          uint64    `json:"vip"`
 }
 
 var Dungeon []*Room
@@ -121,6 +123,13 @@ func init() {
 	json.Unmarshal([]byte(byteValueDungeon), &Dungeon)
 	byteValueItems, _ := ioutil.ReadFile("./resources/galo/items.json")
 	json.Unmarshal([]byte(byteValueItems), &Items)
+}
+
+func IsVip(galo Galo) bool{
+	if uint64(time.Now().Unix()) > galo.Vip{
+		return false
+	}
+	return true
 }
 
 func findClassIndex(class string) int {

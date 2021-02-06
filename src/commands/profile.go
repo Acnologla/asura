@@ -67,8 +67,15 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 
 	radius := 70.0
 	// Resize the images
+	
+	galo, _ := rinha.GetGaloDB(user.ID)
+	if galo.Type == 0 {
+		galoType := rinha.GetRandByType(rinha.Common)
+		galo.Type = galoType
+		rinha.SaveGaloDB(user.ID, galo)
+	}
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
-	file, err := os.Open("resources/wall.jpg")
+	file, err := os.Open(rinha.GetBackground(galo))
 
 	if err != nil {
 		return
@@ -120,13 +127,6 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.DrawString("INFO", 220, 345)
 	dc.DrawLine(220, 350, 580, 350)
 	dc.Stroke()
-
-	galo, _ := rinha.GetGaloDB(user.ID)
-	if galo.Type == 0 {
-		galoType := rinha.GetRandByType(rinha.Common)
-		galo.Type = galoType
-		rinha.SaveGaloDB(user.ID, galo)
-	}
 	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 16)
 	dc.DrawStringAnchored("WINS", 260, 380, 0.5, 0.5)
 	dc.DrawStringAnchored("LOSES", 350, 380, 0.5, 0.5)
@@ -165,7 +165,6 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 			dc.Fill()
 		}
 	}
-
 	dc.SetRGB(0.9, 0.9, 0.9)
 	for i := 0; i < 5; i++ {
 		dc.DrawRectangle(float64(220+i*75), 265, 55, 55)

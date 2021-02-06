@@ -117,5 +117,10 @@
         "name": "Demoniaco",
         "disadvantages": [],
         "rarity": 3
+    },
+    {
+        "name": "Vampirico",
+        "disadvantages": [],
+        "rarity": 2
     }
 ]

@@ -1,8 +1,8 @@
 package rinha
 
 import (
-	"math"
 	"asura/src/utils"
+	"math"
 	"math/rand"
 )
 

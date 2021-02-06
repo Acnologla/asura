@@ -26,11 +26,12 @@ func init() {
 
 func childToQuery(str string) string {
 	return map[string]string{
-		"players": "dungeonreset",
-		"money":   "money",
-		"level":   "xp",
-		"clan":    "xp",
-		"wins":    "win",
+		"players":  "dungeonreset",
+		"money":    "money",
+		"level":    "xp",
+		"clan":     "xp",
+		"vitorias": "win",
+		"derrotas": "lose",
 	}[str]
 }
 
@@ -100,8 +101,12 @@ func top(topType string, session disgord.Session) (text string) {
 				value = rinha.CalcLevel(gal.Xp)
 			}
 			if child == "win" {
-				name = "Wins"
+				name = "Vitorias"
 				value = gal.Win
+			}
+			if child == "lose" {
+				name = "Derrotas"
+				value = gal.Lose
 			}
 			text += fmt.Sprintf("[%d] - %s\n%s: %d\n", len(result)-i, username, name, value)
 		}
@@ -114,7 +119,7 @@ func runRank(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 			Content: msg.Author.Mention(),
 			Embed: &disgord.Embed{
-				Description: "Use `j!rank players` para ver os melhores jogadores\nUse `j!rank money` para ver os jogadores com mais dinheiro\nUse `j!rank clan` para ver os melhores clan\nUse `j!rank level` para ver os galos com o maior nivel\nUse `j!rank wins` para ver os jogadores com maior vitoria",
+				Description: "Use `j!rank players` para ver os melhores jogadores\nUse `j!rank money` para ver os jogadores com mais dinheiro\nUse `j!rank clan` para ver os melhores clan\nUse `j!rank level` para ver os galos com o maior nivel\nUse `j!rank vitorias` para ver os jogadores com mais vitorias\nUse `j!rank derrotas` para ver os jogadores com mais derrotas",
 				Title:       "Ranks",
 				Color:       65535,
 			},

@@ -1,10 +1,9 @@
 package rinha
 
 import (
+	"asura/src/utils"
 	"fmt"
 	"math"
-	"asura/src/utils"
-
 )
 
 type Item struct {

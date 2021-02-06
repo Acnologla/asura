@@ -130,11 +130,11 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 				return
 			}
 			galoAdv.Items[j] = firstItem
-			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error){
-				galo.Items[i] = secondItem				
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+				galo.Items[i] = secondItem
 				return galo, nil
 			})
-			rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error){
+			rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 				galo.Items[j] = firstItem
 				return galo, nil
 			})

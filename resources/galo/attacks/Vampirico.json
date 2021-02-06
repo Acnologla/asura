@@ -1,0 +1,98 @@
+[
+    {
+        "name": "Mordida",
+        "damage": [10,13],
+        "level": 1,
+        "effect": [0.5, 1]
+    },
+    {
+        "name": "Garras",
+        "damage": [20,26],
+        "level": 2
+    },
+    {
+        "name": "Roubar sangue",
+        "damage": [15,15],
+        "level": 3,
+        "effect": [1,34]
+    },
+    {
+        "name": "Manipulação sanguinea",
+        "damage": [25,30],
+        "level": 4
+    },
+    {
+        "name": "Chupada",
+        "damage": [24,35],
+        "level": 5
+    },
+    {
+        "name": "Destruidora de Cruzes",
+        "damage": [34,40],
+        "level": 7
+    },
+    {
+        "name": "Mordida Feroz",
+        "damage": [20,25],
+        "level": 9,
+        "effect": [1,7]
+    },
+    {
+        "name": "Caixão",
+        "damage": [1,2],
+        "effect": [1,14],
+        "level": 10,
+        "self": true
+    },
+    {
+        "name": "Roubo de vida",
+        "damage": [30,30],
+        "level": 12,
+        "effect": [1,35]
+    },
+    {
+        "name": "Destruição da alma",
+        "damage": [35,45],
+        "level": 13
+    },
+    {
+        "name": "Explosão sanguinea",
+        "damage": [42,50],
+        "level": 15
+    },
+    {
+        "name": "Hemorragia interna",
+        "damage": [5,15],
+        "level": 17,
+        "effect": [1,36]
+    },
+    {
+        "name": "Garras demoniacas",
+        "damage": [35,40],
+        "level": 19,
+        "effect": [1,7]
+    },
+    {
+        "name": "Espinhos sanguineos",
+        "damage": [45,55],
+        "level": 21
+    },
+    {
+        "name": "Sugar sangue",
+        "damage": [40,40],
+        "level": 23,
+        "effect": [1,37]
+    },
+    {
+        "name": "Mordida demoniaca",
+        "damage": [15, 25],
+        "level": 25,
+        "effect": [1,36]
+    },
+    {
+        "name": "Sugar vida",
+        "damage": [50, 50],
+        "level": 30,
+        "effect": [1,38]
+    }
+]

@@ -2,7 +2,6 @@ package rinha
 
 import (
 	"asura/src/utils"
-
 )
 
 var lootChances = [][3]int{
@@ -83,20 +82,20 @@ func HaveLootbox(galo Galo, lootbox string) bool {
 	return galo.Lootbox > 0
 }
 
-func GetNewLb(lootbox string, galo Galo, add bool) (Galo) {
+func GetNewLb(lootbox string, galo Galo, add bool) Galo {
 	if lootbox == "comum" {
 		if add {
 			galo.CommonLootbox++
 		} else {
 			galo.CommonLootbox--
 		}
-	}else if lootbox == "rara" {
+	} else if lootbox == "rara" {
 		if add {
 			galo.RareLootbox++
 		} else {
 			galo.RareLootbox--
 		}
-	}else{
+	} else {
 		if add {
 			galo.Lootbox++
 		} else {

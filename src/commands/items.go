@@ -60,7 +60,7 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		if value >= 0 && len(galo.Items) > value {
-			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error ) {
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 				newItem := galo.Items[value]
 				old := galo.Items[0]
 				galo.Items[0] = newItem

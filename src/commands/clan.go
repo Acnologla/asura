@@ -206,13 +206,17 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 		}
 		benefits := rinha.GetBenefits(clan.Xp)
+		maxMembers := 15
+		if level >= 3 {
+			maxMembers = 20
+		}
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title: galo.Clan,
 			Color: 65535,
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!clan invite <user> para convidar | j!clan remove <user> para remover | j!clan admin <user> para promover membros",
 			},
-			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/15):\n %s", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), memberMsg),
+			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/%d):\n %s", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), maxMembers, memberMsg),
 		})
 	}
 }

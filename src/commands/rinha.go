@@ -6,9 +6,9 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
+	"github.com/andersfylling/disgord"
 	"sync"
 	"time"
-	"github.com/andersfylling/disgord"
 )
 
 type rinhaOptions struct {
@@ -112,7 +112,7 @@ func UnlockEvent(authorID disgord.Snowflake) {
 }
 
 func updateGaloWin(id disgord.Snowflake, xp int, win int) {
-	rinha.UpdateGaloDB(id, func(galo rinha.Galo) (rinha.Galo, error){
+	rinha.UpdateGaloDB(id, func(galo rinha.Galo) (rinha.Galo, error) {
 		galo.Xp += xp
 		galo.Win = win
 		return galo, nil
@@ -273,14 +273,18 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 			money += 5
 			rinha.ChangeMoney(winner.ID, money, 0)
 			galoLoser.Lose++
-			rinha.UpdateGaloDB(loser.ID, func(galo rinha.Galo) (rinha.Galo, error){
-				galo.Lose =  galoLoser.Lose
+			rinha.UpdateGaloDB(loser.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+				galo.Lose = galoLoser.Lose
 				return galo, nil
 			})
 			galoWinner.Win++
 		}
-		if xpOb > 38 {
+		vip := rinha.IsVip(*galoWinner)
+		if xpOb > 38 && !vip {
 			xpOb = 38
+		}
+		if vip{
+			xpOb += int(xpOb / 4)
 		}
 		galoWinner.Xp += xpOb
 		updateGaloWin(winner.ID, xpOb, galoWinner.Win)

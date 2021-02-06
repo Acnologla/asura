@@ -96,7 +96,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				})
 				return
 			}
-			rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error){
+			rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 				galo.Equipped = append(galo.Equipped, skills[i])
 				return galo, nil
 			})
@@ -110,7 +110,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				})
 				return
 			}
-			rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error){
+			rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 				if len(galo.Equipped)-1 == i {
 					galo.Equipped = galo.Equipped[:i]
 				} else {

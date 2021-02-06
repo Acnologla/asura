@@ -57,7 +57,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	// Resize the images
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
 
-	file, err := os.Open("resources/wall.jpg")
+	file, err := os.Open(rinha.GetBackground(galo))
 
 	if err != nil {
 		return

@@ -2,10 +2,10 @@ package rinha
 
 import (
 	"asura/src/handler"
+	"asura/src/utils"
 	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
-	"asura/src/utils"
 	"time"
 )
 
@@ -28,7 +28,8 @@ type Mission struct {
 func MissionsToString(id disgord.Snowflake, galo Galo) string {
 	missions := PopulateMissions(galo)
 	if len(missions) > len(galo.Missions) {
-		UpdateGaloDB(id, func(galo Galo) (Galo, error){
+		galo.Missions = missions
+		UpdateGaloDB(id, func(galo Galo) (Galo, error) {
 			galo.Missions = missions
 			galo.LastMission = uint64(time.Now().Unix())
 			return galo, nil
@@ -68,14 +69,15 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 	galo.Missions = tempGalo.Missions
 	galo.LastMission = tempGalo.LastMission
 	if len(galo.Missions) == 3 {
-		UpdateGaloDB(id, func(galo Galo) (Galo, error){
+		UpdateGaloDB(id, func(galo Galo) (Galo, error) {
 			galo.LastMission = uint64(time.Now().Unix())
 			return galo, nil
 		})
 	}
 	missions := PopulateMissions(galo)
 	if len(missions) > len(galo.Missions) {
-		UpdateGaloDB(id, func(galo Galo) (Galo, error){
+		galo.Missions = missions
+		UpdateGaloDB(id, func(galo Galo) (Galo, error) {
 			galo.Missions = missions
 			galo.LastMission = uint64(time.Now().Unix())
 			return galo, nil
@@ -143,7 +145,7 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 }
 
 func MissionUpdate(id disgord.Snowflake, galo Galo, xp int, money int) {
-	UpdateGaloDB(id, func(gal Galo) (Galo, error){
+	UpdateGaloDB(id, func(gal Galo) (Galo, error) {
 		gal.Missions = galo.Missions
 		if xp != 0 {
 			gal.Xp += xp
