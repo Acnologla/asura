@@ -52,8 +52,8 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem essa lootbox\nuse j!lootbox para ver suas lootbox")
 			return
 		}
-		if len(galo.Galos) >= 7 {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce atingiu o limite maximo de galos (7) use `j!equip` para remover um galo")
+		if len(galo.Galos) >= 10 {
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce atingiu o limite maximo de galos (10) use `j!equip` para remover um galo")
 			return
 		}
 		battleMutex.RLock()

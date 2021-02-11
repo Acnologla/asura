@@ -40,6 +40,17 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		galo.Type = galoType
 		rinha.SaveGaloDB(user.ID, galo)
 	}
+	if len(args) > 0 {
+		num, err := strconv.Atoi(args[len(args)-1])
+		if err == nil {
+			if num >= 0 && len(galo.Galos)-1 >= num {
+				galo.Type = galo.Galos[num].Type
+				galo.Xp = galo.Galos[num].Xp
+				galo.Name = galo.Galos[num].Name
+				galo.Equipped = []int{}
+			}
+		}
+	}
 	skills := rinha.GetEquipedSkills(&galo)
 	avatar, err := utils.DownloadImage(rinha.Sprites[0][galo.Type-1])
 

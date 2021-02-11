@@ -4,7 +4,6 @@ import (
 	"asura/src/database"
 	"asura/src/utils"
 	"context"
-	"time"
 	"encoding/json"
 	"errors"
 	"firebase.google.com/go/db"
@@ -13,6 +12,7 @@ import (
 	"io/ioutil"
 	"math"
 	"strings"
+	"time"
 )
 
 type Rarity int
@@ -80,14 +80,16 @@ type Galo struct {
 	RareLootbox   int       `json:"rareLootbox"`
 	Galos         []SubGalo `json:"galos"`
 	Money         int       `json:"money"`
-	//	Daily         uint64     `json:"daily"`
-	Clan         string    `json:"clan"`
-	Dungeon      int       `json:"dungeon"`
-	DungeonReset int       `json:"dungeonreset"`
-	Items        []int     `json:"items"`
-	Missions     []Mission `json:"missions"`
-	LastMission  uint64    `json:"lastMission"`
-	Vip          uint64    `json:"vip"`
+	Clan            string    `json:"clan"`
+	Dungeon         int       `json:"dungeon"`
+	DungeonReset    int       `json:"dungeonreset"`
+	Items           []int     `json:"items"`
+	Missions        []Mission `json:"missions"`
+	LastMission     uint64    `json:"lastMission"`
+	Vip             uint64    `json:"vip"`
+	Cosmetics       []int     `json:"cosmetics"`
+	Background      int       `json:"background"`
+	CosmeticLootbox int       `json:"cosmeticLootbox"`
 }
 
 var Dungeon []*Room
@@ -96,6 +98,7 @@ var Effects []*Effect
 var Classes []*Class
 var Skills []([]*Skill)
 var Sprites [][]string
+var Cosmetics []*Cosmestic
 
 func init() {
 
@@ -123,10 +126,12 @@ func init() {
 	json.Unmarshal([]byte(byteValueDungeon), &Dungeon)
 	byteValueItems, _ := ioutil.ReadFile("./resources/galo/items.json")
 	json.Unmarshal([]byte(byteValueItems), &Items)
+	byteValueCosmetics, _ := ioutil.ReadFile("./resources/galo/cosmetics.json")
+	json.Unmarshal([]byte(byteValueCosmetics), &Cosmetics)
 }
 
-func IsVip(galo Galo) bool{
-	if uint64(time.Now().Unix()) > galo.Vip{
+func IsVip(galo Galo) bool {
+	if uint64(time.Now().Unix()) > galo.Vip {
 		return false
 	}
 	return true

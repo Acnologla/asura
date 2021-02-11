@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+func IsNumber(text string) bool {
+	_, err := strconv.Atoi(text)
+	return err == nil
+}
+
 func StringToID(id string) disgord.Snowflake {
 	converted, err := strconv.Atoi(id)
 	if err == nil && converted >= 0 {
@@ -34,7 +39,7 @@ func GetUser(msg *disgord.Message, args []string, session disgord.Session) *disg
 		user, err := session.User(converted).Get()
 		if err == nil && converted != 0 {
 			return user
-		} else {
+		} else if !IsNumber(args[0]) {
 			members, err := session.Guild(msg.GuildID).GetMembers(&disgord.GetMembersParams{
 				Limit: 0,
 			})

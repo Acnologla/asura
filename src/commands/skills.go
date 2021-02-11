@@ -64,7 +64,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 	} else {
 		if len(args) == 1 {
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
-				Content: "Voce esta usando errado bob lolo",
+				Content: "Use 'j!skills use [numero_da_skill]' por exemplo 'j!skills use 1' para equipar ou 'j!skills remove [skill]' para retirar uma!",
 			})
 			return
 		}

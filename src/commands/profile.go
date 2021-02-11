@@ -67,7 +67,7 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 
 	radius := 70.0
 	// Resize the images
-	
+
 	galo, _ := rinha.GetGaloDB(user.ID)
 	if galo.Type == 0 {
 		galoType := rinha.GetRandByType(rinha.Common)

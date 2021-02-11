@@ -283,7 +283,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 		if xpOb > 38 && !vip {
 			xpOb = 38
 		}
-		if vip{
+		if vip {
 			xpOb += int(xpOb / 4)
 		}
 		galoWinner.Xp += xpOb
