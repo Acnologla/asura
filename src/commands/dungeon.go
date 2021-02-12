@@ -74,7 +74,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		advName:     "Boss " + rinha.Classes[galoAdv.Type].Name,
 		authorLevel: rinha.CalcLevel(galo.Xp),
 		advLevel:    AdvLVL,
-		noItems:     galo.DungeonReset >= 2,
+		noItems:     2 > galo.DungeonReset,
 	})
 	if winner == 0 {
 		if galo.DungeonReset != 0 && galo.Dungeon+1 != len(rinha.Dungeon) {
