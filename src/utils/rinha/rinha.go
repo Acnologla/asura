@@ -69,17 +69,17 @@ type SubGalo struct {
 }
 
 type Galo struct {
-	Name          string    `json:"name"`
-	Xp            int       `json:"xp"`
-	Type          int       `json:"type"`
-	Equipped      []int     `json:"equipped"`
-	Win           int       `json:"win"`
-	Lose          int       `json:"lose"`
-	Lootbox       int       `json:"lootbox"`
-	CommonLootbox int       `json:"commonLootbox"`
-	RareLootbox   int       `json:"rareLootbox"`
-	Galos         []SubGalo `json:"galos"`
-	Money         int       `json:"money"`
+	Name            string    `json:"name"`
+	Xp              int       `json:"xp"`
+	Type            int       `json:"type"`
+	Equipped        []int     `json:"equipped"`
+	Win             int       `json:"win"`
+	Lose            int       `json:"lose"`
+	Lootbox         int       `json:"lootbox"`
+	CommonLootbox   int       `json:"commonLootbox"`
+	RareLootbox     int       `json:"rareLootbox"`
+	Galos           []SubGalo `json:"galos"`
+	Money           int       `json:"money"`
 	Clan            string    `json:"clan"`
 	Dungeon         int       `json:"dungeon"`
 	DungeonReset    int       `json:"dungeonreset"`
@@ -98,7 +98,7 @@ var Effects []*Effect
 var Classes []*Class
 var Skills []([]*Skill)
 var Sprites [][]string
-var Cosmetics []*Cosmestic
+var Cosmetics []*Cosmetic
 
 func init() {
 

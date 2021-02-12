@@ -1,3 +1,72 @@
 [
-    
+    {
+        "name": "BugError404NotE E E BOOM",
+        "rarity": -1
+    },
+    {
+        "rarity": 4,
+        "type": 0,
+        "name": "Vip background",
+        "value": "https://i.imgur.com/gwN9sPo.jpg"
+    },
+    {
+        "rarity": 0,
+        "type": 0,
+        "name": "City background",
+        "value": "https://i.imgur.com/DDXPbjt.jpg"
+    },
+    {
+        "rarity": 0,
+        "type": 0,
+        "name": "Balcony background",
+        "value": "https://i.pinimg.com/originals/d2/69/10/d269108846af5268a9c8765309e65886.jpg"
+    },
+    {
+        "rarity": 0,
+        "type": 0,
+        "name": "Stairs background",
+        "value": "https://i.imgur.com/M1l6pIq.jpg"
+    },
+    {
+        "rarity": 0,
+        "type": 0,
+        "name": "Forest background",
+        "value": "https://i.imgur.com/TmIHeIr.jpg"
+    },
+    {
+        "rarity": 1,
+        "type": 0,
+        "name": "Sky background",
+        "value": "https://swall.teahub.io/photos/small/17-179110_anime-landscape.jpg"
+    },
+    {
+        "rarity": 1,
+        "type": 0,
+        "name": "Tree background",
+        "value": "https://i.imgur.com/gkGyBbe.png"
+    },
+    {
+        "rarity": 1,
+        "type": 0,
+        "name": "Moon background",
+        "value": "https://i.imgur.com/Q8FstHw.jpgg"
+    },
+    {
+        "rarity": 2,
+        "type": 0,
+        "name": "Ocean background",
+        "value": "https://i.imgur.com/EFCZwS8.jpg"
+    },
+    {
+        "rarity": 2,
+        "type": 0,
+        "name": "Cloud background",
+        "value": "https://i.imgur.com/GmHGzv8.jpg"
+    },
+    {
+        "rarity": 3,
+        "type": 0,
+        "name": "Explosion background",
+        "value": "https://i.imgur.com/QOdKYPx.jpg"
+    }
 ]

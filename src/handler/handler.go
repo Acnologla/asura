@@ -13,7 +13,9 @@ import (
 	"time"
 )
 
-const Workers = 128
+const BaseWorkers = 128
+
+var Workers = BaseWorkers
 
 var DevMod = false
 var DevIds = []disgord.Snowflake{365948625676795904, 395542409959964672, 364614407721844737}
@@ -27,7 +29,7 @@ func isDev(id disgord.Snowflake) bool {
 	return false
 }
 
-var WorkersArray = [Workers]bool{}
+var WorkersArray = make([]bool, Workers)
 
 // A struct that stores the information of a single "command" of the bot
 type Command struct {
@@ -191,10 +193,24 @@ func OnMessageUpdate(old *disgord.Message, new *disgord.Message) {
 
 func Worker(id int) {
 	for msg := range CommandChannel {
+		if id >= len(WorkersArray) {
+			handleCommand(Client, msg)
+			return
+		}
 		WorkersArray[id] = true
 		handleCommand(Client, msg)
 		WorkersArray[id] = false
 	}
+}
+
+func GetFreeWorkers() int {
+	freeWorkers := 0
+	for _, worker := range WorkersArray {
+		if !worker {
+			freeWorkers++
+		}
+	}
+	return freeWorkers
 }
 
 func init() {
@@ -204,4 +220,24 @@ func init() {
 	for i := 0; i < Workers; i++ {
 		go Worker(i)
 	}
+	go func() {
+		for {
+			time.Sleep(time.Minute * 10)
+			freeWorkers := GetFreeWorkers()
+			if int(Workers/5) >= freeWorkers {
+				telemetry.Debug("Added workers...", map[string]string{})
+				num := int(Workers / 2)
+				WorkersArray = append(WorkersArray, make([]bool, num)...)
+				for i := 0; i < num; i++ {
+					go Worker(Workers + i)
+				}
+				Workers += num
+			} else if Workers != BaseWorkers && (freeWorkers*100)/Workers >= 80 {
+				num := int(Workers / 3)
+				WorkersArray = WorkersArray[:Workers-num]
+				Workers -= num
+				telemetry.Debug("Removed extra workers...", map[string]string{})
+			}
+		}
+	}()
 }

@@ -10,10 +10,8 @@ import (
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
-	"image/jpeg"
 	"image/png"
 	"io"
-	"os"
 	"strconv"
 )
 
@@ -22,7 +20,7 @@ func init() {
 		Aliases:   []string{"galo", "galolevel", "meugalo"},
 		Run:       runGalo,
 		Available: true,
-		Cooldown:  7,
+		Cooldown:  8,
 		Usage:     "j!galo",
 		Help:      "Informação sobre seu galo",
 		Category:  1,
@@ -68,19 +66,11 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	// Resize the images
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
 
-	file, err := os.Open(rinha.GetBackground(galo))
-
+	img, err := utils.DownloadImage(rinha.GetBackground(galo))
 	if err != nil {
 		return
 	}
-
-	defer file.Close()
-	img, err := jpeg.Decode(file)
-
-	if err != nil {
-		return
-	}
-
+	img = resize.Resize(320, 200, img, resize.Lanczos3)
 	dc := gg.NewContext(320, 450)
 
 	dc.DrawRoundedRectangle(0, 0, 320, 630, 10)

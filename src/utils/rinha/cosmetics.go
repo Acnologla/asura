@@ -1,25 +1,68 @@
 package rinha
 
-import "fmt"
-
-type CosmesticType int
-
-const (
-	Background CosmesticType = iota
+import (
+	"asura/src/utils"
+	"fmt"
 )
 
-type Cosmestic struct {
-	Type   CosmesticType
-	Name   string
-	Value  string
-	Rarity Rarity
+type CosmeticType int
+
+const (
+	Background CosmeticType = iota
+)
+
+type Cosmetic struct {
+	Type   CosmeticType `json:"type"`
+	Name   string       `json:"name"`
+	Value  string       `json:"value"`
+	Rarity Rarity       `json:"rarity"`
 }
 
-func (cosmetic Cosmestic) TypeToString() string {
+func (cosmetic Cosmetic) TypeToString() string {
 	return [...]string{"Background"}[cosmetic.Type]
 }
 
-func (cosmetic Cosmestic) String() string {
+func (cosmetic Cosmetic) String() string {
 	cosmeticType := cosmetic.TypeToString()
 	return fmt.Sprintf("(%s) - %s %s", cosmetic.Rarity.String(), cosmeticType, cosmetic.Name)
+}
+
+func GetCosmeticRandByType(rarity Rarity) int {
+	cosmeticArr := []*Cosmetic{}
+	for _, cosmetic := range Cosmetics {
+		if cosmetic.Rarity == rarity {
+			cosmeticArr = append(cosmeticArr, cosmetic)
+		}
+	}
+	selected := cosmeticArr[utils.RandInt(len(cosmeticArr))]
+	for i, cosmetic := range Cosmetics {
+		if cosmetic.Name == selected.Name {
+			return i
+		}
+	}
+	return -1
+
+}
+
+func OpenCosmetic() int {
+	value := utils.RandInt(1001)
+	if 10 >= value {
+		return GetCosmeticRandByType(Legendary)
+	} else if 110 >= value {
+		return GetCosmeticRandByType(Epic)
+	} else if 460 >= value {
+		return GetCosmeticRandByType(Rare)
+	}
+	return GetCosmeticRandByType(Common)
+}
+
+func GetRandCosmetic() int {
+	return utils.RandInt(len(Cosmetics)-1) + 1
+}
+
+func CosmeticCommand(cosmetic Cosmetic) string {
+	if cosmetic.Type == Background {
+		return "Use j!background para equipar o background"
+	}
+	return ""
 }

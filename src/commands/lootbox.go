@@ -31,7 +31,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title:       "Lootbox",
 			Color:       65535,
-			Description: fmt.Sprintf("Money: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 Gold)", galo.Money, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox),
+			Description: fmt.Sprintf("Money: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n[500] Lootbox cosmetica: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 Gold)", galo.Money, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox, galo.CosmeticLootbox),
 		})
 	}
 	if len(args) == 0 {
@@ -44,7 +44,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		lootType := strings.ToLower(args[1])
-		if lootType != "comum" && lootType != "rara" && lootType != "normal" {
+		if lootType != "comum" && lootType != "rara" && lootType != "normal" && lootType != "cosmetica" {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Tipo de caixa invalido, use j!lootbox para ver os tipos")
 			return
 		}
@@ -52,7 +52,8 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem essa lootbox\nuse j!lootbox para ver suas lootbox")
 			return
 		}
-		if len(galo.Galos) >= 10 {
+		isCosmetic := lootType == "cosmetica"
+		if len(galo.Galos) >= 10 && !isCosmetic {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce atingiu o limite maximo de galos (10) use `j!equip` para remover um galo")
 			return
 		}
@@ -64,6 +65,49 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		battleMutex.RUnlock()
 		result := rinha.Open(lootType)
+		avatar, _ := msg.Author.AvatarURL(512, true)
+		embed := &disgord.Embed{
+			Title: "Abrindo lootbox",
+		}
+		if isCosmetic {
+			newCosmetic := rinha.Cosmetics[result]
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+				galo = rinha.GetNewLb(lootType, galo, false)
+				if !rinha.IsIntInList(result, galo.Cosmetics) {
+					galo.Cosmetics = append(galo.Cosmetics, result)
+				}
+				return galo, nil
+			})
+			message, err := msg.Reply(context.Background(), session, embed)
+			if err == nil {
+				embed.Description = "Selecionando cosmetico..."
+				for i := 0; i < 6; i++ {
+					rand := rinha.GetRandCosmetic()
+					if i == 5 {
+						embed.Title = "Lootbox open"
+						rand = result
+						embed.Description = "Voce abriu uma lootbox " + lootType + " e ganhou o cosmetico **" + newCosmetic.Name + "**\nRaridade: " + newCosmetic.Rarity.String()
+						embed.Footer = &disgord.EmbedFooter{
+							IconURL: avatar,
+							Text:    rinha.CosmeticCommand(*newCosmetic),
+						}
+					}
+					randCosmetic := rinha.Cosmetics[rand]
+					embed.Color = randCosmetic.Rarity.Color()
+					embed.Image = &disgord.EmbedImage{
+						URL: randCosmetic.Value,
+					}
+					utils.Try(func() error {
+						msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).Update()
+						msgUpdater.SetEmbed(embed)
+						_, err := msgUpdater.Execute()
+						return err
+					}, 3)
+					time.Sleep(time.Millisecond * 3500)
+				}
+			}
+			return
+		}
 		newGalo := rinha.Classes[result]
 		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 		extraMsg := ""
@@ -90,11 +134,6 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			"lootType": lootType,
 			"sold":     sold,
 		})
-		avatar, _ := msg.Author.AvatarURL(512, true)
-
-		embed := &disgord.Embed{
-			Title: "Abrindo lootbox",
-		}
 		message, err := msg.Reply(context.Background(), session, embed)
 		if err == nil {
 			embed.Description = "Selecionando galo..."
@@ -129,7 +168,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		lootType := strings.ToLower(args[1])
-		if lootType != "comum" && lootType != "rara" && lootType != "normal" {
+		if lootType != "comum" && lootType != "rara" && lootType != "normal" && lootType != "cosmetica" {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Tipo de caixa invalido, use j!lootbox para ver os tipos")
 			return
 		}

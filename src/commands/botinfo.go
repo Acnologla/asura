@@ -64,12 +64,7 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	avatar, _ := myself.AvatarURL(512, true)
 	date := ((uint64(myself.ID) >> 22) + 1420070400000) / 1000
 	readyAt := int(time.Since(handler.ReadyAt).Minutes())
-	freeWorkers := 0
-	for _, worker := range handler.WorkersArray {
-		if !worker {
-			freeWorkers++
-		}
-	}
+	freeWorkers := handler.GetFreeWorkers()
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
 			Title: "Asura",

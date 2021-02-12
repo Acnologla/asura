@@ -59,6 +59,9 @@ func Open(lootType string) int {
 	if lootType == "rara" {
 		return OpenRare()
 	}
+	if lootType == "cosmetica" {
+		return OpenCosmetic()
+	}
 	return OpenNormal()
 }
 
@@ -69,6 +72,9 @@ func GetPrice(lootType string) int {
 	if lootType == "rara" {
 		return 800
 	}
+	if lootType == "cosmetica" {
+		return 500
+	}
 	return 400
 }
 
@@ -78,6 +84,9 @@ func HaveLootbox(galo Galo, lootbox string) bool {
 	}
 	if lootbox == "rara" {
 		return galo.RareLootbox > 0
+	}
+	if lootbox == "cosmetica" {
+		return galo.CosmeticLootbox > 0
 	}
 	return galo.Lootbox > 0
 }
@@ -94,6 +103,12 @@ func GetNewLb(lootbox string, galo Galo, add bool) Galo {
 			galo.RareLootbox++
 		} else {
 			galo.RareLootbox--
+		}
+	} else if lootbox == "cosmetica" {
+		if add {
+			galo.CosmeticLootbox++
+		} else {
+			galo.CosmeticLootbox--
 		}
 	} else {
 		if add {

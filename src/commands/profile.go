@@ -12,10 +12,8 @@ import (
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
 	"image"
-	"image/jpeg"
 	"image/png"
 	"io"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -33,7 +31,7 @@ func init() {
 		Aliases:   []string{"perfil", "profile"},
 		Run:       runProfile,
 		Available: true,
-		Cooldown:  10,
+		Cooldown:  12,
 		Usage:     "j!profile @user",
 		Help:      "Veja o perfil",
 		Category:  1,
@@ -75,17 +73,11 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 		rinha.SaveGaloDB(user.ID, galo)
 	}
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
-	file, err := os.Open(rinha.GetBackground(galo))
-
+	img, err := utils.DownloadImage(rinha.GetBackground(galo))
 	if err != nil {
 		return
 	}
-	defer file.Close()
-	img, err := jpeg.Decode(file)
-
-	if err != nil {
-		return
-	}
+	img = resize.Resize(600, 250, img, resize.Lanczos3)
 	dc := gg.NewContext(600, 430)
 
 	dc.DrawRoundedRectangle(0, 0, 600, 430, 10)
