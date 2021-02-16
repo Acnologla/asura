@@ -8,6 +8,7 @@ import (
 	"github.com/andersfylling/disgord"
 	"os"
 	"strconv"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -115,10 +116,9 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 		fmt.Printf("Unable to get current user info")
 		return
 	}
-
-	botMention := fmt.Sprintf("<@!%d> ", uint64(myself.ID))
-	onlyBotMention := fmt.Sprintf("<@!%d>", uint64(myself.ID))
-	if strings.HasPrefix(strings.ToLower(msg.Content), "j!") || strings.HasPrefix(strings.ToLower(msg.Content), "asura ") || strings.HasPrefix(msg.Content, botMention) {
+	onlyBotMention := regexp.MustCompile(fmt.Sprintf(`<@(\!?)%d>`, uint64(myself.ID)))
+	botMention := onlyBotMention.FindString(msg.Content)
+	if strings.HasPrefix(strings.ToLower(msg.Content), "j!") || strings.HasPrefix(strings.ToLower(msg.Content), "asura ") || (botMention != "" && strings.HasPrefix(msg.Content, botMention)) {
 		// I dont know if it's efficient but this is the easiest way to remove one of the three prefixes from the command.
 		var raw string
 		switch {
@@ -132,6 +132,9 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 		}
 		splited := strings.Fields(raw)
 		if len(splited) == 0 {
+			if strings.HasPrefix(msg.Content, botMention){
+				msg.Reply(context.Background(), session, msg.Author.Mention()+", Meu prefix é **j!** use j!comandos para ver meus comandos")
+			}
 			return
 		}
 		command := strings.ToLower(splited[0])
@@ -173,9 +176,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 			Client.Channel(msg.ChannelID).TriggerTypingIndicator()
 			realCommand.Run(session, msg, args)
 		}
-	} else if strings.HasPrefix(msg.Content, onlyBotMention) {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Meu prefix é **j!** use j!comandos para ver meus comandos")
-	}
+	} 
 }
 
 //Handles messages and call the functions that they have to execute.
