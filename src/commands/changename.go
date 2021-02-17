@@ -31,13 +31,18 @@ func runChangeName(session disgord.Session, msg *disgord.Message, args []string)
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", O nome do seu galo deve ter entre 3 e 25 caracteres")
 		return
 	}
-	err := rinha.ChangeMoney(msg.Author.ID, -100, 100)
+	price := 100
+	galo, _ := rinha.GetGaloDB(msg.Author.ID)
+	if rinha.IsVip(galo) {
+		price = 0
+	}
+	err := rinha.ChangeMoney(msg.Author.ID, -price, price)
 	if err == nil {
 		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 			gal.Name = text
 			return gal, nil
 		})
-		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou o nome do seu galo para `%s` com sucesso\nCustou 100 de dinheiro", msg.Author.Mention(), text))
+		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou o nome do seu galo para `%s` com sucesso\nCustou %d de dinheiro", msg.Author.Mention(), text, price))
 	} else {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa ter 100 de dinheiro para trocar o nome do seu galo\nUse j!lootbox para ver seu dinheiro")
 		return

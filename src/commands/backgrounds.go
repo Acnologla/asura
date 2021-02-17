@@ -25,13 +25,13 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	if len(args) == 0 {
 		text := ""
-		if galo.Background == 0 {
+		bgs, indexes := rinha.GetBackgrounds(galo.Cosmetics)
+		if len(bgs) == 0 {
 			text = "Background equipado: **padrão**\n\n"
 		} else {
-			equippedBg := rinha.Cosmetics[galo.Background]
+			equippedBg := rinha.Cosmetics[galo.Cosmetics[galo.Background]]
 			text = fmt.Sprintf("Background equipado: **%s** (%s)\n\n", equippedBg.Name, equippedBg.Rarity.String())
 		}
-		bgs, indexes := rinha.GetBackgrounds(galo.Cosmetics)
 		for i, background := range bgs {
 			text += fmt.Sprintf("[%d] - %s (Raridade: **%s**) \n", indexes[i], background.Name, background.Rarity.String())
 		}
@@ -64,8 +64,8 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 		_, indexes := rinha.GetBackgrounds(galo.Cosmetics)
 		if rinha.IsIntInList(value, indexes) {
 			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
-				galo.Background = galo.Cosmetics[value]
-				msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce equipou o background **%s**", msg.Author.Mention(), rinha.Cosmetics[galo.Background].Name))
+				galo.Background = value
+				msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce equipou o background **%s**", msg.Author.Mention(), rinha.Cosmetics[galo.Cosmetics[galo.Background]].Name))
 				return galo, nil
 			})
 		} else {

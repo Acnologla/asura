@@ -265,7 +265,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 				if level >= 5 {
 					money += 3
 				}
-				rinha.AddClanXp(galoWinner.Clan, winner.ID, 1)
+				go rinha.CompleteClanMission(galoWinner.Clan, winner.ID)
 				clanMsg = "\nGanhou **1** de xp para seu clan"
 			}
 		}
@@ -279,6 +279,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 			})
 			galoWinner.Win++
 		}
+
 		vip := rinha.IsVip(*galoWinner)
 		if xpOb > 38 && !vip {
 			xpOb = 38

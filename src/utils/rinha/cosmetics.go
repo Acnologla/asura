@@ -46,9 +46,9 @@ func GetCosmeticRandByType(rarity Rarity) int {
 
 func OpenCosmetic() int {
 	value := utils.RandInt(1001)
-	if 10 >= value {
+	if 15 >= value {
 		return GetCosmeticRandByType(Legendary)
-	} else if 110 >= value {
+	} else if 120 >= value {
 		return GetCosmeticRandByType(Epic)
 	} else if 460 >= value {
 		return GetCosmeticRandByType(Rare)

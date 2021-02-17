@@ -41,7 +41,7 @@ func runVip(session disgord.Session, msg *disgord.Message, args []string) {
 	rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 		vipTime = uint64(months * 30 * 24 * 60 * 60)
 		galo.Vip = uint64(time.Now().Unix()) + vipTime
-		if !rinha.IsIntInList(1, galo.Cosmetics){
+		if !rinha.IsIntInList(1, galo.Cosmetics) {
 			galo.Cosmetics = append(galo.Cosmetics, 1)
 		}
 		return galo, nil

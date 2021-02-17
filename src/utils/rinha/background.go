@@ -1,8 +1,9 @@
 package rinha
 
 func GetBackground(galo Galo) string {
-	if galo.Background != 0 {
-		return Cosmetics[galo.Background].Value
+	bgs, _ := GetBackgrounds(galo.Cosmetics)
+	if len(bgs) != 0 {
+		return Cosmetics[galo.Cosmetics[galo.Background]].Value
 	}
 	return "https://i.imgur.com/F64ybgg.jpg"
 }

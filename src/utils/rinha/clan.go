@@ -32,9 +32,11 @@ type ClanMember struct {
 }
 
 type Clan struct {
-	Xp        int          `json:"xp"`
-	CreatedAt uint64       `json:"createdAt"`
-	Members   []ClanMember `json:"members"`
+	Xp              int          `json:"xp"`
+	CreatedAt       uint64       `json:"createdAt"`
+	Members         []ClanMember `json:"members"`
+	Mission         uint64       `json:"mission"`
+	MissionProgress int          `json:"missionProgress"`
 }
 
 func GetClan(name string) Clan {
@@ -96,10 +98,18 @@ func DeleteClan(clan string) {
 	database.Database.NewRef("clan/" + clan).Delete(context.Background())
 }
 
-func UpdateClan(clan string, update map[string]interface{}) {
-	database.Database.NewRef("clan/"+clan).Update(context.Background(), update)
+func UpdateClan(clan string, callback func(clan Clan) (Clan, error)) {
+	fn := func(tn db.TransactionNode) (interface{}, error) {
+		var clan Clan
+		err := tn.Unmarshal(&clan)
+		if err == nil {
+			return callback(clan)
+		}
+		fmt.Println("UpdateClan transaction error\n", err)
+		return nil, err
+	}
+	database.Database.NewRef("clan/"+clan).Transaction(context.Background(), fn)
 }
-
 func FindMemberIndex(clan Clan, memberID disgord.Snowflake) int {
 	for i, member := range clan.Members {
 		if member.ID == uint64(memberID) {
@@ -156,23 +166,56 @@ func includesString(strOne rune, strTwo string) bool {
 	return false
 }
 
-func AddClanXp(clan string, id disgord.Snowflake, xp int) {
-	fn := func(tn db.TransactionNode) (interface{}, error) {
-		var clan Clan
-		err := tn.Unmarshal(&clan)
-		if err == nil {
-			clan.Xp += xp
-			for i, member := range clan.Members {
-				if member.ID == uint64(id) {
-					member.Xp += uint(xp)
-					clan.Members[i] = member
-					break
+func PopulateClanMissions(clan Clan, name string, save bool) Clan {
+	if uint64((uint64(time.Now().Unix())-clan.Mission)/60/60/24) >= 7 {
+		clan.Mission = uint64(time.Now().Unix())
+		clan.MissionProgress = 0
+		if save {
+			UpdateClan(name, func(clanUpdate Clan) (Clan, error) {
+				clanUpdate.Mission = clan.Mission
+				clanUpdate.MissionProgress = clan.MissionProgress
+				return clanUpdate, nil
+			})
+		}
+	}
+	return clan
+}
+
+func MissionToString(clan Clan) string {
+	done := clan.MissionProgress >= 500
+	if done {
+		need := uint64(time.Now().Unix()) - clan.Mission
+		return fmt.Sprintf("Espere mais %d dias e %d horas para seu clan receber uma nova missão", 6-(need/60/60/24), 23-(need/60/60%24))
+	} else {
+		return fmt.Sprintf("Derrote %d/500 galos na rinha\nMoney: **120**\nXp: **420**", clan.MissionProgress)
+	}
+}
+
+func CompleteClanMission(clanName string, id disgord.Snowflake) {
+	UpdateClan(clanName, func(clan Clan) (Clan, error) {
+		clan = PopulateClanMissions(clan, clanName, false)
+		clan.Xp++
+		for i, member := range clan.Members {
+			if member.ID == uint64(id) {
+				member.Xp++
+				clan.Members[i] = member
+				break
+			}
+		}
+		done := clan.MissionProgress >= 500
+		if !done {
+			clan.MissionProgress++
+			if clan.MissionProgress >= 500 {
+				for _, member := range clan.Members {
+					UpdateGaloDB(disgord.Snowflake(member.ID), func(galo Galo) (Galo, error) {
+						galo.Xp += 420
+						galo.Money += 120
+						return galo, nil
+					})
 				}
 			}
-			return clan, nil
 		}
-		fmt.Println(err)
-		return nil, err
-	}
-	database.Database.NewRef("clan/"+clan).Transaction(context.Background(), fn)
+		return clan, nil
+	})
+
 }

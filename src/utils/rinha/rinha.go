@@ -88,7 +88,7 @@ type Galo struct {
 	LastMission     uint64    `json:"lastMission"`
 	Vip             uint64    `json:"vip"`
 	Cosmetics       []int     `json:"cosmetics"`
-	Background      int       `json:"background"`
+	Background      int       `json:"bg"`
 	CosmeticLootbox int       `json:"cosmeticLootbox"`
 }
 
@@ -185,7 +185,7 @@ func ChangeMoney(id disgord.Snowflake, money int, onlyIf int) error {
 			}
 			return nil, errors.New("Dont have money")
 		}
-		fmt.Println(err)
+		fmt.Println("ChangeMoney transaction error\n", err)
 		return nil, err
 	}
 	return database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Transaction(context.Background(), fn)
@@ -198,7 +198,7 @@ func UpdateGaloDB(id disgord.Snowflake, callback func(galo Galo) (Galo, error)) 
 		if err == nil {
 			return callback(galo)
 		}
-		fmt.Println(err)
+		fmt.Println("UpdateGaloDB transaction error\n", err)
 		return nil, err
 	}
 	database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Transaction(context.Background(), fn)

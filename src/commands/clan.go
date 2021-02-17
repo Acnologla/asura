@@ -74,14 +74,24 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				if role.Role == rinha.Owner {
 					members[0].Role = rinha.Owner
 				}
-				rinha.UpdateClan(galo.Clan, map[string]interface{}{
-					"members": members,
+				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
+					clan.Members = members
+					return clan, nil
 				})
 				rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 					gal.Clan = ""
 					return gal, nil
 				})
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce saiu do clan **"+galo.Clan+"** com sucesso")
+				return
+			}
+			if strings.ToLower(args[0]) == "missao" || strings.ToLower(args[0]) == "missão" {
+				clan = rinha.PopulateClanMissions(clan, galo.Clan, true)
+				msg.Reply(context.Background(), session, &disgord.Embed{
+					Title:       "Clan missão",
+					Color:       65535,
+					Description: rinha.MissionToString(clan),
+				})
 				return
 			}
 		}
@@ -133,8 +143,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 							ID:   uint64(user.ID),
 							Role: rinha.Member,
 						})
-						rinha.UpdateClan(galo.Clan, map[string]interface{}{
-							"members": clan.Members,
+						rinha.UpdateClan(galo.Clan, func(clanUpdate rinha.Clan) (rinha.Clan, error) {
+							clanUpdate.Members = clan.Members
+							return clanUpdate, nil
 						})
 						rinha.UpdateGaloDB(user.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 							gal.Clan = galo.Clan
@@ -160,8 +171,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					return
 				}
 				members := rinha.PromoteMember(clan, user.ID)
-				rinha.UpdateClan(galo.Clan, map[string]interface{}{
-					"members": members,
+				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
+					clan.Members = members
+					return clan, nil
 				})
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", O usuario **"+user.Username+"** foi promovido com sucesso")
 				return
@@ -186,8 +198,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					return
 				}
 				members := rinha.RemoveMember(clan, user.ID)
-				rinha.UpdateClan(galo.Clan, map[string]interface{}{
-					"members": members,
+				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
+					clan.Members = members
+					return clan, nil
 				})
 				rinha.UpdateGaloDB(user.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 					gal.Clan = ""
@@ -216,7 +229,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!clan invite <user> para convidar | j!clan remove <user> para remover | j!clan admin <user> para promover membros",
 			},
-			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/%d):\n %s", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), maxMembers, memberMsg),
+			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/%d):\n %s\nUse **j!clan missao** para ver a missão semanal do clan", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), maxMembers, memberMsg),
 		})
 	}
 }
