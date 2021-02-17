@@ -68,5 +68,41 @@
         "type": 0,
         "name": "Explosion background",
         "value": "https://i.imgur.com/QOdKYPx.jpg"
+    },
+    {
+        "rarity": 0,
+        "type": 0,
+        "name": "Grass background",
+        "value": "https://i.imgur.com/RffgI9r.png"
+    },
+    {
+        "rarity": 0,
+        "type": 0,
+        "name": "BlackSky background",
+        "value": "https://i.imgur.com/DTiesJA.jpg"
+    },
+    {
+        "rarity": 1,
+        "type": 0,
+        "name": "Stars background",
+        "value": "https://i.imgur.com/co1ro7Y.jpg"
+    },
+    {
+        "rarity": 1,
+        "type": 0,
+        "name": "PinkTree background",
+        "value": "https://i.imgur.com/7j40FCG.jpg"
+    },
+    {
+        "rarity": 2,
+        "type": 0,
+        "name": "PurpleSky backgroundd",
+        "value": "https://i.imgur.com/sg45Hnf.jpg"
+    },
+    {
+        "rarity": 3,
+        "type": 0,
+        "name": "Nexus background",
+        "value": "https://i.imgur.com/WdixxuS.jpg"
     }
 ]

@@ -51,7 +51,7 @@
         "name": "Espada",
         "effect": 1,
         "level": 1,
-        "payload": 1.25
+        "payload": 1.20
     },
     {
         "name": "Faca envenada",
@@ -75,13 +75,13 @@
         "name": "Armadura de diamante",
         "effect": 5,
         "level": 1,
-        "payload": 0.75
+        "payload": 0.8
     },
     {
         "name": "Machado divino",
         "effect": 1,
         "level": 2,
-        "payload": 1.50
+        "payload": 1.35
     },
     {
         "name": "Amplificador espiritual",
@@ -105,13 +105,13 @@
         "name": "Armadura de obisidiana",
         "effect": 5,
         "level": 2,
-        "payload": 0.5
+        "payload": 0.65
     },
     {
         "name": "Escalibur",
         "effect": 1,
         "level": 3,
-        "payload": 1.75
+        "payload": 1.5
     },
     {
         "name": "Imortalidade",
@@ -129,7 +129,7 @@
         "name": "Armadura da divindade",
         "effect": 5,
         "level": 3,
-        "payload": 0.25
+        "payload": 0.5
     },
     {
         "name": "Amplificador divino",
