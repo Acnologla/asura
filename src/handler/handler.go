@@ -7,8 +7,8 @@ import (
 	"github.com/agnivade/levenshtein"
 	"github.com/andersfylling/disgord"
 	"os"
-	"strconv"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -132,7 +132,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 		}
 		splited := strings.Fields(raw)
 		if len(splited) == 0 {
-			if strings.HasPrefix(msg.Content, botMention){
+			if strings.HasPrefix(msg.Content, botMention) {
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", Meu prefix é **j!** use j!comandos para ver meus comandos")
 			}
 			return
@@ -176,7 +176,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 			Client.Channel(msg.ChannelID).TriggerTypingIndicator()
 			realCommand.Run(session, msg, args)
 		}
-	} 
+	}
 }
 
 //Handles messages and call the functions that they have to execute.
