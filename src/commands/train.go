@@ -68,7 +68,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					galo.Xp += 15
 					if rinha.IsVip(galo){
 						galo.Xp += 10
-						xpOb = 20
+						xpOb = 25
 					}
 					galo.Money += 3
 					return galo, nil
