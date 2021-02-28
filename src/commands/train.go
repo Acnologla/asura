@@ -63,20 +63,20 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			})
 			rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
 			if winner == 0 {
-				xpOb := 10
+				xpOb := 15
 				rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
-					galo.Xp += 10
+					galo.Xp += 15
 					if rinha.IsVip(galo){
-						galo.Xp += 5
-						xpOb = 15
+						galo.Xp += 10
+						xpOb = 20
 					}
-					galo.Money += 2
+					galo.Money += 3
 					return galo, nil
 				})
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Color:       16776960,
 					Title:       "Train",
-					Description: fmt.Sprintf("Parabens %s, voce venceu\nGanhou **%d** de dinheiro e **%d** de xp", msg.Author.Username, 2,xpOb),
+					Description: fmt.Sprintf("Parabens %s, voce venceu\nGanhou **%d** de dinheiro e **%d** de xp", msg.Author.Username, 3,xpOb),
 				})
 			} else {
 				msg.Reply(context.Background(), session, &disgord.Embed{
