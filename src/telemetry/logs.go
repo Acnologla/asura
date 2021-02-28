@@ -19,6 +19,7 @@ func log(level string, message string, values map[string]string) {
 		res, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 		if err != nil {
 			fmt.Println(err)
+			return
 		}
 		defer res.Body.Close()
 	}

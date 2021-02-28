@@ -2,6 +2,7 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/utils"
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
@@ -26,39 +27,64 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem um galo, use j!galo para criar um")
 		return
 	}
-	battleMutex.RLock()
-	if currentBattles[msg.Author.ID] != "" {
-		battleMutex.RUnlock()
-		msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
-		return
-	}
-	battleMutex.RUnlock()
-	galoAdv := rinha.Galo{
-		Xp:   galo.Xp,
-		Type: rinha.GetRand(),
-	}
-	LockEvent(msg.Author.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
-	defer UnlockEvent(msg.Author.ID)
-	winner, _ := ExecuteRinha(msg, session, rinhaOptions{
-		galoAuthor:  &galo,
-		galoAdv:     &galoAdv,
-		authorName:  rinha.GetName(msg.Author.Username, galo),
-		advName:     "Clone de " + rinha.Classes[galoAdv.Type].Name,
-		authorLevel: rinha.CalcLevel(galo.Xp),
-		advLevel:    rinha.CalcLevel(galoAdv.Xp),
+	confirmMsg, confirmErr := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
+		Content: msg.Author.Mention(),
+		Embed: &disgord.Embed{
+			Color:       65535,
+			Description: fmt.Sprintf("**%s** clique na reação abaixo para lutar", msg.Author.Username),
+		},
 	})
-	rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
-	if winner == 0 {
-		msg.Reply(context.Background(), session, &disgord.Embed{
-			Color:       16776960,
-			Title:       "Train",
-			Description: fmt.Sprintf("Parabens %s, voce venceu", msg.Author.Username),
-		})
-	} else {
-		msg.Reply(context.Background(), session, &disgord.Embed{
-			Color:       16711680,
-			Title:       "Train",
-			Description: fmt.Sprintf("Parabens %s, voce perdeu. Use j!train para treinar novamente", msg.Author.Username),
+	if confirmErr == nil {
+		utils.Confirm(confirmMsg, msg.Author.ID, func() {
+			battleMutex.RLock()
+			if currentBattles[msg.Author.ID] != "" {
+				battleMutex.RUnlock()
+				msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+				return
+			}
+			battleMutex.RUnlock()
+			galoAdv := rinha.Galo{
+				Xp:   galo.Xp,
+				Type: rinha.GetRand(),			
+			}
+			if len(galo.Items) > 0 {	
+				randItem := rinha.GetItemByLevel(rinha.Items[galo.Items[0]].Level)
+				galoAdv.Items = []int{randItem}
+			}
+			LockEvent(msg.Author.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
+			defer UnlockEvent(msg.Author.ID)
+			winner, _ := ExecuteRinha(msg, session, rinhaOptions{
+				galoAuthor:  &galo,
+				galoAdv:     &galoAdv,
+				authorName:  rinha.GetName(msg.Author.Username, galo),
+				advName:     "Clone de " + rinha.Classes[galoAdv.Type].Name,
+				authorLevel: rinha.CalcLevel(galo.Xp),
+				advLevel:    rinha.CalcLevel(galoAdv.Xp),
+			})
+			rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
+			if winner == 0 {
+				xpOb := 10
+				rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+					galo.Xp += 10
+					if rinha.IsVip(galo){
+						galo.Xp += 5
+						xpOb = 15
+					}
+					galo.Money += 2
+					return galo, nil
+				})
+				msg.Reply(context.Background(), session, &disgord.Embed{
+					Color:       16776960,
+					Title:       "Train",
+					Description: fmt.Sprintf("Parabens %s, voce venceu\nGanhou **%d** de dinheiro e **%d** de xp", msg.Author.Username, 2,xpOb),
+				})
+			} else {
+				msg.Reply(context.Background(), session, &disgord.Embed{
+					Color:       16711680,
+					Title:       "Train",
+					Description: fmt.Sprintf("Parabens %s, voce perdeu. Use j!train para treinar novamente", msg.Author.Username),
+				})
+			}
 		})
 	}
 

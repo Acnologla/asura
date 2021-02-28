@@ -98,12 +98,15 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	return real_damage
 }
 
-func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect) int {
+func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccker *Fighter) int {
 
 	effect_damage := Between(effect.Range)
 	switch effect.Type {
 	case 1:
 		{
+			if ataccker.ItemEffect == 6{
+				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
+			}
 			if effect_damage >= receiver.Life {
 				effect_damage = receiver.Life - 1
 			}
@@ -153,7 +156,7 @@ func (round *Round) applyEffect(id int, self bool, to_append bool) {
 
 	receiver.Effect[0]--
 
-	effect_damage := round.applyEffectDamage(receiver, effect)
+	effect_damage := round.applyEffectDamage(receiver, effect, round.Attacker)
 
 	if to_append {
 		round.Results = append(round.Results,

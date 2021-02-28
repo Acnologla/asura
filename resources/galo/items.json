@@ -136,5 +136,29 @@
         "effect": 3,
         "level": 3,
         "payload": 0.25
+    },
+    {
+        "name": "Multiplicador",
+        "effect": 6,
+        "level": 0,
+        "payload": 1.1
+    },
+    {
+        "name": "Multiplicador potente",
+        "effect": 6,
+        "level": 1,
+        "payload": 1.2
+    },
+    {
+        "name": "Multiplicador espiritual",
+        "effect": 6,
+        "level": 2,
+        "payload": 1.35
+    },
+    {
+        "name": "Multiplicador divino",
+        "effect": 6,
+        "level": 3,
+        "payload": 1.5
     }
 ]

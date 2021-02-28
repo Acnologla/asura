@@ -36,42 +36,10 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	database.Database.NewRef("private/"+id).Get(ctx, &private)
 	oldAvatars := ""
 	oldUsernames := ""
-	filteredGuilds := ""
-	count := 0
 	date := ((uint64(user.ID) >> 22) + 1420070400000) / 1000
-	cGuilds := session.GetConnectedGuilds()
-	for i, guild := range cGuilds {
-		guil, _ := handler.Client.Guild(guild).Get()
-		if guil == nil {
-			continue
-		}
-		var is bool
-		if count >= 10 {
-			break
-		}
-		for _, member := range guil.Members {
-			if member.User != nil {
-				if member.User.ID == user.ID {
-					is = true
-					break
-				}
-			}
-		}
-		if is {
-			filteredGuilds += guil.Name
-			count++
-			if i != len(cGuilds) {
-				filteredGuilds += "** | **"
-			}
-
-		}
-	}
-	if filteredGuilds == "" {
-		filteredGuilds = "Nenhum servidor compartilhado"
-	}
 	if len(userinfo.Usernames) > 0 {
-		if len(userinfo.Usernames) > 12 {
-			oldUsernames = strings.Join(userinfo.Usernames[:12], "** | **")
+		if len(userinfo.Usernames) > 10 {
+			oldUsernames = strings.Join(userinfo.Usernames[:10], "** | **")
 		} else {
 			oldUsernames = strings.Join(userinfo.Usernames, "** | **")
 		}
@@ -80,8 +48,8 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	if len(userinfo.Avatars) > 0 && !private {
 		avats := userinfo.Avatars
-		if len(avats) > 12 {
-			avats = avats[:12]
+		if len(avats) > 10 {
+			avats = avats[:10]
 		}
 		for i, avatar := range avats {
 			oldAvatars += fmt.Sprintf("[**Link**](%s)", avatar)
@@ -114,14 +82,6 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 				&disgord.EmbedField{
 					Name:  "Avatares Antigos",
 					Value: oldAvatars,
-				},
-				&disgord.EmbedField{
-					Name:  fmt.Sprintf("Servidores compartilhados (%d)", count),
-					Value: filteredGuilds,
-				},
-				&disgord.EmbedField{
-					Name:  "Mais informaçoes",
-					Value: fmt.Sprintf("[**Clique aqui**](https://asura-site.glitch.me/user/%s)", id),
 				},
 			},
 		}})

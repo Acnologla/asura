@@ -63,5 +63,12 @@ func ItemToString(item *Item) string {
 	if item.Effect == 5 {
 		return fmt.Sprintf("Bloqueia **%d%%** de dano", int(math.Round((1-item.Payload)*100)))
 	}
+	if item.Effect == 6{
+		return fmt.Sprintf("Aumenta o dano dos seus efeitos em **%d%%** ", int(math.Round((item.Payload-1)*100)))
+	}
 	return ""
+}
+
+func GetRandItem() int {
+	return utils.RandInt(len(Items))
 }

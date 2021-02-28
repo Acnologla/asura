@@ -57,7 +57,7 @@ func OpenCosmetic() int {
 }
 
 func GetRandCosmetic() int {
-	return utils.RandInt(len(Cosmetics)-1) + 1
+	return utils.RandInt(len(Cosmetics))
 }
 
 func CosmeticCommand(cosmetic Cosmetic) string {
