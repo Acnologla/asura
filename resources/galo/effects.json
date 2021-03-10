@@ -301,5 +301,21 @@
         "self": true,
         "phrase": "%s se curou! (+%d)",
         "range": [50, 50]
+    },
+    {
+        "name": "Tempestade de areia",
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está em uma tempestade de areia! (-%d)",
+        "range": [12,17]
+    },
+    {
+        "name": "Golem",
+        "turns": 3,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está sendo atacado por um golem! (-%d)",
+        "range": [20,22]
     }
 ]

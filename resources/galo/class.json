@@ -122,5 +122,10 @@
         "name": "Vampirico",
         "disadvantages": [],
         "rarity": 2
+    },
+    {
+        "name": "Areia",
+        "disadvantages": [],
+        "rarity": 1
     }
 ]

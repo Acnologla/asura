@@ -65,11 +65,10 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			if winner == 0 {
 				xpOb := 15
 				rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
-					galo.Xp += 15
 					if rinha.IsVip(galo){
-						galo.Xp += 10
-						xpOb = 25
+						xpOb += 6
 					}
+					galo.Xp += xpOb
 					galo.Money += 3
 					return galo, nil
 				})
@@ -78,6 +77,8 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					Title:       "Train",
 					Description: fmt.Sprintf("Parabens %s, voce venceu\nGanhou **%d** de dinheiro e **%d** de xp", msg.Author.Username, 3,xpOb),
 				})
+				galo.Xp += xpOb
+				sendLevelUpEmbed(msg, session, &galo, msg.Author, xpOb)
 			} else {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Color:       16711680,

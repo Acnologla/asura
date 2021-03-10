@@ -187,7 +187,7 @@ func MissionToString(clan Clan) string {
 		need := uint64(time.Now().Unix()) - clan.Mission
 		return fmt.Sprintf("Espere mais %d dias e %d horas para seu clan receber uma nova missão", 6-(need/60/60/24), 23-(need/60/60%24))
 	} else {
-		return fmt.Sprintf("Derrote %d/500 galos na rinha\nMoney: **120**\nXp: **420**", clan.MissionProgress)
+		return fmt.Sprintf("Derrote %d/500 galos na rinha\nMoney: **125**\nXp: **425**", clan.MissionProgress)
 	}
 }
 
@@ -208,8 +208,8 @@ func CompleteClanMission(clanName string, id disgord.Snowflake) {
 			if clan.MissionProgress >= 500 {
 				for _, member := range clan.Members {
 					UpdateGaloDB(disgord.Snowflake(member.ID), func(galo Galo) (Galo, error) {
-						galo.Xp += 420
-						galo.Money += 120
+						galo.Xp += 425
+						galo.Money += 125
 						return galo, nil
 					})
 				}

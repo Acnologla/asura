@@ -146,13 +146,15 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	arr := []*stats{}
 	for i := 1; i < len(rinha.Classes); i++ {
-		arr = append(arr, &stats{
-			Type: i,
-		})
+		if rinha.Classes[i].Rarity == 1{
+			arr = append(arr, &stats{
+				Type: i,
+			})
+		}
 	}
-	arr = []*stats{&stats{
-		Type: 24,
-	}}
+/*	arr = []*stats{&stats{
+		Type: 25,
+	}}*/
 	for i := 1; i < 20; i += 1 {
 		for _, class := range arr {
 			result := measure(class.Type, 1, i, i, 10000, false)
