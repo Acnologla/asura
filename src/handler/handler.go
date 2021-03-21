@@ -9,6 +9,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"runtime/debug"
 	"strings"
 	"sync"
 	"time"
@@ -158,11 +159,11 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 				"content": msg.Content,
 				"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
 			})
-			if !DevMod {
+			if !DevMod{
 				defer func() {
 					err := recover()
 					if err != nil {
-						stringError := err.(error).Error()
+						stringError := string(debug.Stack())
 						telemetry.Error(stringError, map[string]string{
 							"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
 							"user":    strconv.FormatUint(uint64(msg.Author.ID), 10),
