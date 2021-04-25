@@ -37,12 +37,14 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	oldAvatars := ""
 	oldUsernames := ""
 	date := ((uint64(user.ID) >> 22) + 1420070400000) / 1000
-	if len(userinfo.Usernames) > 0 {
+	if len(userinfo.Usernames) > 0 && !private {
 		if len(userinfo.Usernames) > 10 {
 			oldUsernames = strings.Join(userinfo.Usernames[:10], "** | **")
 		} else {
 			oldUsernames = strings.Join(userinfo.Usernames, "** | **")
 		}
+	} else if private{
+		oldUsernames = "O historico desse usuario é privado, use j!private para deixar publico"
 	} else {
 		oldUsernames = "Nenhum nome antigo registrado"
 	}

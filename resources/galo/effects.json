@@ -317,5 +317,13 @@
         "self": false,
         "phrase": "%s está sendo atacado por um golem! (-%d)",
         "range": [20,22]
+    },
+    {
+        "name": "Frio luar",
+        "turns": 3,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está sobre frio luar! (-%d)",
+        "range": [12,20]
     }
 ]

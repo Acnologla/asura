@@ -85,7 +85,7 @@
     },
     {
         "name": "Eletrico",
-        "disadvantages": [12],
+        "disadvantages": [12, 26],
         "rarity": 1
     },
     {
@@ -127,5 +127,15 @@
         "name": "Areia",
         "disadvantages": [],
         "rarity": 1
+    },
+    {
+        "name": "Borracha",
+        "disadvantages": [],
+        "rarity": 0
+    },
+    {
+        "name": "Lua",
+        "disadvantages": [],
+        "rarity": 2
     }
 ]

@@ -1,0 +1,87 @@
+[
+    {
+        "name": "Soco de borracha",
+        "damage": [17,22],
+        "level": 1
+    },
+    {
+        "name": "Chute de borracha",
+        "damage": [20,25],
+        "level": 2
+    },
+    {
+        "name": "Bala de borracha",
+        "damage": [22,27],
+        "level": 3
+    },
+    {
+        "name": "Soco esticado",
+        "damage": [25,32],
+        "level": 4
+    },
+    {
+        "name": "Borracha endurecida",
+        "damage": [27,35],
+        "level": 6
+    },
+    {
+        "name": "Chute esticado",
+        "damage": [30,38],
+        "level": 7
+    },
+    {
+        "name": "Duplo soco",
+        "damage": [33,40],
+        "level": 8
+    },
+    {
+        "name": "Borracha derretida",
+        "damage": [34,41],
+        "level": 10
+    },
+    {
+        "name": "Impacto de borracha",
+        "damage": [37, 44],
+        "level": 12
+    },
+    {
+        "name": "Soco de borracha derretida",
+        "damage": [43,48],
+        "level": 14 
+    },
+    {
+        "name": "Borracha preta",
+        "damage": [46,50],
+        "level": 15
+    },
+    {
+        "name": "Corpo de borracha",
+        "damage": [50,58],
+        "level": 16
+    },
+    {
+        "name": "Chute elastico",
+        "damage": [52,59],
+        "level": 19
+    },
+    {
+        "name": "Esmagamento de borracha",
+        "damage": [52,62],
+        "level": 21
+    },
+    {
+        "name": "Furia de borracha",
+        "damage": [54,64],
+        "level": 23
+    },
+    {
+        "name": "Punho elastico",
+        "damage": [56,65],
+        "level": 25
+    },
+    {
+        "name": "Mundo de borracha",
+        "damage": [53,78],
+        "level": 30
+    }
+]
