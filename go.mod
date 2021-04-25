@@ -7,7 +7,7 @@ require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/acnologla/interpreter v0.0.0-20201213223129-6a55692d2db7
 	github.com/agnivade/levenshtein v1.1.0
-	github.com/andersfylling/disgord v0.26.10
+	github.com/andersfylling/disgord v0.26.0
 	github.com/andersfylling/snowflake/v4 v4.0.2 // indirect
 	github.com/chromedp/cdproto v0.0.0-20201009231348-1c6a710e77de
 	github.com/cjsaylor/chessimage v0.0.0-20190107020940-8abad33612f4
