@@ -26,7 +26,7 @@ func OpenEpic() int {
 	value := utils.RandInt(1001)
 	if 14 >= value {
 		return GetRandByType(Legendary)
-	} else if 235 >= value {
+	} else if 245 >= value {
 		return GetRandByType(Epic)
 	}
 	return GetRandByType(Rare)
@@ -36,7 +36,7 @@ func OpenRare() int {
 	value := utils.RandInt(1001)
 	if 6 >= value {
 		return GetRandByType(Legendary)
-	} else if 115 >= value {
+	} else if 120 >= value {
 		return GetRandByType(Epic)
 	} else if 450 >= value {
 		return GetRandByType(Rare)
