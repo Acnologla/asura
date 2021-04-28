@@ -38,7 +38,7 @@ func OpenRare() int {
 		return GetRandByType(Legendary)
 	} else if 120 >= value {
 		return GetRandByType(Epic)
-	} else if 450 >= value {
+	} else if 500 >= value {
 		return GetRandByType(Rare)
 	}
 	return GetRandByType(Common)
