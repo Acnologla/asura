@@ -8,8 +8,8 @@ import (
 	"github.com/andersfylling/disgord"
 	"os"
 	"regexp"
-	"strconv"
 	"runtime/debug"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -159,7 +159,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 				"content": msg.Content,
 				"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
 			})
-			if !DevMod{
+			if !DevMod {
 				defer func() {
 					err := recover()
 					if err != nil {

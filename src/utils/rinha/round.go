@@ -104,7 +104,7 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 	switch effect.Type {
 	case 1:
 		{
-			if ataccker.ItemEffect == 6{
+			if ataccker.ItemEffect == 6 {
 				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
 			}
 			if effect_damage >= receiver.Life {

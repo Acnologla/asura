@@ -43,7 +43,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 		} else {
 			oldUsernames = strings.Join(userinfo.Usernames, "** | **")
 		}
-	} else if private{
+	} else if private {
 		oldUsernames = "O historico desse usuario é privado, use j!private para deixar publico"
 	} else {
 		oldUsernames = "Nenhum nome antigo registrado"

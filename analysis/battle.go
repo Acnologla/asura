@@ -146,7 +146,7 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	arr := []*stats{}
 	for i := 1; i < len(rinha.Classes); i++ {
-		if rinha.Classes[i].Rarity == 1{
+		if rinha.Classes[i].Rarity == 1 {
 			arr = append(arr, &stats{
 				Type: i,
 			})

@@ -45,9 +45,9 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			battleMutex.RUnlock()
 			galoAdv := rinha.Galo{
 				Xp:   galo.Xp,
-				Type: rinha.GetRand(),			
+				Type: rinha.GetRand(),
 			}
-			if len(galo.Items) > 0 {	
+			if len(galo.Items) > 0 {
 				randItem := rinha.GetItemByLevel(rinha.Items[galo.Items[0]].Level)
 				galoAdv.Items = []int{randItem}
 			}
@@ -63,18 +63,18 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			})
 			rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
 			if winner == 0 {
-				xpOb := 15
-				money := 3
+				xpOb := utils.RandInt(11) + 12
+				money := 4
 				rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
-					if rinha.IsVip(galo){
-						xpOb += 6
+					if rinha.IsVip(galo) {
+						xpOb += 8
 					}
 					if galo.Clan != "" {
 						clan := rinha.GetClan(galo.Clan)
 						xpOb++
 						level := rinha.ClanXpToLevel(clan.Xp)
 						if level >= 2 {
-							xpOb+= 2
+							xpOb += 2
 						}
 						if level >= 4 {
 							money++
@@ -90,7 +90,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Color:       16776960,
 					Title:       "Train",
-					Description: fmt.Sprintf("Parabens %s, voce venceu\nGanhou **%d** de dinheiro e **%d** de xp", msg.Author.Username, money,xpOb),
+					Description: fmt.Sprintf("Parabens %s, voce venceu\nGanhou **%d** de dinheiro e **%d** de xp", msg.Author.Username, money, xpOb),
 				})
 				galo.Xp += xpOb
 				sendLevelUpEmbed(msg, session, &galo, msg.Author, xpOb)

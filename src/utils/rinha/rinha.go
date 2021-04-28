@@ -30,7 +30,7 @@ func (rarity Rarity) String() string {
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 130, 360, 1500, 500}[rarity]
+	return [...]int{30, 135, 400, 1600, 500}[rarity]
 }
 
 func (rarity Rarity) Color() int {
@@ -78,6 +78,7 @@ type Galo struct {
 	Lootbox         int       `json:"lootbox"`
 	CommonLootbox   int       `json:"commonLootbox"`
 	RareLootbox     int       `json:"rareLootbox"`
+	EpicLootbox     int       `json:"epicLootbox"`
 	Galos           []SubGalo `json:"galos"`
 	Money           int       `json:"money"`
 	Clan            string    `json:"clan"`

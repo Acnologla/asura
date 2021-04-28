@@ -22,11 +22,21 @@ func _Open(lootType int) int {
 	return GetRandByType(Common)
 }
 
+func OpenEpic() int {
+	value := utils.RandInt(1001)
+	if 14 >= value {
+		return GetRandByType(Legendary)
+	} else if 230 >= value {
+		return GetRandByType(Epic)
+	}
+	return GetRandByType(Rare)
+}
+
 func OpenRare() int {
 	value := utils.RandInt(1001)
-	if 5 >= value {
+	if 6 >= value {
 		return GetRandByType(Legendary)
-	} else if 99 >= value {
+	} else if 105 >= value {
 		return GetRandByType(Epic)
 	} else if 450 >= value {
 		return GetRandByType(Rare)
@@ -36,9 +46,9 @@ func OpenRare() int {
 
 func OpenNormal() int {
 	value := utils.RandInt(101)
-	if 4 >= value {
+	if 6 >= value {
 		return GetRandByType(Epic)
-	} else if 24 >= value {
+	} else if 25 >= value {
 		return GetRandByType(Rare)
 	}
 	return GetRandByType(Common)
@@ -59,6 +69,9 @@ func Open(lootType string) int {
 	if lootType == "rara" {
 		return OpenRare()
 	}
+	if lootType == "epica" {
+		return OpenEpic()
+	}
 	if lootType == "cosmetica" {
 		return OpenCosmetic()
 	}
@@ -71,6 +84,9 @@ func GetPrice(lootType string) int {
 	}
 	if lootType == "rara" {
 		return 800
+	}
+	if lootType == "epica" {
+		return 1800
 	}
 	if lootType == "cosmetica" {
 		return 500
@@ -88,6 +104,9 @@ func HaveLootbox(galo Galo, lootbox string) bool {
 	if lootbox == "cosmetica" {
 		return galo.CosmeticLootbox > 0
 	}
+	if lootbox == "epica" {
+		return galo.EpicLootbox > 0
+	}
 	return galo.Lootbox > 0
 }
 
@@ -103,6 +122,12 @@ func GetNewLb(lootbox string, galo Galo, add bool) Galo {
 			galo.RareLootbox++
 		} else {
 			galo.RareLootbox--
+		}
+	} else if lootbox == "epica" {
+		if add {
+			galo.EpicLootbox++
+		} else {
+			galo.EpicLootbox--
 		}
 	} else if lootbox == "cosmetica" {
 		if add {

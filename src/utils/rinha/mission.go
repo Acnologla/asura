@@ -109,7 +109,7 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 		case WinGalo:
 			if winner && galoAdv.Type == mission.Adv {
 				mission.Progress++
-				if mission.Progress == 2{
+				if mission.Progress == 2 {
 					xp += 90
 					money += 30
 					done = true
