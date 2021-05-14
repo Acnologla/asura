@@ -8,6 +8,11 @@ import (
 	"fmt"
 	"github.com/andersfylling/disgord"
 	"strconv"
+	"io"
+	"bytes"
+	"github.com/fogleman/gg"
+	"math"
+	"image/png"
 )
 
 func init() {
@@ -25,25 +30,57 @@ func init() {
 func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	if len(args) == 0 {
-		text := ""
-		for i, otherGalo := range galo.Galos {
-			name := rinha.Classes[otherGalo.Type].Name
-			if otherGalo.Name != "" {
-				name = otherGalo.Name
+		lenGalos := len(galo.Galos)
+		dc := gg.NewContext(510, 95 * int(math.Round((float64(lenGalos) /2 ))))
+		for i, _galo := range galo.Galos{
+			dc.LoadFontFace("./resources/Raleway-Bold.ttf", 30)
+			galo := _galo.Type
+			img := downloadedSprites[galo - 1]
+			dc.SetRGB255(255, 255, 255)
+			dc.DrawRectangle(0,float64(i) * 95, 510,95)
+			width := 0.0
+			if i % 2 != 0 {
+				width = 250
 			}
-			text += fmt.Sprintf("[%d] - %s (Level: **%d**) \n", i, name, rinha.CalcLevel(otherGalo.Xp))
+			dc.Fill()
+			dc.SetRGB255(30, 30 , 30)
+			dc.DrawString(strconv.Itoa(i), 20 + width, 55 + float64(i/2) * 95)
+			if i != 0 && i != lenGalos {
+				dc.DrawLine(0, 95 * float64(i/ 2), 510, 95 * float64(i/ 2)) 
+				dc.Stroke()
+			}
+			
+			dc.LoadFontFace("./resources/Raleway-Light.ttf", 15)
+			name := rinha.Classes[galo].Name
+			if _galo.Name != ""{
+				name = _galo.Name
+			}
+			dc.DrawString(name, 70 + 57 + width, 40 + float64(i/ 2) * 95)
+			dc.DrawString(fmt.Sprintf("Level: %d", rinha.CalcLevel(_galo.Xp)),70 + 57 + width, 60 + float64(i/ 2) * 95 )
+			color := rinha.Classes[galo].Rarity.Color()
+			dc.SetHexColor(fmt.Sprintf("%06x", color))
+			dc.DrawRectangle(58 + width, 18 + float64(i/ 2) * 95, 59, 59)
+			dc.Fill()
+			dc.DrawImage(img, 60 + int(width), 20 + (i/2) * 95)
+
 		}
-		if text == "" {
-			text = "Voce não tem nenhum galo, para conseguir galos compre lootboxs usando j!lootbox"
-		}
+		var b bytes.Buffer
+		pw := io.Writer(&b)
+		png.Encode(pw, dc.Image())
 		avatar, _ := msg.Author.AvatarURL(512, true)
-		msg.Reply(context.Background(), session, &disgord.Embed{
-			Color:       65535,
-			Title:       "Galos",
-			Description: text,
-			Footer: &disgord.EmbedFooter{
-				IconURL: avatar,
-				Text:    "Use j!equipar <numero do galo> para equipar um galo | use j!equipar <numero do galo> remove para vender um galo",
+		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
+			Files: []disgord.CreateMessageFileParams{
+				{bytes.NewReader(b.Bytes()), "galos.jpg", false},
+			},
+			Embed: &disgord.Embed{
+				Footer: &disgord.EmbedFooter{
+					IconURL: avatar,
+					Text:    "Use j!equipar <numero do galo> para equipar um galo | use j!equipar <numero do galo> remove para vender um galo",
+				},
+				Color: 65535,
+				Image: &disgord.EmbedImage{
+					URL: "attachment://galos.jpg",
+				},
 			},
 		})
 	} else {

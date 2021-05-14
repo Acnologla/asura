@@ -68,6 +68,11 @@ type SubGalo struct {
 	Name string `json:"name"`
 }
 
+type TrainLimit struct{
+	Times         int       `json:"times"`
+	LastReset     uint64    `json:"lastReset"`
+}
+
 type Galo struct {
 	Name            string    `json:"name"`
 	Xp              int       `json:"xp"`
@@ -91,6 +96,7 @@ type Galo struct {
 	Cosmetics       []int     `json:"cosmetics"`
 	Background      int       `json:"bg"`
 	CosmeticLootbox int       `json:"cosmeticLootbox"`
+	TrainLimit      TrainLimit `json:"trainLimit"`
 }
 
 var Dungeon []*Room
@@ -313,4 +319,18 @@ func GetEffectFromSkill(skill *Skill) *Effect {
 // Effect functions
 func GetEffectFromIndex(idx int) *Effect {
 	return Effects[idx]
+}
+
+
+func IsInLimit(galo Galo, id disgord.Snowflake) bool {
+	if galo.TrainLimit.LastReset == 0 || 1 <= (uint64(time.Now().Unix())-galo.TrainLimit.LastReset)/60/60/24{
+		UpdateGaloDB(id, func(galo Galo)(Galo, error){
+			galo.TrainLimit.LastReset = uint64(time.Now().Unix())
+			galo.TrainLimit.Times = 0
+			return galo, nil
+		})
+	}else if galo.TrainLimit.Times >= 600 {
+		return true
+	}
+	return false
 }

@@ -4,8 +4,10 @@ import (
 	"asura/src/handler"
 	"asura/src/utils"
 	"asura/src/utils/rinha"
+	"asura/src/telemetry"
 	"context"
 	"fmt"
+	"time"
 	"github.com/andersfylling/disgord"
 )
 
@@ -66,10 +68,24 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 				xpOb := utils.RandInt(11) + 12
 				money := 4
 				clanMsg := ""
+				isLimit := rinha.IsInLimit(galo, msg.Author.ID)
+				if isLimit{
+					need := uint64(time.Now().Unix()) - galo.TrainLimit.LastReset
+					msg.Reply(context.Background(), session, &disgord.Embed{
+						Color:       16776960,
+						Title:       "Train",
+						Description: fmt.Sprintf("Voce excedeu seu limite de trains ganhos por dia. Faltam %d horas e %d minutos para voce poder usar mais", 23-(need/60/60), 59-(need/60%60)),
+					})
+					telemetry.Debug(fmt.Sprintf("%s in rinha limit", msg.Author.Username), map[string]string{
+						"id": fmt.Sprintf("%d", msg.Author.ID),
+					})
+					return
+				}
 				rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 					if rinha.IsVip(galo) {
 						xpOb += 8
 					}
+					galo.TrainLimit.Times++
 					if galo.Clan != "" {
 						clan := rinha.GetClan(galo.Clan)
 						xpOb++
