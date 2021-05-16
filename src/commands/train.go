@@ -2,13 +2,13 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/telemetry"
 	"asura/src/utils"
 	"asura/src/utils/rinha"
-	"asura/src/telemetry"
 	"context"
 	"fmt"
-	"time"
 	"github.com/andersfylling/disgord"
+	"time"
 )
 
 func init() {
@@ -16,7 +16,7 @@ func init() {
 		Aliases:   []string{"train", "treino", "treinar"},
 		Run:       runTrain,
 		Available: true,
-		Cooldown:  5,
+		Cooldown:  12,
 		Usage:     "j!train",
 		Category:  1,
 		Help:      "Batalhe contra um galo",
@@ -69,7 +69,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 				money := 4
 				clanMsg := ""
 				isLimit := rinha.IsInLimit(galo, msg.Author.ID)
-				if isLimit{
+				if isLimit {
 					need := uint64(time.Now().Unix()) - galo.TrainLimit.LastReset
 					msg.Reply(context.Background(), session, &disgord.Embed{
 						Color:       16776960,

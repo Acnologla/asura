@@ -260,10 +260,10 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 			}
 			if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp) {
 				if level >= 4 {
-					money ++
+					money++
 				}
 				if level >= 5 {
-					money ++
+					money++
 				}
 				go rinha.CompleteClanMission(galoWinner.Clan, winner.ID)
 				clanMsg = "\nGanhou **1** de xp para seu clan"

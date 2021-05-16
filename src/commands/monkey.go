@@ -7,8 +7,8 @@ import (
 	"context"
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
-	"image/png"
 	"github.com/nfnt/resize"
+	"image/png"
 	"io"
 	"os"
 	"strings"
@@ -46,7 +46,7 @@ func runMonkey(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	// Here we draw the image to the "editor"
-	avatar = resize.Resize(491,406, avatar, resize.Lanczos3)
+	avatar = resize.Resize(491, 406, avatar, resize.Lanczos3)
 	dc := gg.NewContext(491, 406)
 	dc.DrawImage(avatar, 0, 0)
 	dc.DrawImage(img, 0, 0)

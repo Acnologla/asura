@@ -4,15 +4,15 @@ import (
 	"asura/src/handler"
 	"asura/src/telemetry"
 	"asura/src/utils/rinha"
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/andersfylling/disgord"
-	"strconv"
-	"io"
-	"bytes"
 	"github.com/fogleman/gg"
-	"math"
 	"image/png"
+	"io"
+	"math"
+	"strconv"
 )
 
 func init() {
@@ -31,37 +31,37 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	if len(args) == 0 {
 		lenGalos := len(galo.Galos)
-		dc := gg.NewContext(510, 95 * int(math.Round((float64(lenGalos) /2 ))))
-		for i, _galo := range galo.Galos{
+		dc := gg.NewContext(510, 95*int(math.Round((float64(lenGalos)/2))))
+		for i, _galo := range galo.Galos {
 			dc.LoadFontFace("./resources/Raleway-Bold.ttf", 30)
 			galo := _galo.Type
-			img := downloadedSprites[galo - 1]
+			img := downloadedSprites[galo-1]
 			dc.SetRGB255(255, 255, 255)
-			dc.DrawRectangle(0,float64(i) * 95, 510,95)
+			dc.DrawRectangle(0, float64(i)*95, 510, 95)
 			width := 0.0
-			if i % 2 != 0 {
+			if i%2 != 0 {
 				width = 250
 			}
 			dc.Fill()
-			dc.SetRGB255(30, 30 , 30)
-			dc.DrawString(strconv.Itoa(i), 20 + width, 55 + float64(i/2) * 95)
+			dc.SetRGB255(30, 30, 30)
+			dc.DrawString(strconv.Itoa(i), 20+width, 55+float64(i/2)*95)
 			if i != 0 && i != lenGalos {
-				dc.DrawLine(0, 95 * float64(i/ 2), 510, 95 * float64(i/ 2)) 
+				dc.DrawLine(0, 95*float64(i/2), 510, 95*float64(i/2))
 				dc.Stroke()
 			}
-			
+
 			dc.LoadFontFace("./resources/Raleway-Light.ttf", 15)
 			name := rinha.Classes[galo].Name
-			if _galo.Name != ""{
+			if _galo.Name != "" {
 				name = _galo.Name
 			}
-			dc.DrawString(name, 70 + 57 + width, 40 + float64(i/ 2) * 95)
-			dc.DrawString(fmt.Sprintf("Level: %d", rinha.CalcLevel(_galo.Xp)),70 + 57 + width, 60 + float64(i/ 2) * 95 )
+			dc.DrawString(name, 70+57+width, 40+float64(i/2)*95)
+			dc.DrawString(fmt.Sprintf("Level: %d", rinha.CalcLevel(_galo.Xp)), 70+57+width, 60+float64(i/2)*95)
 			color := rinha.Classes[galo].Rarity.Color()
 			dc.SetHexColor(fmt.Sprintf("%06x", color))
-			dc.DrawRectangle(58 + width, 18 + float64(i/ 2) * 95, 59, 59)
+			dc.DrawRectangle(58+width, 18+float64(i/2)*95, 59, 59)
 			dc.Fill()
-			dc.DrawImage(img, 60 + int(width), 20 + (i/2) * 95)
+			dc.DrawImage(img, 60+int(width), 20+(i/2)*95)
 
 		}
 		var b bytes.Buffer
