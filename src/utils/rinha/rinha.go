@@ -73,6 +73,12 @@ type TrainLimit struct{
 	LastReset     uint64    `json:"lastReset"`
 }
 
+type Arena struct{
+	Active bool `json:"active"`
+	Win    int  `json:"wins"`
+	Lose   int  `json:"lose"` 
+}
+
 type Galo struct {
 	Name            string    `json:"name"`
 	Xp              int       `json:"xp"`
@@ -96,7 +102,8 @@ type Galo struct {
 	Cosmetics       []int     `json:"cosmetics"`
 	Background      int       `json:"bg"`
 	CosmeticLootbox int       `json:"cosmeticLootbox"`
-	TrainLimit      TrainLimit `json:"trainLimit"`
+	TrainLimit      TrainLimit`json:"trainLimit"`
+	Arena           Arena     `json:"arena"`        
 }
 
 var Dungeon []*Room
@@ -329,7 +336,7 @@ func IsInLimit(galo Galo, id disgord.Snowflake) bool {
 			galo.TrainLimit.Times = 0
 			return galo, nil
 		})
-	}else if galo.TrainLimit.Times >= 600 {
+	}else if galo.TrainLimit.Times >= 400 {
 		return true
 	}
 	return false
