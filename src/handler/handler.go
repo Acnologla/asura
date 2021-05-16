@@ -2,6 +2,7 @@ package handler
 
 import (
 	"asura/src/telemetry"
+	"asura/src/database"
 	"context"
 	"fmt"
 	"github.com/agnivade/levenshtein"
@@ -147,6 +148,9 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 				if !isDev(msg.Author.ID) {
 					return
 				}
+			}
+			if database.IsBanned(msg.Author.ID){
+				return
 			}
 			if checkCooldown(session, msg, realCommand.Aliases[0], msg.Author.ID, realCommand.Cooldown) {
 				return

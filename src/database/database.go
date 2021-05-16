@@ -39,6 +39,12 @@ func Init() error {
 	return nil
 }
 
+func IsBanned(id disgord.Snowflake) bool {
+	var isBan bool
+	Database.NewRef(fmt.Sprintf("bans/%d", id)).Get(context.Background(), &isBan)
+	return isBan
+}
+
 func GetUserDB(id disgord.Snowflake) (User, error) {
 	var acc User
 	err := Database.NewRef(fmt.Sprintf("users/%d", id)).Get(context.Background(), &acc)
