@@ -72,11 +72,6 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, "Voce precisa ter um ingresso para batalhar na arena, use **j!arena** para comprar um")
 		return
 	}
-	rarity := rinha.Classes[galo.Type].Rarity
-	if rarity == 3 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", galos lendarios nao podem ser usado na arena")
-		return
-	}
 	battleMutex.RLock()
 	if currentBattles[msg.Author.ID] != "" {
 		battleMutex.RUnlock()
@@ -86,7 +81,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 	battleMutex.RUnlock()
 	galoAdv := rinha.Galo{
 		Xp:   rinha.CalcXP(rinha.CalcLevel(galo.Xp) +1),
-		Type: rinha.GetRand(),
+		Type: rinha.GetRandByType(rinha.Classes[galo.Type].Rarity),
 	}
 	LockEvent(msg.Author.ID, "Arena "+rinha.Classes[galoAdv.Type].Name)
 	defer UnlockEvent(msg.Author.ID)

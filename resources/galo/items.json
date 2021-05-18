@@ -81,7 +81,7 @@
         "name": "Machado divino",
         "effect": 1,
         "level": 2,
-        "payload": 1.4
+        "payload": 1.35
     },
     {
         "name": "Amplificador espiritual",
@@ -105,13 +105,13 @@
         "name": "Armadura de obisidiana",
         "effect": 5,
         "level": 2,
-        "payload": 0.6
+        "payload": 0.65
     },
     {
         "name": "Escalibur",
         "effect": 1,
         "level": 3,
-        "payload": 1.6
+        "payload": 1.55
     },
     {
         "name": "Imortalidade",
@@ -129,7 +129,7 @@
         "name": "Armadura da divindade",
         "effect": 5,
         "level": 3,
-        "payload": 0.4
+        "payload": 0.45
     },
     {
         "name": "Amplificador divino",
@@ -153,12 +153,12 @@
         "name": "Multiplicador espiritual",
         "effect": 6,
         "level": 2,
-        "payload": 1.4
+        "payload": 1.35
     },
     {
         "name": "Multiplicador divino",
         "effect": 6,
         "level": 3,
-        "payload": 1.6
+        "payload": 1.55
     }
 ]
