@@ -89,7 +89,7 @@ func GetPrice(lootType string) int {
 		return 1800
 	}
 	if lootType == "cosmetica" {
-		return 500
+		return 320
 	}
 	return 400
 }

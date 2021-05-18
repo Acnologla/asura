@@ -2,7 +2,7 @@ package rinha
 
 func CalcArena(gal Galo) (Galo, int, int ){
 	wins := gal.Arena.Win
-	money := 75 * wins
+	money := 80 * wins
 	xp := 22 * wins
 	gal.Xp += xp
 	gal.Money += money
