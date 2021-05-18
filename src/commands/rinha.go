@@ -403,7 +403,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 			edit(message, embed)
 			lastEffects = text
 			round++
-			time.Sleep(5 * time.Second)
+			time.Sleep(4 * time.Second)
 		}
 	} else {
 		return -1, nil
