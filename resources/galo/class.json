@@ -120,21 +120,31 @@
     },
     {
         "name": "Vampirico",
-        "disadvantages": [],
+        "disadvantages": [22],
         "rarity": 2
     },
     {
         "name": "Areia",
-        "disadvantages": [],
+        "disadvantages": [8],
         "rarity": 1
     },
     {
         "name": "Borracha",
-        "disadvantages": [],
+        "disadvantages": [5],
         "rarity": 0
     },
     {
         "name": "Lua",
+        "disadvantages": [],
+        "rarity": 2
+    },
+    {
+        "name": "Radioativo",
+        "disadvantages": [],
+        "rarity": 1
+    },
+    {
+        "name": "Dragao",
         "disadvantages": [],
         "rarity": 2
     }

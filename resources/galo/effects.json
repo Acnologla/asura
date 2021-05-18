@@ -325,5 +325,21 @@
         "self": false,
         "phrase": "%s está sobre frio luar! (-%d)",
         "range": [12,20]
+    },
+    {
+        "name": "Radiaçao",
+        "turns": 4,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está sobre radiação! (-%d)",
+        "range": [4,8]
+    },
+    {
+        "name": "Radiaçao forte",
+        "turns": 4,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está sobre radiação! (-%d)",
+        "range": [10,14]
     }
 ]

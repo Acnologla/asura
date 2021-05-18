@@ -1,0 +1,96 @@
+[
+    {
+        "name": "Lança contaminada",
+        "damage": [16,25],
+        "level": 1
+    },
+    {
+        "name": "Raio radioativo",
+        "damage": [2,4],
+        "level": 2,
+        "effect": [1,42]
+    },
+    {
+        "name": "Ondas eletromagneticas",
+        "damage": [10,34],
+        "level": 3
+    },
+    {
+        "name": "Raio ionizante",
+        "damage": [10,14],
+        "level": 4,
+        "effect": [1,42]
+    },
+    {
+        "name": "Radiação",
+        "damage": [14,20],
+        "effect": [1,42],
+        "level": 5
+    },
+    {
+        "name": "Radição forte",
+        "damage": [1,2],
+        "level": 6,
+        "effect": [1,43]
+    },
+    {
+        "name": "Punhos radioativos",
+        "damage": [23,28],
+        "level": 7
+    },
+    {
+        "name": "Cancer",
+        "damage": [30,39],
+        "level": 8
+    },
+    {
+        "name": "Raio gama",
+        "damage": [18,26],
+        "effect": [1,42],
+        "level": 9
+    },
+    {
+        "name": "Poluição",
+        "damage": [35,49],
+        "level": 11
+    },
+    {
+        "name": "Faca radioativa",
+        "damage": [20,25],
+        "level": 12,
+        "effect": [1,43]
+    },
+    {
+        "name": "Ataque radioativo",
+        "damage": [38, 54],
+        "level": 14
+    },
+    {
+        "name": "Raio X",
+        "damage": [30,45],
+        "level": 16,
+        "effect":[1,42]
+    },
+    {
+        "name": "Celula contaminada",
+        "damage": [40, 57],
+        "level": 18
+    },
+    {
+        "name": "Nuvem radioativa",
+        "damage": [30, 35],
+        "level": 22,
+        "effect": [1,43]
+    },
+    {
+        "name": "Toxicidade subatomica",
+        "damage": [50,85],
+        "level": 24
+    },
+    {
+        "name": "Fusão de protons",
+        "damage": [50,70],
+        "level": 30,
+        "effect":[1,42]
+    }
+]

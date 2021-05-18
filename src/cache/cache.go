@@ -4,7 +4,6 @@ import (
 	"github.com/andersfylling/disgord"
 	"sync"
 	"time"
-	"fmt"
 )
 
 const N = 5

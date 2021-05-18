@@ -153,9 +153,9 @@ func main() {
 		}
 	}
 	arr = []*stats{&stats{
-		Type: 27,
+		Type: 29,
 	}}
-	for i := 1; i < 26; i += 1 {
+	for i := 1; i < 31; i += 1 {
 		for _, class := range arr {
 			result := measure(class.Type, 1, i, i, 10000, false)
 			class.TotalWins += result
