@@ -30,7 +30,9 @@ func (cache *Cache) MessageCreate(data []byte) (*disgord.MessageCreate, error) {
 				Message: *(disgord.DeepCopy(message).(*disgord.Message)),
 				Date:    time.Now(),
 			}
+			cache.Lock()
 			cache.Messages[message.ID] = entry
+			cache.Unlock()
 		}
 	}
 	return msg, nil
