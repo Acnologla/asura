@@ -6,11 +6,12 @@ import (
 	"asura/src/handler"
 	"asura/src/telemetry"
 	"fmt"
-	"github.com/andersfylling/disgord"
-	"github.com/joho/godotenv"
 	"math/rand"
 	"os"
 	"time"
+
+	"github.com/andersfylling/disgord"
+	"github.com/joho/godotenv"
 )
 
 func onReady() {

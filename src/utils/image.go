@@ -1,13 +1,14 @@
 package utils
 
 import (
-	"github.com/andersfylling/disgord"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/andersfylling/disgord"
 )
 
 // This function checks if the url has a valid image by checking the head of the url

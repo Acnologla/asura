@@ -7,12 +7,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
-	"github.com/fogleman/gg"
-	"github.com/nfnt/resize"
 	"image/png"
 	"io"
 	"strconv"
+
+	"github.com/andersfylling/disgord"
+	"github.com/fogleman/gg"
+	"github.com/nfnt/resize"
 )
 
 func init() {
@@ -103,7 +104,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.ResetClip()
 	dc.SetRGB(0.3, 0.3, 0.3)
 
-	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 13)
+	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 13)
 	dc.SetRGB255(196, 196, 196)
 	dc.DrawRoundedRectangle(10, 195, 300, 20, 10)
 	dc.Fill()
@@ -121,7 +122,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.DrawLine(10, 310, 310, 310)
 	dc.Stroke()
 
-	err = dc.LoadFontFace("./resources/Raleway-Light.ttf", 14)
+	dc.LoadFontFace("./resources/Raleway-Light.ttf", 14)
 	dc.SetRGB255(255, 255, 255)
 	dc.DrawStringAnchored(fmt.Sprintf("%d/%d", galo.Xp-int(curLevelXP), int(nextLevelXp-curLevelXP)), 320/2, 203.5, 0.5, 0.5)
 	dc.SetRGB(0, 0, 0)
@@ -147,7 +148,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 
 	dc.SetRGB(1, 1, 1)
-	err = dc.LoadFontFace("./resources/Raleway-Light.ttf", 22)
+	dc.LoadFontFace("./resources/Raleway-Light.ttf", 22)
 	dc.DrawStringAnchored(name, 320/2, 160, 0.5, 0.5)
 
 	// And here we encode it to send

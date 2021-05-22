@@ -6,13 +6,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"firebase.google.com/go/db"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"io/ioutil"
 	"math"
 	"strings"
 	"time"
+
+	"firebase.google.com/go/db"
+	"github.com/andersfylling/disgord"
 )
 
 type Rarity int
@@ -68,42 +69,42 @@ type SubGalo struct {
 	Name string `json:"name"`
 }
 
-type TrainLimit struct{
-	Times         int       `json:"times"`
-	LastReset     uint64    `json:"lastReset"`
+type TrainLimit struct {
+	Times     int    `json:"times"`
+	LastReset uint64 `json:"lastReset"`
 }
 
-type Arena struct{
+type Arena struct {
 	Active bool `json:"active"`
 	Win    int  `json:"wins"`
-	Lose   int  `json:"lose"` 
+	Lose   int  `json:"lose"`
 }
 
 type Galo struct {
-	Name            string    `json:"name"`
-	Xp              int       `json:"xp"`
-	Type            int       `json:"type"`
-	Equipped        []int     `json:"equipped"`
-	Win             int       `json:"win"`
-	Lose            int       `json:"lose"`
-	Lootbox         int       `json:"lootbox"`
-	CommonLootbox   int       `json:"commonLootbox"`
-	RareLootbox     int       `json:"rareLootbox"`
-	EpicLootbox     int       `json:"epicLootbox"`
-	Galos           []SubGalo `json:"galos"`
-	Money           int       `json:"money"`
-	Clan            string    `json:"clan"`
-	Dungeon         int       `json:"dungeon"`
-	DungeonReset    int       `json:"dungeonreset"`
-	Items           []int     `json:"items"`
-	Missions        []Mission `json:"missions"`
-	LastMission     uint64    `json:"lastMission"`
-	Vip             uint64    `json:"vip"`
-	Cosmetics       []int     `json:"cosmetics"`
-	Background      int       `json:"bg"`
-	CosmeticLootbox int       `json:"cosmeticLootbox"`
-	TrainLimit      TrainLimit`json:"trainLimit"`
-	Arena           Arena     `json:"arena"`        
+	Name            string     `json:"name"`
+	Xp              int        `json:"xp"`
+	Type            int        `json:"type"`
+	Equipped        []int      `json:"equipped"`
+	Win             int        `json:"win"`
+	Lose            int        `json:"lose"`
+	Lootbox         int        `json:"lootbox"`
+	CommonLootbox   int        `json:"commonLootbox"`
+	RareLootbox     int        `json:"rareLootbox"`
+	EpicLootbox     int        `json:"epicLootbox"`
+	Galos           []SubGalo  `json:"galos"`
+	Money           int        `json:"money"`
+	Clan            string     `json:"clan"`
+	Dungeon         int        `json:"dungeon"`
+	DungeonReset    int        `json:"dungeonreset"`
+	Items           []int      `json:"items"`
+	Missions        []Mission  `json:"missions"`
+	LastMission     uint64     `json:"lastMission"`
+	Vip             uint64     `json:"vip"`
+	Cosmetics       []int      `json:"cosmetics"`
+	Background      int        `json:"bg"`
+	CosmeticLootbox int        `json:"cosmeticLootbox"`
+	TrainLimit      TrainLimit `json:"trainLimit"`
+	Arena           Arena      `json:"arena"`
 }
 
 var Dungeon []*Room
@@ -145,10 +146,7 @@ func init() {
 }
 
 func IsVip(galo Galo) bool {
-	if uint64(time.Now().Unix()) > galo.Vip {
-		return false
-	}
-	return true
+	return uint64(time.Now().Unix()) <= galo.Vip
 }
 
 func findClassIndex(class string) int {
@@ -183,7 +181,7 @@ func GetGaloDB(id disgord.Snowflake) (Galo, error) {
 	var acc Galo
 	err := database.Database.NewRef(fmt.Sprintf("galo/%d", id)).Get(context.Background(), &acc)
 	if err != nil {
-		return acc, errors.New("There's some error")
+		return acc, errors.New("THERES SOME ERROR")
 	}
 	return acc, nil
 }
@@ -197,7 +195,7 @@ func ChangeMoney(id disgord.Snowflake, money int, onlyIf int) error {
 				galo.Money += money
 				return galo, nil
 			}
-			return nil, errors.New("Dont have money")
+			return nil, errors.New("DONT HAVE MONEY")
 		}
 		fmt.Println("ChangeMoney transaction error\n", err)
 		return nil, err
@@ -328,15 +326,14 @@ func GetEffectFromIndex(idx int) *Effect {
 	return Effects[idx]
 }
 
-
 func IsInLimit(galo Galo, id disgord.Snowflake) bool {
-	if galo.TrainLimit.LastReset == 0 || 1 <= (uint64(time.Now().Unix())-galo.TrainLimit.LastReset)/60/60/24{
-		UpdateGaloDB(id, func(galo Galo)(Galo, error){
+	if galo.TrainLimit.LastReset == 0 || 1 <= (uint64(time.Now().Unix())-galo.TrainLimit.LastReset)/60/60/24 {
+		UpdateGaloDB(id, func(galo Galo) (Galo, error) {
 			galo.TrainLimit.LastReset = uint64(time.Now().Unix())
 			galo.TrainLimit.Times = 0
 			return galo, nil
 		})
-	}else if galo.TrainLimit.Times >= 400 {
+	} else if galo.TrainLimit.Times >= 400 {
 		return true
 	}
 	return false

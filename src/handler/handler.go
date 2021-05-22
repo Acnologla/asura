@@ -1,12 +1,10 @@
 package handler
 
 import (
-	"asura/src/telemetry"
 	"asura/src/database"
+	"asura/src/telemetry"
 	"context"
 	"fmt"
-	"github.com/agnivade/levenshtein"
-	"github.com/andersfylling/disgord"
 	"os"
 	"regexp"
 	"runtime/debug"
@@ -14,6 +12,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/agnivade/levenshtein"
+	"github.com/andersfylling/disgord"
 )
 
 const BaseWorkers = 128
@@ -149,7 +150,7 @@ func handleCommand(session disgord.Session, msg *disgord.Message) {
 					return
 				}
 			}
-			if database.IsBanned(msg.Author.ID){
+			if database.IsBanned(msg.Author.ID) {
 				return
 			}
 			if checkCooldown(session, msg, realCommand.Aliases[0], msg.Author.ID, realCommand.Cooldown) {

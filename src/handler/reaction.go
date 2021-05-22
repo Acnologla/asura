@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"github.com/andersfylling/disgord"
 	"sync"
 	"time"
+
+	"github.com/andersfylling/disgord"
 )
 
 var ReactionHandlers = map[disgord.Snowflake]func(bool, disgord.Emoji, disgord.Snowflake){}

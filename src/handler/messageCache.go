@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"github.com/andersfylling/disgord"
 	"sync"
 	"time"
+
+	"github.com/andersfylling/disgord"
 )
 
 type Message struct {

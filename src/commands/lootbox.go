@@ -7,10 +7,11 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/andersfylling/disgord"
 )
 
 var lootTypes = []string{"comum", "rara", "normal", "cosmetica", "epica"}
@@ -33,7 +34,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title:       "Lootbox",
 			Color:       65535,
-			Description: fmt.Sprintf("Money: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n[1800] Lootbox epica: **%d**\n[320] Lootbox cosmetica: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 Gold)", galo.Money, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox, galo.EpicLootbox, galo.CosmeticLootbox),
+			Description: fmt.Sprintf("Money: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n[1800] Lootbox epica: **%d**\n[320] Lootbox cosmetica: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 Gold)\n\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**", galo.Money, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox, galo.EpicLootbox, galo.CosmeticLootbox),
 		})
 	}
 	if len(args) == 0 {
@@ -100,7 +101,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 						URL: randCosmetic.Value,
 					}
 					utils.Try(func() error {
-						msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).Update()
+						msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).UpdateBuilder()
 						msgUpdater.SetEmbed(embed)
 						_, err := msgUpdater.Execute()
 						return err
@@ -156,7 +157,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 					URL: rinha.Sprites[0][rand-1],
 				}
 				utils.Try(func() error {
-					msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).Update()
+					msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).UpdateBuilder()
 					msgUpdater.SetEmbed(embed)
 					_, err := msgUpdater.Execute()
 					return err

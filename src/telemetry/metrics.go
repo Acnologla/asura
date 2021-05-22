@@ -3,11 +3,12 @@ package telemetry
 import (
 	"bytes"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"net/http"
 	"os"
 	"runtime"
 	"time"
+
+	"github.com/andersfylling/disgord"
 )
 
 const (

@@ -1,6 +1,6 @@
 package rinha
 
-func CalcArena(gal Galo) (Galo, int, int ){
+func CalcArena(gal Galo) (Galo, int, int) {
 	wins := gal.Arena.Win
 	money := 80 * wins
 	xp := 22 * wins
@@ -9,5 +9,5 @@ func CalcArena(gal Galo) (Galo, int, int ){
 	gal.Arena.Win = 0
 	gal.Arena.Lose = 0
 	gal.Arena.Active = false
-	return gal,xp, money
+	return gal, xp, money
 }

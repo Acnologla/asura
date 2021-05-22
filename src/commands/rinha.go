@@ -6,9 +6,10 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"sync"
 	"time"
+
+	"github.com/andersfylling/disgord"
 )
 
 type rinhaOptions struct {
@@ -30,7 +31,7 @@ var (
 
 func edit(message *disgord.Message, embed *disgord.Embed) {
 	utils.Try(func() error {
-		msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).Update()
+		msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).UpdateBuilder()
 		msgUpdater.SetEmbed(embed)
 		_, err := msgUpdater.Execute()
 		return err
@@ -80,7 +81,7 @@ func effectToStr(effect *rinha.Result, affected string, author string, battle *r
 		}
 		return fmt.Sprintf(effectLiteral.Phrase+"\n", affected, effect.Damage)
 	} else if effect.Effect == rinha.NotEffective {
-		return fmt.Sprintf("**reduzido**\n")
+		return "**reduzido**\n"
 	}
 	return ""
 }
@@ -318,12 +319,12 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 		},
 		Description: "Iniciando a briga de galo	",
 		Fields: []*disgord.EmbedField{
-			&disgord.EmbedField{
+			{
 				Name:   fmt.Sprintf("%s Level %d", options.authorName, options.authorLevel),
 				Value:  fmt.Sprintf("%d/%d", 100, 100),
 				Inline: true,
 			},
-			&disgord.EmbedField{
+			{
 				Name:   fmt.Sprintf("%s Level %d", options.advName, options.advLevel),
 				Value:  fmt.Sprintf("%d/%d", 100, 100),
 				Inline: true,
@@ -372,12 +373,12 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 			embed.Description = lastEffects + "\n" + text
 
 			embed.Fields = []*disgord.EmbedField{
-				&disgord.EmbedField{
+				{
 					Name:   fmt.Sprintf("%s Level %d", options.authorName, options.authorLevel),
 					Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, battle.Fighters[0].MaxLife),
 					Inline: true,
 				},
-				&disgord.EmbedField{
+				{
 					Name:   fmt.Sprintf("%s Level %d", options.advName, options.advLevel),
 					Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, battle.Fighters[1].MaxLife),
 					Inline: true,

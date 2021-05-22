@@ -1,20 +1,22 @@
 package database
 
 import (
+	"asura/src/cache"
 	"context"
 	"errors"
-	"firebase.google.com/go"
-	"firebase.google.com/go/db"
 	"fmt"
-	"asura/src/cache"
-	"github.com/andersfylling/disgord"
-	"google.golang.org/api/option"
 	"log"
 	"os"
+
+	firebase "firebase.google.com/go"
+	"firebase.google.com/go/db"
+	"github.com/andersfylling/disgord"
+	"google.golang.org/api/option"
 )
 
 var Database *db.Client
 var Cache = cache.New()
+
 type User struct {
 	Avatars   []string `json:"avatar"`
 	Usernames []string `json:"username"`
@@ -42,7 +44,7 @@ func Init() error {
 
 func IsBanned(id disgord.Snowflake) bool {
 	cacheBan, exists := cache.Get(Cache, id)
-	if exists{
+	if exists {
 		return cacheBan
 	}
 	var isBan bool
@@ -55,7 +57,7 @@ func GetUserDB(id disgord.Snowflake) (User, error) {
 	var acc User
 	err := Database.NewRef(fmt.Sprintf("users/%d", id)).Get(context.Background(), &acc)
 	if err != nil {
-		return acc, errors.New("Not bro")
+		return acc, errors.New("ERR")
 	}
 	return acc, nil
 }

@@ -3,10 +3,11 @@ package utils
 import (
 	"asura/src/handler"
 	"context"
-	"github.com/andersfylling/disgord"
 	"image"
 	"strconv"
 	"strings"
+
+	"github.com/andersfylling/disgord"
 )
 
 func IsNumber(text string) bool {

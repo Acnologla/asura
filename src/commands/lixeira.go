@@ -5,13 +5,14 @@ import (
 	"asura/src/utils"
 	"bytes"
 	"context"
-	"github.com/andersfylling/disgord"
-	"github.com/fogleman/gg"
-	"github.com/nfnt/resize"
 	"image/png"
 	"io"
 	"os"
 	"strings"
+
+	"github.com/andersfylling/disgord"
+	"github.com/fogleman/gg"
+	"github.com/nfnt/resize"
 )
 
 func init() {
@@ -27,7 +28,7 @@ func init() {
 
 func runLixeira(session disgord.Session, msg *disgord.Message, args []string) {
 	// Loads the template of nunca.png in memory
-	file, err := os.Open("resources/lixeira.png")
+	file, _ := os.Open("resources/lixeira.png")
 	defer file.Close()
 
 	// Decodes it into a image.Image

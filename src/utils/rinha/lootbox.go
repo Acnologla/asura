@@ -4,7 +4,7 @@ import (
 	"asura/src/utils"
 )
 
-var lootChances = [][3]int{
+/* var lootChances = [][3]int{
 	{50},
 	{240, 50},
 	{450, 100},
@@ -21,7 +21,7 @@ func _Open(lootType int) int {
 	}
 	return GetRandByType(Common)
 }
-
+*/
 func OpenEpic() int {
 	value := utils.RandInt(1001)
 	if 14 >= value {

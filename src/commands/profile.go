@@ -8,14 +8,15 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
-	"github.com/fogleman/gg"
-	"github.com/nfnt/resize"
 	"image"
 	"image/png"
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/andersfylling/disgord"
+	"github.com/fogleman/gg"
+	"github.com/nfnt/resize"
 )
 
 var downloadedSprites = []image.Image{}
@@ -111,7 +112,7 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.ResetClip()
 	dc.SetRGB(0.3, 0.3, 0.3)
 
-	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 13)
+	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 13)
 	dc.DrawString("GALOS", 220, 245)
 	dc.DrawLine(220, 250, 580, 250)
 	dc.Stroke()
@@ -119,19 +120,19 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.DrawString("INFO", 220, 345)
 	dc.DrawLine(220, 350, 580, 350)
 	dc.Stroke()
-	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 16)
+	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 16)
 	dc.DrawStringAnchored("WINS", 260, 380, 0.5, 0.5)
 	dc.DrawStringAnchored("LOSES", 350, 380, 0.5, 0.5)
 	dc.DrawStringAnchored("CLAN", 440, 380, 0.5, 0.5)
 	dc.DrawStringAnchored("GALOS", 530, 380, 0.5, 0.5)
 
-	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
+	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
 	dc.DrawStringAnchored(strconv.Itoa(galo.Win), 260, 400, 0.5, 0.5)
 	dc.DrawStringAnchored(strconv.Itoa(galo.Lose), 350, 400, 0.5, 0.5)
 	dc.DrawStringAnchored("#"+strconv.Itoa(GetClanPos(galo.Clan)), 440, 400, 0.5, 0.5)
 	dc.DrawStringAnchored(strconv.Itoa(len(galo.Galos)+1), 530, 400, 0.5, 0.5)
 
-	err = dc.LoadFontFace("./resources/Raleway-Light.ttf", 13)
+	dc.LoadFontFace("./resources/Raleway-Light.ttf", 13)
 
 	dc.DrawString("Clan", 10, 280)
 	dc.DrawString("Money", 10, 310)
@@ -143,7 +144,7 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.DrawStringAnchored(strconv.Itoa(galo.Money), 190, 310, 1, 0)
 
 	dc.SetRGB(1, 1, 1)
-	err = dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
+	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
 	dc.DrawString(user.Username, 185, 204)
 
 	dc.SetRGB(0.3, 0.3, 0.3)

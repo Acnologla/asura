@@ -6,8 +6,9 @@ import (
 	"asura/src/utils"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"strconv"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -58,7 +59,7 @@ func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
 	}, 3)
 	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
 		if !removed && msg.Author.ID == u {
-			msgUpdater := session.Channel(msg.ChannelID).Message(message.ID).Update()
+			msgUpdater := session.Channel(msg.ChannelID).Message(message.ID).UpdateBuilder()
 			if emoji.Name == "⬅️" {
 				if count == 0 {
 					count = len(userinfo.Avatars) - 1

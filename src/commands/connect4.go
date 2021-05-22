@@ -4,8 +4,9 @@ import (
 	"asura/src/handler"
 	"asura/src/utils"
 	"context"
-	"github.com/andersfylling/disgord"
 	"strings"
+
+	"github.com/andersfylling/disgord"
 )
 
 var connect4Emojis = map[int]string{
@@ -126,7 +127,7 @@ func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 						}
 					}
 					if played {
-						msgUpdater := mes.Update()
+						msgUpdater := mes.UpdateBuilder()
 						winned := checkConnect4Win(board)
 						if winned != 0 {
 							emoji := "❌"

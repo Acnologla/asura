@@ -3,12 +3,13 @@ package rinha
 import (
 	"asura/src/database"
 	"context"
-	"firebase.google.com/go/db"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"math"
 	"strings"
 	"time"
+
+	"firebase.google.com/go/db"
+	"github.com/andersfylling/disgord"
 )
 
 const allowedChars = "abcdefghijklmnopqrstuvwxyz123456789 -_"

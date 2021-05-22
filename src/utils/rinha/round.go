@@ -87,12 +87,12 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	if not_effective_damage != 0 {
 		real_not_effective := int(math.Round(float64(not_effective_damage) * round.Target.ItemPayload))
 		round.Results = append([]*Result{
-			&Result{Effect: NotEffective, Damage: -real_not_effective, Skill: round.Skill, Self: false, EffectID: 0},
+			{Effect: NotEffective, Damage: -real_not_effective, Skill: round.Skill, Self: false, EffectID: 0},
 		}, round.Results...)
 	}
 
 	round.Results = append([]*Result{
-		&Result{Reflected: reflected, Effect: Damaged, Damage: real_damage, Skill: round.Skill, Self: false, EffectID: 0},
+		{Reflected: reflected, Effect: Damaged, Damage: real_damage, Skill: round.Skill, Self: false, EffectID: 0},
 	}, round.Results...)
 
 	return real_damage

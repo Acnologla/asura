@@ -3,12 +3,13 @@ package main
 import (
 	"asura/src/utils/rinha"
 	"fmt"
+	"math/rand"
+	"time"
+
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
-	"math/rand"
-	"time"
 )
 
 type stats struct {
@@ -142,7 +143,7 @@ func graphic(stat []*stats) {
 	}
 }
 
-func main() {
+func main3() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	arr := []*stats{}
 	for i := 1; i < len(rinha.Classes); i++ {

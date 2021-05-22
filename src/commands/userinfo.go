@@ -6,10 +6,11 @@ import (
 	"asura/src/utils"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -77,11 +78,11 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 				IconURL: authorAvatar,
 			},
 			Fields: []*disgord.EmbedField{
-				&disgord.EmbedField{
+				{
 					Name:  "Nomes Antigos",
 					Value: oldUsernames,
 				},
-				&disgord.EmbedField{
+				{
 					Name:  "Avatares Antigos",
 					Value: oldAvatars,
 				},

@@ -5,9 +5,10 @@ import (
 	"asura/src/utils"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"strconv"
 	"time"
+
+	"github.com/andersfylling/disgord"
 )
 
 var arrows = []string{"➡", "⬇", "⬆", "⬅"}
@@ -30,7 +31,7 @@ var emojis2048 = map[int]string{
 }
 
 func slideLeft(board []([]int), points *int) {
-	for i, _ := range board {
+	for i := range board {
 		s := 0
 		for j := 1; j < len(board[i]); j++ {
 			if board[i][j] != 0 {
@@ -130,7 +131,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 				if time.Since(lastPlay).Seconds()/60 >= 2 {
 					handler.DeleteHandler(message)
 					mes.DeleteAllReactions()
-					msgUpdater := mes.Update()
+					msgUpdater := mes.UpdateBuilder()
 					msgUpdater.SetContent(fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), draw2048Board(board)))
 					utils.Try(func() error {
 						_, err := msgUpdater.Execute()
@@ -176,7 +177,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 								n := empty[utils.RandInt(len(empty))]
 								board[n/len(board)][n%len(board)] = 2
 							}
-							msgUpdater := mes.Update()
+							msgUpdater := mes.UpdateBuilder()
 							msgUpdater.SetContent(fmt.Sprintf("%s\n\n%s", drawPoints(points), draw2048Board(board)))
 							utils.Try(func() error {
 								_, err := msgUpdater.Execute()

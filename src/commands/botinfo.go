@@ -61,13 +61,15 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	if err != nil {
 		return
 	}
+	botInfo, _ := handler.Client.Gateway().GetBot()
+
 	avatar, _ := myself.AvatarURL(512, true)
 	date := ((uint64(myself.ID) >> 22) + 1420070400000) / 1000
 	readyAt := int(time.Since(handler.ReadyAt).Minutes())
 	freeWorkers := handler.GetFreeWorkers()
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
-			Title: "Asura",
+			Title: fmt.Sprintf("Asura (Shard %d)", disgord.ShardID(msg.GuildID, botInfo.Shards)),
 			Color: 65535,
 			Thumbnail: &disgord.EmbedThumbnail{
 				URL: avatar,
@@ -81,12 +83,13 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			Servidores: **%d**
 			Ram usada: **%d**MB
 			Ping: **%dms**
+			Shards: **%d**
 			Bot online a %d dias %d horas %d minutos
 
 			**[Convite](https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=bot&permissions=8)**
 			**[Website](https://acnologla.github.io/asura-site/)**
 			**[Servidor de suporte](https://discord.gg/tdVWQGV)**
-			`, handler.Workers, freeWorkers, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].Milliseconds(), readyAt/60/24, readyAt/60%24, readyAt%60),
+			`, handler.Workers, freeWorkers, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].Milliseconds(),botInfo.Shards, readyAt/60/24, readyAt/60%24, readyAt%60),
 		},
 	})
 }

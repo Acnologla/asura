@@ -6,9 +6,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
-	"github.com/fogleman/gg"
-	"github.com/nfnt/resize"
 	"image/png"
 	"io"
 	"math/rand"
@@ -16,6 +13,10 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/andersfylling/disgord"
+	"github.com/fogleman/gg"
+	"github.com/nfnt/resize"
 )
 
 var cards []string = []string{}
@@ -147,8 +148,7 @@ func (game *unoGame) addToLast() {
 func (game *unoGame) drawCards(p *player) *bytes.Buffer {
 	dc := gg.NewContext(7*80+7*35, (int(len(p.cards)/7)-1)*110+330)
 	dc.SetHexColor("#FFFFFF")
-	if err := dc.LoadFontFace("./resources/Raleway-Black.ttf", 20); err != nil {
-	}
+	dc.LoadFontFace("./resources/Raleway-Black.ttf", 20)
 	i, h := 0, 30
 	for _, card := range p.cards {
 		file, _ := os.Open(fmt.Sprintf("resources/uno/%s.png", card))
