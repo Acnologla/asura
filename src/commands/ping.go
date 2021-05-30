@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"context"
 	"fmt"
+
 	"github.com/andersfylling/disgord"
 )
 
@@ -23,4 +24,5 @@ func runPing(session disgord.Session, msg *disgord.Message, args []string) {
 	botInfo, _ := handler.Client.Gateway().GetBot()
 	shard := disgord.ShardID(msg.GuildID, botInfo.Shards)
 	msg.Reply(context.Background(), session, fmt.Sprintf("%dms", ping[shard].Milliseconds()))
+
 }
