@@ -4,8 +4,9 @@ import (
 	"asura/src/handler"
 	"asura/src/utils/rinha"
 	"context"
-	"github.com/andersfylling/disgord"
 	"strconv"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -79,7 +80,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 		if args[0] == "use" {
 			if len(galo.Equipped) >= 5 {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
-					Content: "Voce ja tem 5 ou mais habilidades ativas! use ``j!skills unequip [skill]`` para desativar uma habilidade e assim conseguir ativar outra!",
+					Content: "Voce ja tem 5 ou mais habilidades ativas! use ``j!skills remove [skill]`` para desativar uma habilidade e assim conseguir ativar outra!",
 				})
 				return
 			}
