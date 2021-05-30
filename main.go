@@ -38,13 +38,13 @@ func main() {
 	telemetry.Init()
 	database.Init()
 	fmt.Println("Starting bot...")
-	cache := disgord.NewCacheLFUImmutable(0, 0, 0, 0)
+	cache := disgord.NewBasicCache()
 	client := disgord.New(disgord.Config{
 		RejectEvents: []string{disgord.EvtPresenceUpdate, disgord.EvtTypingStart},
 		BotToken:     os.Getenv("TOKEN"),
 		Cache: &handler.Cache{
-			CacheLFUImmutable: cache.(*disgord.CacheLFUImmutable),
-			Messages:          map[disgord.Snowflake]*handler.Message{},
+			BasicCache: cache,
+			Messages:   map[disgord.Snowflake]*handler.Message{},
 		},
 	})
 	defer client.Gateway().StayConnectedUntilInterrupted()
@@ -52,6 +52,7 @@ func main() {
 	client.Gateway().MessageCreate(handler.OnMessage)
 	client.Gateway().MessageReactionAdd(handler.OnReactionAdd)
 	client.Gateway().MessageReactionRemove(handler.OnReactionRemove)
+	client.Gateway().InteractionCreate(handler.Interaction)
 	client.Gateway().BotReady(onReady)
 
 }

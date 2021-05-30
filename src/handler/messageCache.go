@@ -15,7 +15,7 @@ type Message struct {
 
 type Cache struct {
 	sync.RWMutex
-	*disgord.CacheLFUImmutable
+	*disgord.BasicCache
 	Messages map[disgord.Snowflake]*Message
 }
 
