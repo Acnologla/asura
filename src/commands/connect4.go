@@ -9,6 +9,8 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
+var emojis = []string{"1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣"}
+
 var connect4Emojis = map[int]string{
 	0: "⚪",
 	1: "🟡",

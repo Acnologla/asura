@@ -6,8 +6,9 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"strings"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -111,49 +112,42 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					msg.Reply(context.Background(), session, msg.Author.Mention()+", Apenas donos e administradores podem convidar pessoas ao clan")
 					return
 				}
-				confirmMsg, confirmErr := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-					Content: msg.Mentions[0].Mention(),
-					Embed: &disgord.Embed{
-						Color:       65535,
-						Description: fmt.Sprintf("**%s** clique na reação abaixo para aceitar o convite", msg.Mentions[0].Username),
-					},
-				})
-				if confirmErr == nil {
-					utils.Confirm(confirmMsg, msg.Mentions[0].ID, func() {
-						clan = rinha.GetClan(galo.Clan)
-						level := rinha.ClanXpToLevel(clan.Xp)
-						maxMembers := 15
-						if level >= 3 {
-							maxMembers = 20
-						}
-						if rinha.IsInClan(clan, user.ID) {
-							msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")
-							return
-						}
-						if len(clan.Members) >= maxMembers {
-							msg.Reply(context.Background(), session, msg.Author.Mention()+", Este clan ja esta cheio\nRemova algum usuario usando j!clan remove @user")
-							return
-						}
-						invited, _ := rinha.GetGaloDB(user.ID)
-						if invited.Clan != "" {
-							msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario esta em outro clan ("+invited.Clan+")")
-							return
-						}
-						clan.Members = append(clan.Members, rinha.ClanMember{
-							ID:   uint64(user.ID),
-							Role: rinha.Member,
-						})
-						rinha.UpdateClan(galo.Clan, func(clanUpdate rinha.Clan) (rinha.Clan, error) {
-							clanUpdate.Members = clan.Members
-							return clanUpdate, nil
-						})
-						rinha.UpdateGaloDB(user.ID, func(gal rinha.Galo) (rinha.Galo, error) {
-							gal.Clan = galo.Clan
-							return gal, nil
-						})
-						msg.Reply(context.Background(), session, user.Mention()+", Voce entrou para o clan **"+galo.Clan+"** com sucesso")
+				text := fmt.Sprintf("%s Voce foi convidado para o clan %s", msg.Mentions[0].Username, galo.Clan)
+				utils.Confirm(text, msg.ChannelID, msg.Mentions[0].ID, func() {
+					clan = rinha.GetClan(galo.Clan)
+					level := rinha.ClanXpToLevel(clan.Xp)
+					maxMembers := 15
+					if level >= 3 {
+						maxMembers = 20
+					}
+					if rinha.IsInClan(clan, user.ID) {
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")
+						return
+					}
+					if len(clan.Members) >= maxMembers {
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este clan ja esta cheio\nRemova algum usuario usando j!clan remove @user")
+						return
+					}
+					invited, _ := rinha.GetGaloDB(user.ID)
+					if invited.Clan != "" {
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario esta em outro clan ("+invited.Clan+")")
+						return
+					}
+					clan.Members = append(clan.Members, rinha.ClanMember{
+						ID:   uint64(user.ID),
+						Role: rinha.Member,
 					})
-				}
+					rinha.UpdateClan(galo.Clan, func(clanUpdate rinha.Clan) (rinha.Clan, error) {
+						clanUpdate.Members = clan.Members
+						return clanUpdate, nil
+					})
+					rinha.UpdateGaloDB(user.ID, func(gal rinha.Galo) (rinha.Galo, error) {
+						gal.Clan = galo.Clan
+						return gal, nil
+					})
+					msg.Reply(context.Background(), session, user.Mention()+", Voce entrou para o clan **"+galo.Clan+"** com sucesso")
+				})
+
 				return
 			}
 			if strings.ToLower(args[0]) == "admin" {

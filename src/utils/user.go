@@ -2,7 +2,6 @@ package utils
 
 import (
 	"asura/src/handler"
-	"context"
 	"image"
 	"strconv"
 	"strings"
@@ -57,17 +56,44 @@ func GetUser(msg *disgord.Message, args []string, session disgord.Session) *disg
 	return msg.Author
 }
 
-func Confirm(confirmMsg *disgord.Message, id disgord.Snowflake, callback func()) {
-	Try(func() error {
-		return confirmMsg.React(context.Background(), handler.Client, "✅")
-	}, 5)
+func Confirm(title string, channel, id disgord.Snowflake, callback func()) {
+	msg, err := handler.Client.Channel(channel).CreateMessage(&disgord.CreateMessageParams{
+		Embed: &disgord.Embed{
+			Title: title,
+			Color: 65535,
+		},
+		Components: []*disgord.MessageComponent{
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:     disgord.MessageComponentButton,
+						Label:    "Aceitar",
+						Style:    disgord.Success,
+						CustomID: "yes",
+					},
+					{
+						Type:     disgord.MessageComponentButton,
+						Label:    "Recusar",
+						Style:    disgord.Danger,
+						CustomID: "no",
+					},
+				},
+			},
+		},
+	})
+	if err != nil {
+		return
+	}
 	done := false
-	handler.RegisterHandler(confirmMsg, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
-		if emoji.Name == "✅" && !removed && u == id && !done {
+	handler.RegisterBHandler(msg, func(interaction *disgord.InteractionCreate) {
+		if id == interaction.Member.User.ID && !done {
 			done = true
-			handler.DeleteHandler(confirmMsg)
-			go handler.Client.Channel(confirmMsg.ChannelID).Message(confirmMsg.ID).Delete()
-			callback()
+			handler.DeleteBHandler(msg)
+			go handler.Client.Channel(msg.ChannelID).Message(msg.ID).Delete()
+			if interaction.Data.CustomID == "yes" {
+				callback()
+			}
 		}
 	}, 120)
 }

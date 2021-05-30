@@ -143,30 +143,23 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 
 		battleMutex.RUnlock()
-		confirmMsg, confirmErr := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-			Content: msg.Mentions[0].Mention(),
-			Embed: &disgord.Embed{
-				Color:       65535,
-				Description: fmt.Sprintf("**%s** clique na reação abaixo para aceitar o duelo", msg.Mentions[0].Username),
-			},
-		})
-		if confirmErr == nil {
-			utils.Confirm(confirmMsg, msg.Mentions[0].ID, func() {
-				battleMutex.RLock()
-				if currentBattles[msg.Author.ID] != "" {
-					battleMutex.RUnlock()
-					msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
-					return
-				}
-				if currentBattles[msg.Mentions[0].ID] != "" {
-					battleMutex.RUnlock()
-					msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
-					return
-				}
+		text := fmt.Sprintf("**%s** voce foi convidado para um duelo com %s", msg.Mentions[0].Username, msg.Author.Username)
+		utils.Confirm(text, msg.ChannelID, msg.Mentions[0].ID, func() {
+			battleMutex.RLock()
+			if currentBattles[msg.Author.ID] != "" {
 				battleMutex.RUnlock()
-				executePVP(msg, session)
-			})
-		}
+				msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+				return
+			}
+			if currentBattles[msg.Mentions[0].ID] != "" {
+				battleMutex.RUnlock()
+				msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+				return
+			}
+			battleMutex.RUnlock()
+			executePVP(msg, session)
+		})
+
 	} else {
 		msg.Reply(context.Background(), session, "Voce precisa mencionar alguem")
 	}
@@ -264,7 +257,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 					money++
 				}
 				if level >= 5 {
-					money++
+					money += 2
 				}
 				go rinha.CompleteClanMission(galoWinner.Clan, winner.ID)
 				clanMsg = "\nGanhou **1** de xp para seu clan"

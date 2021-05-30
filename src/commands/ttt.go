@@ -2,9 +2,10 @@ package commands
 
 import (
 	"asura/src/handler"
-	"asura/src/utils"
 	"context"
 	"fmt"
+	"strconv"
+
 	"github.com/andersfylling/disgord"
 )
 
@@ -19,22 +20,46 @@ func init() {
 	})
 }
 
-var emojis = []string{"1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣"}
-
-func text(tiles [9]int) (text string) {
-	for i, tile := range tiles {
-		if tile == 1 {
-			text += ":x:"
-		} else if tile == 2 {
-			text += ":o:"
-		} else {
-			text += emojis[i]
-		}
-		if i == 2 || i == 5 {
-			text += "\n"
-		}
+func board(tiles [9]int) *disgord.CreateMessageParams {
+	arrs := []*disgord.MessageComponent{
+		{
+			Type: disgord.MessageComponentActionRow,
+		},
+		{
+			Type: disgord.MessageComponentActionRow,
+		},
+		{
+			Type: disgord.MessageComponentActionRow,
+		},
 	}
-	return
+	params := &disgord.CreateMessageParams{
+		Content: "Clique nos botoes para jogar",
+	}
+	for i, tile := range tiles {
+		var arrField int = i / 3
+		button := &disgord.MessageComponent{
+			Type:     disgord.MessageComponentButton,
+			Style:    disgord.Secondary,
+			CustomID: strconv.Itoa(i),
+			Label:    "\u200f",
+		}
+		if tile == 1 {
+			button.Style = disgord.Primary
+			button.Emoji = &disgord.Emoji{
+				Name: "❌",
+			}
+			button.Disabled = true
+		} else if tile == 2 {
+			button.Style = disgord.Danger
+			button.Emoji = &disgord.Emoji{
+				Name: "⭕",
+			}
+			button.Disabled = true
+		}
+		arrs[arrField].Components = append(arrs[arrField].Components, button)
+	}
+	params.Components = arrs
+	return params
 }
 
 func win(tiles [9]int) int {
@@ -70,57 +95,51 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 	ctx := context.Background()
 	tiles := [9]int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 	turn := 1
-	message, err := msg.Reply(ctx, session, ":hash::x:\n\n"+text(tiles))
+	message, err := msg.Reply(ctx, session, board(tiles))
 	if err != nil {
 		return
 	}
-	for i := 0; i < len(emojis); i++ {
-		utils.Try(func() error {
-			return message.React(ctx, session, emojis[i])
-		}, 5)
-	}
 	mes := session.Channel(message.ChannelID).Message(message.ID)
-	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
+	handler.RegisterBHandler(message, func(interaction *disgord.InteractionCreate) {
 		turnUser := user
 		letter := ":x:"
 		if turn == 1 {
 			turnUser = msg.Author
 			letter = ":o:"
 		}
-		if !removed && turnUser.ID == u {
-			if utils.Includes(emojis, emoji.Name) {
-				tile := utils.IndexOf(emojis, emoji.Name)
-				played := playTTT(tile, &tiles, turn)
-				if played {
-					if turn == 2 {
-						turn--
-					} else {
-						turn++
-					}
-					winner := win(tiles)
-					playType := ":hash:"
-					if winner != 3 {
-						playType = ":crown:"
-						if letter == ":x:" {
-							letter = ":o:"
-						} else {
-							letter = ":x:"
-						}
-						if winner == 0 {
-							letter = ":no_good:"
-						}
-						handler.DeleteHandler(message)
-						go mes.DeleteAllReactions()
-					}
-					msgUpdater := mes.Update()
-					msgUpdater.SetContent(fmt.Sprintf("%s%s\n\n%s", playType, letter, text(tiles)))
-					msgUpdater.Execute()
-					message.Unreact(ctx, session, emoji.Name)
-					mes.Reaction(emoji.Name).DeleteUser(u)
+		if turnUser.ID == interaction.Member.User.ID {
+			tile, _ := strconv.Atoi(interaction.Data.CustomID)
+			played := playTTT(tile, &tiles, turn)
+			if played {
+				if turn == 2 {
+					turn--
+				} else {
+					turn++
 				}
+				winner := win(tiles)
+				playType := ":hash:"
+				if winner != 3 {
+					playType = ":crown:"
+					if letter == ":x:" {
+						letter = ":o:"
+					} else {
+						letter = ":x:"
+					}
+					if winner == 0 {
+						letter = ":no_good:"
+					}
+					handler.DeleteBHandler(message)
+				}
+				session.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+					Type: disgord.UpdateMessage,
+					Data: &disgord.InteractionApplicationCommandCallbackData{
+						Content: fmt.Sprintf("%s%s", playType, letter),
+					},
+				})
+				msgUpdater := mes.UpdateBuilder()
+				msgUpdater.Set("components", board(tiles).Components)
+				msgUpdater.Execute()
 			}
-		} else if u != message.Author.ID {
-			mes.Reaction(emoji.Name).DeleteUser(u)
 		}
 	}, 60*5)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 var ReactionHandlers = map[disgord.Snowflake]func(bool, disgord.Emoji, disgord.Snowflake){}
-var ReactionLock = &sync.RWMutex{}
+var ReactionLock = sync.RWMutex{}
 
 func RegisterHandler(msg *disgord.Message, callback func(bool, disgord.Emoji, disgord.Snowflake), timeout int) {
 	ReactionHandlers[msg.ID] = callback
