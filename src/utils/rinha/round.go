@@ -38,20 +38,37 @@ type Round struct {
 
 func (round *Round) applySkillDamage(firstTurn bool) int {
 	reflected := false
+	var galo *Galo
 	if round.SkillId == 0 {
 		round.SkillId = round.Attacker.Equipped[utils.RandInt(len(round.Attacker.Equipped))]
 		round.Skill = Skills[round.Attacker.Galo.Type-1][round.SkillId]
+		galo = round.Attacker.Galo
+		if HasUpgrade(galo.Upgrades, 1, 1, 0) {
+			round.Attacker.Life += 3
+		}
 	} else {
 		reflected = true
 		round.Skill = Skills[round.Target.Galo.Type-1][round.SkillId]
+		galo = round.Target.Galo
 	}
 
 	attack_damage := 0
 
 	if round.Skill.Damage[1] != 0 {
-		attack_damage = int(float32(Between(round.Skill.Damage)))
+		min, max := CalcDamage(round.Skill, *galo)
+		attack_damage = int(float32(Between([2]int{min, max})))
 	}
-
+	if HasUpgrade(galo.Upgrades, 1, 0) {
+		attack_damage += 2
+		if HasUpgrade(galo.Upgrades, 1, 0, 0) {
+			attack_damage += 3
+		}
+	}
+	if HasUpgrade(galo.Upgrades, 2, 0, 1) {
+		if 9 >= utils.RandInt(101) {
+			attack_damage += attack_damage / 5
+		}
+	}
 	not_effective_damage := 0
 
 	difference := CalcLevel(round.Attacker.Galo.Xp) - CalcLevel(round.Target.Galo.Xp)
@@ -109,6 +126,9 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 			}
 			if effect_damage >= receiver.Life {
 				effect_damage = receiver.Life - 1
+			}
+			if HasUpgrade(ataccker.Galo.Upgrades, 1, 0, 1) {
+				effect_damage += 2
 			}
 			receiver.Life -= effect_damage
 		}
@@ -247,6 +267,15 @@ func (battle *Battle) Play() []*Result {
 		battle.Stun = round.Stun
 		if round.Reflex {
 			battle.ReflexType = 1
+		}
+		if HasUpgrade(round.Target.Galo.Upgrades, 2) {
+			num := 4
+			if HasUpgrade(round.Target.Galo.Upgrades, 2, 0, 0) {
+				num += 3
+			}
+			if num >= utils.RandInt(101) {
+				main_damage = 0
+			}
 		}
 		round.Target.Life -= main_damage
 	}

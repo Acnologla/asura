@@ -64,9 +64,10 @@ type Skill struct {
 }
 
 type SubGalo struct {
-	Type int    `json:"type"`
-	Xp   int    `json:"xp"`
-	Name string `json:"name"`
+	Type      int    `json:"type"`
+	Xp        int    `json:"xp"`
+	Name      string `json:"name"`
+	GaloReset int    `json:"galoReset"`
 }
 
 type TrainLimit struct {
@@ -81,6 +82,9 @@ type Arena struct {
 }
 
 type Galo struct {
+	UserXp          int        `json:"userXp"`
+	Upgrades        []int      `json:"upgrades"`
+	GaloReset       int        `json:"galoReset"`
 	Name            string     `json:"name"`
 	Xp              int        `json:"xp"`
 	Type            int        `json:"type"`
@@ -143,6 +147,8 @@ func init() {
 	json.Unmarshal([]byte(byteValueItems), &Items)
 	byteValueCosmetics, _ := ioutil.ReadFile("./resources/galo/cosmetics.json")
 	json.Unmarshal([]byte(byteValueCosmetics), &Cosmetics)
+	byteValueUpgrades, _ := ioutil.ReadFile("./resources/galo/upgrades.json")
+	json.Unmarshal([]byte(byteValueUpgrades), &Upgrades)
 }
 
 func IsVip(galo Galo) bool {
@@ -157,8 +163,20 @@ func findClassIndex(class string) int {
 	}
 	return -1
 }
-func SkillToStringFormated(skill *Skill) (text string) {
-	text = fmt.Sprintf("`[Dano: %d - %d]`", skill.Damage[0], skill.Damage[1]-1)
+
+func CalcDamage(skill *Skill, galo Galo) (min int, max int) {
+	min = skill.Damage[0]
+	max = skill.Damage[1]
+	if galo.GaloReset > 0 {
+		min += min / 5 * galo.GaloReset
+		max += max / 5 * galo.GaloReset
+	}
+	return
+}
+
+func SkillToStringFormated(skill *Skill, galo Galo) (text string) {
+	min, max := CalcDamage(skill, galo)
+	text = fmt.Sprintf("`[Dano: %d - %d]`", min, max-1)
 	if skill.Effect[0] != 0 || skill.Effect[1] != 0 {
 		effect := Effects[int(skill.Effect[1])]
 		text += fmt.Sprintf("\n*Tem %d%% de Chance de causar %s*", int(skill.Effect[0]*100), effect.Name)

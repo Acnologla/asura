@@ -7,12 +7,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
-	"github.com/fogleman/gg"
 	"image/png"
 	"io"
 	"math"
 	"strconv"
+
+	"github.com/andersfylling/disgord"
+	"github.com/fogleman/gg"
 )
 
 func init() {
@@ -125,12 +126,14 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 				newGalo := galo.Galos[value]
 				old := rinha.SubGalo{
-					Xp:   galo.Xp,
-					Type: galo.Type,
-					Name: galo.Name,
+					Xp:        galo.Xp,
+					Type:      galo.Type,
+					Name:      galo.Name,
+					GaloReset: galo.GaloReset,
 				}
 				galo.Type = newGalo.Type
 				galo.Xp = newGalo.Xp
+				galo.GaloReset = newGalo.GaloReset
 				galo.Name = newGalo.Name
 				galo.Galos[value] = old
 				galo.Equipped = []int{}

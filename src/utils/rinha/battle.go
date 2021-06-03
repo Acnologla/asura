@@ -35,6 +35,16 @@ func checkItem(galo *Galo) (int, float64) {
 
 func initFighter(galo *Galo, noItems bool) *Fighter {
 	life := 100 + (CalcLevel(galo.Xp) * 3)
+	if HasUpgrade(galo.Upgrades, 1) {
+		life += 5
+		if HasUpgrade(galo.Upgrades, 1, 1) {
+			life += 5
+			if HasUpgrade(galo.Upgrades, 1, 1, 1) {
+				life += 10
+			}
+		}
+
+	}
 	var itemEffect int
 	var payload float64
 	if !noItems {
@@ -56,10 +66,25 @@ func initFighter(galo *Galo, noItems bool) *Fighter {
 	}
 }
 
-func CreateBattle(first *Galo, sec *Galo, noItems bool) Battle {
-	firstFighter := initFighter(first, noItems)
-	secFighter := initFighter(sec, noItems)
-
+func CreateBattle(first Galo, sec Galo, noItems bool) Battle {
+	firstFighter := initFighter(&first, noItems)
+	secFighter := initFighter(&sec, noItems)
+	if HasUpgrade(firstFighter.Galo.Upgrades, 2, 1) {
+		if HasUpgrade(firstFighter.Galo.Upgrades, 2, 1, 1) {
+			secFighter.Life -= 10
+			secFighter.MaxLife -= 10
+		}
+		secFighter.Life -= 5
+		secFighter.MaxLife -= 5
+	}
+	if HasUpgrade(secFighter.Galo.Upgrades, 2, 1) {
+		if HasUpgrade(secFighter.Galo.Upgrades, 2, 1, 1) {
+			firstFighter.Life -= 10
+			firstFighter.MaxLife -= 10
+		}
+		firstFighter.Life -= 5
+		firstFighter.MaxLife -= 5
+	}
 	initEquips(firstFighter)
 	initEquips(secFighter)
 

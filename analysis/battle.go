@@ -36,7 +36,7 @@ func one(firstClass int, secClass int, firstLvl int, secLvl int) {
 		Equipped: []int{},
 	}
 
-	battle := rinha.CreateBattle(&first, &sec, false)
+	battle := rinha.CreateBattle(first, sec, false)
 
 	for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0 {
 		turno := 0
@@ -83,7 +83,7 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, 
 			Equipped: []int{},
 		}
 
-		battle := rinha.CreateBattle(&first, &sec, false)
+		battle := rinha.CreateBattle(first, sec, false)
 
 		for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0 {
 			if log {

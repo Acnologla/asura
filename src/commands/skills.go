@@ -40,7 +40,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 
 			for i := 0; i < len(galo.Equipped); i++ {
 				skill := rinha.Skills[galo.Type-1][galo.Equipped[i]]
-				desc += "**" + strconv.Itoa(i) + ". " + skill.Name + "**  " + rinha.SkillToStringFormated(skill) + "\n"
+				desc += "**" + strconv.Itoa(i) + ". " + skill.Name + "**  " + rinha.SkillToStringFormated(skill, galo) + "\n"
 			}
 		}
 
@@ -48,7 +48,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 
 		for i := 0; i < len(skills); i++ {
 			skill := rinha.Skills[galo.Type-1][skills[i]]
-			desc += "**" + strconv.Itoa(i) + ". " + skill.Name + "**  " + rinha.SkillToStringFormated(skill) + "\n"
+			desc += "**" + strconv.Itoa(i) + ". " + skill.Name + "**  " + rinha.SkillToStringFormated(skill, galo) + "\n"
 		}
 
 		msg.Reply(context.Background(), session, disgord.CreateMessageParams{

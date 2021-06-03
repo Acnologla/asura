@@ -59,8 +59,17 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		})
 		rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
 		if winner == 0 {
-			xpOb := utils.RandInt(11) + 12
-			money := 4
+			xpOb := utils.RandInt(10) + 11
+			if rinha.HasUpgrade(galo.Upgrades, 0) {
+				xpOb++
+				if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1) {
+					xpOb += 3
+				}
+			}
+			money := 5
+			if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1) {
+				money++
+			}
 			clanMsg := ""
 			isLimit := rinha.IsInLimit(galo, msg.Author.ID)
 			if isLimit {
@@ -79,6 +88,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 				if rinha.IsVip(galo) {
 					xpOb += 8
 				}
+				galo.UserXp++
 				galo.TrainLimit.Times++
 				if galo.Clan != "" {
 					clan := rinha.GetClan(galo.Clan)

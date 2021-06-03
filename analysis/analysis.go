@@ -37,7 +37,7 @@ func battle(firstClass int, secClass int, firstLvl int, secLvl int, times int) R
 			Equipped: []int{},
 		}
 
-		battle := rinha.CreateBattle(&first, &sec, false)
+		battle := rinha.CreateBattle(first, sec, false)
 
 		result.Skills = [2][5][2]int{}
 

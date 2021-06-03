@@ -40,6 +40,21 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		rinha.SaveGaloDB(user.ID, galo)
 	}
 	if len(args) > 0 {
+		if args[0] == "update" {
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+				level := rinha.CalcLevel(galo.Xp)
+				if level >= 35 {
+					galo.GaloReset++
+					galo.Xp = 0
+					galo.Equipped = []int{}
+					msg.Reply(context.Background(), session, "Voce evoluiu seu galo com sucesso")
+				} else {
+					msg.Reply(context.Background(), session, "Seu galo precisa ser pelomenos nivel 35 para evoluir ele")
+				}
+				return galo, nil
+			})
+			return
+		}
 		num, err := strconv.Atoi(args[len(args)-1])
 		if err == nil {
 			if num >= 0 && len(galo.Galos)-1 >= num {
@@ -144,7 +159,8 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		margin := float64(335 + (25 * i))
 		text, _ := rinha.SkillToString(rinhaSkill)
 		dc.DrawString(text, 10, margin)
-		dc.DrawStringAnchored(fmt.Sprintf("Dano: %d - %d", rinhaSkill.Damage[0], rinhaSkill.Damage[1]-1), 310, margin, 1, 0)
+		min, max := rinha.CalcDamage(rinhaSkill, galo)
+		dc.DrawStringAnchored(fmt.Sprintf("Dano: %d - %d", min, max-1), 310, margin, 1, 0)
 	}
 
 	dc.SetRGB(1, 1, 1)
@@ -155,8 +171,12 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	var b bytes.Buffer
 	pw := io.Writer(&b)
 	png.Encode(pw, dc.Image())
-
+	content := ""
+	if level >= 35 {
+		content = "Voce pode fortalecer o tipo do seu galo mas o deixando nivel 1 usando **j!galo update**."
+	}
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
+		Content: content,
 		Files: []disgord.CreateMessageFileParams{
 			{bytes.NewReader(b.Bytes()), "galo.jpg", false},
 		},

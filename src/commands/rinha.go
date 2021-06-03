@@ -300,7 +300,14 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 }
 
 func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOptions) (int, *rinha.Battle) {
-
+	if rinha.HasUpgrade(options.galoAuthor.Upgrades, 2, 1, 0) {
+		options.galoAdv.Xp = rinha.CalcXP(rinha.CalcLevel(options.galoAdv.Xp)) - 1
+	}
+	if rinha.HasUpgrade(options.galoAdv.Upgrades, 2, 1, 0) {
+		options.galoAuthor.Xp = rinha.CalcXP(rinha.CalcLevel(options.galoAuthor.Xp)) - 1
+	}
+	options.advLevel = rinha.CalcLevel(options.galoAdv.Xp)
+	options.authorLevel = rinha.CalcLevel(options.galoAuthor.Xp)
 	embed := &disgord.Embed{
 		Title: "Briga de galo",
 		Color: 16776960,
@@ -331,7 +338,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 	})
 
 	if err == nil {
-		battle := rinha.CreateBattle(options.galoAuthor, options.galoAdv, options.noItems)
+		battle := rinha.CreateBattle(*options.galoAuthor, *options.galoAdv, options.noItems)
 		var lastEffects string
 		round := 0
 		for {
