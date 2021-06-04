@@ -13,8 +13,8 @@ import (
 )
 
 type rinhaOptions struct {
-	galoAuthor  *rinha.Galo
-	galoAdv     *rinha.Galo
+	galoAuthor  rinha.Galo
+	galoAdv     rinha.Galo
 	authorLevel int
 	advLevel    int
 	authorName  string
@@ -66,6 +66,9 @@ func initGalo(galo *rinha.Galo, user *disgord.User) {
 }
 
 func effectToStr(effect *rinha.Result, affected string, author string, battle *rinha.Battle) string {
+	if effect.Dodge {
+		return fmt.Sprintf("%s **%s** desviou do ataque\n", rinhaEmojis[battle.GetReverseTurn()], affected)
+	}
 	if effect.Effect == rinha.Damaged {
 		if effect.Skill.Self {
 			return fmt.Sprintf("%s **%s** Usou **%s** em si mesmo\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name)
@@ -210,8 +213,8 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 	}
 
 	whoWin, battle := ExecuteRinha(msg, session, rinhaOptions{
-		galoAuthor:  &galoAuthor,
-		galoAdv:     &galoAdv,
+		galoAuthor:  galoAuthor,
+		galoAdv:     galoAdv,
 		authorName:  authorName,
 		advName:     advName,
 		authorLevel: authorLevel,
@@ -306,6 +309,12 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 	if rinha.HasUpgrade(options.galoAdv.Upgrades, 2, 1, 0) {
 		options.galoAuthor.Xp = rinha.CalcXP(rinha.CalcLevel(options.galoAuthor.Xp)) - 1
 	}
+	if options.galoAuthor.Xp < 0 {
+		options.galoAuthor.Xp = 0
+	}
+	if options.galoAdv.Xp < 0 {
+		options.galoAdv.Xp = 0
+	}
 	options.advLevel = rinha.CalcLevel(options.galoAdv.Xp)
 	options.authorLevel = rinha.CalcLevel(options.galoAuthor.Xp)
 	embed := &disgord.Embed{
@@ -315,7 +324,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 			Text: "Use j!galo para ver informaçoes sobre seu galo",
 		},
 		Image: &disgord.EmbedImage{
-			URL: getImageTile(options.galoAuthor, options.galoAdv, 0),
+			URL: getImageTile(&options.galoAuthor, &options.galoAdv, 0),
 		},
 		Description: "Iniciando a briga de galo	",
 		Fields: []*disgord.EmbedField{
@@ -338,7 +347,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 	})
 
 	if err == nil {
-		battle := rinha.CreateBattle(*options.galoAuthor, *options.galoAdv, options.noItems)
+		battle := rinha.CreateBattle(options.galoAuthor, options.galoAdv, options.noItems)
 		var lastEffects string
 		round := 0
 		for {
@@ -386,7 +395,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 			}
 
 			embed.Image = &disgord.EmbedImage{
-				URL: getImageTile(options.galoAuthor, options.galoAdv, turn),
+				URL: getImageTile(&options.galoAuthor, &options.galoAdv, turn),
 			}
 
 			if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {

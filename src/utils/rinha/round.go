@@ -20,6 +20,7 @@ type Result struct {
 	Damage    int
 	Self      bool
 	Reflected bool
+	Dodge     bool
 }
 
 type Round struct {
@@ -269,11 +270,12 @@ func (battle *Battle) Play() []*Result {
 			battle.ReflexType = 1
 		}
 		if HasUpgrade(round.Target.Galo.Upgrades, 2) {
-			num := 4
+			num := 45
 			if HasUpgrade(round.Target.Galo.Upgrades, 2, 0, 0) {
 				num += 3
 			}
 			if num >= utils.RandInt(101) {
+				round.Results = append(round.Results, &Result{Dodge: true})
 				main_damage = 0
 			}
 		}

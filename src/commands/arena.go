@@ -90,8 +90,8 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		galoAdv.Items = []int{randItem}
 	}
 	winner, _ := ExecuteRinha(msg, session, rinhaOptions{
-		galoAuthor:  &galo,
-		galoAdv:     &galoAdv,
+		galoAuthor:  galo,
+		galoAdv:     galoAdv,
 		authorName:  rinha.GetName(msg.Author.Username, galo),
 		advName:     "Arena " + rinha.Classes[galoAdv.Type].Name,
 		authorLevel: rinha.CalcLevel(galo.Xp),
