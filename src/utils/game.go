@@ -1,10 +1,10 @@
 package utils
 
-func MakeBoard(size int) []([]int) {
+func MakeBoard(x, y int) []([]int) {
 	board := []([]int){}
-	for i := 0; i < size; i++ {
+	for i := 0; i < x; i++ {
 		row := []int{}
-		for j := 0; j < size; j++ {
+		for j := 0; j < y; j++ {
 			row = append(row, 0)
 		}
 		board = append(board, row)

@@ -55,7 +55,7 @@ func slideLeft(board []([]int), points *int) {
 }
 
 func rotateBoard(board []([]int), c bool) []([]int) {
-	var rotatedBoard = utils.MakeBoard(len(board))
+	var rotatedBoard = utils.MakeBoard(len(board), len(board))
 	for i, row := range board {
 		for j := range row {
 			if c {
@@ -73,7 +73,7 @@ func init() {
 		Aliases:   []string{"2048", "jogar2048"},
 		Run:       run2048,
 		Available: true,
-		Cooldown:  20,
+		Cooldown:  30,
 		Usage:     "j!2048",
 		Help:      "Jogue 2048",
 	})
@@ -109,7 +109,7 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 			size = n
 		}
 	}
-	board := utils.MakeBoard(size)
+	board := utils.MakeBoard(size, size)
 	for i := 0; i < 2; i++ {
 		board[utils.RandInt(size)][utils.RandInt(size)] = 2
 	}

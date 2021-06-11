@@ -270,7 +270,10 @@ func (battle *Battle) Play() []*Result {
 			battle.ReflexType = 1
 		}
 		if HasUpgrade(round.Target.Galo.Upgrades, 2) {
-			num := 5
+			num := 3
+			if HasUpgrade(round.Target.Galo.Upgrades, 2, 0) {
+				num += 2
+			}
 			if HasUpgrade(round.Target.Galo.Upgrades, 2, 0, 0) {
 				num += 3
 			}

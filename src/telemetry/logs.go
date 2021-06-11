@@ -23,7 +23,9 @@ func log(level string, message string, values map[string]string) {
 		}
 		defer res.Body.Close()
 	}
-	fmt.Printf("[%s] - %s\n", level, message)
+	if level == "warn" || level == "error" {
+		fmt.Printf("[%s] - %s\n", level, message)
+	}
 }
 
 // Different "flavours" of log message to make it easier to separate

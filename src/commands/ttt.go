@@ -14,7 +14,7 @@ func init() {
 		Aliases:   []string{"jogodavelha", "ttt", "tictactoe"},
 		Run:       runTTT,
 		Available: true,
-		Cooldown:  8,
+		Cooldown:  15,
 		Usage:     "j!jogodavelha @usuario",
 		Help:      "Jogue jogo da velha",
 	})
@@ -99,7 +99,6 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 	if err != nil {
 		return
 	}
-	mes := session.Channel(message.ChannelID).Message(message.ID)
 	handler.RegisterBHandler(message, func(interaction *disgord.InteractionCreate) {
 		turnUser := user
 		letter := ":x:"
@@ -133,12 +132,10 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 				session.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
 					Type: disgord.UpdateMessage,
 					Data: &disgord.InteractionApplicationCommandCallbackData{
-						Content: fmt.Sprintf("%s%s", playType, letter),
+						Content:    fmt.Sprintf("%s%s", playType, letter),
+						Components: board(tiles).Components,
 					},
 				})
-				msgUpdater := mes.UpdateBuilder()
-				msgUpdater.Set("components", board(tiles).Components)
-				msgUpdater.Execute()
 			}
 		}
 	}, 60*5)

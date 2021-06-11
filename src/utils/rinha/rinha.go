@@ -351,7 +351,7 @@ func IsInLimit(galo Galo, id disgord.Snowflake) bool {
 			galo.TrainLimit.Times = 0
 			return galo, nil
 		})
-	} else if galo.TrainLimit.Times >= 400 {
+	} else if galo.TrainLimit.Times >= 200 {
 		return true
 	}
 	return false

@@ -106,7 +106,7 @@ func checkCooldown(session disgord.Session, msg *disgord.Message, command string
 	return false
 }
 
-func handleCommand(session disgord.Session, msg *disgord.Message) {
+func HandleCommand(session disgord.Session, msg *disgord.Message) {
 	if msg.Author == nil {
 		return
 	}
@@ -201,11 +201,11 @@ func OnMessageUpdate(old *disgord.Message, new *disgord.Message) {
 func Worker(id int) {
 	for msg := range CommandChannel {
 		if id >= len(WorkersArray) {
-			handleCommand(Client, msg)
+			HandleCommand(Client, msg)
 			return
 		}
 		WorkersArray[id] = true
-		handleCommand(Client, msg)
+		HandleCommand(Client, msg)
 		WorkersArray[id] = false
 	}
 }

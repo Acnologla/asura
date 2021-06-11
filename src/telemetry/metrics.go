@@ -32,6 +32,7 @@ func metricUpdate(session disgord.Session) {
 		res, err := http.Post(url, "application/json", bytes.NewBuffer([]byte(realMetric)))
 		if err != nil {
 			Error(err.Error(), map[string]string{})
+			return
 		}
 		res.Body.Close()
 	}

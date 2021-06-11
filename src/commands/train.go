@@ -66,6 +66,9 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					xpOb += 3
 				}
 			}
+			if galo.GaloReset > 0 {
+				xpOb = xpOb / (galo.GaloReset + 1)
+			}
 			money := 5
 			if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1) {
 				money++

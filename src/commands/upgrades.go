@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/andersfylling/disgord"
 )
@@ -26,7 +27,18 @@ func runUpgrades(session disgord.Session, msg *disgord.Message, args []string) {
 	user := msg.Author
 	galo, _ := rinha.GetGaloDB(user.ID)
 	if len(args) == 0 {
-		desc := fmt.Sprintf("Upgrade Xp: %d/%d", galo.UserXp, rinha.CalcUserXp(galo))
+		desc := fmt.Sprintf("Upgrade Xp: **%d/%d**", galo.UserXp, rinha.CalcUserXp(galo))
+		if len(galo.Upgrades) > 0 {
+			desc += "\n\nUpgrades:\n"
+			upgrades := rinha.Upgrade{
+				Childs: rinha.Upgrades,
+			}
+			for i, upgrade := range galo.Upgrades {
+				upgrades = upgrades.Childs[upgrade]
+				v := strings.Repeat("-", i*5)
+				desc += fmt.Sprintf("%s%s\n%s%s\n", v, upgrades.Name, v, upgrades.Value)
+			}
+		}
 		if rinha.HavePoint(galo) {
 			desc += "\nVoce tem um ponto de upgrade disponivel.\nUse **j!upgrade <id do upgrade>** para dar updgrade.\n\nUpgrades:\n\n" + rinha.UpgradesToString(galo)
 		}

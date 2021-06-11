@@ -22,7 +22,7 @@ func init() {
 		Aliases:   []string{"connect4", "c4"},
 		Run:       runConnect4,
 		Available: true,
-		Cooldown:  10,
+		Cooldown:  20,
 		Usage:     "j!connect4 @user",
 		Help:      "Jogue connect4",
 	})
@@ -91,7 +91,7 @@ func checkConnect4Win(board []([]int)) int {
 }
 func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 	ctx := context.Background()
-	board := utils.MakeBoard(8)
+	board := utils.MakeBoard(8, 8)
 	if len(msg.Mentions) == 0 {
 		msg.Reply(ctx, session, msg.Author.Mention()+", Voce precisa mencionar alguem para jogar connect4")
 		return

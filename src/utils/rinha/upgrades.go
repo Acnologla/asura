@@ -32,7 +32,7 @@ func CalcUserXp(galo Galo) int {
 	if n == 0 {
 		return 100
 	}
-	return 100 * (5 * int(math.Pow(float64(n), 2)))
+	return 100 * (6 * int(math.Pow(float64(n), 2)))
 }
 
 func GetCurrentUpgrade(galo Galo) Upgrade {
