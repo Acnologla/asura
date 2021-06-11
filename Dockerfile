@@ -8,7 +8,7 @@ COPY go.mod .
 RUN go mod tidy
 
 COPY . .
-RUN go build -o main .
+RUN go build -mod=mod -o main .
 
 FROM alpine
 
