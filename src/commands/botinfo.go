@@ -62,8 +62,10 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	if err != nil {
 		return
 	}
-	botInfo, _ := handler.Client.Gateway().GetBot()
-
+	botInfo, err := handler.Client.Gateway().GetBot()
+	if err != nil {
+		return
+	}
 	avatar, _ := myself.AvatarURL(512, true)
 	date := ((uint64(myself.ID) >> 22) + 1420070400000) / 1000
 	readyAt := int(time.Since(handler.ReadyAt).Minutes())
