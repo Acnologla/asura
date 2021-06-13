@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math"
+	"os"
 	"strings"
 	"time"
 
@@ -120,7 +121,10 @@ var Sprites [][]string
 var Cosmetics []*Cosmetic
 
 func init() {
-
+	str, _ := os.Getwd()
+	if strings.HasSuffix(str, "test") {
+		os.Chdir("..")
+	}
 	byteValueClass, _ := ioutil.ReadFile("./resources/galo/class.json")
 	json.Unmarshal([]byte(byteValueClass), &Classes)
 	for i := 0; i < len(Classes)-1; i++ {

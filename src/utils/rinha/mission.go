@@ -166,7 +166,7 @@ func MissionUpdate(id disgord.Snowflake, galo Galo, xp int, money int) {
 	}
 }
 
-func CreateMission(galo Galo) Mission {
+func CreateMission() Mission {
 	missionType := MissionType(utils.RandInt(4))
 	level := utils.RandInt(3)
 	galoAdv := 0
@@ -184,7 +184,7 @@ func PopulateMissions(galo Galo) []Mission {
 	missions := galo.Missions
 	need := 3 - len(galo.Missions)
 	for i := 0; need > i && uint64(i) < uint64((uint64(time.Now().Unix())-galo.LastMission)/60/60/24); i++ {
-		mission := CreateMission(galo)
+		mission := CreateMission()
 		missions = append(missions, mission)
 	}
 	return missions
