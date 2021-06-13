@@ -38,3 +38,24 @@ func TestCommandLevenshtein(t *testing.T) {
 		}
 	}
 }
+
+func TestCommandFields(t *testing.T) {
+	for _, command := range handler.Commands {
+		if len(command.Aliases) == 0 {
+			t.Errorf("Commands must have at least one aliase")
+		}
+		if command.Cooldown <= 0 {
+			t.Errorf(command.Aliases[0] + " - The cooldown should be greater than 0")
+		}
+		if command.Help == "" {
+			t.Errorf(command.Aliases[0] + " - The command must have a help")
+		}
+		if command.Usage == "" {
+			t.Errorf(command.Aliases[0] + " - The command must have a usage example")
+		}
+		if command.Run == nil {
+			t.Errorf(command.Aliases[0] + " - The command must have a run function")
+
+		}
+	}
+}
