@@ -14,7 +14,7 @@ import (
 // This function checks if the url has a valid image by checking the head of the url
 // The head contains the Content-Length (that we limit the size to avoid downloading absurd res images)
 // And the Content-type that will tell us if the url has an image
-func checkImage(url string) bool {
+func CheckImage(url string) bool {
 	req, err := http.NewRequest("HEAD", url, nil)
 	if err != nil {
 		return false
@@ -66,7 +66,7 @@ func GetImageURL(msg *disgord.Message, args []string, size int, session disgord.
 			return avatar
 		}
 	}
-	if checkImage(strings.Join(args, "")) {
+	if CheckImage(strings.Join(args, "")) {
 		return strings.Join(args, "")
 	}
 	avatar, _ := msg.Author.AvatarURL(size, false)

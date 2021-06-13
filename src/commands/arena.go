@@ -85,10 +85,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	LockEvent(msg.Author.ID, "Arena "+rinha.Classes[galoAdv.Type].Name)
 	defer UnlockEvent(msg.Author.ID)
-	if len(galo.Items) > 0 {
-		randItem := rinha.GetItemByLevel(rinha.Items[galo.Items[0]].Level)
-		galoAdv.Items = []int{randItem}
-	}
+	galoAdv.Items = galo.Items
 	winner, _ := ExecuteRinha(msg, session, rinhaOptions{
 		galoAuthor:  galo,
 		galoAdv:     galoAdv,
