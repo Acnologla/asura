@@ -7,11 +7,18 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-var ButtonsHandlers = map[disgord.Snowflake]func(*disgord.InteractionCreate){}
+type ButtonHandler struct {
+	callback func(*disgord.InteractionCreate)
+	sync.Mutex
+}
+
+var ButtonsHandlers = map[disgord.Snowflake]*ButtonHandler{}
 var ButtonLock = sync.RWMutex{}
 
 func RegisterBHandler(msg *disgord.Message, callback func(*disgord.InteractionCreate), timeout int) {
-	ButtonsHandlers[msg.ID] = callback
+	ButtonsHandlers[msg.ID] = &ButtonHandler{
+		callback: callback,
+	}
 	if timeout != 0 {
 		time.Sleep(time.Duration(timeout) * time.Second)
 		DeleteBHandler(msg)
@@ -26,9 +33,11 @@ func DeleteBHandler(msg *disgord.Message) {
 
 func handleButton(interaction *disgord.InteractionCreate) {
 	ButtonLock.RLock()
-	if cb, found := ButtonsHandlers[interaction.Message.ID]; found {
+	if btn, found := ButtonsHandlers[interaction.Message.ID]; found {
 		ButtonLock.RUnlock()
-		cb(interaction)
+		btn.Lock()
+		defer btn.Unlock()
+		btn.callback(interaction)
 		return
 	}
 	ButtonLock.RUnlock()

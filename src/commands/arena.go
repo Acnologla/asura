@@ -79,9 +79,15 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	battleMutex.RUnlock()
+	advType := galo.Type
+	if advType == int(rinha.Epic) {
+		advType = rinha.GetEpicOrLegendary()
+	} else {
+		rinha.GetRandByType(rinha.Classes[galo.Type].Rarity)
+	}
 	galoAdv := rinha.Galo{
 		Xp:   rinha.CalcXP(rinha.CalcLevel(galo.Xp) + 1),
-		Type: rinha.GetRandByType(rinha.Classes[galo.Type].Rarity),
+		Type: advType,
 	}
 	LockEvent(msg.Author.ID, "Arena "+rinha.Classes[galoAdv.Type].Name)
 	defer UnlockEvent(msg.Author.ID)

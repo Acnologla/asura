@@ -19,14 +19,16 @@ type Command struct {
 func main() {
 	commands := []Command{}
 	for _, command := range handler.Commands {
-		commands = append(commands, Command{
-			Aliases:   command.Aliases,
-			Help:      command.Help,
-			Usage:     command.Usage,
-			Cooldown:  command.Cooldown,
-			Available: command.Available,
-			Category:  command.Category,
-		})
+		if command.Available {
+			commands = append(commands, Command{
+				Aliases:   command.Aliases,
+				Help:      command.Help,
+				Usage:     command.Usage,
+				Cooldown:  command.Cooldown,
+				Available: command.Available,
+				Category:  command.Category,
+			})
+		}
 	}
 	result, _ := json.Marshal(commands)
 	file, _ := os.OpenFile("generate/commands.json", os.O_RDWR, 0644)

@@ -103,6 +103,7 @@ type Galo struct {
 	DungeonReset    int        `json:"dungeonreset"`
 	Items           []int      `json:"items"`
 	Missions        []Mission  `json:"missions"`
+	MissionTrade    uint64     `json:"missionTrade"`
 	LastMission     uint64     `json:"lastMission"`
 	Vip             uint64     `json:"vip"`
 	Cosmetics       []int      `json:"cosmetics"`
@@ -312,6 +313,22 @@ func GetName(username string, galo Galo) string {
 
 func GetRand() int {
 	return utils.RandInt(len(Classes)-1) + 1
+}
+
+func GetEpicOrLegendary() int {
+	classTypeArr := []*Class{}
+	for _, class := range Classes {
+		if class.Rarity == Epic || class.Rarity == Legendary {
+			classTypeArr = append(classTypeArr, class)
+		}
+	}
+	selected := classTypeArr[utils.RandInt(len(classTypeArr))]
+	for i, class := range Classes {
+		if class.Name == selected.Name {
+			return i
+		}
+	}
+	return -1
 }
 
 func GetRandByType(classType Rarity) int {
