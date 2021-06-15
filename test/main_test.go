@@ -1,6 +1,7 @@
 package test
 
 import (
+	_ "asura/src/commands"
 	"log"
 	"os"
 	"testing"
