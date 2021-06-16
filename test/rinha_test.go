@@ -6,11 +6,25 @@ import (
 	"time"
 )
 
-func TestGetBackground(t *testing.T) {
-	val := rinha.GetBackground(rinha.Galo{})
-	if val != "https://i.imgur.com/F64ybgg.jpg" {
-		t.Errorf("This must return the default background")
-	}
+func TestBackground(t *testing.T) {
+	t.Run("TestGetBackground", func(t *testing.T) {
+		val := rinha.GetBackground(rinha.Galo{})
+		if val != "https://i.imgur.com/F64ybgg.jpg" {
+			t.Errorf("This must return the default background")
+		}
+	})
+	t.Run("TestGetBackgrounds", func(t *testing.T) {
+		galo := rinha.Galo{
+			Cosmetics: []int{1, 2},
+		}
+		backgrounds, indexes := rinha.GetBackgrounds(galo.Cosmetics)
+		if len(backgrounds) != 2 || len(indexes) != 2 {
+			t.Errorf("The length must be 2")
+		}
+		if indexes[0] != 0 || indexes[1] != 1 {
+			t.Errorf("This must be true")
+		}
+	})
 }
 
 func TestGetName(t *testing.T) {

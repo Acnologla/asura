@@ -187,7 +187,7 @@ func HandleCommand(session disgord.Session, msg *disgord.Message) {
 
 //Handles messages and call the functions that they have to execute.
 func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
-	go sendMsg(evt.Message)
+	go SendMsg(evt.Message)
 	CommandChannel <- evt.Message
 }
 

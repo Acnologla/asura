@@ -31,7 +31,7 @@ func DeleteBHandler(msg *disgord.Message) {
 	ButtonLock.Unlock()
 }
 
-func handleButton(interaction *disgord.InteractionCreate) {
+func HandleButton(interaction *disgord.InteractionCreate) {
 	ButtonLock.RLock()
 	if btn, found := ButtonsHandlers[interaction.Message.ID]; found {
 		ButtonLock.RUnlock()
@@ -45,6 +45,6 @@ func handleButton(interaction *disgord.InteractionCreate) {
 
 func Interaction(session disgord.Session, evt *disgord.InteractionCreate) {
 	if evt.Type == disgord.InteractionMessageComponent && evt.Member != nil {
-		go handleButton(evt)
+		go HandleButton(evt)
 	}
 }

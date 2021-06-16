@@ -2,6 +2,7 @@ package test
 
 import (
 	"asura/src/utils"
+	"errors"
 	"testing"
 )
 
@@ -60,5 +61,21 @@ func TestImage(t *testing.T) {
 	}
 	if utils.CheckImage("https://www.youtube.com/") {
 		t.Errorf("This must return false")
+	}
+}
+
+func TestRate(t *testing.T) {
+	times := 0
+	done := false
+	utils.Try(func() error {
+		if times == 2 {
+			done = true
+			return nil
+		}
+		times++
+		return errors.New("rate limit")
+	}, 3)
+	if !done {
+		t.Errorf("This must return true")
 	}
 }

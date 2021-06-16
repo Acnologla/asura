@@ -43,7 +43,7 @@ func CreateMessageCollector(id disgord.Snowflake, filter func(msg *disgord.Messa
 	return msgReturned
 }
 
-func sendMsg(msg *disgord.Message) {
+func SendMsg(msg *disgord.Message) {
 	MessageLock.RLock()
 	collectors, ok := MessageHandlers[msg.ChannelID]
 	MessageLock.RUnlock()

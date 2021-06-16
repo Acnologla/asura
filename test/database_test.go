@@ -17,4 +17,9 @@ func TestDatabaseConnect(t *testing.T) {
 			t.Error(err)
 		}
 	})
+	t.Run("TestDatabaseIsBanned", func(t *testing.T) {
+		if database.IsBanned(0) {
+			t.Errorf("This must return false")
+		}
+	})
 }
