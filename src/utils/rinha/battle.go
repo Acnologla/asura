@@ -33,7 +33,7 @@ func CheckItem(galo *Galo) (int, float64) {
 	return 0, 0
 }
 
-func initFighter(galo *Galo, noItems bool) *Fighter {
+func InitFighter(galo *Galo, noItems bool) *Fighter {
 	life := 100 + (CalcLevel(galo.Xp) * 3)
 	if HasUpgrade(galo.Upgrades, 1) {
 		life += 5
@@ -67,8 +67,8 @@ func initFighter(galo *Galo, noItems bool) *Fighter {
 }
 
 func CreateBattle(first Galo, sec Galo, noItems bool) Battle {
-	firstFighter := initFighter(&first, noItems)
-	secFighter := initFighter(&sec, noItems)
+	firstFighter := InitFighter(&first, noItems)
+	secFighter := InitFighter(&sec, noItems)
 	if HasUpgrade(firstFighter.Galo.Upgrades, 2, 1) {
 		if HasUpgrade(firstFighter.Galo.Upgrades, 2, 1, 1) {
 			secFighter.Life -= 10

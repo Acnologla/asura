@@ -66,7 +66,7 @@ func Format(text string) string {
 			str = strings.Replace(str, string(char), "", 1)
 		}
 	}
-	return str
+	return strings.TrimSpace(str)
 }
 
 func ClanXpToLevel(xp int) int {

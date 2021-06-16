@@ -1,7 +1,9 @@
 package test
 
 import (
+	"asura/src/database"
 	"asura/src/utils/rinha"
+	"context"
 	"testing"
 	"time"
 )
@@ -62,7 +64,6 @@ func TestLootbox(t *testing.T) {
 		}
 	})
 }
-
 func TestClan(t *testing.T) {
 	member := rinha.ClanMember{
 		ID: 0,
@@ -71,6 +72,12 @@ func TestClan(t *testing.T) {
 	clan := rinha.Clan{
 		Members: []rinha.ClanMember{member},
 	}
+	t.Run("TestClanFormat", func(t *testing.T) {
+		text := rinha.Format("XX@ Y Z *")
+		if text != "xx y z" {
+			t.Errorf("Invalid format")
+		}
+	})
 	t.Run("TestIsInClan", func(t *testing.T) {
 		if !rinha.IsInClan(clan, 0) {
 			t.Errorf("This must be true")
@@ -90,11 +97,49 @@ func TestClan(t *testing.T) {
 			t.Errorf("This sould be 0 ")
 		}
 	})
-	t.Run("TestRemoveMember", func(t *testing.T) {
-		clan.Members = rinha.RemoveMember(clan, 0)
-		if len(clan.Members) != 0 {
+	t.Run("TestPromoteMember", func(t *testing.T) {
+		clan.Members = append(clan.Members, rinha.ClanMember{
+			ID: 1,
+		})
+		rinha.PromoteMember(clan, 1)
+		m := rinha.GetMember(clan, 1)
+		if m.Role != rinha.Admin {
 			t.Errorf("This must be true")
 		}
+	})
+	t.Run("TestRemoveMember", func(t *testing.T) {
+		clan.Members = rinha.RemoveMember(clan, 0)
+		if len(clan.Members) != 1 {
+			t.Errorf("This must be true")
+		}
+	})
+	t.Run("TestClanDatabase", func(t *testing.T) {
+		t.Run("TestCreateClan", func(t *testing.T) {
+			rinha.CreateClan("_test", 2)
+		})
+		t.Run("TestGetClan", func(t *testing.T) {
+			clan := rinha.GetClan("_test")
+			if clan.Members[0].ID != 2 {
+				t.Errorf("This must be true")
+			}
+		})
+		t.Run("TestUpdateClan", func(t *testing.T) {
+			rinha.UpdateClan("_test", func(clan rinha.Clan) (rinha.Clan, error) {
+				clan.Xp = 500
+				return clan, nil
+			})
+			clan := rinha.GetClan("_test")
+			if clan.Xp != 500 {
+				t.Errorf("This must be true")
+			}
+		})
+		t.Run("TestDeleteClan", func(t *testing.T) {
+			rinha.DeleteClan("_test")
+			clan := rinha.GetClan("_test")
+			if len(clan.Members) != 0 {
+				t.Errorf("this must be true")
+			}
+		})
 	})
 }
 
@@ -146,11 +191,44 @@ func TestIsVip(t *testing.T) {
 	}
 }
 
-func TestGetGaloDB(t *testing.T) {
-	_, err := rinha.GetGaloDB(365948625676795904)
-	if err != nil {
-		t.Errorf(err.Error())
-	}
+func TestGaloDatabase(t *testing.T) {
+	t.Run("TestSetGaloDB", func(t *testing.T) {
+		rinha.SaveGaloDB(0, rinha.Galo{
+			Name: "Test",
+		})
+	})
+	t.Run("TestGetGaloDB", func(t *testing.T) {
+		galo, err := rinha.GetGaloDB(0)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		if galo.Name != "Test" {
+			t.Errorf("Invalid name")
+		}
+	})
+	t.Run("TestUpdateGaloDB", func(t *testing.T) {
+		rinha.UpdateGaloDB(0, func(galo rinha.Galo) (rinha.Galo, error) {
+			galo.Name = "Test Update"
+			return galo, nil
+		})
+		galo, _ := rinha.GetGaloDB(0)
+		if galo.Name != "Test Update" {
+			t.Errorf("Invalid name")
+		}
+	})
+	t.Run("TestChangeMoney", func(t *testing.T) {
+		rinha.ChangeMoney(0, 100, 0)
+		galo, _ := rinha.GetGaloDB(0)
+		if galo.Money != 100 {
+			t.Errorf("This must have 100 money")
+		}
+		rinha.ChangeMoney(0, -100, 100)
+		galo, _ = rinha.GetGaloDB(0)
+		if galo.Money != 0 {
+			t.Errorf("This must have 0 money")
+		}
+	})
+	database.Database.NewRef("/galo/0").Delete(context.Background())
 }
 
 func TestHaveGalo(t *testing.T) {
@@ -231,6 +309,58 @@ func TestBattle(t *testing.T) {
 		effect, payload := rinha.CheckItem(&galo)
 		if effect != 2 || payload != 8 {
 			t.Errorf("Effect must be 2 and payload must be 8")
+		}
+	})
+	t.Run("TestInitFight", func(t *testing.T) {
+		galo := &rinha.Galo{
+			Xp:       rinha.CalcXP(7),
+			Items:    []int{1},
+			Equipped: []int{0},
+			Type:     1,
+		}
+		fighter := rinha.InitFighter(galo, false)
+		if fighter.Life != 121 {
+			t.Errorf("Fighter life must be 115")
+		}
+		if fighter.ItemEffect != 2 || fighter.ItemPayload != 8 {
+			t.Errorf("Effect must be 2 and payload must be 8")
+		}
+		t.Run("TestGetEquipedSkills", func(t *testing.T) {
+			skills := rinha.GetEquipedSkills(galo)
+			if len(skills) != 5 {
+				t.Errorf("Length must be 5")
+			}
+			if skills[0] != 0 {
+				t.Errorf("First skill must be 0")
+			}
+			if skills[4] != 2 {
+				t.Errorf("Last skill must be 2")
+			}
+
+		})
+	})
+}
+
+func TestSkill(t *testing.T) {
+	galo := rinha.Galo{
+		Xp:   rinha.CalcXP(5),
+		Type: 1,
+	}
+	t.Run("TestGetSkills", func(t *testing.T) {
+		skills := rinha.GetSkills(galo)
+		if len(skills) != 5 {
+			t.Errorf("Length must be 5")
+		}
+	})
+	t.Run("TestGetNextSkill", func(t *testing.T) {
+		galo.Xp = rinha.CalcXP(7)
+		skills := rinha.GetNextSkill(galo)
+		if len(skills) != 1 {
+			t.Errorf("Length must be 1")
+		}
+		skill := skills[0]
+		if skill.Name != "Investida pesada" {
+			t.Errorf("Skill name must be 'Investida pesada'")
 		}
 	})
 }

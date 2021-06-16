@@ -29,6 +29,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 		if len(args) > 1 {
 			if args[0] == "create" {
 				text := rinha.Format(strings.Join(args[1:], " "))
+				if text == "_test" {
+					return
+				}
 				if len(text) >= 25 {
 					msg.Reply(context.Background(), session, msg.Author.Mention()+", O nome do clan pode ter no maximo 24 caracteres")
 					return
