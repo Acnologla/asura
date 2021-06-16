@@ -7,7 +7,7 @@ jobs:
          - checkout
          - run:
             name: Unit test
-            command: go test -v ./test
+            command: go test ./test
     Build-and-deploy:
       docker:
          - image: 'circleci/golang:1.14'
