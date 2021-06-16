@@ -118,3 +118,23 @@ func TestItems(t *testing.T) {
 		}
 	})
 }
+
+func TestIsVip(t *testing.T) {
+	galo := rinha.Galo{
+		Vip: uint64(time.Now().Unix()) + (60 * 60 * 24 * 30),
+	}
+	if !rinha.IsVip(galo) {
+		t.Errorf("Galo must be vip")
+	}
+	galo.Vip = galo.Vip - (60 * 60 * 24 * 30)
+	if rinha.IsVip(galo) {
+		t.Errorf("Galo must not be vip")
+	}
+}
+
+func TestGetGaloDB(t *testing.T) {
+	_, err := rinha.GetGaloDB(365948625676795904)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+}
