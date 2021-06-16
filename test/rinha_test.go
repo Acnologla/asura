@@ -126,7 +126,7 @@ func TestIsVip(t *testing.T) {
 	if !rinha.IsVip(galo) {
 		t.Errorf("Galo must be vip")
 	}
-	galo.Vip = galo.Vip - (60 * 60 * 24 * 30)
+	galo.Vip = galo.Vip - (60 * 60 * 24 * 30) - 1
 	if rinha.IsVip(galo) {
 		t.Errorf("Galo must not be vip")
 	}
@@ -137,4 +137,86 @@ func TestGetGaloDB(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
+}
+
+func TestHaveGalo(t *testing.T) {
+	galo := rinha.Galo{
+		Galos: []rinha.SubGalo{{
+			Type: 1,
+		}},
+	}
+	if !rinha.HaveGalo(1, galo.Galos) {
+		t.Errorf("This must return true")
+	}
+	if rinha.HaveGalo(2, galo.Galos) {
+		t.Errorf("This must return false")
+	}
+}
+
+func TestCalcDamage(t *testing.T) {
+	min, max := rinha.CalcDamage(&rinha.Skill{
+		Damage: [2]int{10, 20},
+	}, rinha.Galo{
+		Type: 1,
+	})
+	if min != 10 || max != 20 {
+		t.Errorf("Max damage must be 20 and min damage must be 10")
+	}
+	min, max = rinha.CalcDamage(&rinha.Skill{
+		Damage: [2]int{10, 20},
+	}, rinha.Galo{
+		Type:      1,
+		GaloReset: 1,
+	})
+
+	if min != 12 || max != 24 {
+		t.Errorf("Max damage must be 24 and min damage must be 102")
+	}
+}
+
+func TestUpgrades(t *testing.T) {
+	galo := rinha.Galo{
+		Upgrades: []int{0, 1},
+	}
+	t.Run("TestHasUpgrades", func(t *testing.T) {
+		if !rinha.HasUpgrade(galo.Upgrades, 0, 1) {
+			t.Errorf("This must return true")
+		}
+		if !rinha.HasUpgrade(galo.Upgrades, 0) {
+			t.Errorf("This must return true")
+		}
+		if rinha.HasUpgrade(galo.Upgrades, 1) {
+			t.Errorf("This must return false")
+		}
+	})
+	t.Run("TestGetCurrentUpgrade", func(t *testing.T) {
+		upgrade := rinha.GetCurrentUpgrade(galo)
+		if upgrade.Name != "Mais bonus" {
+			t.Errorf("Upgrade name must be 'Mais bonus'")
+		}
+	})
+	t.Run("TestHavePoint", func(t *testing.T) {
+		galo = rinha.Galo{
+			UserXp: 100,
+		}
+		if !rinha.HavePoint(galo) {
+			t.Errorf("This must return true")
+		}
+		galo.UserXp = 0
+		if rinha.HavePoint(galo) {
+			t.Errorf("This must return false")
+		}
+	})
+}
+
+func TestBattle(t *testing.T) {
+	t.Run("TestCheckItem", func(t *testing.T) {
+		galo := rinha.Galo{
+			Items: []int{1},
+		}
+		effect, payload := rinha.CheckItem(&galo)
+		if effect != 2 || payload != 8 {
+			t.Errorf("Effect must be 2 and payload must be 8")
+		}
+	})
 }

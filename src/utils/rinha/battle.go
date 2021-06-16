@@ -24,7 +24,7 @@ type Battle struct {
 	ReflexSkill int
 }
 
-func checkItem(galo *Galo) (int, float64) {
+func CheckItem(galo *Galo) (int, float64) {
 	if len(galo.Items) > 0 {
 		id := galo.Items[0]
 		item := Items[id]
@@ -48,7 +48,7 @@ func initFighter(galo *Galo, noItems bool) *Fighter {
 	var itemEffect int
 	var payload float64
 	if !noItems {
-		itemEffect, payload = checkItem(galo)
+		itemEffect, payload = CheckItem(galo)
 	}
 	// 4 is the ID of Item EFFECT that increase life
 	if itemEffect == 4 {
