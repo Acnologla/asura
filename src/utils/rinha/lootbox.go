@@ -34,7 +34,7 @@ func OpenEpic() int {
 
 func OpenRare() int {
 	value := utils.RandInt(1001)
-	if 7 >= value {
+	if 6 >= value {
 		return GetRandByType(Legendary)
 	} else if 122 >= value {
 		return GetRandByType(Epic)
@@ -86,10 +86,10 @@ func GetPrice(lootType string) int {
 		return 800
 	}
 	if lootType == "epica" {
-		return 1800
+		return 1750
 	}
 	if lootType == "cosmetica" {
-		return 320
+		return 300
 	}
 	return 400
 }
@@ -145,7 +145,7 @@ func GetNewLb(lootbox string, galo Galo, add bool) Galo {
 	return galo
 }
 
-func Sell(rarity Rarity, xp int) int {
-	level := CalcLevel(xp)
+func Sell(rarity Rarity, xp int, reset int) int {
+	level := CalcLevel(xp) + (reset * 30)
 	return rarity.Price() * (level/5 + 1)
 }

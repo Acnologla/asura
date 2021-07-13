@@ -34,7 +34,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title:       "Lootbox",
 			Color:       65535,
-			Description: fmt.Sprintf("Money: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n[1800] Lootbox epica: **%d**\n[320] Lootbox cosmetica: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 money)\n\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**", galo.Money, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox, galo.EpicLootbox, galo.CosmeticLootbox),
+			Description: fmt.Sprintf("Money: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n[1750] Lootbox epica: **%d**\n[300] Lootbox cosmetica: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 money)\n\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**", galo.Money, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox, galo.EpicLootbox, galo.CosmeticLootbox),
 		})
 	}
 	if len(args) == 0 {
@@ -123,7 +123,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 					Xp:   0,
 				})
 			} else {
-				price := rinha.Sell(newGalo.Rarity, 0)
+				price := rinha.Sell(newGalo.Rarity, 0, 0)
 				sold = "yes"
 				galo.Money += price
 				extraMsg = fmt.Sprintf("\nComo voce ja tinha esse galo voce ganhou **%d** de dinheiro", price)

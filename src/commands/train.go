@@ -59,7 +59,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		})
 		rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
 		if winner == 0 {
-			xpOb := utils.RandInt(10) + 11
+			xpOb := utils.RandInt(10) + 10
 			if rinha.HasUpgrade(galo.Upgrades, 0) {
 				xpOb++
 				if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1) {
@@ -83,7 +83,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					Description: fmt.Sprintf("Voce excedeu seu limite de trains ganhos por dia. Faltam %d horas e %d minutos para voce poder usar mais", 23-(need/60/60), 59-(need/60%60)),
 				})
 				telemetry.Debug(fmt.Sprintf("%s in rinha limit", msg.Author.Username), map[string]string{
-					"id": fmt.Sprintf("%d", msg.Author.ID),
+					"user": fmt.Sprintf("%d", msg.Author.ID),
 				})
 				return
 			}
@@ -98,7 +98,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					xpOb++
 					level := rinha.ClanXpToLevel(clan.Xp)
 					if level >= 2 {
-						xpOb += 2
+						xpOb++
 					}
 					if level >= 4 {
 						money++

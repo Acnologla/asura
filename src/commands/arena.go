@@ -86,8 +86,9 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		advType = rinha.GetRandByType(rinha.Classes[galo.Type].Rarity)
 	}
 	galoAdv := rinha.Galo{
-		Xp:   rinha.CalcXP(rinha.CalcLevel(galo.Xp) + 1),
-		Type: advType,
+		Xp:        rinha.CalcXP(rinha.CalcLevel(galo.Xp) + 1),
+		Type:      advType,
+		GaloReset: galo.GaloReset,
 	}
 	LockEvent(msg.Author.ID, "Arena "+rinha.Classes[galoAdv.Type].Name)
 	defer UnlockEvent(msg.Author.ID)

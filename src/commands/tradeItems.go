@@ -13,11 +13,11 @@ import (
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:   []string{"troca", "trocaritems", "trade"},
+		Aliases:   []string{"trocaitems", "tradeitems", "trade"},
 		Run:       runTrade,
 		Available: true,
 		Cooldown:  3,
-		Usage:     "j!trade <@user>",
+		Usage:     "j!trocaitems <@user>",
 		Help:      "Troque seus itens",
 		Category:  1,
 	})

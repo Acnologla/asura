@@ -144,9 +144,14 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.DrawString("Tipo", 10, 240)
 	dc.DrawString("Level", 10, 255)
 	dc.DrawString("Item", 10, 270)
-
+	levelText := strconv.Itoa(rinha.CalcLevel(galo.Xp))
+	if galo.GaloReset > 0 {
+		levelText += "["
+		levelText += strconv.Itoa(galo.GaloReset)
+		levelText += "]"
+	}
 	dc.DrawStringAnchored(rinha.Classes[galo.Type].Name, 310, 240, 1, 0)
-	dc.DrawStringAnchored(strconv.Itoa(rinha.CalcLevel(galo.Xp)), 310, 255, 1, 0)
+	dc.DrawStringAnchored(levelText, 310, 255, 1, 0)
 	if len(galo.Items) > 0 {
 		dc.DrawStringAnchored(rinha.Items[galo.Items[0]].Name, 310, 270, 1, 0)
 	} else {

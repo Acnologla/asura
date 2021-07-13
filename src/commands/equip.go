@@ -57,7 +57,13 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 				name = _galo.Name
 			}
 			dc.DrawString(name, 70+57+width, 40+float64(i/2)*95)
-			dc.DrawString(fmt.Sprintf("Level: %d", rinha.CalcLevel(_galo.Xp)), 70+57+width, 60+float64(i/2)*95)
+			levelText := fmt.Sprintf("Level: %d", rinha.CalcLevel(_galo.Xp))
+			if _galo.GaloReset > 0 {
+				levelText += "["
+				levelText += strconv.Itoa(_galo.GaloReset)
+				levelText += "]"
+			}
+			dc.DrawString(levelText, 70+57+width, 60+float64(i/2)*95)
 			color := rinha.Classes[galo].Rarity.Color()
 			dc.SetHexColor(fmt.Sprintf("%06x", color))
 			dc.DrawRectangle(58+width, 18+float64(i/2)*95, 59, 59)
@@ -107,7 +113,7 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 						for i := value; i < len(galo.Galos)-1; i++ {
 							galo.Galos[i] = galo.Galos[i+1]
 						}
-						price = rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp)
+						price = rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp, gal.GaloReset)
 						galo.Money += price
 						galo.Galos = galo.Galos[0 : len(galo.Galos)-1]
 						return galo, nil
