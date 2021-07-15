@@ -240,7 +240,7 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 		galoWinner := battle.Fighters[winnerTurn].Galo
 		galoLoser := battle.Fighters[turn].Galo
 
-		xpOb := (utils.RandInt(10) + 4) - (3 * (rinha.CalcLevel(galoWinner.Xp) - rinha.CalcLevel(galoLoser.Xp)))
+		xpOb := (utils.RandInt(6) + 3) - (3 * (rinha.CalcLevel(galoWinner.Xp) - rinha.CalcLevel(galoLoser.Xp)))
 
 		if 0 > xpOb {
 			xpOb = 0
@@ -256,11 +256,8 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 				xpOb += int(xpOb / 10)
 			}
 			if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp) {
-				if level >= 4 {
-					money++
-				}
 				if level >= 5 {
-					money += 2
+					money++
 				}
 				go rinha.CompleteClanMission(galoWinner.Clan, winner.ID)
 				clanMsg = "\nGanhou **1** de xp para seu clan"

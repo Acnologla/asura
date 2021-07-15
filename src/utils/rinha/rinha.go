@@ -32,7 +32,7 @@ func (rarity Rarity) String() string {
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 135, 450, 1600, 500}[rarity]
+	return [...]int{30, 140, 500, 1600, 500}[rarity]
 }
 
 func (rarity Rarity) Color() int {
@@ -173,8 +173,17 @@ func CalcDamage(skill *Skill, galo Galo) (min int, max int) {
 	min = skill.Damage[0]
 	max = skill.Damage[1]
 	if galo.GaloReset > 0 {
-		min += min / 5 * galo.GaloReset
-		max += max / 5 * galo.GaloReset
+		min += min / 10 * galo.GaloReset
+		max += max / 10 * galo.GaloReset
+	}
+	return
+}
+func CalcEffectRange(effect *Effect, galo Galo) (min int, max int) {
+	min = effect.Range[0]
+	max = effect.Range[1]
+	if galo.GaloReset > 0 {
+		min += min / 10 * galo.GaloReset
+		max += max / 10 * galo.GaloReset
 	}
 	return
 }
@@ -315,10 +324,10 @@ func GetRand() int {
 	return utils.RandInt(len(Classes)-1) + 1
 }
 
-func GetEpicOrLegendary() int {
+func GetRarityPlusOne(rarity Rarity) int {
 	classTypeArr := []*Class{}
 	for _, class := range Classes {
-		if class.Rarity == Epic || class.Rarity == Legendary {
+		if class.Rarity == rarity || class.Rarity == rarity+1 {
 			classTypeArr = append(classTypeArr, class)
 		}
 	}
@@ -372,7 +381,7 @@ func IsInLimit(galo Galo, id disgord.Snowflake) bool {
 			galo.TrainLimit.Times = 0
 			return galo, nil
 		})
-	} else if galo.TrainLimit.Times >= 150 {
+	} else if galo.TrainLimit.Times >= 200 {
 		return true
 	}
 	return false

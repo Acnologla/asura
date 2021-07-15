@@ -61,6 +61,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 				galo.Type = galo.Galos[num].Type
 				galo.Xp = galo.Galos[num].Xp
 				galo.Name = galo.Galos[num].Name
+				galo.GaloReset = galo.Galos[num].GaloReset
 				galo.Equipped = []int{}
 			}
 		}

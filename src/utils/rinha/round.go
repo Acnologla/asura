@@ -117,8 +117,14 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 }
 
 func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccker *Fighter) int {
-
-	effect_damage := Between(effect.Range)
+	min := effect.Range[0]
+	max := effect.Range[1]
+	if effect.Type == 1 {
+		min, max = CalcEffectRange(effect, *ataccker.Galo)
+	} else if effect.Type == 2 {
+		min, max = CalcEffectRange(effect, *receiver.Galo)
+	}
+	effect_damage := Between([2]int{min, max})
 	switch effect.Type {
 	case 1:
 		{

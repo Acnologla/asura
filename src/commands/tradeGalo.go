@@ -127,7 +127,7 @@ func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		if rinha.HaveGalo(secondGalo.Type, galo.Galos) || rinha.HaveGalo(firstGalo.Type, galoAdv.Galos) {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", Não pode trocar galos repetidos.\nTroca cancelada")
 			return
 		}
 		galoAdv.Galos[j] = firstGalo

@@ -13,7 +13,7 @@ import (
 
 func init() {
 	handler.Register(handler.Command{
-		Aliases:   []string{"upgrades", "melhorias"},
+		Aliases:   []string{"upgrades", "melhorias", "up"},
 		Run:       runUpgrades,
 		Available: true,
 		Cooldown:  5,

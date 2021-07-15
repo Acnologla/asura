@@ -79,14 +79,9 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	battleMutex.RUnlock()
-	advType := int(rinha.Classes[galo.Type].Rarity)
-	if advType == int(rinha.Epic) {
-		advType = rinha.GetEpicOrLegendary()
-	} else {
-		advType = rinha.GetRandByType(rinha.Classes[galo.Type].Rarity)
-	}
+	advType := rinha.GetRarityPlusOne(rinha.Classes[galo.Type].Rarity)
 	galoAdv := rinha.Galo{
-		Xp:        rinha.CalcXP(rinha.CalcLevel(galo.Xp) + 1),
+		Xp:        rinha.CalcXP(rinha.CalcLevel(galo.Xp) + 2),
 		Type:      advType,
 		GaloReset: galo.GaloReset,
 	}
