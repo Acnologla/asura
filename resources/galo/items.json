@@ -105,13 +105,13 @@
         "name": "Armadura de obisidiana",
         "effect": 5,
         "level": 2,
-        "payload": 0.65
+        "payload": 0.7
     },
     {
         "name": "Escalibur",
         "effect": 1,
         "level": 3,
-        "payload": 1.55
+        "payload": 1.5
     },
     {
         "name": "Imortalidade",
@@ -129,7 +129,7 @@
         "name": "Armadura da divindade",
         "effect": 5,
         "level": 3,
-        "payload": 0.45
+        "payload": 0.6
     },
     {
         "name": "Amplificador divino",
@@ -159,6 +159,6 @@
         "name": "Multiplicador divino",
         "effect": 6,
         "level": 3,
-        "payload": 1.55
+        "payload": 1.5
     }
 ]
