@@ -272,8 +272,8 @@ func TestCalcDamage(t *testing.T) {
 		GaloReset: 1,
 	})
 
-	if min != 12 || max != 24 {
-		t.Errorf("Max damage must be 24 and min damage must be 102")
+	if min != 11 || max != 22 {
+		t.Errorf("Max damage must be 22 and min damage must be 11")
 	}
 }
 
@@ -300,7 +300,7 @@ func TestUpgrades(t *testing.T) {
 	})
 	t.Run("TestHavePoint", func(t *testing.T) {
 		galo = rinha.Galo{
-			UserXp: 100,
+			UserXp: 150,
 		}
 		if !rinha.HavePoint(galo) {
 			t.Errorf("This must return true")
@@ -341,10 +341,10 @@ func TestBattle(t *testing.T) {
 			if len(skills) != 5 {
 				t.Errorf("Length must be 5")
 			}
-			if skills[0] != 0 {
+			if skills[0].Skill != 0 {
 				t.Errorf("First skill must be 0")
 			}
-			if skills[4] != 2 {
+			if skills[4].Skill != 2 {
 				t.Errorf("Last skill must be 2")
 			}
 

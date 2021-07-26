@@ -67,15 +67,15 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		Xp:   rinha.CalcXP(AdvLVL) + 1,
 		Type: galoAdv.Type,
 	}
-	winner, _ := ExecuteRinha(msg, session, rinhaOptions{
-		galoAuthor:  galo,
-		galoAdv:     ngaloAdv,
-		authorName:  rinha.GetName(msg.Author.Username, galo),
-		advName:     "Boss " + rinha.Classes[galoAdv.Type].Name,
-		authorLevel: rinha.CalcLevel(galo.Xp),
-		advLevel:    AdvLVL,
-		noItems:     true,
-	})
+	winner, _ := ExecuteRinha(msg, session, rinha.RinhaOptions{
+		GaloAuthor:  galo,
+		GaloAdv:     ngaloAdv,
+		AuthorName:  rinha.GetName(msg.Author.Username, galo),
+		AdvName:     "Boss " + rinha.Classes[galoAdv.Type].Name,
+		AuthorLevel: rinha.CalcLevel(galo.Xp),
+		AdvLevel:    AdvLVL,
+		NoItems:     true,
+	}, false)
 	if winner == 0 {
 		if galo.DungeonReset != 0 && galo.Dungeon+1 != len(rinha.Dungeon) {
 			rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {

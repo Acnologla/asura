@@ -37,17 +37,17 @@ func battle(firstClass int, secClass int, firstLvl int, secLvl int, times int) R
 			Equipped: []int{},
 		}
 
-		battle := rinha.CreateBattle(first, sec, false)
+		battle := rinha.CreateBattle(first, sec, false, 0, 0)
 
 		result.Skills = [2][5][2]int{}
 
 		for i := 0; i < 2; i++ {
 			for j, v := range battle.Fighters[i].Equipped {
-				result.Skills[i][j] = [2]int{battle.Fighters[i].Galo.Type, v}
+				result.Skills[i][j] = [2]int{battle.Fighters[i].Galo.Type, v.Skill}
 			}
 		}
 		for battle.Fighters[0].Life > 0 && battle.Fighters[1].Life > 0 {
-			battle.Play()
+			battle.Play(-1)
 
 		}
 

@@ -49,20 +49,23 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		LockEvent(msg.Author.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
 		defer UnlockEvent(msg.Author.ID)
-		winner, _ := ExecuteRinha(msg, session, rinhaOptions{
-			galoAuthor:  galo,
-			galoAdv:     galoAdv,
-			authorName:  rinha.GetName(msg.Author.Username, galo),
-			advName:     "Clone de " + rinha.Classes[galoAdv.Type].Name,
-			authorLevel: rinha.CalcLevel(galo.Xp),
-			advLevel:    rinha.CalcLevel(galoAdv.Xp),
-		})
+		winner, _ := ExecuteRinha(msg, session, rinha.RinhaOptions{
+			GaloAuthor:  galo,
+			GaloAdv:     galoAdv,
+			AuthorName:  rinha.GetName(msg.Author.Username, galo),
+			AdvName:     "Clone de " + rinha.Classes[galoAdv.Type].Name,
+			AuthorLevel: rinha.CalcLevel(galo.Xp),
+			AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
+		}, false)
 		rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
 		if winner == 0 {
 			xpOb := utils.RandInt(10) + 10
 			if rinha.HasUpgrade(galo.Upgrades, 0) {
 				xpOb++
 				if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1) {
+					xpOb += 2
+				}
+				if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1, 0) {
 					xpOb += 3
 				}
 			}
@@ -105,6 +108,9 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					}
 					if level >= 5 {
 						money += 2
+					}
+					if level >= 7 {
+						galo.UserXp++
 					}
 					go rinha.CompleteClanMission(galo.Clan, msg.Author.ID)
 					clanMsg = "\nGanhou **1** de xp para seu clan"

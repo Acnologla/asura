@@ -36,14 +36,14 @@ func one(firstClass int, secClass int, firstLvl int, secLvl int) {
 		Equipped: []int{},
 	}
 
-	battle := rinha.CreateBattle(first, sec, false)
+	battle := rinha.CreateBattle(first, sec, false, 0, 0)
 
 	for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0 {
 		turno := 0
 		if battle.Turn {
 			turno = 1
 		}
-		effects := battle.Play()
+		effects := battle.Play(-1)
 		fmt.Printf("Turno de %d\n%d vs %d\n", turno, battle.Fighters[0].Life, battle.Fighters[1].Life)
 		for i := 0; i < len(effects); i++ {
 			if effects[i].Effect == rinha.Effected {
@@ -83,15 +83,15 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, 
 			Equipped: []int{},
 		}
 
-		battle := rinha.CreateBattle(first, sec, false)
+		battle := rinha.CreateBattle(first, sec, false, 0, 0)
 
 		for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0 {
 			if log {
-				effects := battle.Play()
+				effects := battle.Play(-1)
 				fmt.Println(effects)
 				fmt.Printf("%d vs %d\n", battle.Fighters[0].Life, battle.Fighters[1].Life)
 			} else {
-				battle.Play()
+				battle.Play(-1)
 			}
 		}
 

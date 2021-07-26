@@ -1,13 +1,23 @@
 package rinha
 
-import "math"
+import (
+	"math"
+
+	"github.com/andersfylling/disgord"
+)
 
 type EffectType string
 
+type NewSkill struct {
+	Skill    int
+	Cooldown int
+}
+
 type Fighter struct {
 	Galo        *Galo
-	Equipped    []int
+	Equipped    []*NewSkill
 	Life        int
+	ID          disgord.Snowflake
 	ItemEffect  int
 	ItemPayload float64
 	MaxLife     int
@@ -61,12 +71,12 @@ func InitFighter(galo *Galo, noItems bool) *Fighter {
 		MaxLife:     life,
 		ItemEffect:  itemEffect,
 		ItemPayload: payload,
-		Equipped:    []int{},
+		Equipped:    []*NewSkill{},
 		Effect:      [4]int{},
 	}
 }
 
-func CreateBattle(first Galo, sec Galo, noItems bool) Battle {
+func CreateBattle(first Galo, sec Galo, noItems bool, firstID, secondID disgord.Snowflake) Battle {
 	firstFighter := InitFighter(&first, noItems)
 	secFighter := InitFighter(&sec, noItems)
 	if HasUpgrade(firstFighter.Galo.Upgrades, 2, 1) {
@@ -95,7 +105,8 @@ func CreateBattle(first Galo, sec Galo, noItems bool) Battle {
 	}
 	initEquips(firstFighter)
 	initEquips(secFighter)
-
+	firstFighter.ID = firstID
+	secFighter.ID = secondID
 	return Battle{
 		Stopped:    false,
 		Turn:       false,
@@ -107,8 +118,9 @@ func CreateBattle(first Galo, sec Galo, noItems bool) Battle {
 	}
 }
 
-func GetEquipedSkills(galo *Galo) []int {
+func GetEquipedSkills(galo *Galo) []*NewSkill {
 	skills := GetSkills(*galo)
+	newSkill := []*NewSkill{}
 	if len(skills) == 0 {
 		skills = append(skills, 0)
 	}
@@ -123,7 +135,12 @@ func GetEquipedSkills(galo *Galo) []int {
 			need--
 		}
 	}
-	return equipedSkills
+	for _, skill := range equipedSkills {
+		newSkill = append(newSkill, &NewSkill{
+			Skill: skill,
+		})
+	}
+	return newSkill
 }
 
 func initEquips(fighter *Fighter) {

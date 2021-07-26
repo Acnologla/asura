@@ -72,6 +72,10 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, "Voce precisa ter um ingresso para batalhar na arena, use **j!arena** para comprar um")
 		return
 	}
+	if 5 > rinha.CalcLevel(galo.Xp) {
+		msg.Reply(context.Background(), session, "O seu galo precisa ser no minimo nivel 5 para batalhar na arena")
+		return
+	}
 	battleMutex.RLock()
 	if currentBattles[msg.Author.ID] != "" {
 		battleMutex.RUnlock()
@@ -88,14 +92,14 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 	LockEvent(msg.Author.ID, "Arena "+rinha.Classes[galoAdv.Type].Name)
 	defer UnlockEvent(msg.Author.ID)
 	galoAdv.Items = galo.Items
-	winner, _ := ExecuteRinha(msg, session, rinhaOptions{
-		galoAuthor:  galo,
-		galoAdv:     galoAdv,
-		authorName:  rinha.GetName(msg.Author.Username, galo),
-		advName:     "Arena " + rinha.Classes[galoAdv.Type].Name,
-		authorLevel: rinha.CalcLevel(galo.Xp),
-		advLevel:    rinha.CalcLevel(galoAdv.Xp),
-	})
+	winner, _ := ExecuteRinha(msg, session, rinha.RinhaOptions{
+		GaloAuthor:  galo,
+		GaloAdv:     galoAdv,
+		AuthorName:  rinha.GetName(msg.Author.Username, galo),
+		AdvName:     "Arena " + rinha.Classes[galoAdv.Type].Name,
+		AuthorLevel: rinha.CalcLevel(galo.Xp),
+		AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
+	}, false)
 	if winner == 0 {
 		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 			gal.Arena.Win++

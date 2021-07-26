@@ -12,38 +12,10 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-type rinhaOptions struct {
-	galoAuthor  rinha.Galo
-	galoAdv     rinha.Galo
-	authorLevel int
-	advLevel    int
-	authorName  string
-	advName     string
-	noItems     bool
-}
-
 var (
 	currentBattles               = map[disgord.Snowflake]string{}
 	battleMutex    *sync.RWMutex = &sync.RWMutex{}
-	rinhaEmojis                  = [2]string{"<:sverde:744682222644363296>", "<:svermelha:744682249408217118>"}
-	rinhaColors                  = [2]int{65280, 16711680}
 )
-
-func edit(message *disgord.Message, embed *disgord.Embed) {
-	utils.Try(func() error {
-		msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).UpdateBuilder()
-		msgUpdater.SetEmbed(embed)
-		_, err := msgUpdater.Execute()
-		return err
-	}, 5)
-}
-
-func getImageTile(first *rinha.Galo, sec *rinha.Galo, turn int) string {
-	if turn == 0 {
-		return rinha.Sprites[turn^1][sec.Type-1]
-	}
-	return rinha.Sprites[turn^1][first.Type-1]
-}
 
 func init() {
 	handler.Register(handler.Command{
@@ -63,30 +35,6 @@ func initGalo(galo *rinha.Galo, user *disgord.User) {
 		galo.Type = galoType
 		rinha.SaveGaloDB(user.ID, *galo)
 	}
-}
-
-func effectToStr(effect *rinha.Result, affected string, author string, battle *rinha.Battle) string {
-	if effect.Dodge {
-		return fmt.Sprintf("%s **%s** desviou do ataque\n", rinhaEmojis[battle.GetReverseTurn()], affected)
-	}
-	if effect.Effect == rinha.Damaged {
-		if effect.Skill.Self {
-			return fmt.Sprintf("%s **%s** Usou **%s** em si mesmo\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name)
-		}
-		if effect.Reflected {
-			return fmt.Sprintf("%s **%s** Refletiu o ataque **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
-		}
-		return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", rinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
-	} else if effect.Effect == rinha.Effected {
-		effectLiteral := rinha.Effects[effect.EffectID]
-		if effect.Self {
-			return fmt.Sprintf(effectLiteral.Phrase+"\n", author, effect.Damage)
-		}
-		return fmt.Sprintf(effectLiteral.Phrase+"\n", affected, effect.Damage)
-	} else if effect.Effect == rinha.NotEffective {
-		return "**reduzido**\n"
-	}
-	return ""
 }
 
 func lockBattle(authorID disgord.Snowflake, advID disgord.Snowflake, authorNick string, advNick string) {
@@ -160,7 +108,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				return
 			}
 			battleMutex.RUnlock()
-			executePVP(msg, session)
+			executePVP(msg, session, args[len(args)-1] == "rinhatest")
 		})
 
 	} else {
@@ -186,7 +134,7 @@ func sendLevelUpEmbed(msg *disgord.Message, session disgord.Session, galoWinner 
 	}
 }
 
-func executePVP(msg *disgord.Message, session disgord.Session) {
+func executePVP(msg *disgord.Message, session disgord.Session, newRinhaEngine bool) {
 	lockBattle(msg.Author.ID, msg.Mentions[0].ID, msg.Author.Username, msg.Mentions[0].Username)
 	defer unlockBattle(msg.Author.ID, msg.Mentions[0].ID)
 	author := msg.Author
@@ -211,15 +159,15 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 	if galoAdv.Name != "" {
 		advName = galoAdv.Name
 	}
-
-	whoWin, battle := ExecuteRinha(msg, session, rinhaOptions{
-		galoAuthor:  galoAuthor,
-		galoAdv:     galoAdv,
-		authorName:  authorName,
-		advName:     advName,
-		authorLevel: authorLevel,
-		advLevel:    advLevel,
-	})
+	whoWin, battle := ExecuteRinha(msg, session, rinha.RinhaOptions{
+		GaloAuthor:  galoAuthor,
+		GaloAdv:     galoAdv,
+		AuthorName:  authorName,
+		AdvName:     advName,
+		AuthorLevel: authorLevel,
+		AdvLevel:    advLevel,
+		IDs:         [2]disgord.Snowflake{author.ID, adv.ID},
+	}, newRinhaEngine)
 
 	if whoWin == -1 {
 		return
@@ -299,39 +247,117 @@ func executePVP(msg *disgord.Message, session disgord.Session) {
 
 }
 
-func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOptions) (int, *rinha.Battle) {
-	if rinha.HasUpgrade(options.galoAuthor.Upgrades, 2, 1, 0) {
-		options.galoAdv.Xp = rinha.CalcXP(rinha.CalcLevel(options.galoAdv.Xp)) - 1
+func RinhaEngine(battle *rinha.Battle, options *rinha.RinhaOptions, message *disgord.Message, embed *disgord.Embed) (int, *rinha.Battle) {
+	var lastEffects string
+	round := 0
+	for {
+		effects := battle.Play(-1)
+		var text string
+
+		authorName := options.AuthorName
+		affectedName := options.AdvName
+
+		turn := battle.GetTurn()
+
+		if turn == 0 {
+			authorName = options.AdvName
+			affectedName = options.AuthorName
+		}
+
+		for _, effect := range effects {
+			text += rinha.EffectToStr(effect, affectedName, authorName, battle)
+		}
+		if round >= 35 {
+			if battle.Fighters[1].Life >= battle.Fighters[0].Life {
+				text += "\n" + options.AuthorName + " Foi executado"
+				battle.Fighters[0].Life = 0
+				battle.Turn = false
+			} else {
+				battle.Fighters[1].Life = 0
+				text += "\n" + options.AdvName + " Foi executado"
+				battle.Turn = true
+			}
+		}
+		embed.Color = rinha.RinhaColors[battle.GetReverseTurn()]
+		embed.Description = lastEffects + "\n" + text
+
+		embed.Fields = []*disgord.EmbedField{
+			{
+				Name:   fmt.Sprintf("%s Level %d", options.AuthorName, options.AuthorLevel),
+				Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, battle.Fighters[0].MaxLife),
+				Inline: true,
+			},
+			{
+				Name:   fmt.Sprintf("%s Level %d", options.AdvName, options.AdvLevel),
+				Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, battle.Fighters[1].MaxLife),
+				Inline: true,
+			},
+		}
+
+		embed.Image = &disgord.EmbedImage{
+			URL: rinha.GetImageTile(&options.GaloAuthor, &options.GaloAdv, turn),
+		}
+
+		if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
+			winnerTurn := battle.GetReverseTurn()
+
+			if winnerTurn == 1 {
+				embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AdvName)
+			} else {
+				embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AuthorName)
+			}
+			rinha.EditRinhaEmbed(message, embed)
+			return winnerTurn, battle
+		}
+
+		rinha.EditRinhaEmbed(message, embed)
+		lastEffects = text
+		round++
+		time.Sleep(4 * time.Second)
 	}
-	if rinha.HasUpgrade(options.galoAdv.Upgrades, 2, 1, 0) {
-		options.galoAuthor.Xp = rinha.CalcXP(rinha.CalcLevel(options.galoAuthor.Xp)) - 1
+}
+
+func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinha.RinhaOptions, newEngine bool) (int, *rinha.Battle) {
+	if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0) {
+		options.GaloAdv.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAdv.Xp)) - 1
+		if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0, 0) {
+			options.GaloAdv.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAdv.Xp)) - 1
+		}
 	}
-	if options.galoAuthor.Xp < 0 {
-		options.galoAuthor.Xp = 0
+	if rinha.HasUpgrade(options.GaloAdv.Upgrades, 2, 1, 0) {
+		options.GaloAuthor.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAuthor.Xp)) - 1
+		if rinha.HasUpgrade(options.GaloAdv.Upgrades, 2, 1, 0, 0) {
+			options.GaloAuthor.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAuthor.Xp)) - 1
+		}
 	}
-	if options.galoAdv.Xp < 0 {
-		options.galoAdv.Xp = 0
+	if options.GaloAuthor.Xp < 0 {
+		options.GaloAuthor.Xp = 0
 	}
-	options.advLevel = rinha.CalcLevel(options.galoAdv.Xp)
-	options.authorLevel = rinha.CalcLevel(options.galoAuthor.Xp)
+	if options.GaloAdv.Xp < 0 {
+		options.GaloAdv.Xp = 0
+	}
+	options.AdvLevel = rinha.CalcLevel(options.GaloAdv.Xp)
+	options.AuthorLevel = rinha.CalcLevel(options.GaloAuthor.Xp)
+	u, _ := handler.Client.User(options.IDs[0]).Get()
+	avatar, _ := u.AvatarURL(128, true)
 	embed := &disgord.Embed{
 		Title: "Briga de galo",
-		Color: 16776960,
+		Color: rinha.RinhaColors[0],
 		Footer: &disgord.EmbedFooter{
-			Text: "Use j!galo para ver informaçoes sobre seu galo",
+			Text:    u.Username,
+			IconURL: avatar,
 		},
 		Image: &disgord.EmbedImage{
-			URL: getImageTile(&options.galoAuthor, &options.galoAdv, 0),
+			URL: rinha.GetImageTile(&options.GaloAuthor, &options.GaloAdv, 1),
 		},
-		Description: "Iniciando a briga de galo	",
 		Fields: []*disgord.EmbedField{
 			{
-				Name:   fmt.Sprintf("%s Level %d", options.authorName, options.authorLevel),
+				Name:   fmt.Sprintf("%s Level %d", options.AuthorName, options.AuthorLevel),
 				Value:  fmt.Sprintf("%d/%d", 100, 100),
 				Inline: true,
 			},
 			{
-				Name:   fmt.Sprintf("%s Level %d", options.advName, options.advLevel),
+				Name:   fmt.Sprintf("%s Level %d", options.AdvName, options.AdvLevel),
 				Value:  fmt.Sprintf("%d/%d", 100, 100),
 				Inline: true,
 			},
@@ -344,74 +370,11 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinhaOp
 	})
 
 	if err == nil {
-		battle := rinha.CreateBattle(options.galoAuthor, options.galoAdv, options.noItems)
-		var lastEffects string
-		round := 0
-		for {
-			effects := battle.Play()
-			var text string
-
-			authorName := options.authorName
-			affectedName := options.advName
-
-			turn := battle.GetTurn()
-
-			if turn == 0 {
-				authorName = options.advName
-				affectedName = options.authorName
-			}
-
-			for _, effect := range effects {
-				text += effectToStr(effect, affectedName, authorName, &battle)
-			}
-			if round >= 35 {
-				if battle.Fighters[1].Life >= battle.Fighters[0].Life {
-					text += "\n" + options.authorName + " Foi executado"
-					battle.Fighters[0].Life = 0
-					battle.Turn = false
-				} else {
-					battle.Fighters[1].Life = 0
-					text += "\n" + options.advName + " Foi executado"
-					battle.Turn = true
-				}
-			}
-			embed.Color = rinhaColors[battle.GetReverseTurn()]
-			embed.Description = lastEffects + "\n" + text
-
-			embed.Fields = []*disgord.EmbedField{
-				{
-					Name:   fmt.Sprintf("%s Level %d", options.authorName, options.authorLevel),
-					Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, battle.Fighters[0].MaxLife),
-					Inline: true,
-				},
-				{
-					Name:   fmt.Sprintf("%s Level %d", options.advName, options.advLevel),
-					Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, battle.Fighters[1].MaxLife),
-					Inline: true,
-				},
-			}
-
-			embed.Image = &disgord.EmbedImage{
-				URL: getImageTile(&options.galoAuthor, &options.galoAdv, turn),
-			}
-
-			if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
-				winnerTurn := battle.GetReverseTurn()
-
-				if winnerTurn == 1 {
-					embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.advName)
-				} else {
-					embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.authorName)
-				}
-				edit(message, embed)
-				return winnerTurn, &battle
-			}
-
-			edit(message, embed)
-			lastEffects = text
-			round++
-			time.Sleep(4 * time.Second)
+		battle := rinha.CreateBattle(options.GaloAuthor, options.GaloAdv, options.NoItems, options.IDs[0], options.IDs[1])
+		if newEngine {
+			return rinha.RinhaEngine(&battle, &options, message, embed)
 		}
+		return RinhaEngine(&battle, &options, message, embed)
 	} else {
 		return -1, nil
 	}

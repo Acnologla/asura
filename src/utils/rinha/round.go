@@ -37,11 +37,15 @@ type Round struct {
 	Reflex        bool
 }
 
-func (round *Round) applySkillDamage(firstTurn bool) int {
+func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 	reflected := false
 	var galo *Galo
 	if round.SkillId == 0 {
-		round.SkillId = round.Attacker.Equipped[utils.RandInt(len(round.Attacker.Equipped))]
+		if skill != -1 {
+			round.SkillId = round.Attacker.Equipped[skill].Skill
+		} else {
+			round.SkillId = round.Attacker.Equipped[utils.RandInt(len(round.Attacker.Equipped))].Skill
+		}
 		round.Skill = Skills[round.Attacker.Galo.Type-1][round.SkillId]
 		galo = round.Attacker.Galo
 		if HasUpgrade(galo.Upgrades, 1, 1, 0) {
@@ -253,7 +257,7 @@ func (round *Round) applyEffects() {
 	}
 }
 
-func (battle *Battle) Play() []*Result {
+func (battle *Battle) Play(skill int) []*Result {
 	if battle.Stun {
 		battle.Turn = !battle.Turn
 		battle.Stun = false
@@ -289,7 +293,7 @@ func (battle *Battle) Play() []*Result {
 	}
 
 	if round.Integrity != 0 {
-		main_damage := round.applySkillDamage(battle.FirstRound)
+		main_damage := round.applySkillDamage(battle.FirstRound, skill)
 		if battle.ReflexType == 1 {
 			battle.ReflexSkill = round.SkillId
 			battle.ReflexType = 2

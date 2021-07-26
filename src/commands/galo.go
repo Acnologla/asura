@@ -161,7 +161,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 
 	for i, skill := range skills {
-		rinhaSkill := rinha.Skills[galo.Type-1][skill]
+		rinhaSkill := rinha.Skills[galo.Type-1][skill.Skill]
 		margin := float64(335 + (25 * i))
 		text, _ := rinha.SkillToString(rinhaSkill)
 		dc.DrawString(text, 10, margin)
