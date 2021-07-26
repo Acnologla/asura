@@ -78,6 +78,17 @@ func TestClan(t *testing.T) {
 			t.Errorf("Invalid format")
 		}
 	})
+	t.Run("TestMaxMembers", func(t *testing.T) {
+		if rinha.GetMaxMembers(0) != 15 {
+			t.Errorf("Max members must be 15")
+		}
+		if 15 >= rinha.GetMaxMembers(3) {
+			t.Errorf("Max members must be greater than 15")
+		}
+		if 20 >= rinha.GetMaxMembers(6) {
+			t.Errorf("Max members must be greater than 20")
+		}
+	})
 	t.Run("TestIsInClan", func(t *testing.T) {
 		if !rinha.IsInClan(clan, 0) {
 			t.Errorf("This must be true")
