@@ -66,6 +66,9 @@ func ItemToString(item *Item) string {
 	if item.Effect == 6 {
 		return fmt.Sprintf("Aumenta o dano dos seus efeitos em **%d%%** ", int(math.Round((item.Payload-1)*100)))
 	}
+	if item.Effect == 7 {
+		return fmt.Sprintf("Voce reflete todo o dano levado de ataques em **%d%%** ", int(item.Payload*100))
+	}
 	return ""
 }
 

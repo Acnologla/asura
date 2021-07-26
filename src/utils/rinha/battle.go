@@ -73,6 +73,10 @@ func CreateBattle(first Galo, sec Galo, noItems bool) Battle {
 		if HasUpgrade(firstFighter.Galo.Upgrades, 2, 1, 1) {
 			secFighter.Life -= 10
 			secFighter.MaxLife -= 10
+			if HasUpgrade(firstFighter.Galo.Upgrades, 2, 1, 1, 0) {
+				secFighter.Life -= 15
+				secFighter.MaxLife -= 15
+			}
 		}
 		secFighter.Life -= 5
 		secFighter.MaxLife -= 5
@@ -81,6 +85,10 @@ func CreateBattle(first Galo, sec Galo, noItems bool) Battle {
 		if HasUpgrade(secFighter.Galo.Upgrades, 2, 1, 1) {
 			firstFighter.Life -= 10
 			firstFighter.MaxLife -= 10
+			if HasUpgrade(secFighter.Galo.Upgrades, 2, 1, 1, 0) {
+				firstFighter.Life -= 15
+				firstFighter.MaxLife -= 15
+			}
 		}
 		firstFighter.Life -= 5
 		firstFighter.MaxLife -= 5

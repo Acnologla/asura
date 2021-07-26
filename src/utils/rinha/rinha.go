@@ -375,13 +375,17 @@ func GetEffectFromIndex(idx int) *Effect {
 }
 
 func IsInLimit(galo Galo, id disgord.Snowflake) bool {
+	max := 230
+	if HasUpgrade(galo.Upgrades, 0, 1, 0, 0) {
+		max += 30
+	}
 	if galo.TrainLimit.LastReset == 0 || 1 <= (uint64(time.Now().Unix())-galo.TrainLimit.LastReset)/60/60/24 {
 		UpdateGaloDB(id, func(galo Galo) (Galo, error) {
 			galo.TrainLimit.LastReset = uint64(time.Now().Unix())
 			galo.TrainLimit.Times = 0
 			return galo, nil
 		})
-	} else if galo.TrainLimit.Times >= 200 {
+	} else if galo.TrainLimit.Times >= max {
 		return true
 	}
 	return false

@@ -154,7 +154,13 @@ func GetBenefits(xp int) (text string) {
 		text += "1 de ouro adicional por rinha ganha\n"
 	}
 	if level >= 5 {
-		text += "2 de ouro adicional por rinha ganha"
+		text += "2 de ouro adicional por rinha ganha\n"
+	}
+	if level >= 6 {
+		text += "10 membros adicionais\n"
+	}
+	if level >= 7 {
+		text += "1 de xp de upgrade a mais por rinha ganha"
 	}
 	return
 }
@@ -219,4 +225,15 @@ func CompleteClanMission(clanName string, id disgord.Snowflake) {
 		return clan, nil
 	})
 
+}
+
+func GetMaxMembers(level int) int {
+	maxMembers := 15
+	if level >= 3 {
+		maxMembers = 20
+	}
+	if level >= 6 {
+		maxMembers = 30
+	}
+	return maxMembers
 }

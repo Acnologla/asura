@@ -140,6 +140,12 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 	if HasUpgrade(galo.Upgrades, 0, 1) {
 		money += 3
 	}
+	if HasUpgrade(galo.Upgrades, 0, 1, 0, 1) {
+		xp += 8
+	}
+	if HasUpgrade(galo.Upgrades, 0, 1, 1, 1) {
+		money += 3
+	}
 	if len(toRemove) > 0 {
 		text := "missão"
 		if len(toRemove) > 1 {

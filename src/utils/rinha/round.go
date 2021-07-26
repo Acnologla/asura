@@ -45,6 +45,12 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 		round.Skill = Skills[round.Attacker.Galo.Type-1][round.SkillId]
 		galo = round.Attacker.Galo
 		if HasUpgrade(galo.Upgrades, 1, 1, 0) {
+			if HasUpgrade(galo.Upgrades, 1, 1, 0, 1) {
+				round.Target.Life -= 3
+			}
+			if HasUpgrade(galo.Upgrades, 1, 1, 0, 0) {
+				round.Attacker.Life += 3
+			}
 			round.Attacker.Life += 3
 		}
 	} else {
@@ -62,13 +68,25 @@ func (round *Round) applySkillDamage(firstTurn bool) int {
 	if HasUpgrade(galo.Upgrades, 1, 0) {
 		attack_damage += 2
 		if HasUpgrade(galo.Upgrades, 1, 0, 0) {
-			attack_damage += 3
+			attack_damage += 2
+			if HasUpgrade(galo.Upgrades, 1, 0, 0, 0) {
+				attack_damage += 3
+			}
 		}
 	}
 	if HasUpgrade(galo.Upgrades, 2, 0, 1) {
-		if 9 >= utils.RandInt(101) {
-			attack_damage += attack_damage / 5
+		critChance := 9
+		if HasUpgrade(galo.Upgrades, 2, 0, 1, 0) {
+			critChance = 19
 		}
+		if critChance >= utils.RandInt(101) {
+			crit := attack_damage / 5
+			if HasUpgrade(galo.Upgrades, 2, 0, 1, 1) {
+				crit *= 2
+			}
+			attack_damage += crit
+		}
+
 	}
 	not_effective_damage := 0
 
@@ -131,11 +149,19 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 			if ataccker.ItemEffect == 6 {
 				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
 			}
+			if HasUpgrade(receiver.Galo.Upgrades, 2, 0, 0, 1) {
+				if 9 >= utils.RandInt(101) {
+					effect_damage = 0
+				}
+			}
 			if effect_damage >= receiver.Life {
 				effect_damage = receiver.Life - 1
 			}
 			if HasUpgrade(ataccker.Galo.Upgrades, 1, 0, 1) {
 				effect_damage += 2
+				if HasUpgrade(ataccker.Galo.Upgrades, 1, 0, 1, 0) {
+					effect_damage += 3
+				}
 			}
 			receiver.Life -= effect_damage
 		}
@@ -213,7 +239,7 @@ func (round *Round) applyEffects() {
 		}
 		round.applyEffect(int(round.Skill.Effect[1]), effect.Self, true)
 	} else {
-		if round.Attacker.ItemEffect == 2 && rand.Float64() >= 0.7 {
+		if round.Attacker.ItemEffect == 2 && rand.Float64() >= 0.6 {
 			id := int(math.Round(round.Attacker.ItemPayload))
 			effect := Effects[id]
 			effect_phy := [4]int{effect.Turns, id, round.Attacker.Galo.Type, round.SkillId}
@@ -283,10 +309,17 @@ func (battle *Battle) Play() []*Result {
 			if HasUpgrade(round.Target.Galo.Upgrades, 2, 0, 0) {
 				num += 3
 			}
+			if HasUpgrade(round.Target.Galo.Upgrades, 2, 0, 0, 0) {
+				num += 3
+			}
 			if num >= utils.RandInt(101) {
 				round.Results = append(round.Results, &Result{Dodge: true})
 				main_damage = 0
 			}
+		}
+		// 7 reflect item
+		if round.Target.ItemEffect == 7 {
+			round.Attacker.Life -= int(float64(main_damage) * round.Target.ItemPayload)
 		}
 		round.Target.Life -= main_damage
 	}

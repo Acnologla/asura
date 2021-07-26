@@ -24,7 +24,7 @@ func _Open(lootType int) int {
 */
 func OpenEpic() int {
 	value := utils.RandInt(1001)
-	if 15 >= value {
+	if 13 >= value {
 		return GetRandByType(Legendary)
 	} else if 245 >= value {
 		return GetRandByType(Epic)
