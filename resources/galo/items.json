@@ -129,7 +129,7 @@
         "name": "Armadura da divindade",
         "effect": 5,
         "level": 3,
-        "payload": 0.6
+        "payload": 0.65
     },
     {
         "name": "Amplificador divino",
@@ -160,5 +160,29 @@
         "effect": 6,
         "level": 3,
         "payload": 1.5
+    },
+    {
+        "name": "Refletidor",
+        "effect": 7,
+        "level": 0,
+        "payload": 0.1
+    },
+    {
+        "name": "Refletidor potente",
+        "effect": 7,
+        "level": 1,
+        "payload": 0.15
+    },
+    {
+        "name": "Refletidor espiritual",
+        "effect": 7,
+        "level": 2,
+        "payload": 0.25
+    },
+    {
+        "name": "Refletidor divino",
+        "effect": 7,
+        "level": 3,
+        "payload": 0.35
     }
 ]
