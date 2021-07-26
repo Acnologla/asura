@@ -350,18 +350,6 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinha.R
 		Image: &disgord.EmbedImage{
 			URL: rinha.GetImageTile(&options.GaloAuthor, &options.GaloAdv, 1),
 		},
-		Fields: []*disgord.EmbedField{
-			{
-				Name:   fmt.Sprintf("%s Level %d", options.AuthorName, options.AuthorLevel),
-				Value:  fmt.Sprintf("%d/%d", 100, 100),
-				Inline: true,
-			},
-			{
-				Name:   fmt.Sprintf("%s Level %d", options.AdvName, options.AdvLevel),
-				Value:  fmt.Sprintf("%d/%d", 100, 100),
-				Inline: true,
-			},
-		},
 	}
 
 	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
@@ -371,6 +359,19 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinha.R
 
 	if err == nil {
 		battle := rinha.CreateBattle(options.GaloAuthor, options.GaloAdv, options.NoItems, options.IDs[0], options.IDs[1])
+		embed.Fields = []*disgord.EmbedField{
+			{
+				Name:   fmt.Sprintf("%s Level %d", options.AuthorName, options.AuthorLevel),
+				Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, battle.Fighters[0].MaxLife),
+				Inline: true,
+			},
+			{
+				Name:   fmt.Sprintf("%s Level %d", options.AdvName, options.AdvLevel),
+				Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, battle.Fighters[1].MaxLife),
+				Inline: true,
+			},
+		}
+		rinha.EditRinhaEmbed(message, embed)
 		if newEngine {
 			return rinha.RinhaEngine(&battle, &options, message, embed)
 		}

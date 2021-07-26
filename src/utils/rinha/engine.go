@@ -65,6 +65,10 @@ func GetImageTile(first *Galo, sec *Galo, turn int) string {
 
 var RinhaEmojis = [2]string{"<:sverde:744682222644363296>", "<:svermelha:744682249408217118>"}
 
+func CheckDead(battle Battle) bool {
+	return 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life
+}
+
 func EffectToStr(effect *Result, affected string, author string, battle *Battle) string {
 	if effect.Dodge {
 		return fmt.Sprintf("%s **%s** desviou do ataque\n", RinhaEmojis[battle.GetReverseTurn()], affected)
@@ -192,7 +196,7 @@ func RinhaEngine(battle *Battle, options *RinhaOptions, message *disgord.Message
 		}
 		embed.Color = RinhaColors[battle.GetReverseTurn()]
 		embed.Description = lastEffects + "\n" + text
-		if battle.Stun || battle.ReflexType == 3 {
+		if (battle.Stun || battle.ReflexType == 3) && !CheckDead(*battle) {
 			battle.Turn = !battle.Turn
 			if battle.Stun {
 				battle.Stun = false
@@ -229,8 +233,7 @@ func RinhaEngine(battle *Battle, options *RinhaOptions, message *disgord.Message
 		embed.Image = &disgord.EmbedImage{
 			URL: GetImageTile(&options.GaloAuthor, &options.GaloAdv, battle.GetReverseTurn()),
 		}
-
-		if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
+		if CheckDead(*battle) {
 			winnerTurn := battle.GetReverseTurn()
 			embed.Image = &disgord.EmbedImage{
 				URL: GetImageTile(&options.GaloAuthor, &options.GaloAdv, battle.GetTurn()),
