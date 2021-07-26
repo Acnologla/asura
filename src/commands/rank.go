@@ -6,10 +6,11 @@ import (
 	"asura/src/utils"
 	"asura/src/utils/rinha"
 	"context"
-	"firebase.google.com/go/db"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"sort"
+
+	"firebase.google.com/go/db"
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -73,7 +74,9 @@ func top(topType string, session disgord.Session) (text string) {
 				continue
 			}
 			name := result[i].Key()
-			text += fmt.Sprintf("[%d] - %s (%d/15)\nLevel: %d (%d XP)\n", len(result)-i, name, len(clan.Members), rinha.ClanXpToLevel(clan.Xp), clan.Xp)
+			level := rinha.ClanXpToLevel(clan.Xp)
+			maxMembers := rinha.GetMaxMembers(level)
+			text += fmt.Sprintf("[%d] - %s (%d/%d)\nLevel: %d (%d XP)\n", len(result)-i, name, len(clan.Members), maxMembers, level, clan.Xp)
 		} else {
 			var gal rinha.Galo
 			if err := result[i].Unmarshal(&gal); err != nil {

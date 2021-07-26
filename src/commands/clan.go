@@ -119,10 +119,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				utils.Confirm(text, msg.ChannelID, msg.Mentions[0].ID, func() {
 					clan = rinha.GetClan(galo.Clan)
 					level := rinha.ClanXpToLevel(clan.Xp)
-					maxMembers := 15
-					if level >= 3 {
-						maxMembers = 20
-					}
+					maxMembers := rinha.GetMaxMembers(level)
 					if rinha.IsInClan(clan, user.ID) {
 						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")
 						return
