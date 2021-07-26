@@ -156,19 +156,26 @@ func RinhaEngine(battle *Battle, options *RinhaOptions, message *disgord.Message
 	newMsg = GenerateRinhaButtons(round, battle.Fighters[0].Equipped, newMsg, battle.Fighters[0])
 	EditRinhaComponents(message, newMsg)
 	for {
-		skill, ic := getSkill(battle, options, message, newMsg, round)
-		battle.Fighters[battle.GetTurn()].Equipped[skill].Cooldown = round
+		var skill int
+		var ic *disgord.InteractionCreate
+		if battle.ReflexType == 1 || battle.ReflexType == 2 {
+			skill = -1
+			round--
+			time.Sleep(time.Second * 2)
+		} else {
+			skill, ic = getSkill(battle, options, message, newMsg, round)
+			battle.Fighters[battle.GetTurn()].Equipped[skill].Cooldown = round
+		}
 		effects := battle.Play(skill)
 		var text string
-
 		authorName := options.AuthorName
 		affectedName := options.AdvName
 		turn := battle.GetTurn()
+
 		if turn == 0 {
 			authorName = options.AdvName
 			affectedName = options.AuthorName
 		}
-		newMsg = GenerateRinhaButtons(round, battle.Fighters[turn].Equipped, newMsg, battle.Fighters[turn])
 		for _, effect := range effects {
 			text += EffectToStr(effect, affectedName, authorName, battle)
 		}
@@ -183,10 +190,25 @@ func RinhaEngine(battle *Battle, options *RinhaOptions, message *disgord.Message
 				battle.Turn = true
 			}
 		}
-		u, _ := handler.Client.User(options.IDs[turn]).Get()
-		avatar, _ := u.AvatarURL(128, true)
 		embed.Color = RinhaColors[battle.GetReverseTurn()]
 		embed.Description = lastEffects + "\n" + text
+		if battle.Stun || battle.ReflexType == 3 {
+			battle.Turn = !battle.Turn
+			if battle.Stun {
+				battle.Stun = false
+			}
+			if battle.ReflexType == 3 {
+				battle.ReflexType = 0
+			}
+			round--
+			turn = battle.GetTurn()
+		}
+		if battle.ReflexType != 1 && battle.ReflexType != 2 {
+			newMsg = GenerateRinhaButtons(round, battle.Fighters[turn].Equipped, newMsg, battle.Fighters[turn])
+		}
+
+		u, _ := handler.Client.User(options.IDs[turn]).Get()
+		avatar, _ := u.AvatarURL(128, true)
 
 		embed.Fields = []*disgord.EmbedField{
 			{

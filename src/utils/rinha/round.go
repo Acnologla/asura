@@ -2,6 +2,7 @@ package rinha
 
 import (
 	"asura/src/utils"
+	"fmt"
 	"math"
 	"math/rand"
 )
@@ -295,6 +296,7 @@ func (battle *Battle) Play(skill int) []*Result {
 	if round.Integrity != 0 {
 		main_damage := round.applySkillDamage(battle.FirstRound, skill)
 		if battle.ReflexType == 1 {
+			fmt.Println(round.SkillId)
 			battle.ReflexSkill = round.SkillId
 			battle.ReflexType = 2
 			battle.Turn = !battle.Turn
