@@ -158,14 +158,14 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 					effect_damage = 0
 				}
 			}
-			if effect_damage >= receiver.Life {
-				effect_damage = receiver.Life - 1
-			}
 			if HasUpgrade(ataccker.Galo.Upgrades, 1, 0, 1) {
 				effect_damage += 2
 				if HasUpgrade(ataccker.Galo.Upgrades, 1, 0, 1, 0) {
 					effect_damage += 3
 				}
+			}
+			if effect_damage >= receiver.Life {
+				effect_damage = receiver.Life - 1
 			}
 			receiver.Life -= effect_damage
 		}
@@ -323,7 +323,11 @@ func (battle *Battle) Play(skill int) []*Result {
 		}
 		// 7 reflect item
 		if round.Target.ItemEffect == 7 {
-			round.Attacker.Life -= int(float64(main_damage) * round.Target.ItemPayload)
+			dm := int(float64(main_damage) * round.Target.ItemPayload)
+			if 0 >= round.Attacker.Life-dm {
+				dm = round.Attacker.Life - 1
+			}
+			round.Attacker.Life -= dm
 		}
 		round.Target.Life -= main_damage
 	}

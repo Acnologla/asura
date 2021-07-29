@@ -373,6 +373,10 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinha.R
 		}
 		rinha.EditRinhaEmbed(message, embed)
 		if newEngine {
+			if 3 > options.AdvLevel || 3 > options.AuthorLevel {
+				message.Reply(context.Background(), session, "Tem que ser pelomenos nivel 3 para batalhar na rinha com botoes")
+				return -1, nil
+			}
 			return rinha.RinhaEngine(&battle, &options, message, embed)
 		}
 		return RinhaEngine(&battle, &options, message, embed)

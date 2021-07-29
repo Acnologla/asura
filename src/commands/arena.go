@@ -100,6 +100,9 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		AuthorLevel: rinha.CalcLevel(galo.Xp),
 		AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
 	}, false)
+	if winner == -1 {
+		return
+	}
 	if winner == 0 {
 		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 			gal.Arena.Win++

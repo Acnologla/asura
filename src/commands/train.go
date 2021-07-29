@@ -57,6 +57,9 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			AuthorLevel: rinha.CalcLevel(galo.Xp),
 			AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
 		}, false)
+		if winner == -1 {
+			return
+		}
 		rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
 		if winner == 0 {
 			xpOb := utils.RandInt(10) + 10

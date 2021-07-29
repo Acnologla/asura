@@ -76,6 +76,9 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		AdvLevel:    AdvLVL,
 		NoItems:     true,
 	}, false)
+	if winner == -1 {
+		return
+	}
 	if winner == 0 {
 		if galo.DungeonReset != 0 && galo.Dungeon+1 != len(rinha.Dungeon) {
 			rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
