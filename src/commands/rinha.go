@@ -108,7 +108,11 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 				return
 			}
 			battleMutex.RUnlock()
-			executePVP(msg, session, args[len(args)-1] == "rinhatest")
+			rinhaTest := false
+			if len(args) > 0 {
+				rinhaTest = args[len(args)-1] == "rinhatest"
+			}
+			executePVP(msg, session, rinhaTest)
 		})
 
 	} else {
@@ -351,7 +355,12 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinha.R
 			URL: rinha.GetImageTile(&options.GaloAuthor, &options.GaloAdv, 1),
 		},
 	}
-
+	if newEngine {
+		if 3 > options.AdvLevel || 3 > options.AuthorLevel {
+			msg.Reply(context.Background(), session, "Tem que ser pelomenos nivel 3 para batalhar na rinha com botoes")
+			return -1, nil
+		}
+	}
 	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Content: msg.Author.Mention(),
 		Embed:   embed,
@@ -373,10 +382,6 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options rinha.R
 		}
 		rinha.EditRinhaEmbed(message, embed)
 		if newEngine {
-			if 3 > options.AdvLevel || 3 > options.AuthorLevel {
-				message.Reply(context.Background(), session, "Tem que ser pelomenos nivel 3 para batalhar na rinha com botoes")
-				return -1, nil
-			}
 			return rinha.RinhaEngine(&battle, &options, message, embed)
 		}
 		return RinhaEngine(&battle, &options, message, embed)
