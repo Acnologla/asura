@@ -213,10 +213,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 		}
 		benefits := rinha.GetBenefits(clan.Xp)
-		maxMembers := 15
-		if level >= 3 {
-			maxMembers = 20
-		}
+		maxMembers := rinha.GetMaxMembers(level)
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title: galo.Clan,
 			Color: 65535,

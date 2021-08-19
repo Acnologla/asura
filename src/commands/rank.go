@@ -18,7 +18,7 @@ func init() {
 		Aliases:   []string{"rank", "top", "tops"},
 		Run:       runRank,
 		Available: true,
-		Cooldown:  5,
+		Cooldown:  20,
 		Usage:     "j!rank <rank>",
 		Help:      "Veja os ranks",
 		Category:  1,
@@ -58,7 +58,7 @@ func top(topType string, session disgord.Session) (text string) {
 	if topType == "players" {
 		q = q.StartAt(1)
 	}
-	q = q.LimitToLast(12)
+	q = q.LimitToLast(15)
 	result, err := q.GetOrdered(context.Background())
 	if topType == "players" {
 		result = sortDungeon(result)

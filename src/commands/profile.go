@@ -61,7 +61,10 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
 
 	if err != nil {
-		avatar, _ = utils.DownloadAvatar(user.ID, 128, false)
+		avatar, err = utils.DownloadAvatar(user.ID, 128, false)
+		if err != nil {
+			return
+		}
 	}
 
 	radius := 70.0
