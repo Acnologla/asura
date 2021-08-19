@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"asura/src/telemetry"
 	"asura/src/utils/rinha"
+	"asura/src/utils/rinha/engine"
 	"context"
 	"fmt"
 	"strconv"
@@ -92,7 +93,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 	LockEvent(msg.Author.ID, "Arena "+rinha.Classes[galoAdv.Type].Name)
 	defer UnlockEvent(msg.Author.ID)
 	galoAdv.Items = galo.Items
-	winner, _ := ExecuteRinha(msg, session, rinha.RinhaOptions{
+	winner, _ := ExecuteRinha(msg, session, engine.RinhaOptions{
 		GaloAuthor:  galo,
 		GaloAdv:     galoAdv,
 		AuthorName:  rinha.GetName(msg.Author.Username, galo),
