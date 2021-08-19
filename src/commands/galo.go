@@ -2,6 +2,7 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/telemetry"
 	"asura/src/utils"
 	"asura/src/utils/rinha"
 	"bytes"
@@ -40,6 +41,20 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 		rinha.SaveGaloDB(user.ID, galo)
 	}
 	if len(args) > 0 {
+		if args[0] == "claim" && msg.GuildID == 710179373860519997 && user.ID == msg.Author.ID {
+			level := rinha.CalcLevel(galo.Xp)
+			if level >= 25 || galo.GaloReset > 0 {
+				if !rinha.IsIntInList(31, galo.Items) {
+					rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+						galo.Items = append(galo.Items, 31)
+						return galo, nil
+					})
+					telemetry.Debug(fmt.Sprintf("%s excalibur beta", msg.Author.Username), map[string]string{})
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce pegou o item excalibur beta")
+				}
+				return
+			}
+		}
 		if args[0] == "update" {
 			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 				level := rinha.CalcLevel(galo.Xp)

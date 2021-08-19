@@ -184,5 +184,11 @@
         "effect": 7,
         "level": 3,
         "payload": 0.35
+    },
+    {
+        "name": "Beta Escalibur",
+        "effect": 1,
+        "level": 4,
+        "payload": 1.6
     }
 ]
