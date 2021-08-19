@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"asura/src/telemetry"
 	"asura/src/utils/rinha"
+	"asura/src/utils/rinha/engine"
 	"context"
 	"fmt"
 	"strconv"
@@ -67,7 +68,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		Xp:   rinha.CalcXP(AdvLVL) + 1,
 		Type: galoAdv.Type,
 	}
-	winner, _ := ExecuteRinha(msg, session, rinha.RinhaOptions{
+	winner, _ := ExecuteRinha(msg, session, engine.RinhaOptions{
 		GaloAuthor:  galo,
 		GaloAdv:     ngaloAdv,
 		AuthorName:  rinha.GetName(msg.Author.Username, galo),
