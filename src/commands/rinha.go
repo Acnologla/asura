@@ -75,22 +75,22 @@ func updateGaloWin(id disgord.Snowflake, xp int, win int) {
 func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(msg.Mentions) != 0 {
 		if msg.Mentions[0].ID == msg.Author.ID {
-			msg.Reply(context.Background(), session, "Voce não pode lutar contra si mesmo!")
+			msg.Reply(context.Background(), session, "Você não pode lutar contra si mesmo!")
 			return
 		}
 		if msg.Mentions[0].Bot {
-			msg.Reply(context.Background(), session, "Voce não pode lutar contra um bot!")
+			msg.Reply(context.Background(), session, "Você não pode lutar contra um bot!")
 			return
 		}
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+			msg.Reply(context.Background(), session, "Você ja esta lutando com o "+currentBattles[msg.Author.ID])
 			return
 		}
 		if currentBattles[msg.Mentions[0].ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+			msg.Reply(context.Background(), session, "Este usuário ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
 			return
 		}
 
@@ -100,12 +100,12 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 			battleMutex.RLock()
 			if currentBattles[msg.Author.ID] != "" {
 				battleMutex.RUnlock()
-				msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+				msg.Reply(context.Background(), session, "Você já esta lutando com o "+currentBattles[msg.Author.ID])
 				return
 			}
 			if currentBattles[msg.Mentions[0].ID] != "" {
 				battleMutex.RUnlock()
-				msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+				msg.Reply(context.Background(), session, "Este usuário ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
 				return
 			}
 			battleMutex.RUnlock()
@@ -117,7 +117,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		})
 
 	} else {
-		msg.Reply(context.Background(), session, "Voce precisa mencionar alguem")
+		msg.Reply(context.Background(), session, "Você precisa mencionar alguem")
 	}
 }
 

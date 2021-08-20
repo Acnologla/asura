@@ -179,7 +179,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	png.Encode(pw, dc.Image())
 	content := ""
 	if level >= 35 {
-		content = "Voce pode fortalecer o tipo do seu galo mas o deixando nivel 1 usando **j!galo update**."
+		content = "Você pode fortalecer o tipo do seu galo mas o deixando nivel 1 usando **j!galo update**."
 	}
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Content: content,

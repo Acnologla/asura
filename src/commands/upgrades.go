@@ -53,7 +53,7 @@ func runUpgrades(session disgord.Session, msg *disgord.Message, args []string) {
 	} else {
 		i, err := strconv.Atoi(args[0])
 		if !rinha.HavePoint(galo) {
-			msg.Reply(context.Background(), session, "Voce não tem pontos de upgrades, use j!upgrades para ver seus pontos de upgrades")
+			msg.Reply(context.Background(), session, "Você não tem pontos de upgrades, use j!upgrades para ver seus pontos de upgrades")
 			return
 		}
 		if err != nil {
@@ -62,7 +62,7 @@ func runUpgrades(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		upgrades := rinha.GetCurrentUpgrade(galo)
 		if 0 > i || i >= len(upgrades.Childs) {
-			msg.Reply(context.Background(), session, "Id do upgrade invalido use j!upgrade para ver os upgrades disponiveis")
+			msg.Reply(context.Background(), session, "Id do upgrade inválido use j!upgrade para ver os upgrades disponiveis")
 			return
 		}
 		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {

@@ -159,24 +159,24 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 					Embed: embed,
 				})
 			} else {
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", Movimento invalido")
+				msg.Reply(context.Background(), session, msg.Author.Mention()+", Movimento inválido")
 			}
 			return
 		}
 	}
 	if len(msg.Mentions) == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Mencione alguem para jogar xadrez")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Mencione alguém para jogar xadrez!")
 		return
 	}
 	user := msg.Mentions[0]
 	if msg.Author.ID == user.ID {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario inválido")
 		return
 	} else if chessPlayers[msg.Author.ID] != nil {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce ja esta em uma partida de xadrez")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Você já esta em uma partida de xadrez")
 		return
 	} else if chessPlayers[user.ID] != nil {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Esse usuario ja esta em uma partida de xadrez")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Esse usuário já esta em uma partida de xadrez")
 		return
 	}
 	game := chess.NewGame()

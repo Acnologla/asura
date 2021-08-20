@@ -82,7 +82,7 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 			Embed: &disgord.Embed{
 				Footer: &disgord.EmbedFooter{
 					IconURL: avatar,
-					Text:    "Use j!equipar <numero do galo> para equipar um galo | use j!equipar <numero do galo> remove para vender um galo",
+					Text:    "Use j!equipar <número do galo> para equipar um galo | use j!equipar <número do galo> remove para vender um galo",
 				},
 				Color: 65535,
 				Image: &disgord.EmbedImage{

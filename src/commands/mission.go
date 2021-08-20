@@ -80,7 +80,7 @@ func runMission(session disgord.Session, msg *disgord.Message, args []string) {
 					session.SendInteractionResponse(context.Background(), event, &disgord.InteractionResponse{
 						Type: disgord.ChannelMessageWithSource,
 						Data: &disgord.InteractionApplicationCommandCallbackData{
-							Content: "Voce trocou sua missão com sucesso",
+							Content: "Você trocou sua missão com sucesso!",
 						},
 					})
 				}

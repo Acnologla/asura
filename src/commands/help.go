@@ -54,7 +54,7 @@ func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 			Embed: &disgord.Embed{
 				Description: commandText + "\n\n**Comandos de rinha**\n" + rinhaText + "\n\n[**Servidor de Suporte**](https://discord.gg/tdVWQGV)\n[**Website**](https://acnologla.github.io/asura-site/)",
 				Footer: &disgord.EmbedFooter{
-					Text: "Use j!help <comando> para ver informaçoes sobre um comando",
+					Text: "Use j!help <comando> para ver informações sobre um comando!",
 				},
 				Color: 65535,
 				Title: "Comandos",

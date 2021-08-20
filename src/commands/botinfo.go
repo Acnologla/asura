@@ -52,9 +52,9 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			guildUsage += int(unsafe.Sizeof(*voiceState))
 		}
 	}
-	guildUsageText := fmt.Sprintf("Este servidor esta usando %.2fKB de memoria ram", float32(guildUsage)/1000)
+	guildUsageText := fmt.Sprintf("Este servidor está usando %.2fKB de memória ram", float32(guildUsage)/1000)
 	if guildUsage >= 1000000 {
-		guildUsageText = fmt.Sprintf("Este servidor esta usando %.2fMB de memoria ram", float32(guildUsage)/1000/1000)
+		guildUsageText = fmt.Sprintf("Este servidor está usando %.2fMB de memória ram", float32(guildUsage)/1000/1000)
 	}
 	ping, _ := handler.Client.HeartbeatLatencies()
 	shard := disgord.ShardID(msg.GuildID, 1)
