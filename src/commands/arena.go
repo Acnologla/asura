@@ -36,15 +36,15 @@ func logArenaFinish(user *disgord.User, xp, money int) {
 func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	if galo.Type == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem um galo, use j!galo para criar um")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Você não tem um galo, use j!galo para criar um")
 		return
 	}
 
 	if len(args) == 0 {
 		authorAvatar, _ := msg.Author.AvatarURL(512, true)
-		text := "Use **j!arena ingresso** para comprar um ingresso para a arena custa **500** de dinheiro"
+		text := "Use **j!arena ingresso** para comprar um ingresso, para a arena custa **500** de dinheiro"
 		if galo.Arena.Active {
-			text = fmt.Sprintf("Vitorias: **%d/12**\nDerrotas: **%d/3**\nUse **j!arena batalha** para batalhar na arena", galo.Arena.Win, galo.Arena.Lose)
+			text = fmt.Sprintf("Vitórias: **%d/12**\nDerrotas: **%d/3**\nUse **j!arena batalha** para batalhar na arena", galo.Arena.Win, galo.Arena.Lose)
 		}
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title: "Arena",
@@ -61,16 +61,16 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 			if gal.Money >= 500 {
 				gal.Money -= 500
 				gal.Arena.Active = true
-				msg.Reply(context.Background(), session, "Voce comprou um ingresso para a arena use **j!arena batalha** para batalhar")
+				msg.Reply(context.Background(), session, "Você comprou um ingresso para a arena use **j!arena batalha** para batalhar")
 			} else {
-				msg.Reply(context.Background(), session, "Voce precisa ter **500** de dinheiro para comprar um ingresso na arena")
+				msg.Reply(context.Background(), session, "Você precisa ter **500** de dinheiro para comprar um ingresso na arena")
 			}
 			return gal, nil
 		})
 		return
 	}
 	if !galo.Arena.Active {
-		msg.Reply(context.Background(), session, "Voce precisa ter um ingresso para batalhar na arena, use **j!arena** para comprar um")
+		msg.Reply(context.Background(), session, "Você precisa ter um ingresso para batalhar na arena, use **j!arena** para comprar um")
 		return
 	}
 	if 5 > rinha.CalcLevel(galo.Xp) {
@@ -80,7 +80,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 	battleMutex.RLock()
 	if currentBattles[msg.Author.ID] != "" {
 		battleMutex.RUnlock()
-		msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+		msg.Reply(context.Background(), session, "Você já está lutando com o "+currentBattles[msg.Author.ID])
 		return
 	}
 	battleMutex.RUnlock()

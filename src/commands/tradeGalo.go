@@ -47,17 +47,17 @@ func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
 		return
 	}
-	text := fmt.Sprintf("**%s** voce foi convidado para trocar galos com %s", user.Username, msg.Author.Username)
+	text := fmt.Sprintf("**%s** você foi convidado para trocar galos com %s", user.Username, msg.Author.Username)
 	utils.Confirm(text, msg.ChannelID, msg.Mentions[0].ID, func() {
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+			msg.Reply(context.Background(), session, "Você ja esta lutando com o "+currentBattles[msg.Author.ID])
 			return
 		}
 		if currentBattles[msg.Mentions[0].ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+			msg.Reply(context.Background(), session, "Este usuário ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
 			return
 		}
 		battleMutex.RUnlock()
@@ -89,18 +89,18 @@ func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		i, err := strconv.Atoi(message.Content)
 		if err != nil {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", número invalido.\nTroca cancelada")
 			return
 		}
 		if 0 > i || i >= len(galo.Galos) {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", número invalido.\nTroca cancelada")
 			return
 		}
 		firstGalo := galo.Galos[i]
 		advGalos := galoToText(galoAdv, rinha.Classes[firstGalo.Type].Rarity, firstGalo.Type)
 		newMsg.Content = user.Mention()
 		session.Channel(tradeMsg.ChannelID).Message(tradeMsg.ID).Delete()
-		newMsg.Embed.Description = advGalos + "\n\nGalo que voce ira receber: **" + rinha.Classes[firstGalo.Type].Name + "**"
+		newMsg.Embed.Description = advGalos + "\n\nGalo que você ira receber: **" + rinha.Classes[firstGalo.Type].Name + "**"
 		secondTradeMsg, err := msg.Reply(context.Background(), session, newMsg)
 		if err != nil {
 			return
@@ -113,17 +113,17 @@ func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		j, err := strconv.Atoi(message.Content)
 		if err != nil {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", número invalido.\nTroca cancelada")
 			return
 		}
 		if 0 > j || j >= len(galoAdv.Galos) {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", número invalido.\nTroca cancelada")
 			return
 		}
 		session.Channel(secondTradeMsg.ChannelID).Message(secondTradeMsg.ID).Delete()
 		secondGalo := galoAdv.Galos[j]
 		if rinha.Classes[secondGalo.Type].Rarity != rinha.Classes[firstGalo.Type].Rarity {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", número invalido.\nTroca cancelada")
 			return
 		}
 		if rinha.HaveGalo(secondGalo.Type, galo.Galos) || rinha.HaveGalo(firstGalo.Type, galoAdv.Galos) {
@@ -143,7 +143,7 @@ func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 			galo.Galos[j] = firstGalo
 			return galo, nil
 		})
-		msg.Reply(context.Background(), session, fmt.Sprintf("%s voce trocou o galo **%s** pelo galo **%s** com sucesso", msg.Author.Mention(), rinha.Classes[firstGalo.Type].Name, rinha.Classes[secondGalo.Type].Name))
+		msg.Reply(context.Background(), session, fmt.Sprintf("%s você trocou o galo **%s** pelo galo **%s** com sucesso!", msg.Author.Mention(), rinha.Classes[firstGalo.Type].Name, rinha.Classes[secondGalo.Type].Name))
 	})
 
 }

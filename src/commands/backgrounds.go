@@ -36,7 +36,7 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 			text += fmt.Sprintf("[%d] - %s (Raridade: **%s**) \n", indexes[i], background.Name, background.Rarity.String())
 		}
 		if len(bgs) == 0 {
-			text = "Voce não tem nenhum background, compre uma caixa cosmetica usando j!lootbox, para obter um"
+			text = "Você não tem nenhum background, compre uma caixa cosmetica usando j!lootbox, para obter um"
 		}
 		avatar, _ := msg.Author.AvatarURL(512, true)
 		msg.Reply(context.Background(), session, &disgord.Embed{
@@ -58,7 +58,7 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 		battleMutex.RUnlock()
 		value, err := strconv.Atoi(args[0])
 		if err != nil {
-			msg.Reply(context.Background(), session, "Use j!background <numero do background> para equipar um background")
+			msg.Reply(context.Background(), session, "Use j!background <número do background> para equipar um background")
 			return
 		}
 		_, indexes := rinha.GetBackgrounds(galo.Cosmetics)
@@ -69,7 +69,7 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 				return galo, nil
 			})
 		} else {
-			msg.Reply(context.Background(), session, "Numero invalido")
+			msg.Reply(context.Background(), session, "Número inválido")
 		}
 	}
 }

@@ -87,13 +87,13 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 
 			if err != nil || i < 0 || i >= len(skills) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
-					Content: "Voce não tem essa habilidade",
+					Content: "Você não tem essa habilidade",
 				})
 				return
 			}
 			if rinha.IsIntInList(skills[i], galo.Equipped) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
-					Content: "Voce já está com essa habilidade equipada!",
+					Content: "Você já está com essa habilidade equipada!",
 				})
 				return
 			}
@@ -102,12 +102,12 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				return galo, nil
 			})
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
-				Content: "Voce equipou essa habilidade",
+				Content: "Você equipou essa habilidade",
 			})
 		} else if args[0] == "remove" {
 			if err != nil || i < 0 || i >= len(galo.Equipped) {
 				msg.Reply(context.Background(), session, disgord.CreateMessageParams{
-					Content: "Voce nao esta equipado com essa habilidade",
+					Content: "Você nao esta equipado com essa habilidade",
 				})
 				return
 			}
@@ -120,7 +120,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 				return galo, nil
 			})
 			msg.Reply(context.Background(), session, disgord.CreateMessageParams{
-				Content: "Voce retirou essa habilidade",
+				Content: "Você retirou essa habilidade",
 			})
 		}
 	}

@@ -36,7 +36,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+			msg.Reply(context.Background(), session, "Você ja esta lutando com o "+currentBattles[msg.Author.ID])
 			return
 		}
 		battleMutex.RUnlock()
@@ -126,7 +126,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, &disgord.Embed{
 				Color:       16776960,
 				Title:       "Train",
-				Description: fmt.Sprintf("Parabens %s, voce venceu\nGanhou **%d** de dinheiro e **%d** de xp%s", msg.Author.Username, money, xpOb, clanMsg),
+				Description: fmt.Sprintf("Parabens %s, você venceu\nGanhou **%d** de dinheiro e **%d** de xp%s", msg.Author.Username, money, xpOb, clanMsg),
 			})
 			galo.Xp += xpOb
 			sendLevelUpEmbed(msg, session, &galo, msg.Author, xpOb)
@@ -134,7 +134,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, &disgord.Embed{
 				Color:       16711680,
 				Title:       "Train",
-				Description: fmt.Sprintf("Parabens %s, voce perdeu. Use j!train para treinar novamente", msg.Author.Username),
+				Description: fmt.Sprintf("Parabens %s, você perdeu. Use j!train para treinar novamente", msg.Author.Username),
 			})
 		}
 	})

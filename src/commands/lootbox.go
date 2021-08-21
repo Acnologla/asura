@@ -43,7 +43,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	if args[0] == "open" || args[0] == "abrir" {
 		if 2 > len(args) {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa decidir o tipo de lootbox para abrir\nj!lootbox open <tipo>")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Você precisa decidir o tipo de lootbox para abrir\nj!lootbox open <tipo>")
 			return
 		}
 		lootType := strings.ToLower(args[1])
@@ -52,25 +52,25 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		if !rinha.HaveLootbox(galo, lootType) {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem essa lootbox\nuse j!lootbox para ver suas lootbox")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Você não tem essa lootbox\nuse j!lootbox para ver as suas lootboxs")
 			return
 		}
 		isCosmetic := lootType == "cosmetica"
 		if len(galo.Galos) >= 10 && !isCosmetic {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce atingiu o limite maximo de galos (10) use `j!equip` para remover um galo")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Você atingiu o limite maximo de galos (10) use `j!equip` para remover um galo")
 			return
 		}
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Espere sua rinha terminar antes de abrir lootboxs")
+			msg.Reply(context.Background(), session, "Espere a sua rinha terminar antes de abrir lootboxs")
 			return
 		}
 		battleMutex.RUnlock()
 		result := rinha.Open(lootType)
 		avatar, _ := msg.Author.AvatarURL(512, true)
 		embed := &disgord.Embed{
-			Title: "Abrindo lootbox",
+			Title: "Abrindo lootbox...",
 		}
 		if isCosmetic {
 			newCosmetic := rinha.Cosmetics[result]
@@ -126,7 +126,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 				price := rinha.Sell(newGalo.Rarity, 0, 0)
 				sold = "yes"
 				galo.Money += price
-				extraMsg = fmt.Sprintf("\nComo voce ja tinha esse galo voce ganhou **%d** de dinheiro", price)
+				extraMsg = fmt.Sprintf("\nComo você ja tinha esse galo voce ganhou **%d** de dinheiro", price)
 			}
 			return galo, nil
 		})
@@ -167,12 +167,12 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 	} else if args[0] == "buy" || args[0] == "comprar" {
 		if 2 > len(args) {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa decidir o tipo de lootbox para comprar\nj!lootbox buy <tipo>")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Você precisa decidir o tipo de lootbox para comprar\nj!lootbox buy <tipo>")
 			return
 		}
 		lootType := strings.ToLower(args[1])
 		if !utils.Includes(lootTypes, lootType) {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Tipo de caixa invalido, use j!lootbox para ver os tipos")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Tipo de caixa inválido, use j!lootbox para ver os tipos")
 			return
 		}
 		battleMutex.RLock()
@@ -185,13 +185,13 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		price := rinha.GetPrice(lootType)
 		err := rinha.ChangeMoney(msg.Author.ID, -price, price)
 		if err != nil {
-			msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce precisa ter %d de dinheiro para comprar uma lootbox %s, use `j!lootbox` para ver seu dinheiro", msg.Author.Mention(), price, lootType))
+			msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você precisa ter %d de dinheiro para comprar uma lootbox %s, use `j!lootbox` para ver seu dinheiro", msg.Author.Mention(), price, lootType))
 			return
 		}
 		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 			return rinha.GetNewLb(lootType, galo, true), nil
 		})
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce comprou uma lootbox "+lootType+" use `j!lootbox open "+lootType+"` para abrir")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Você comprou uma lootbox "+lootType+" use `j!lootbox open "+lootType+"` para abrir")
 	} else {
 		normal()
 	}

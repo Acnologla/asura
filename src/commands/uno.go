@@ -275,7 +275,7 @@ func getCards(msg *disgord.Message, session disgord.Session) {
 			}
 		} else {
 			gameMutex.RUnlock()
-			go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce não ta no jogo")
+			go msg.Reply(context.Background(), session, msg.Author.Mention()+", Você não está no jogo")
 		}
 	} else {
 		gameMutex.RUnlock()

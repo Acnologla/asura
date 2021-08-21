@@ -45,7 +45,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			oldUsernames = strings.Join(userinfo.Usernames, "** | **")
 		}
 	} else if private {
-		oldUsernames = "O historico desse usuario é privado, use j!private para deixar publico"
+		oldUsernames = "O histórico desse usuario é privado, use j!private para deixar publico"
 	} else {
 		oldUsernames = "Nenhum nome antigo registrado"
 	}
@@ -61,7 +61,7 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 		}
 	} else if private {
-		oldAvatars = "O historico desse usuario é privado, use j!private para deixar publico"
+		oldAvatars = "O histórico desse usuario é privado, use j!private para deixar público!"
 	} else {
 		oldAvatars = "Nenhum avatar antigo registrado"
 	}

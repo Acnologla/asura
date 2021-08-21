@@ -44,17 +44,17 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
 		return
 	}
-	text := fmt.Sprintf("**%s** voce foi convidado para trocar itens com %s", user.Username, msg.Author.Username)
+	text := fmt.Sprintf("**%s** você foi convidado para trocar itens com %s", user.Username, msg.Author.Username)
 	utils.Confirm(text, msg.ChannelID, msg.Mentions[0].ID, func() {
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+			msg.Reply(context.Background(), session, "Você ja esta lutando com o "+currentBattles[msg.Author.ID])
 			return
 		}
 		if currentBattles[msg.Mentions[0].ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Este usuario ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+			msg.Reply(context.Background(), session, "Este usuário ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
 			return
 		}
 		battleMutex.RUnlock()
@@ -86,11 +86,11 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		i, err := strconv.Atoi(message.Content)
 		if err != nil {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", numero inválido.\nTroca cancelada")
 			return
 		}
 		if 0 > i || i >= len(galo.Items) {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", numero inválido.\nTroca cancelada")
 			return
 		}
 		firstItem := galo.Items[i]

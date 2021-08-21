@@ -34,7 +34,7 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 			text += fmt.Sprintf("[%d] - %s (Raridade: **%s**) \n%s\n", i, name.Name, rinha.LevelToString(name.Level), rinha.ItemToString(name))
 		}
 		if text == "" {
-			text = "Voce não tem nenhum item, para conseguir items use j!dungeon"
+			text = "Você não tem nenhum item, para conseguir items use j!dungeon"
 		}
 		avatar, _ := msg.Author.AvatarURL(512, true)
 		msg.Reply(context.Background(), session, &disgord.Embed{
@@ -50,7 +50,7 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Espere sua rinha terminar para equipar items")
+			msg.Reply(context.Background(), session, "Espere a sua rinha terminar para equipar items")
 			return
 		}
 		battleMutex.RUnlock()
@@ -69,8 +69,7 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 				return galo, nil
 			})
 		} else {
-			msg.Reply(context.Background(), session, "Numero invalido")
-
+			msg.Reply(context.Background(), session, "Numero inválido")
 		}
 	}
 }

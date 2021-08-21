@@ -39,14 +39,14 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 				IconURL: authorAvatar,
 			},
 			Color:       65535,
-			Description: fmt.Sprintf("Voce esta no andar **%d**\nUse j!dungeon battle para batalhar contra o chefe", galo.Dungeon),
+			Description: fmt.Sprintf("Você está no andar **%d**\nUse j!dungeon battle para batalhar contra o chefe", galo.Dungeon),
 		})
 		return
 	}
 	battleMutex.RLock()
 	if currentBattles[msg.Author.ID] != "" {
 		battleMutex.RUnlock()
-		msg.Reply(context.Background(), session, "Voce ja esta lutando com o "+currentBattles[msg.Author.ID])
+		msg.Reply(context.Background(), session, "Você já esta lutando com o "+currentBattles[msg.Author.ID])
 		return
 	}
 	battleMutex.RUnlock()
@@ -90,7 +90,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, &disgord.Embed{
 				Color:       16776960,
 				Title:       "Dungeon",
-				Description: fmt.Sprintf("Parabens %s voce consegiu derrotar o boss e avançar para o andar **%d**", msg.Author.Username, galo.Dungeon+1),
+				Description: fmt.Sprintf("Parabéns %s você consegiu derrotar o boss e avançar para o andar **%d**", msg.Author.Username, galo.Dungeon+1),
 			})
 			return
 		}
@@ -109,13 +109,13 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       16776960,
 			Title:       "Dungeon",
-			Description: fmt.Sprintf("Parabens %s voce consegiu derrotar o boss e avançar para o andar **%d** %s", msg.Author.Username, galo.Dungeon+1, endMsg),
+			Description: fmt.Sprintf("Parabens %s você consegiu derrotar o boss e avançar para o andar **%d** %s", msg.Author.Username, galo.Dungeon+1, endMsg),
 		})
 	} else {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       16711680,
 			Title:       "Dungeon",
-			Description: fmt.Sprintf("Parabens %s, voce perdeu. Use j!dungeon battle para tentar novamente", msg.Author.Username),
+			Description: fmt.Sprintf("Parabéns %s, você perdeu. Use j!dungeon battle para tentar novamente", msg.Author.Username),
 		})
 	}
 }

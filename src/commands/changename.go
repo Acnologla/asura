@@ -42,9 +42,9 @@ func runChangeName(session disgord.Session, msg *disgord.Message, args []string)
 			gal.Name = text
 			return gal, nil
 		})
-		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou o nome do seu galo para `%s` com sucesso\nCustou %d de dinheiro", msg.Author.Mention(), text, price))
+		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você trocou o nome do seu galo para `%s` com sucesso\nCustou %d de dinheiro", msg.Author.Mention(), text, price))
 	} else {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa ter 100 de dinheiro para trocar o nome do seu galo\nUse j!lootbox para ver seu dinheiro")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Você precisa ter 100 de dinheiro para trocar o nome do seu galo\nUse j!lootbox para ver seu dinheiro")
 		return
 	}
 }

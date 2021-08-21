@@ -33,17 +33,17 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					return
 				}
 				if len(text) >= 25 {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", O nome do clan pode ter no maximo 24 caracteres")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", O nome do clan pode ter no máximo 24 caracteres.")
 					return
 				}
 				clan := rinha.GetClan(text)
 				if clan.CreatedAt != 0 {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Ja tem um clan com esse nome")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Infelizmente já possui um clan com esse nome!")
 					return
 				}
 				err := rinha.ChangeMoney(msg.Author.ID, -1000, 1000)
 				if err != nil {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce precisa ter 1000 de dinheiro para criar um clan")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Você precisa ter 1000 de dinheiro para criar um clan!")
 					return
 				}
 				rinha.CreateClan(text, msg.Author.ID)
@@ -51,14 +51,14 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					gal.Clan = text
 					return gal, nil
 				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", Clan **"+text+"** criado com sucesso\nUse **j!clan invite <usuario>** para convidar membros")
+				msg.Reply(context.Background(), session, msg.Author.Mention()+", Clan **"+text+"** criado com sucesso!\nUse **j!clan invite <usuario>** para convidar membros")
 				return
 			}
 		}
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title:       "Clan",
 			Color:       65535,
-			Description: "Voce não esta em nenhum clan\nUse j!clan create <nome> para criar um (**1000** de dinheiro)",
+			Description: "Você não esta em nenhum clan\nUse j!clan create <nome> para criar um (**1000** de dinheiro)",
 		})
 	} else {
 		clan := rinha.GetClan(galo.Clan)

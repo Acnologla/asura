@@ -169,11 +169,11 @@ func runMinifield(session disgord.Session, msg *disgord.Message, args []string) 
 		}
 		if totalUsed == total {
 			endMinifield(board)
-			content = "Voce ganhou"
+			content = "Você ganhou"
 			handler.DeleteBHandler(message)
 		} else if cell.Type == 1 {
 			endMinifield(board)
-			content = "Voce perdeu"
+			content = "Você perdeu"
 			handler.DeleteBHandler(message)
 		}
 		newMsg := generateMinifieldBoard(board)
