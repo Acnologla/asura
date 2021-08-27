@@ -70,11 +70,10 @@ func Format(text string) string {
 }
 
 func ClanXpToLevel(xp int) int {
-	return int(math.Floor(math.Sqrt(float64(xp)/2000))) + 1
-
+	return int(math.Floor(math.Sqrt(float64(xp)/4000))) + 1
 }
 func ClanLevelToXp(level int) int {
-	return int(math.Pow(float64(level), 2)) * 2000
+	return int(math.Pow(float64(level), 2)) * 4000
 }
 
 func GetMember(clan Clan, id disgord.Snowflake) ClanMember {
@@ -160,7 +159,10 @@ func GetBenefits(xp int) (text string) {
 		text += "10 membros adicionais\n"
 	}
 	if level >= 7 {
-		text += "1 de xp de upgrade a mais por rinha ganha"
+		text += "1 de xp de upgrade a mais por rinha ganha\n"
+	}
+	if level >= 8 {
+		text += "Aumenta o limite de trains"
 	}
 	return
 }
@@ -174,7 +176,7 @@ func includesString(strOne rune, strTwo string) bool {
 }
 
 func PopulateClanMissions(clan Clan, name string, save bool) Clan {
-	if uint64((uint64(time.Now().Unix())-clan.Mission)/60/60/24) >= 7 {
+	if uint64((uint64(time.Now().Unix())-clan.Mission)/60/60/24) >= 30 {
 		clan.Mission = uint64(time.Now().Unix())
 		clan.MissionProgress = 0
 		if save {
@@ -188,13 +190,19 @@ func PopulateClanMissions(clan Clan, name string, save bool) Clan {
 	return clan
 }
 
+const (
+	missionN     = 15000
+	missionMoney = 625
+	missionXp    = 2125
+)
+
 func MissionToString(clan Clan) string {
-	done := clan.MissionProgress >= 500
+	done := clan.MissionProgress >= missionN
 	if done {
 		need := uint64(time.Now().Unix()) - clan.Mission
-		return fmt.Sprintf("Espere mais %d dias e %d horas para seu clan receber uma nova missão", 6-(need/60/60/24), 23-(need/60/60%24))
+		return fmt.Sprintf("Espere mais %d dias e %d horas para seu clan receber uma nova missão", 30-(need/60/60/24), 23-(need/60/60%24))
 	} else {
-		return fmt.Sprintf("Derrote %d/500 galos na rinha\nMoney: **125**\nXp: **425**", clan.MissionProgress)
+		return fmt.Sprintf("Derrote %d/%d galos na rinha\nMoney: **%d**\nXp: **%d**", clan.MissionProgress, missionN, missionMoney, missionXp)
 	}
 }
 
@@ -209,14 +217,14 @@ func CompleteClanMission(clanName string, id disgord.Snowflake) {
 				break
 			}
 		}
-		done := clan.MissionProgress >= 500
+		done := clan.MissionProgress >= missionN
 		if !done {
 			clan.MissionProgress++
-			if clan.MissionProgress >= 500 {
+			if clan.MissionProgress >= missionN {
 				for _, member := range clan.Members {
 					UpdateGaloDB(disgord.Snowflake(member.ID), func(galo Galo) (Galo, error) {
-						galo.Xp += 425
-						galo.Money += 125
+						galo.Xp += missionXp
+						galo.Money += missionMoney
 						return galo, nil
 					})
 				}

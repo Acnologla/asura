@@ -379,6 +379,13 @@ func IsInLimit(galo Galo, id disgord.Snowflake) bool {
 	if HasUpgrade(galo.Upgrades, 0, 1, 0, 0) {
 		max += 30
 	}
+	if galo.Clan != "" {
+		clan := GetClan(galo.Clan)
+		level := ClanXpToLevel(clan.Xp)
+		if level >= 8 {
+			max += 25
+		}
+	}
 	if galo.TrainLimit.LastReset == 0 || 1 <= (uint64(time.Now().Unix())-galo.TrainLimit.LastReset)/60/60/24 {
 		UpdateGaloDB(id, func(galo Galo) (Galo, error) {
 			galo.TrainLimit.LastReset = uint64(time.Now().Unix())

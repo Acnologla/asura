@@ -5,9 +5,10 @@ import (
 	"asura/src/utils"
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/acnologla/interpreter"
 	"github.com/andersfylling/disgord"
-	"strings"
 )
 
 func init() {
@@ -47,9 +48,7 @@ func runEval(session disgord.Session, msg *disgord.Message, args []string) {
 		if strings.HasPrefix(code, "```") && strings.HasSuffix(code, "```") {
 			code = code[3:]
 			code = code[:len(code)-3]
-			if strings.HasPrefix(code, "rust") {
-				code = code[4:]
-			}
+			code = strings.TrimPrefix(code, "rust")
 		}
 		eval := interpreter.Run(code, map[string]interface{}{
 			"msg":     msg,

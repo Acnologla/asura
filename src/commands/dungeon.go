@@ -104,7 +104,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 		telemetry.Debug(fmt.Sprintf("%s %s", tag, endMsg), map[string]string{
 			"user":         strconv.FormatUint(uint64(msg.Author.ID), 10),
-			"dungeonLevel": string(galo.Dungeon),
+			"dungeonLevel": fmt.Sprintf("%d", galo.Dungeon),
 		})
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       16776960,
