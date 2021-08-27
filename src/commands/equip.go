@@ -107,16 +107,19 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 			if len(args) >= 2 {
 				if args[1] == "remove" || args[1] == "vender" {
 					var gal rinha.SubGalo
-					var price int
+					var (
+						price,
+						asuraCoins int
+					)
 					rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 						gal = galo.Galos[value]
 						for i := value; i < len(galo.Galos)-1; i++ {
 							galo.Galos[i] = galo.Galos[i+1]
 						}
-						price = rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp, gal.GaloReset)
+						price, asuraCoins = rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp, gal.GaloReset)
 						if gal.GaloReset > 0 {
 							price = 0
-							galo.AsuraCoin++
+							galo.AsuraCoin += asuraCoins
 						}
 						galo.Money += price
 						galo.Galos = galo.Galos[0 : len(galo.Galos)-1]
@@ -129,6 +132,10 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 						"user":   strconv.FormatUint(uint64(msg.Author.ID), 10),
 						"rarity": newGalo.Rarity.String(),
 					})
+					if asuraCoins > 0 {
+						msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o galo **%s** por **%d** asuraCoins com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, asuraCoins))
+						return
+					}
 					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o galo **%s** por **%d** de dinheiro com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, price))
 					return
 				}

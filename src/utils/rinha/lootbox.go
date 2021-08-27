@@ -145,8 +145,15 @@ func GetNewLb(lootbox string, galo Galo, add bool) Galo {
 	return galo
 }
 
-func Sell(rarity Rarity, xp int, reset int) int {
+func Sell(rarity Rarity, xp int, reset int) (int, int) {
 	level := float64(CalcLevel(xp)+(reset*30)) - 1
 	price := float64(rarity.Price())
-	return int(price * (level/5 + 1))
+	if reset == 0 {
+		return int(price * (level/5 + 1)), 0
+	}
+	asuraCoins := reset
+	if rarity > Rare {
+		asuraCoins++
+	}
+	return 0, asuraCoins
 }

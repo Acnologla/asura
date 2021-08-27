@@ -123,7 +123,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 					Xp:   0,
 				})
 			} else {
-				price := rinha.Sell(newGalo.Rarity, 0, 0)
+				price, _ := rinha.Sell(newGalo.Rarity, 0, 0)
 				sold = "yes"
 				galo.Money += price
 				extraMsg = fmt.Sprintf("\nComo você ja tinha esse galo voce ganhou **%d** de dinheiro", price)
