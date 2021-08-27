@@ -111,6 +111,7 @@ type Galo struct {
 	CosmeticLootbox int        `json:"cosmeticLootbox"`
 	TrainLimit      TrainLimit `json:"trainLimit"`
 	Arena           Arena      `json:"arena"`
+	AsuraCoin       int        `json:"asuraCoin"`
 }
 
 var Dungeon []*Room

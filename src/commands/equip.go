@@ -114,6 +114,10 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 							galo.Galos[i] = galo.Galos[i+1]
 						}
 						price = rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp, gal.GaloReset)
+						if gal.GaloReset > 0 {
+							price = 0
+							galo.AsuraCoin++
+						}
 						galo.Money += price
 						galo.Galos = galo.Galos[0 : len(galo.Galos)-1]
 						return galo, nil
