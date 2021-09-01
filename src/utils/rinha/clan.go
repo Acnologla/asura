@@ -32,10 +32,18 @@ type ClanMember struct {
 	Xp   uint   `json:"xp"`
 }
 
+type ClanUpgrades struct {
+	Members int `json:"members"`
+	Banks   int `json:"banks"`
+}
+
 type Clan struct {
 	Xp              int          `json:"xp"`
 	CreatedAt       uint64       `json:"createdAt"`
 	Members         []ClanMember `json:"members"`
+	Money           int          `json:"money"`
+	Upgrades        ClanUpgrades `json:"upgrades"`
+	LastIncome      uint64       `json:"lastIncome"`
 	Mission         uint64       `json:"mission"`
 	MissionProgress int          `json:"missionProgress"`
 }
@@ -147,21 +155,18 @@ func GetBenefits(xp int) (text string) {
 		text += "10% de xp adicional por rinha ganha\n"
 	}
 	if level >= 3 {
-		text += "5 membros adicionais\n"
+		text += "Maior chance de galos raros nas caixas\n"
 	}
 	if level >= 4 {
 		text += "1 de ouro adicional por rinha ganha\n"
 	}
-	if level >= 5 {
+	if level >= 6 {
 		text += "2 de ouro adicional por rinha ganha\n"
 	}
-	if level >= 6 {
-		text += "10 membros adicionais\n"
-	}
-	if level >= 7 {
+	if level >= 8 {
 		text += "1 de xp de upgrade a mais por rinha ganha\n"
 	}
-	if level >= 8 {
+	if level >= 10 {
 		text += "Aumenta o limite de trains"
 	}
 	return
@@ -191,7 +196,7 @@ func PopulateClanMissions(clan Clan, name string, save bool) Clan {
 }
 
 const (
-	missionN     = 15000
+	missionN     = 20000
 	missionMoney = 625
 	missionXp    = 2125
 )
@@ -235,13 +240,28 @@ func CompleteClanMission(clanName string, id disgord.Snowflake) {
 
 }
 
-func GetMaxMembers(level int) int {
-	maxMembers := 15
-	if level >= 3 {
-		maxMembers = 20
+func GetMaxMembers(clan Clan) int {
+	return 15 + clan.Upgrades.Members
+}
+
+func CalcClanUpgrade(x int) int {
+	return int(math.Pow(2, float64(x)) * 1000)
+}
+func UpdateClanBank(clan Clan, clanName string) Clan {
+	income := int((uint64(time.Now().Unix()) - clan.LastIncome) / 60 / 60 / 4)
+	if clan.LastIncome == 0 {
+		income = 1
 	}
-	if level >= 6 {
-		maxMembers = 30
+	money := 0
+	for i := 0; i < income; i++ {
+		val := int(float64(clan.Money) * (float64(1+clan.Upgrades.Banks) / 100))
+		money += val
+		clan.Money += val
 	}
-	return maxMembers
+	UpdateClan(clanName, func(clan Clan) (Clan, error) {
+		clan.Money += money
+		clan.LastIncome = uint64(time.Now().Unix())
+		return clan, nil
+	})
+	return clan
 }

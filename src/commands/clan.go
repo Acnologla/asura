@@ -6,6 +6,7 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/andersfylling/disgord"
@@ -89,6 +90,15 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce saiu do clan **"+galo.Clan+"** com sucesso")
 				return
 			}
+			if strings.ToLower(args[0]) == "banco" {
+				clan = rinha.UpdateClanBank(clan, galo.Clan)
+				msg.Reply(context.Background(), session, &disgord.Embed{
+					Title:       "Banco do clan",
+					Color:       65535,
+					Description: fmt.Sprintf("Dinheiro: **%d** (Rendendo %d%% a cada 4 horas)\n\nUpgrades:\n[**Membros**] - Membro adicional para clan (%d)\n[**Bancos**] - Banco adicional (%d)\n\nUse j!clan depositar <dinheiro> para depositar dinheiro\nUse j!clan upgrade <upgrade> para dar upgrade em algo", clan.Money, clan.Upgrades.Banks+1, rinha.CalcClanUpgrade(clan.Upgrades.Members), rinha.CalcClanUpgrade(clan.Upgrades.Banks)),
+				})
+				return
+			}
 			if strings.ToLower(args[0]) == "missao" || strings.ToLower(args[0]) == "missão" {
 				clan = rinha.PopulateClanMissions(clan, galo.Clan, true)
 				msg.Reply(context.Background(), session, &disgord.Embed{
@@ -101,6 +111,60 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		if len(args) > 1 {
 			role := rinha.GetMember(clan, msg.Author.ID)
+			if strings.ToLower(args[0]) == "upgrade" {
+				if role.Role >= rinha.Admin {
+					txt := strings.ToLower(args[1])
+					if txt != "membros" && txt != "bancos" {
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Upgrade invalido")
+						return
+					}
+					done := false
+					if txt == "membros" {
+						price := rinha.CalcClanUpgrade(clan.Upgrades.Members)
+						rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
+							if clan.Money >= price {
+								clan.Upgrades.Members++
+								clan.Money -= price
+								done = true
+							}
+							return clan, nil
+						})
+					} else if txt == "bancos" {
+						price := rinha.CalcClanUpgrade(clan.Upgrades.Banks)
+						rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
+							if clan.Money >= price {
+								clan.Upgrades.Banks++
+								clan.Money -= price
+								done = true
+							}
+							return clan, nil
+						})
+					}
+					if done {
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Upgrade comprado com sucesso")
+					} else {
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Seu clan nao tem dinheiro para isso")
+					}
+				}
+				return
+			}
+			if strings.ToLower(args[0]) == "depositar" {
+				money, err := strconv.Atoi(args[1])
+				if err != nil {
+					return
+				}
+				err = rinha.ChangeMoney(msg.Author.ID, money, money)
+				if err != nil {
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem esse dinheiro")
+					return
+				}
+				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
+					clan.Money += money
+					return clan, nil
+				})
+				msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce depositou dinheiro no clan com sucesso")
+				return
+			}
 			if strings.ToLower(args[0]) == "invite" {
 				if len(msg.Mentions) == 0 {
 					msg.Reply(context.Background(), session, msg.Author.Mention()+", Use j!clan invite @user")
@@ -118,8 +182,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				text := fmt.Sprintf("%s Voce foi convidado para o clan %s", msg.Mentions[0].Username, galo.Clan)
 				utils.Confirm(text, msg.ChannelID, msg.Mentions[0].ID, func() {
 					clan = rinha.GetClan(galo.Clan)
-					level := rinha.ClanXpToLevel(clan.Xp)
-					maxMembers := rinha.GetMaxMembers(level)
+					maxMembers := rinha.GetMaxMembers(clan)
 					if rinha.IsInClan(clan, user.ID) {
 						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")
 						return
@@ -213,14 +276,14 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 		}
 		benefits := rinha.GetBenefits(clan.Xp)
-		maxMembers := rinha.GetMaxMembers(level)
+		maxMembers := rinha.GetMaxMembers(clan)
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title: galo.Clan,
 			Color: 65535,
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!clan invite <user> para convidar | j!clan remove <user> para remover | j!clan admin <user> para promover membros",
 			},
-			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/%d):\n %s\nUse **j!clan missao** para ver a missão semanal do clan", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), maxMembers, memberMsg),
+			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/%d):\n %s\nUse **j!clan missao** para ver a missão mensal do clan\nUse **j!clan banco** para ver o banco do clan", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), maxMembers, memberMsg),
 		})
 	}
 }
