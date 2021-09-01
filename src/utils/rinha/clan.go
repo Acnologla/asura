@@ -249,6 +249,9 @@ func CalcClanUpgrade(x int) int {
 }
 func UpdateClanBank(clan Clan, clanName string) Clan {
 	income := int((uint64(time.Now().Unix()) - clan.LastIncome) / 60 / 60 / 4)
+	if income == 0 {
+		return clan
+	}
 	if clan.LastIncome == 0 {
 		income = 1
 	}
