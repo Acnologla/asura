@@ -153,7 +153,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				if err != nil {
 					return
 				}
-				err = rinha.ChangeMoney(msg.Author.ID, money, money)
+				err = rinha.ChangeMoney(msg.Author.ID, -money, money)
 				if err != nil {
 					msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem esse dinheiro")
 					return
