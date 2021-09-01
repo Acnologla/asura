@@ -24,7 +24,7 @@ func _Open(lootType int) int {
 */
 func OpenEpic() int {
 	value := utils.RandInt(1001)
-	if 12 >= value {
+	if 10 >= value {
 		return GetRandByType(Legendary)
 	} else if 243 >= value {
 		return GetRandByType(Epic)
@@ -34,9 +34,7 @@ func OpenEpic() int {
 
 func OpenRare() int {
 	value := utils.RandInt(1001)
-	if 5 >= value {
-		return GetRandByType(Legendary)
-	} else if 120 >= value {
+	if 120 >= value {
 		return GetRandByType(Epic)
 	} else if 500 >= value {
 		return GetRandByType(Rare)
@@ -62,6 +60,22 @@ func OpenCommon() int {
 	return GetRandByType(Common)
 }
 
+func OpenLegendary() int {
+	value := utils.RandInt(101)
+	if 4 >= value {
+		return GetRandByType(Legendary)
+	}
+	return GetRandByType(Epic)
+}
+
+func OpenItems() int {
+	value := utils.RandInt(101)
+	if 10 >= value {
+		return GetItemByLevel(4)
+	}
+	return GetItemByLevel(3)
+}
+
 func Open(lootType string) int {
 	if lootType == "comum" {
 		return OpenCommon()
@@ -75,23 +89,35 @@ func Open(lootType string) int {
 	if lootType == "cosmetica" {
 		return OpenCosmetic()
 	}
+	if lootType == "items" {
+		return OpenItems()
+	}
+	if lootType == "lendaria" {
+		return OpenLegendary()
+	}
 	return OpenNormal()
 }
 
-func GetPrice(lootType string) int {
+func GetPrice(lootType string) (int, int) {
 	if lootType == "comum" {
-		return 100
+		return 100, 0
 	}
 	if lootType == "rara" {
-		return 800
+		return 800, 0
 	}
 	if lootType == "epica" {
-		return 1750
+		return 1750, 0
 	}
 	if lootType == "cosmetica" {
-		return 300
+		return 300, 0
 	}
-	return 400
+	if lootType == "items" {
+		return 0, 4
+	}
+	if lootType == "lendaria" {
+		return 0, 2
+	}
+	return 400, 0
 }
 
 func HaveLootbox(galo Galo, lootbox string) bool {
@@ -106,6 +132,12 @@ func HaveLootbox(galo Galo, lootbox string) bool {
 	}
 	if lootbox == "epica" {
 		return galo.EpicLootbox > 0
+	}
+	if lootbox == "lendaria" {
+		return galo.LegendaryLootbox > 0
+	}
+	if lootbox == "items" {
+		return galo.ItemsLootbox > 0
 	}
 	return galo.Lootbox > 0
 }
@@ -134,6 +166,18 @@ func GetNewLb(lootbox string, galo Galo, add bool) Galo {
 			galo.CosmeticLootbox++
 		} else {
 			galo.CosmeticLootbox--
+		}
+	} else if lootbox == "lendaria" {
+		if add {
+			galo.LegendaryLootbox++
+		} else {
+			galo.LegendaryLootbox--
+		}
+	} else if lootbox == "items" {
+		if add {
+			galo.ItemsLootbox++
+		} else {
+			galo.ItemsLootbox--
 		}
 	} else {
 		if add {

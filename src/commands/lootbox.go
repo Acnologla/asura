@@ -14,7 +14,7 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-var lootTypes = []string{"comum", "rara", "normal", "cosmetica", "epica"}
+var lootTypes = []string{"comum", "rara", "normal", "cosmetica", "epica", "lendaria", "items"}
 
 func init() {
 	handler.Register(handler.Command{
@@ -34,7 +34,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title:       "Lootbox",
 			Color:       65535,
-			Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n[1750] Lootbox epica: **%d**\n[300] Lootbox cosmetica: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 money)\n\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**", galo.Money, galo.AsuraCoin, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox, galo.EpicLootbox, galo.CosmeticLootbox),
+			Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n[1750] Lootbox epica: **%d**\n[2 AsuraCoins] Lootbox lendaria: **%d**\n[4 AsuraCoins] Lootbox items: **%d**\n[300] Lootbox cosmetica: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 money)\n\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**", galo.Money, galo.AsuraCoin, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox, galo.EpicLootbox, galo.LegendaryLootbox, galo.ItemsLootbox, galo.CosmeticLootbox),
 		})
 	}
 	if len(args) == 0 {
@@ -56,7 +56,8 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		isCosmetic := lootType == "cosmetica"
-		if len(galo.Galos) >= 10 && !isCosmetic {
+		isItem := lootType == "items"
+		if len(galo.Galos) >= 10 && !isCosmetic && !isItem {
 			msg.Reply(context.Background(), session, msg.Author.Mention()+", Você atingiu o limite maximo de galos (10) use `j!equip` para remover um galo")
 			return
 		}
@@ -109,6 +110,20 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 					time.Sleep(time.Millisecond * 3500)
 				}
 			}
+			return
+		}
+		if isItem {
+			newItem := rinha.Items[result]
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+				galo = rinha.GetNewLb(lootType, galo, false)
+				if !rinha.IsIntInList(result, galo.Items) {
+					galo.Items = append(galo.Items, result)
+				}
+				return galo, nil
+			})
+			embed.Title = "Lootbox open"
+			embed.Description = fmt.Sprintf("Voce abriu uma caixa e items e ganhou o item: **%s**\nRaridade: **%s**", newItem.Name, rinha.LevelToString(newItem.Level))
+			msg.Reply(context.Background(), session, embed)
 			return
 		}
 		newGalo := rinha.Classes[result]
@@ -182,11 +197,27 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		battleMutex.RUnlock()
-		price := rinha.GetPrice(lootType)
-		err := rinha.ChangeMoney(msg.Author.ID, -price, price)
-		if err != nil {
-			msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você precisa ter %d de dinheiro para comprar uma lootbox %s, use `j!lootbox` para ver seu dinheiro", msg.Author.Mention(), price, lootType))
-			return
+		price, asuraCoins := rinha.GetPrice(lootType)
+		if asuraCoins == 0 {
+			err := rinha.ChangeMoney(msg.Author.ID, -price, price)
+			if err != nil {
+				msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você precisa ter %d de dinheiro para comprar uma lootbox %s, use `j!lootbox` para ver seu dinheiro", msg.Author.Mention(), price, lootType))
+				return
+			}
+		} else {
+			e := false
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+				if asuraCoins > galo.AsuraCoin {
+					e = true
+					return galo, nil
+				}
+				galo.AsuraCoin -= asuraCoins
+				return galo, nil
+			})
+			if e {
+				msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você precisa ter %d de dinheiro para comprar uma lootbox %s, use `j!lootbox` para ver seu dinheiro", msg.Author.Mention(), asuraCoins, lootType))
+				return
+			}
 		}
 		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 			return rinha.GetNewLb(lootType, galo, true), nil
