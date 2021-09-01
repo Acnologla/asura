@@ -75,7 +75,7 @@ func top(topType string, session disgord.Session) (text string) {
 			}
 			name := result[i].Key()
 			level := rinha.ClanXpToLevel(clan.Xp)
-			maxMembers := rinha.GetMaxMembers(level)
+			maxMembers := rinha.GetMaxMembers(clan)
 			text += fmt.Sprintf("[%d] - %s (%d/%d)\nLevel: %d (%d XP)\n", len(result)-i, name, len(clan.Members), maxMembers, level, clan.Xp)
 		} else {
 			var gal rinha.Galo

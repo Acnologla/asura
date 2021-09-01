@@ -83,35 +83,37 @@ type Arena struct {
 }
 
 type Galo struct {
-	UserXp          int        `json:"userXp"`
-	Upgrades        []int      `json:"upgrades"`
-	GaloReset       int        `json:"galoReset"`
-	Name            string     `json:"name"`
-	Xp              int        `json:"xp"`
-	Type            int        `json:"type"`
-	Equipped        []int      `json:"equipped"`
-	Win             int        `json:"win"`
-	Lose            int        `json:"lose"`
-	Lootbox         int        `json:"lootbox"`
-	CommonLootbox   int        `json:"commonLootbox"`
-	RareLootbox     int        `json:"rareLootbox"`
-	EpicLootbox     int        `json:"epicLootbox"`
-	Galos           []SubGalo  `json:"galos"`
-	Money           int        `json:"money"`
-	Clan            string     `json:"clan"`
-	Dungeon         int        `json:"dungeon"`
-	DungeonReset    int        `json:"dungeonreset"`
-	Items           []int      `json:"items"`
-	Missions        []Mission  `json:"missions"`
-	MissionTrade    uint64     `json:"missionTrade"`
-	LastMission     uint64     `json:"lastMission"`
-	Vip             uint64     `json:"vip"`
-	Cosmetics       []int      `json:"cosmetics"`
-	Background      int        `json:"bg"`
-	CosmeticLootbox int        `json:"cosmeticLootbox"`
-	TrainLimit      TrainLimit `json:"trainLimit"`
-	Arena           Arena      `json:"arena"`
-	AsuraCoin       int        `json:"asuraCoin"`
+	UserXp           int        `json:"userXp"`
+	Upgrades         []int      `json:"upgrades"`
+	GaloReset        int        `json:"galoReset"`
+	Name             string     `json:"name"`
+	Xp               int        `json:"xp"`
+	Type             int        `json:"type"`
+	Equipped         []int      `json:"equipped"`
+	Win              int        `json:"win"`
+	Lose             int        `json:"lose"`
+	Lootbox          int        `json:"lootbox"`
+	CommonLootbox    int        `json:"commonLootbox"`
+	RareLootbox      int        `json:"rareLootbox"`
+	EpicLootbox      int        `json:"epicLootbox"`
+	LegendaryLootbox int        `json:"legendaryLootbox"`
+	ItemsLootbox     int        `json:"itemsLootbox"`
+	Galos            []SubGalo  `json:"galos"`
+	Money            int        `json:"money"`
+	Clan             string     `json:"clan"`
+	Dungeon          int        `json:"dungeon"`
+	DungeonReset     int        `json:"dungeonreset"`
+	Items            []int      `json:"items"`
+	Missions         []Mission  `json:"missions"`
+	MissionTrade     uint64     `json:"missionTrade"`
+	LastMission      uint64     `json:"lastMission"`
+	Vip              uint64     `json:"vip"`
+	Cosmetics        []int      `json:"cosmetics"`
+	Background       int        `json:"bg"`
+	CosmeticLootbox  int        `json:"cosmeticLootbox"`
+	TrainLimit       TrainLimit `json:"trainLimit"`
+	Arena            Arena      `json:"arena"`
+	AsuraCoin        int        `json:"asuraCoin"`
 }
 
 var Dungeon []*Room

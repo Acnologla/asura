@@ -193,7 +193,7 @@ func executePVP(msg *disgord.Message, session disgord.Session, newRinhaEngine bo
 		galoWinner := battle.Fighters[winnerTurn].Galo
 		galoLoser := battle.Fighters[turn].Galo
 
-		xpOb := (utils.RandInt(5) + 3) - (2 * (rinha.CalcLevel(galoWinner.Xp) - rinha.CalcLevel(galoLoser.Xp)))
+		xpOb := (utils.RandInt(5) + 2) - (2 * (rinha.CalcLevel(galoWinner.Xp) - rinha.CalcLevel(galoLoser.Xp)))
 
 		if 0 > xpOb {
 			xpOb = 0

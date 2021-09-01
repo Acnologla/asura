@@ -63,7 +63,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
 		if winner == 0 {
-			xpOb := utils.RandInt(10) + 10
+			xpOb := utils.RandInt(10) + 9
 			if rinha.HasUpgrade(galo.Upgrades, 0) {
 				xpOb++
 				if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1) {
