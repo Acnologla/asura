@@ -247,6 +247,10 @@ func GetMaxMembers(clan Clan) int {
 func CalcClanUpgrade(x int) int {
 	return int(math.Pow(2, float64(x)) * 1000)
 }
+
+func CalcClanIncomeTime(clan Clan) int {
+	return 4 - int((uint64(time.Now().Unix())-clan.LastIncome)/60/60)
+}
 func UpdateClanBank(clan Clan, clanName string) Clan {
 	income := int((uint64(time.Now().Unix()) - clan.LastIncome) / 60 / 60 / 4)
 	if income == 0 {
@@ -266,5 +270,6 @@ func UpdateClanBank(clan Clan, clanName string) Clan {
 		clan.LastIncome = uint64(time.Now().Unix())
 		return clan, nil
 	})
+	clan.LastIncome = uint64(time.Now().Unix())
 	return clan
 }
