@@ -15,7 +15,7 @@
         "name": "Amplificador",
         "effect": 3,
         "level": 0,
-        "payload": 0.08
+        "payload": 0.1
     },
     {
         "name": "Reforçado de crista",
@@ -63,7 +63,7 @@
         "name": "Amplificador potente",
         "effect": 3,
         "level": 1,
-        "payload": 0.13
+        "payload": 0.18
     },
     {
         "name": "Rosa da vida",
@@ -87,7 +87,7 @@
         "name": "Amplificador espiritual",
         "effect": 3,
         "level": 2,
-        "payload": 0.2
+        "payload": 0.25
     },
     {
         "name": "Canhao de plasma",
@@ -135,7 +135,7 @@
         "name": "Amplificador divino",
         "effect": 3,
         "level": 3,
-        "payload": 0.25
+        "payload": 0.3
     },
     {
         "name": "Multiplicador",
@@ -190,5 +190,41 @@
         "effect": 1,
         "level": 4,
         "payload": 1.6
+    },
+    {
+        "name": "Beta Multiplicador",
+        "effect": 6,
+        "level": 4,
+        "payload": 1.6
+    },
+    {
+        "name": "Beta refletidor",
+        "effect": 7,
+        "level": 4,
+        "payload": 0.45
+    },
+    {
+        "name": "Beta Amplificador",
+        "effect": 3,
+        "level": 4,
+        "payload": 0.35
+    },
+    {
+        "name": "Beta Armor",
+        "effect": 5,
+        "level": 4,
+        "payload": 0.6
+    },
+    {
+        "name": "Beta imortalidade",
+        "effect": 4,
+        "level": 4,
+        "payload": 1.9
+    },
+    {
+        "name": "Iluminação",
+        "effect": 2,
+        "level": 4,
+        "payload": 17
     }
 ]
