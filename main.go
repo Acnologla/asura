@@ -27,14 +27,14 @@ func onReady() {
 }
 func main() {
 	rand.Seed(time.Now().UnixNano())
-	// If it's not in production so it's good to read a ".env" file
+	//If it's not in production so it's good to read a ".env" file
 	if os.Getenv("PRODUCTION") == "" {
 		err := godotenv.Load()
 		if err != nil {
 			panic("Cannot read the motherfucking envfile")
 		}
 	}
-	// Initialize datalog services for telemetry of the application
+	//Initialize datalog services for telemetry of the application
 	telemetry.Init()
 	database.Init()
 	fmt.Println("Starting bot...")
