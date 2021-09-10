@@ -341,5 +341,13 @@
         "self": false,
         "phrase": "%s está sobre radiação! (-%d)",
         "range": [10,14]
+    },
+    {
+        "name": "Bomba de luz",
+        "turns": 1,
+        "type": 4,
+        "self": true,
+        "phrase": "%s está com %d%% de proteção!",
+        "range": [100,100]
     }
 ]

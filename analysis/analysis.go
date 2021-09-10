@@ -73,7 +73,7 @@ func battleGalo(level, galoType, advLevel, advType int) {
 	fmt.Println(battle(galoType, advType, level, advLevel, 10000))
 }
 
-func main4() {
+func main() {
 	data := []Result{}
 	rand.Seed(time.Now().UTC().UnixNano())
 	//	battleGalo(30,7,37,23)

@@ -1,0 +1,95 @@
+[
+    {
+        "name": "Faca pequena",
+        "damage": [1,5],
+        "level": 1,
+        "effect": [1,1]
+    },
+    {
+        "name": "Chute elastico",
+        "damage": [16,28],
+        "level": 2
+    },
+    {
+        "name": "Soco ingles",
+        "damage": [18,30],
+        "level": 3
+    },
+    {
+        "name": "Faca",
+        "damage": [5,15],
+        "level": 4,
+        "effect": [1,1]
+    },
+    {
+        "name": "Kunai",
+        "damage": [22,39],
+        "level": 5
+    },
+    {
+        "name": "Bomba de fumaça",
+        "damage": [3,5],
+        "level": 7,
+        "effect": [1,4]
+    },
+    {
+        "name": "Soco ninja",
+        "damage": [35,46],
+        "level": 8
+    },
+    {
+        "name": "Katana",
+        "damage": [5,15],
+        "effect": [1,7],
+        "level": 10
+    },
+    {
+        "name": "Chibatada",
+        "damage": [40,50],
+        "level": 12
+    },
+    {
+        "name": "Shuriken",
+        "damage": [30,40],
+        "level": 13,
+        "effect": [1,1]
+    },
+    {
+        "name": "Katana afiada",
+        "damage": [30,35],
+        "level": 15,
+        "effect": [1,7]
+    },
+    {
+        "name": "Passos ninjas",
+        "damage": [50,55],
+        "level": 16
+    },
+    {
+        "name": "Bomba de luz",
+        "damage": [20,25],
+        "level": 19,
+        "effect": [1,44]
+    },
+    {
+        "name": "Katana negra",
+        "damage": [25,30],
+        "level": 21,
+        "effect": [1,36]
+    },
+    {
+        "name": "Chuva de shurikens",
+        "damage": [55,70],
+        "level": 22
+    },
+    {
+        "name": "Teleporte",
+        "damage": [55,80],
+        "level": 26
+    },
+    {
+        "name": "Tecnica secreta",
+        "damage": [50, 110],
+        "level": 30
+    }
+]

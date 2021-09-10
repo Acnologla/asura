@@ -143,7 +143,7 @@ func graphic(stat []*stats) {
 	}
 }
 
-func main3() {
+func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	arr := []*stats{}
 	for i := 1; i < len(rinha.Classes); i++ {
@@ -154,9 +154,9 @@ func main3() {
 		}
 	}
 	arr = []*stats{&stats{
-		Type: 29,
+		Type: 30,
 	}}
-	for i := 1; i < 31; i += 1 {
+	for i := 1; i < 20; i += 1 {
 		for _, class := range arr {
 			result := measure(class.Type, 1, i, i, 10000, false)
 			class.TotalWins += result

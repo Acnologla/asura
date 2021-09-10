@@ -44,6 +44,9 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			Xp:   galo.Xp,
 			Type: rinha.GetRand(),
 		}
+		if rinha.Classes[galo.Type].Rarity == rinha.Common {
+			galoAdv.Type = rinha.GetRarityPlusOne(rinha.Common)
+		}
 		if len(galo.Items) > 0 {
 			randItem := rinha.GetItemByLevel(rinha.Items[galo.Items[0]].Level)
 			galoAdv.Items = []int{randItem}
@@ -73,6 +76,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					xpOb += 3
 				}
 			}
+			xpOb += int(rinha.Classes[galoAdv.Type].Rarity-rinha.Classes[galo.Type].Rarity) * 2
 			if galo.GaloReset > 0 {
 				xpOb = xpOb / (galo.GaloReset + 1)
 			}
@@ -110,10 +114,10 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					if level >= 4 {
 						money++
 					}
-					if level >= 5 {
+					if level >= 6 {
 						money += 2
 					}
-					if level >= 7 {
+					if level >= 8 {
 						galo.UserXp++
 					}
 					go rinha.CompleteClanMission(galo.Clan, msg.Author.ID)

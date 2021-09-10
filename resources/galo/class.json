@@ -140,11 +140,16 @@
     },
     {
         "name": "Radioativo",
-        "disadvantages": [],
+        "disadvantages": [29,27],
         "rarity": 1
     },
     {
         "name": "Dragao",
+        "disadvantages": [],
+        "rarity": 2
+    },
+    {
+        "name": "Ninja",
         "disadvantages": [],
         "rarity": 2
     }

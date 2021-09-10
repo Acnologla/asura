@@ -89,10 +89,10 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		Xp:        rinha.CalcXP(rinha.CalcLevel(galo.Xp) + 2),
 		Type:      advType,
 		GaloReset: galo.GaloReset,
+		Upgrades:  galo.Upgrades,
 	}
 	LockEvent(msg.Author.ID, "Arena "+rinha.Classes[galoAdv.Type].Name)
 	defer UnlockEvent(msg.Author.ID)
-	galoAdv.Items = galo.Items
 	winner, _ := ExecuteRinha(msg, session, engine.RinhaOptions{
 		GaloAuthor:  galo,
 		GaloAdv:     galoAdv,
@@ -100,6 +100,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		AdvName:     "Arena " + rinha.Classes[galoAdv.Type].Name,
 		AuthorLevel: rinha.CalcLevel(galo.Xp),
 		AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
+		NoItems:     true,
 	}, false)
 	if winner == -1 {
 		return

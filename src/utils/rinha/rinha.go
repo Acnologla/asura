@@ -385,8 +385,8 @@ func IsInLimit(galo Galo, id disgord.Snowflake) bool {
 	if galo.Clan != "" {
 		clan := GetClan(galo.Clan)
 		level := ClanXpToLevel(clan.Xp)
-		if level >= 8 {
-			max += 25
+		if level >= 10 {
+			max += 30
 		}
 	}
 	if galo.TrainLimit.LastReset == 0 || 1 <= (uint64(time.Now().Unix())-galo.TrainLimit.LastReset)/60/60/24 {
