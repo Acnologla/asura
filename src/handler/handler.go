@@ -4,7 +4,9 @@ import (
 	"asura/src/database"
 	"asura/src/telemetry"
 	"context"
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"regexp"
 	"runtime/debug"
@@ -38,17 +40,26 @@ var WorkersArray = make([]bool, Workers)
 // A struct that stores the information of a single "command" of the bot
 type Command struct {
 	Aliases   []string
-	Run       func(disgord.Session, *disgord.Message, []string)
+	Run       func(disgord.Session, *disgord.Message, []*disgord.ApplicationCommandDataOption) (*disgord.Message, func(disgord.Snowflake))
 	Help      string
 	Usage     string
+	NoSlash   bool
+	Options   []*disgord.ApplicationCommandOption
 	Cooldown  int
 	Available bool
 	Category  int
 }
 
+type Entry struct {
+	Msg         *disgord.Message
+	IsSlash     bool
+	Command     Command
+	Interaction *disgord.InteractionCreate
+}
+
 // The place that will be stored all the commands
 var Commands []Command = make([]Command, 0)
-var CommandChannel = make(chan *disgord.Message)
+var CommandChannel = make(chan *Entry)
 var Client *disgord.Client
 var ReadyAt = time.Now()
 var Cooldowns = map[string]map[disgord.Snowflake]time.Time{}
@@ -85,13 +96,12 @@ func FindCommand(command string) (realCommand Command) {
 }
 
 // This hell of Mutexes are a simple way to sincronize all the goroutines around the Cooldown array.
-func checkCooldown(session disgord.Session, msg *disgord.Message, command string, id disgord.Snowflake, cooldown int) bool {
+func checkCooldown(session disgord.Session, msg *disgord.Message, command string, id disgord.Snowflake, cooldown int) (bool, float64) {
 	CooldownMutexes[command].RLock()
 	if val, ok := Cooldowns[command][id]; ok {
 		time_until := float64(cooldown) - time.Since(val).Seconds()
-		msg.Reply(context.Background(), session, fmt.Sprintf("Voce tem que esperar %.1f segundos para usar esse comando denovo!", time_until))
 		CooldownMutexes[command].RUnlock()
-		return true
+		return true, time_until
 	}
 	CooldownMutexes[command].RUnlock()
 	CooldownMutexes[command].Lock()
@@ -103,14 +113,110 @@ func checkCooldown(session disgord.Session, msg *disgord.Message, command string
 		delete(Cooldowns[command], id)
 		CooldownMutexes[command].Unlock()
 	}()
-	return false
+	return false, 0
 }
 
+func ExecuteCommand(command Command, msg *disgord.Message, interaction *disgord.InteractionCreate) {
+	fmt.Println(1)
+	if len(command.Aliases) == 0 {
+		return
+	}
+	args := interaction.Data.Options
+	if DevMod {
+		if !isDev(msg.Author.ID) {
+			return
+		}
+	}
+	if database.IsBanned(msg.Author.ID) {
+		return
+	}
+	cooldown, time_until := checkCooldown(Client, msg, command.Aliases[0], msg.Author.ID, command.Cooldown)
+	if cooldown {
+		content := fmt.Sprintf("Voce tem que esperar %.1f segundos para usar esse comando denovo!", time_until)
+		if interaction.ID == 0 {
+			msg.Reply(context.Background(), Client, content)
+		} else {
+			Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+				Type: disgord.ChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: content,
+				},
+			})
+		}
+		return
+	}
+	tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
+	telemetry.Info(fmt.Sprintf("Command %s used by %s", command.Aliases[0], tag), map[string]string{
+		"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
+		"user":    strconv.FormatUint(uint64(msg.Author.ID), 10),
+		"command": command.Aliases[0],
+		"content": msg.Content,
+		"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
+	})
+	if !DevMod {
+		defer func() {
+			err := recover()
+			if err != nil {
+				stringError := string(debug.Stack())
+				telemetry.Error(stringError, map[string]string{
+					"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
+					"user":    strconv.FormatUint(uint64(msg.Author.ID), 10),
+					"content": msg.Content,
+					"command": command.Aliases[0],
+					"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
+				})
+			}
+		}()
+	}
+	Client.Channel(msg.ChannelID).TriggerTypingIndicator()
+	message, followup := command.Run(Client, msg, args)
+	if message == nil {
+		return
+	}
+	if interaction.ID == 0 {
+		newmsg, err := msg.Reply(context.Background(), Client, message)
+		if followup != nil && err == nil {
+			followup(newmsg.ID)
+		}
+	} else {
+		Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+			Type: disgord.ChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Tts:        message.Tts,
+				Content:    message.Content,
+				Embeds:     message.Embeds,
+				Components: message.Components,
+			},
+		})
+		if followup != nil {
+			var msg *disgord.Message
+			endpoint := fmt.Sprintf("%s/webhooks/%d/%s/messages/@original", endpoint, AppID, interaction.Token)
+			resp, err := http.Get(endpoint)
+			if err == nil {
+				defer resp.Body.Close()
+				json.NewDecoder(resp.Body).Decode(&msg)
+				followup(msg.ID)
+			}
+		}
+	}
+}
+
+func getArgs(command Command, args []string) []*disgord.ApplicationCommandDataOption {
+	val := []*disgord.ApplicationCommandDataOption{}
+	for i, arg := range args {
+		val = append(val, &disgord.ApplicationCommandDataOption{
+			Name:  getOptionName(command, i),
+			Type:  disgord.STRING,
+			Value: arg,
+		})
+	}
+	return val
+}
 func HandleCommand(session disgord.Session, msg *disgord.Message) {
 	if msg.Author == nil {
 		return
 	}
-	if msg.Author.Bot || uint64(msg.GuildID) == 0 {
+	if msg.Author.Bot || msg.GuildID == 0 {
 		return
 	}
 
@@ -141,46 +247,15 @@ func HandleCommand(session disgord.Session, msg *disgord.Message) {
 			return
 		}
 		command := strings.ToLower(splited[0])
-		args := splited[1:]
-		realCommand := FindCommand(command)
 
+		realCommand := FindCommand(command)
+		args := getArgs(realCommand, splited[1:])
 		if len(realCommand.Aliases) > 0 {
-			if DevMod {
-				if !isDev(msg.Author.ID) {
-					return
-				}
-			}
-			if database.IsBanned(msg.Author.ID) {
-				return
-			}
-			if checkCooldown(session, msg, realCommand.Aliases[0], msg.Author.ID, realCommand.Cooldown) {
-				return
-			}
-			tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
-			telemetry.Info(fmt.Sprintf("Command %s used by %s", realCommand.Aliases[0], tag), map[string]string{
-				"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
-				"user":    strconv.FormatUint(uint64(msg.Author.ID), 10),
-				"command": realCommand.Aliases[0],
-				"content": msg.Content,
-				"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
+			ExecuteCommand(realCommand, msg, &disgord.InteractionCreate{
+				Data: &disgord.ApplicationCommandInteractionData{
+					Options: args,
+				},
 			})
-			if !DevMod {
-				defer func() {
-					err := recover()
-					if err != nil {
-						stringError := string(debug.Stack())
-						telemetry.Error(stringError, map[string]string{
-							"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
-							"user":    strconv.FormatUint(uint64(msg.Author.ID), 10),
-							"content": msg.Content,
-							"command": realCommand.Aliases[0],
-							"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
-						})
-					}
-				}()
-			}
-			Client.Channel(msg.ChannelID).TriggerTypingIndicator()
-			realCommand.Run(session, msg, args)
 		}
 	}
 }
@@ -188,24 +263,37 @@ func HandleCommand(session disgord.Session, msg *disgord.Message) {
 //Handles messages and call the functions that they have to execute.
 func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
 	go SendMsg(evt.Message)
-	CommandChannel <- evt.Message
+	CommandChannel <- &Entry{
+		Msg: evt.Message,
+	}
 }
 
 //If you want to edit a message to make the command work again
 func OnMessageUpdate(old *disgord.Message, new *disgord.Message) {
 	if len(new.Embeds) == 0 && old.Pinned == new.Pinned {
-		CommandChannel <- new
+		CommandChannel <- &Entry{
+			Msg: new,
+		}
 	}
 }
 
 func Worker(id int) {
-	for msg := range CommandChannel {
+	for entry := range CommandChannel {
+		fmt.Println(1)
 		if id >= len(WorkersArray) {
-			HandleCommand(Client, msg)
+			if entry.IsSlash {
+				ExecuteCommand(entry.Command, entry.Msg, entry.Interaction)
+			} else {
+				HandleCommand(Client, entry.Msg)
+			}
 			return
 		}
 		WorkersArray[id] = true
-		HandleCommand(Client, msg)
+		if entry.IsSlash {
+			ExecuteCommand(entry.Command, entry.Msg, entry.Interaction)
+		} else {
+			HandleCommand(Client, entry.Msg)
+		}
 		WorkersArray[id] = false
 	}
 }

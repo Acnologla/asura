@@ -15,12 +15,18 @@ func init() {
 		Run:       runTTT,
 		Available: true,
 		Cooldown:  15,
-		Usage:     "j!jogodavelha @usuario",
-		Help:      "Jogue jogo da velha",
+		Options: handler.GetOptions(&disgord.ApplicationCommandOption{
+			Type:        disgord.USER,
+			Name:        "usuario",
+			Description: "usuario para jogar jogo da velha",
+			Required:    true,
+		}),
+		Usage: "j!jogodavelha @usuario",
+		Help:  "Jogue jogo da velha",
 	})
 }
 
-func board(tiles [9]int) *disgord.CreateMessageParams {
+func board(tiles [9]int) *disgord.Message {
 	arrs := []*disgord.MessageComponent{
 		{
 			Type: disgord.MessageComponentActionRow,
@@ -32,7 +38,7 @@ func board(tiles [9]int) *disgord.CreateMessageParams {
 			Type: disgord.MessageComponentActionRow,
 		},
 	}
-	params := &disgord.CreateMessageParams{
+	params := &disgord.Message{
 		Content: "Clique nos botoes para jogar",
 	}
 	for i, tile := range tiles {
@@ -82,61 +88,64 @@ func playTTT(tile int, tiles *[9]int, turn int) bool {
 	return true
 }
 
-func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
+func runTTT(session disgord.Session, msg *disgord.Message, args []*disgord.ApplicationCommandDataOption) (*disgord.Message, func(disgord.Snowflake)) {
+	user, _ := handler.GetUserArg(args, 0)
+	if user != nil {
+		msg.Mentions = append(msg.Mentions, user)
+	}
 	if len(msg.Mentions) == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Mencione alguem para jogar jogo da velha")
-		return
+		return handler.CreateMessageContent(msg.Author.Mention() + ", Mencione alguem para jogar jogo da velha"), nil
 	}
-	user := msg.Mentions[0]
+	if user == nil {
+		user = msg.Mentions[0]
+	}
 	if user.ID == msg.Author.ID || user.Bot {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
-		return
+		return handler.CreateMessageContent(msg.Author.Mention() + ", Usuario invalido"), nil
 	}
-	ctx := context.Background()
 	tiles := [9]int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 	turn := 1
-	message, err := msg.Reply(ctx, session, board(tiles))
-	if err != nil {
-		return
-	}
-	handler.RegisterBHandler(message, func(interaction *disgord.InteractionCreate) {
-		turnUser := user
-		letter := ":x:"
-		if turn == 1 {
-			turnUser = msg.Author
-			letter = ":o:"
-		}
-		if turnUser.ID == interaction.Member.User.ID {
-			tile, _ := strconv.Atoi(interaction.Data.CustomID)
-			played := playTTT(tile, &tiles, turn)
-			if played {
-				if turn == 2 {
-					turn--
-				} else {
-					turn++
-				}
-				winner := win(tiles)
-				playType := ":hash:"
-				if winner != 3 {
-					playType = ":crown:"
-					if letter == ":x:" {
-						letter = ":o:"
-					} else {
-						letter = ":x:"
-					}
-					if winner == 0 {
-						letter = ":no_good:"
-					}
-					handler.DeleteBHandler(message)
-				}
-				session.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
-					Type: disgord.UpdateMessage,
-					Data: &disgord.InteractionApplicationCommandCallbackData{
-						Content:    fmt.Sprintf("%s%s", playType, letter),
-						Components: board(tiles).Components,
-					},
-				})
+	message := board(tiles)
+	return message, func(id disgord.Snowflake) {
+		handler.RegisterBHandler(id, func(interaction *disgord.InteractionCreate) {
+			turnUser := user
+			letter := ":x:"
+			if turn == 1 {
+				turnUser = msg.Author
+				letter = ":o:"
 			}
-		}
-	}, 60*5)
+			if turnUser.ID == interaction.Member.User.ID {
+				tile, _ := strconv.Atoi(interaction.Data.CustomID)
+				played := playTTT(tile, &tiles, turn)
+				if played {
+					if turn == 2 {
+						turn--
+					} else {
+						turn++
+					}
+					winner := win(tiles)
+					playType := ":hash:"
+					if winner != 3 {
+						playType = ":crown:"
+						if letter == ":x:" {
+							letter = ":o:"
+						} else {
+							letter = ":x:"
+						}
+						if winner == 0 {
+							letter = ":no_good:"
+						}
+						handler.DeleteBHandler(id)
+					}
+					session.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+						Type: disgord.UpdateMessage,
+						Data: &disgord.InteractionApplicationCommandCallbackData{
+							Content:    fmt.Sprintf("%s%s", playType, letter),
+							Components: board(tiles).Components,
+						},
+					})
+				}
+			}
+		}, 60*5)
+
+	}
 }

@@ -129,7 +129,7 @@ func getSkill(battle *rinha.Battle, options *RinhaOptions, message *disgord.Mess
 	author := battle.Fighters[turn]
 	skills := author.Equipped
 	var interaction *disgord.InteractionCreate
-	go handler.RegisterBHandler(message, func(ic *disgord.InteractionCreate) {
+	go handler.RegisterBHandler(message.ID, func(ic *disgord.InteractionCreate) {
 		if ic.Member.User.ID == author.ID {
 			skillId, _ := strconv.Atoi(ic.Data.CustomID)
 			interaction = ic

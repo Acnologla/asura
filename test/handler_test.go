@@ -64,7 +64,7 @@ func TestButton(t *testing.T) {
 		})
 	}()
 	done := false
-	handler.RegisterBHandler(msg, func(ic *disgord.InteractionCreate) {
+	handler.RegisterBHandler(msg.ID, func(ic *disgord.InteractionCreate) {
 		if ic.Data.CustomID != "Test" {
 			t.Errorf("CustomId must be 'Test'")
 		} else {

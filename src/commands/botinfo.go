@@ -2,7 +2,6 @@ package commands
 
 import (
 	"asura/src/handler"
-	"context"
 	"fmt"
 	"runtime"
 	"time"
@@ -22,7 +21,7 @@ func init() {
 	})
 }
 
-func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
+func runBotinfo(session disgord.Session, msg *disgord.Message, args []*disgord.ApplicationCommandDataOption) (*disgord.Message, func(disgord.Snowflake)) {
 	guildSize := len(session.GetConnectedGuilds())
 	var memory runtime.MemStats
 	runtime.ReadMemStats(&memory)
@@ -60,17 +59,17 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 	shard := disgord.ShardID(msg.GuildID, 1)
 	myself, err := handler.Client.Cache().GetCurrentUser()
 	if err != nil {
-		return
+		return nil, nil
 	}
 	botInfo, err := handler.Client.Gateway().GetBot()
 	if err != nil {
-		return
+		return nil, nil
 	}
 	avatar, _ := myself.AvatarURL(512, true)
 	date := ((uint64(myself.ID) >> 22) + 1420070400000) / 1000
 	readyAt := int(time.Since(handler.ReadyAt).Minutes())
 	freeWorkers := handler.GetFreeWorkers()
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
+	return handler.CreateMessage(&disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
 			Title: fmt.Sprintf("Asura (Shard %d)", disgord.ShardID(msg.GuildID, botInfo.Shards)),
 			Color: 65535,
@@ -115,5 +114,5 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 				},
 			},
 		},
-	})
+	}), nil
 }

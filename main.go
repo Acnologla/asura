@@ -17,12 +17,15 @@ import (
 func onReady() {
 	myself, err := handler.Client.Cache().GetCurrentUser()
 	handler.Client.UpdateStatusString("Use j!comandos para ver meus comandos")
+	handler.InitSlashCommands()
 	if err == nil {
 		telemetry.Info(fmt.Sprintf("%s Started", myself.Username), map[string]string{
 			"eventType": "ready",
 		})
 	}
+
 	go telemetry.MetricUpdate(handler.Client)
+	fmt.Println("Ready")
 
 }
 func main() {

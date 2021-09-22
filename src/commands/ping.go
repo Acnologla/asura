@@ -2,7 +2,6 @@ package commands
 
 import (
 	"asura/src/handler"
-	"context"
 	"fmt"
 
 	"github.com/andersfylling/disgord"
@@ -19,10 +18,10 @@ func init() {
 	})
 }
 
-func runPing(session disgord.Session, msg *disgord.Message, args []string) {
+func runPing(session disgord.Session, msg *disgord.Message, args []*disgord.ApplicationCommandDataOption) (*disgord.Message, func(disgord.Snowflake)) {
+	fmt.Println(6)
 	ping, _ := handler.Client.HeartbeatLatencies()
 	botInfo, _ := handler.Client.Gateway().GetBot()
 	shard := disgord.ShardID(msg.GuildID, botInfo.Shards)
-	msg.Reply(context.Background(), session, fmt.Sprintf("%dms", ping[shard].Milliseconds()))
-
+	return handler.CreateMessageContent(fmt.Sprintf("%dms", ping[shard].Milliseconds())), nil
 }

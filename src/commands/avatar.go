@@ -3,8 +3,8 @@ package commands
 import (
 	"asura/src/handler"
 	"asura/src/utils"
-	"context"
 	"fmt"
+
 	"github.com/andersfylling/disgord"
 )
 
@@ -14,15 +14,21 @@ func init() {
 		Run:       runAvatar,
 		Available: true,
 		Cooldown:  2,
-		Usage:     "j!avatar <usuario>",
-		Help:      "Veja o avatar de alguem",
+		Options: handler.GetOptions(&disgord.ApplicationCommandOption{
+			Type:        disgord.USER,
+			Name:        "usuario",
+			Description: "usuario para ver o avatar",
+			Required:    false,
+		}),
+		Usage: "j!avatar <usuario>",
+		Help:  "Veja o avatar de alguem",
 	})
 }
 
-func runAvatar(session disgord.Session, msg *disgord.Message, args []string) {
+func runAvatar(session disgord.Session, msg *disgord.Message, args []*disgord.ApplicationCommandDataOption) (*disgord.Message, func(disgord.Snowflake)) {
 	user := utils.GetUser(msg, args, session)
 	avatar, _ := user.AvatarURL(512, true)
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
+	return handler.CreateMessage(&disgord.CreateMessageParams{
 		Embed: &disgord.Embed{
 			Color:       65535,
 			Description: fmt.Sprintf("**%s**\n[**Download**](%s)", user.Username, avatar),
@@ -30,5 +36,5 @@ func runAvatar(session disgord.Session, msg *disgord.Message, args []string) {
 				URL: avatar,
 			},
 		},
-	})
+	}), nil
 }

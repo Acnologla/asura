@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"sync"
 	"time"
 
@@ -15,19 +16,19 @@ type ButtonHandler struct {
 var ButtonsHandlers = map[disgord.Snowflake]*ButtonHandler{}
 var ButtonLock = sync.RWMutex{}
 
-func RegisterBHandler(msg *disgord.Message, callback func(*disgord.InteractionCreate), timeout int) {
-	ButtonsHandlers[msg.ID] = &ButtonHandler{
+func RegisterBHandler(id disgord.Snowflake, callback func(*disgord.InteractionCreate), timeout int) {
+	ButtonsHandlers[id] = &ButtonHandler{
 		callback: callback,
 	}
 	if timeout != 0 {
 		time.Sleep(time.Duration(timeout) * time.Second)
-		DeleteBHandler(msg)
+		DeleteBHandler(id)
 	}
 }
 
-func DeleteBHandler(msg *disgord.Message) {
+func DeleteBHandler(id disgord.Snowflake) {
 	ButtonLock.Lock()
-	delete(ButtonsHandlers, msg.ID)
+	delete(ButtonsHandlers, id)
 	ButtonLock.Unlock()
 }
 
@@ -44,7 +45,11 @@ func HandleButton(interaction *disgord.InteractionCreate) {
 }
 
 func Interaction(session disgord.Session, evt *disgord.InteractionCreate) {
+	fmt.Println("receib")
 	if evt.Type == disgord.InteractionMessageComponent && evt.Member != nil {
 		go HandleButton(evt)
+	} else if evt.Type == disgord.InteractionApplicationCommand {
+		fmt.Println("x")
+		handleSlash(evt)
 	}
 }
