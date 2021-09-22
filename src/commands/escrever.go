@@ -30,7 +30,7 @@ func runEscrever(session disgord.Session, msg *disgord.Message, args []*disgord.
 		return handler.CreateMessageContent(msg.Author.Mention() + " diga algo para eu escrever!"), nil
 	}
 	text := ""
-	str := utils.GetAllStringArgs(args)
+	str := strings.Join(utils.GetAllStringArgs(args), " ")
 	for i := 0; i < len(str); i++ {
 		if i%2 == 0 {
 			text += strings.ToUpper(string(str[i]))
