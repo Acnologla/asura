@@ -152,5 +152,9 @@
         "name": "Ninja",
         "disadvantages": [],
         "rarity": 2
+    },{
+        "name": "Eclipse",
+        "disadvantages": [],
+        "rarity": 3
     }
 ]

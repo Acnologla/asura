@@ -349,5 +349,13 @@
         "self": true,
         "phrase": "%s está com %d%% de proteção!",
         "range": [100,100]
+    },
+    {
+        "name": "Eclipse eterno",
+        "turns": 10,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está sobre eclipse eterno! (-%d)",
+        "range": [15,30]
     }
 ]
