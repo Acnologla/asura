@@ -31,6 +31,7 @@ type Battle struct {
 	FirstRound  bool
 	Stun        bool
 	ReflexType  int
+	Reseted     bool
 	ReflexSkill int
 }
 

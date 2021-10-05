@@ -154,7 +154,7 @@ func main() {
 		}
 	}
 	arr = []*stats{&stats{
-		Type: 31,
+		Type: 32,
 	}}
 	for u := 0; u < 12; {
 		for i := 1; i < 20+u; i += 1 {

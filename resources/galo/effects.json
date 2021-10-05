@@ -356,6 +356,30 @@
         "type": 1,
         "self": false,
         "phrase": "%s está sobre eclipse eterno! (-%d)",
+        "range": [20,30]
+    },
+    {
+        "name": "Envelhecer",
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está envelhecendo! (-%d)",
         "range": [15,30]
+    },
+    {
+        "name": "Cura divina",
+        "turns": 3,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [15,25]
+    },
+    {
+        "name": "Indo para o futuro",
+        "turns": 2,
+        "type": 4,
+        "self": true,
+        "phrase": "%s está com %d%% de proteção!",
+        "range": [100,100]
     }
 ]

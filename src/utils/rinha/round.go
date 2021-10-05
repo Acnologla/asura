@@ -16,6 +16,7 @@ const (
 type Result struct {
 	Effect    EffectType
 	EffectID  int
+	Reset     bool
 	Skill     *Skill
 	Damage    int
 	Self      bool
@@ -331,17 +332,32 @@ func (battle *Battle) Play(skill int) []*Result {
 		}
 		round.Target.Life -= main_damage
 	}
-
-	if round.Attacker.Life <= 0 {
-		round.Attacker.Life = 0
-	}
-
-	if round.Target.Life <= 0 {
-		round.Target.Life = 0
+	reset := func() {
+		if !battle.Reseted {
+			round.Attacker.Life = round.Attacker.MaxLife
+			round.Target.Life = round.Target.MaxLife
+			round.Results = append(round.Results, &Result{Reset: true})
+			battle.FirstRound = true
+			battle.Turn = false
+			battle.Reseted = true
+		}
 	}
 
 	battle.FirstRound = false
 	battle.Turn = !battle.Turn
+	if round.Attacker.Life <= 0 {
+		round.Attacker.Life = 0
+		if round.Attacker.Galo.Type == 32 {
+			reset()
+		}
+	}
+
+	if round.Target.Life <= 0 {
+		round.Target.Life = 0
+		if round.Target.Galo.Type == 32 {
+			reset()
+		}
+	}
 	return round.Results
 
 }

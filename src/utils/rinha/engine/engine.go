@@ -71,6 +71,9 @@ func CheckDead(battle rinha.Battle) bool {
 }
 
 func EffectToStr(effect *rinha.Result, affected string, author string, battle *rinha.Battle) string {
+	if effect.Reset {
+		return "O tempo volta e a batalha recomeça"
+	}
 	if effect.Dodge {
 		return fmt.Sprintf("%s **%s** desviou do ataque\n", RinhaEmojis[battle.GetReverseTurn()], affected)
 	}
