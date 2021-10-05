@@ -154,18 +154,25 @@ func main() {
 		}
 	}
 	arr = []*stats{&stats{
-		Type: 30,
+		Type: 31,
 	}}
-	for i := 1; i < 20; i += 1 {
-		for _, class := range arr {
-			result := measure(class.Type, 1, i, i, 10000, false)
-			class.TotalWins += result
-			class.Wins = append(class.Wins, result)
-			class.Level = append(class.Level, i)
+	for u := 0; u < 12; {
+		for i := 1; i < 20+u; i += 1 {
+			for _, class := range arr {
+				result := measure(class.Type, 1, i, i, 10000, false)
+				class.TotalWins += result
+				class.Wins = append(class.Wins, result)
+				class.Level = append(class.Level, i)
+			}
 		}
-	}
-	for _, class := range arr {
-		fmt.Printf("Classe: %s\nTotal %d%%\n", rinha.Classes[class.Type].Name, class.TotalWins/len(class.Wins))
+		for _, class := range arr {
+			fmt.Printf("Classe: %s\nTotal %d%%\nAté o nivel: %d\n", rinha.Classes[class.Type].Name, class.TotalWins/len(class.Wins), 20+u)
+		}
+		if u == 0 {
+			u += 6
+		} else {
+			u += 5
+		}
 	}
 
 	//    graphic(arr)

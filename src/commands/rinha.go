@@ -193,7 +193,7 @@ func executePVP(msg *disgord.Message, session disgord.Session, newRinhaEngine bo
 		galoWinner := battle.Fighters[winnerTurn].Galo
 		galoLoser := battle.Fighters[turn].Galo
 
-		xpOb := (utils.RandInt(5) + 2) - (2 * (rinha.CalcLevel(galoWinner.Xp) - rinha.CalcLevel(galoLoser.Xp)))
+		xpOb := (utils.RandInt(3) + 1) - (2 * (rinha.CalcLevel(galoWinner.Xp) - rinha.CalcLevel(galoLoser.Xp)))
 
 		if 0 > xpOb {
 			xpOb = 0
@@ -202,7 +202,7 @@ func executePVP(msg *disgord.Message, session disgord.Session, newRinhaEngine bo
 		money := 0
 		clanMsg := ""
 		if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp) {
-			money += 2
+			money += 1
 			rinha.ChangeMoney(winner.ID, money, 0)
 			galoLoser.Lose++
 			rinha.UpdateGaloDB(loser.ID, func(galo rinha.Galo) (rinha.Galo, error) {
