@@ -14,6 +14,8 @@ import (
 
 const allowedChars = "abcdefghijklmnopqrstuvwxyz123456789 -_"
 
+const MaxMoney = 10000000
+
 type Role uint
 
 const (
@@ -249,7 +251,7 @@ func CalcClanUpgrade(x int) int {
 }
 
 func CalcClanIncomeTime(clan Clan) int {
-	return 4 - int((uint64(time.Now().Unix())-clan.LastIncome)/60/60)
+	return 24 - int((uint64(time.Now().Unix())-clan.LastIncome)/60/60)
 }
 func UpdateClanBank(clan Clan, clanName string) Clan {
 	income := int((uint64(time.Now().Unix()) - clan.LastIncome) / 60 / 60 / 24)
@@ -267,6 +269,9 @@ func UpdateClanBank(clan Clan, clanName string) Clan {
 	}
 	UpdateClan(clanName, func(clan Clan) (Clan, error) {
 		clan.Money += money
+		if clan.Money > MaxMoney {
+			clan.Money = MaxMoney
+		}
 		clan.LastIncome = uint64(time.Now().Unix())
 		return clan, nil
 	})

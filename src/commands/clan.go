@@ -149,6 +149,9 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				return
 			}
 			if strings.ToLower(args[0]) == "depositar" {
+				if clan.Money >= rinha.MaxMoney {
+					return
+				}
 				money, err := strconv.Atoi(args[1])
 				if err != nil {
 					return
