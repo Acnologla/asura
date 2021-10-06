@@ -81,7 +81,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 				xpOb = xpOb / (galo.GaloReset + 1)
 			}
 			money := 5
-			if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1) {
+			if rinha.HasUpgrade(galo.Upgrades, 0, 1, 0) {
 				money++
 			}
 			clanMsg := ""
