@@ -338,7 +338,6 @@ func (battle *Battle) Play(skill int) []*Result {
 			round.Target.Life = round.Target.MaxLife
 			round.Results = append(round.Results, &Result{Reset: true})
 			battle.FirstRound = true
-			battle.Turn = false
 			battle.Reseted = true
 		}
 	}
