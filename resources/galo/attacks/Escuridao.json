@@ -51,7 +51,7 @@
         "name": "Sombra avassaladora",
         "damage": [15,35],
         "level": 13,
-        "effect": [0.5,3]
+        "effect": [0.4,3]
     },
     {
         "name": "Caixão sombrio",
@@ -73,16 +73,16 @@
         "name": "Vazio",
         "damage": [32,35],
         "level": 21,
-        "effect": [0.6,3]
+        "effect": [0.5,3]
     },
     {
         "name": "Escuridao total",
-        "damage": [50,65],
+        "damage": [50,60],
         "level": 23
     },
     {
         "name": "Buraco negro",
-        "damage": [60,80],
+        "damage": [60,75],
         "level": 25
     },
     {

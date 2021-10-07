@@ -35,12 +35,12 @@
     },
     {
         "name": "Prisma",
-        "damage": [38,43],
+        "damage": [40,43],
         "level": 9
     },
     {
         "name": "Banho de luz aprimorado",
-        "damage": [1,5],
+        "damage": [5,10],
         "effect": [1,14],
         "level": 10,
         "self": true
@@ -59,7 +59,7 @@
     },
     {
         "name": "Velocidade da luz",
-        "damage": [53,58],
+        "damage": [55,58],
         "level": 15
     },
     {

@@ -7,12 +7,12 @@
     },
     {
         "name": "Foguete",
-        "damage": [18,26],
+        "damage": [18,25],
         "level": 2
     },
     {
         "name": "Pistola",
-        "damage": [10, 15],
+        "damage": [9, 15],
         "level": 3,
         "effect": [0.6,1]
     },
@@ -24,7 +24,7 @@
     },
     {
         "name": "Sniper",
-        "damage": [10,20],
+        "damage": [10,15],
         "level": 6,
         "effect": [1,1]
     },
@@ -42,13 +42,13 @@
     },
     {
         "name": "Micro robos",
-        "damage": [5,10],
+        "damage": [1,5],
         "level": 10,
         "effect": [1,22]
     },
     {
         "name": "Bomba magnetica",
-        "damage": [40,45],
+        "damage": [35,45],
         "level": 12
     },
     {

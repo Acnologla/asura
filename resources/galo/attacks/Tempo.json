@@ -11,7 +11,7 @@
     },
     {
         "name": "Infinitos socos temporais",
-        "damage": [25,40],
+        "damage": [30,40],
         "level": 3
     },
     {
@@ -23,7 +23,7 @@
     },
     {
         "name": "Inferno temporal",
-        "damage": [30,40],
+        "damage": [30,45],
         "level": 5
     },
     {
@@ -40,7 +40,7 @@
     },
     {
         "name": "Esmagamento temporal",
-        "damage": [35,50],
+        "damage": [35,55],
         "level": 10
     },
     {
@@ -87,13 +87,13 @@
     },
     {
         "name": "Viajar para o futuro",
-        "damage": [10,20],
+        "damage": [15,20],
         "level": 25,
         "effect": [1,48]
     },
     {
         "name": "Destruiçao da linha temporal",
-        "damage": [80, 140],
+        "damage": [90, 150],
         "level": 30
     }
 ]

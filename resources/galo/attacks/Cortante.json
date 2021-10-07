@@ -8,13 +8,13 @@
         "name": "Tesourada intermitente",
         "damage": [20,25],
         "level": 2,
-        "effect": [0.05, 1]
+        "effect": [0.3, 1]
     },
     {
         "name": "Navalhada",
         "damage": [10,30],
         "level": 3,
-        "effect": [0.05, 1]
+        "effect": [0.2, 1]
     },
     {
         "name": "Dupla navalhada",
@@ -29,7 +29,7 @@
     },
     {
         "name": "Explosão de tesouras",
-        "damage": [12,60],
+        "damage": [20,60],
         "level": 7
     },
     {

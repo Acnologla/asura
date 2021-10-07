@@ -46,7 +46,7 @@
     },
     {
         "name": "Viga luar",
-        "damage": [50,52],
+        "damage": [50,55],
         "level": 12
     },
     {
@@ -69,14 +69,14 @@
     },
     {
         "name": "Milagre da lua",
-        "damage": [25,35],
+        "damage": [30,35],
         "level": 19,
         "effect": [1,14],
         "self":  true
     },
     {
         "name": "Congelamento luar",
-        "damage": [12,18],
+        "damage": [20,25],
         "level": 21,
         "effect": [1,41]
 

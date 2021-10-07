@@ -171,7 +171,7 @@
         "type": 1,
         "self": false,
         "phrase": "%s esta sobre morte (-%d)",
-        "range": [80,100]
+        "range": [70,85]
     },
     {
         "name": "Micro robos",
@@ -356,7 +356,7 @@
         "type": 1,
         "self": false,
         "phrase": "%s está sobre eclipse eterno! (-%d)",
-        "range": [20,30]
+        "range": [25,40]
     },
     {
         "name": "Envelhecer",
@@ -364,7 +364,7 @@
         "type": 1,
         "self": false,
         "phrase": "%s está envelhecendo! (-%d)",
-        "range": [15,30]
+        "range": [25,30]
     },
     {
         "name": "Cura divina",

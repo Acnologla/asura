@@ -27,18 +27,18 @@
     },
     {
         "name": "Atração gravitacional",
-        "damage": [10,18],
+        "damage": [15,18],
         "level": 7,
         "effect":[1,28]
     },
     {
         "name": "Impulso forte",
-        "damage": [29,52],
+        "damage": [29,55],
         "level": 9
     },
     {
         "name": "Atração",
-        "damage": [10,23],
+        "damage": [20,25],
         "effect": [0.3,3],
         "level": 10
     },
@@ -49,12 +49,12 @@
     },
     {
         "name": "Destruição gravitacional",
-        "damage": [41,66],
+        "damage": [41,70],
         "level": 13
     },
     {
         "name": "Campo gravitacional",
-        "damage": [10,20],
+        "damage": [12,20],
         "level": 15,
         "effect": [0.5,3]
     },
@@ -65,7 +65,7 @@
     },
     {
         "name": "Atração microcospica",
-        "damage": [20,30],
+        "damage": [25,35],
         "level": 19,
         "effect": [0.5,3]
     },
@@ -76,18 +76,18 @@
     },
     {
         "name": "NodeModules",
-        "damage": [49,70],
+        "damage": [49,75],
         "level": 22
     },
     {
         "name": "Gravidade infinita",
-        "damage": [50,83],
+        "damage": [55,83],
         "level": 24,
         "effect": [1,28]
     },
     {
         "name": "Repulsão avassaladora",
-        "damage": [50,160],
+        "damage": [80,130],
         "level": 30
     }
 ]

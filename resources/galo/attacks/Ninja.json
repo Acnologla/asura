@@ -67,9 +67,8 @@
     },
     {
         "name": "Bomba de luz",
-        "damage": [20,25],
-        "level": 19,
-        "effect": [1,44]
+        "damage": [55,60],
+        "level": 19
     },
     {
         "name": "Katana negra",
@@ -79,7 +78,7 @@
     },
     {
         "name": "Chuva de shurikens",
-        "damage": [55,70],
+        "damage": [60,70],
         "level": 22
     },
     {

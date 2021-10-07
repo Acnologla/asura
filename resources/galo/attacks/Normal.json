@@ -31,19 +31,19 @@
     },
     {
         "name":"Voadora planar",
-        "damage": [29,38],
+        "damage": [30,38],
         "level":8
     },
     {
         "name":"Planada",
-        "damage": [32,41],
+        "damage": [35,41],
         "level":9
     },
     {
         "name": "Bicada de ferro",
         "damage": [35,44],
         "level":11,
-        "effect": [0.5,1]
+        "effect": [1,1]
     },
     { 
         "name": "Stomp",
@@ -56,7 +56,7 @@
         "level":14
     },{
         "name": "Bicada suprema",
-        "damage":[30,40],
+        "damage":[35,40],
         "level": 15,
         "effect": [1,0]
     },
@@ -78,7 +78,7 @@
     },
     {
         "name": "Chute divino",
-        "damage": [35,45],
+        "damage": [35,50],
         "level":24,
         "effect": [1,4]
     },

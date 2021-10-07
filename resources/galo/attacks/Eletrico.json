@@ -51,12 +51,12 @@
     },
     {
         "name": "Flash",
-        "damage": [38,43],
+        "damage": [35,40],
         "level": 11
     },
     {
         "name": "Palma do trovão",
-        "damage": [25,37],
+        "damage": [25,35],
         "level": 13,
         "effect": [1,8]
     },
@@ -74,7 +74,7 @@
     },
     {
         "name": "Chuva de raios revigorantes",
-        "damage": [15,30],
+        "damage": [15,25],
         "level": 19,
         "effect": [1, 14]
     },

@@ -135,7 +135,9 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 	round.Results = append([]*Result{
 		{Reflected: reflected, Effect: Damaged, Damage: real_damage, Skill: round.Skill, Self: false, EffectID: 0},
 	}, round.Results...)
-
+	if 0 > real_damage {
+		real_damage = 0
+	}
 	return real_damage
 }
 
