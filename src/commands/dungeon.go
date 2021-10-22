@@ -68,7 +68,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		Xp:   rinha.CalcXP(AdvLVL) + 1,
 		Type: galoAdv.Type,
 	}
-	winner, _ := ExecuteRinha(msg, session, engine.RinhaOptions{
+	winner, _ := engine.ExecuteRinha(msg, session, engine.RinhaOptions{
 		GaloAuthor:  galo,
 		GaloAdv:     ngaloAdv,
 		AuthorName:  rinha.GetName(msg.Author.Username, galo),

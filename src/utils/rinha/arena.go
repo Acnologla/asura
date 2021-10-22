@@ -12,5 +12,6 @@ func CalcArena(gal Galo) (Galo, int, int) {
 	gal.Arena.Win = 0
 	gal.Arena.Lose = 0
 	gal.Arena.Active = false
+	gal.Arena.LastFight = 0
 	return gal, xp, money
 }

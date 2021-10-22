@@ -37,6 +37,7 @@ type ClanMember struct {
 type ClanUpgrades struct {
 	Members int `json:"members"`
 	Banks   int `json:"banks"`
+	Mission int `json:"mission"`
 }
 
 type Clan struct {
@@ -203,13 +204,19 @@ const (
 	missionXp    = 2125
 )
 
+func calcMissionPrize(clan Clan) (int, int, int) {
+	return missionN + (1500 * clan.Upgrades.Mission), missionMoney + (20 * clan.Upgrades.Mission), missionXp + (100 * clan.Upgrades.Mission)
+}
+
 func MissionToString(clan Clan) string {
-	done := clan.MissionProgress >= missionN
+	needeed, money, xp := calcMissionPrize(clan)
+	done := clan.MissionProgress >= needeed
+
 	if done {
 		need := uint64(time.Now().Unix()) - clan.Mission
 		return fmt.Sprintf("Espere mais %d dias e %d horas para seu clan receber uma nova missão", 30-(need/60/60/24), 23-(need/60/60%24))
 	} else {
-		return fmt.Sprintf("Derrote %d/%d galos na rinha\nMoney: **%d**\nXp: **%d**", clan.MissionProgress, missionN, missionMoney, missionXp)
+		return fmt.Sprintf("Derrote %d/%d galos na rinha\nMoney: **%d**\nXp: **%d**", clan.MissionProgress, needeed, money, xp)
 	}
 }
 
@@ -224,14 +231,15 @@ func CompleteClanMission(clanName string, id disgord.Snowflake) {
 				break
 			}
 		}
-		done := clan.MissionProgress >= missionN
+		needeed, money, xp := calcMissionPrize(clan)
+		done := clan.MissionProgress >= needeed
 		if !done {
 			clan.MissionProgress++
-			if clan.MissionProgress >= missionN {
+			if clan.MissionProgress >= needeed {
 				for _, member := range clan.Members {
 					UpdateGaloDB(disgord.Snowflake(member.ID), func(galo Galo) (Galo, error) {
-						galo.Xp += missionXp
-						galo.Money += missionMoney
+						galo.Xp += xp
+						galo.Money += money
 						return galo, nil
 					})
 				}
@@ -246,15 +254,15 @@ func GetMaxMembers(clan Clan) int {
 	return 15 + clan.Upgrades.Members
 }
 
-func CalcClanUpgrade(x int) int {
-	return int(math.Pow(2, float64(x)) * 1000)
+func CalcClanUpgrade(x, price int) int {
+	return int(math.Pow(2, float64(x)) * (float64(price * 1000)))
 }
 
 func CalcClanIncomeTime(clan Clan) int {
-	return 24 - int((uint64(time.Now().Unix())-clan.LastIncome)/60/60)
+	return 50 - int((uint64(time.Now().Unix())-clan.LastIncome)/60/60)
 }
 func UpdateClanBank(clan Clan, clanName string) Clan {
-	income := int((uint64(time.Now().Unix()) - clan.LastIncome) / 60 / 60 / 24)
+	income := int((uint64(time.Now().Unix()) - clan.LastIncome) / 60 / 60 / 50)
 	if income == 0 {
 		return clan
 	}

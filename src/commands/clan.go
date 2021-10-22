@@ -95,7 +95,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Title:       "Banco do clan",
 					Color:       65535,
-					Description: fmt.Sprintf("Dinheiro: **%d** (Rendendo %d%% a cada 24 horas)\nTempo para o proximo rendimento: **%d horas**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan (%d)\n[**Bancos**] - Banco adicional (%d)\n\nUse j!clan depositar <dinheiro> para depositar dinheiro\nUse j!clan upgrade <upgrade> para dar upgrade em algo", clan.Money, clan.Upgrades.Banks+1, rinha.CalcClanIncomeTime(clan), rinha.CalcClanUpgrade(clan.Upgrades.Members), rinha.CalcClanUpgrade(clan.Upgrades.Banks)),
+					Description: fmt.Sprintf("Dinheiro: **%d** (Rendendo %d%% a cada 50 horas)\nTempo para o proximo rendimento: **%d horas**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan (%d)\n[**Bancos**] - Banco adicional (%d)\n[**Missao**] - Bonus para missao do clan (%d)\n\nUse j!clan depositar <dinheiro> para depositar dinheiro\nUse j!clan upgrade <upgrade> para dar upgrade em algo", clan.Money, clan.Upgrades.Banks+1, rinha.CalcClanIncomeTime(clan), rinha.CalcClanUpgrade(clan.Upgrades.Members, 1), rinha.CalcClanUpgrade(clan.Upgrades.Banks, 1), rinha.CalcClanUpgrade(clan.Upgrades.Mission, 2)),
 				})
 				return
 			}
@@ -114,13 +114,24 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 			if strings.ToLower(args[0]) == "upgrade" {
 				if role.Role >= rinha.Admin {
 					txt := strings.ToLower(args[1])
-					if txt != "membros" && txt != "bancos" {
+					if txt != "membros" && txt != "bancos" && txt != "missao" {
 						msg.Reply(context.Background(), session, msg.Author.Mention()+", Upgrade invalido")
 						return
 					}
 					done := false
+					if txt == "missao" {
+						price := rinha.CalcClanUpgrade(clan.Upgrades.Mission, 2)
+						rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
+							if clan.Money >= price {
+								clan.Upgrades.Mission++
+								clan.Money -= price
+								done = true
+							}
+							return clan, nil
+						})
+					}
 					if txt == "membros" {
-						price := rinha.CalcClanUpgrade(clan.Upgrades.Members)
+						price := rinha.CalcClanUpgrade(clan.Upgrades.Members, 1)
 						rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
 							if clan.Money >= price {
 								clan.Upgrades.Members++
@@ -130,7 +141,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 							return clan, nil
 						})
 					} else if txt == "bancos" {
-						price := rinha.CalcClanUpgrade(clan.Upgrades.Banks)
+						price := rinha.CalcClanUpgrade(clan.Upgrades.Banks, 1)
 						rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
 							if clan.Money >= price {
 								clan.Upgrades.Banks++

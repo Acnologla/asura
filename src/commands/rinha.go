@@ -8,7 +8,6 @@ import (
 	"context"
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/andersfylling/disgord"
 )
@@ -164,7 +163,7 @@ func executePVP(msg *disgord.Message, session disgord.Session, newRinhaEngine bo
 	if galoAdv.Name != "" {
 		advName = galoAdv.Name
 	}
-	whoWin, battle := ExecuteRinha(msg, session, engine.RinhaOptions{
+	whoWin, battle := engine.ExecuteRinha(msg, session, engine.RinhaOptions{
 		GaloAuthor:  galoAuthor,
 		GaloAdv:     galoAdv,
 		AuthorName:  authorName,
@@ -235,143 +234,4 @@ func executePVP(msg *disgord.Message, session disgord.Session, newRinhaEngine bo
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{Embed: embed})
 	}
 
-}
-
-func RinhaEngine(battle *rinha.Battle, options *engine.RinhaOptions, message *disgord.Message, embed *disgord.Embed) (int, *rinha.Battle) {
-	var lastEffects string
-	round := 0
-	for {
-		effects := battle.Play(-1)
-		var text string
-
-		authorName := options.AuthorName
-		affectedName := options.AdvName
-
-		turn := battle.GetTurn()
-
-		if turn == 0 {
-			authorName = options.AdvName
-			affectedName = options.AuthorName
-		}
-
-		for _, effect := range effects {
-			text += engine.EffectToStr(effect, affectedName, authorName, battle)
-		}
-		if round >= 35 {
-			if battle.Fighters[1].Life >= battle.Fighters[0].Life {
-				text += "\n" + options.AuthorName + " Foi executado"
-				battle.Fighters[0].Life = 0
-				battle.Turn = false
-			} else {
-				battle.Fighters[1].Life = 0
-				text += "\n" + options.AdvName + " Foi executado"
-				battle.Turn = true
-			}
-		}
-		embed.Color = engine.RinhaColors[battle.GetReverseTurn()]
-		embed.Description = lastEffects + "\n" + text
-
-		embed.Fields = []*disgord.EmbedField{
-			{
-				Name:   fmt.Sprintf("%s Level %d", options.AuthorName, options.AuthorLevel),
-				Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, battle.Fighters[0].MaxLife),
-				Inline: true,
-			},
-			{
-				Name:   fmt.Sprintf("%s Level %d", options.AdvName, options.AdvLevel),
-				Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, battle.Fighters[1].MaxLife),
-				Inline: true,
-			},
-		}
-
-		embed.Image = &disgord.EmbedImage{
-			URL: engine.GetImageTile(&options.GaloAuthor, &options.GaloAdv, turn),
-		}
-
-		if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
-			winnerTurn := battle.GetReverseTurn()
-
-			if winnerTurn == 1 {
-				embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AdvName)
-			} else {
-				embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AuthorName)
-			}
-			engine.EditRinhaEmbed(message, embed)
-			return winnerTurn, battle
-		}
-
-		engine.EditRinhaEmbed(message, embed)
-		lastEffects = text
-		round++
-		time.Sleep(4 * time.Second)
-	}
-}
-
-func ExecuteRinha(msg *disgord.Message, session disgord.Session, options engine.RinhaOptions, newEngine bool) (int, *rinha.Battle) {
-	if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0) {
-		options.GaloAdv.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAdv.Xp)) - 1
-		if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0, 0) {
-			options.GaloAdv.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAdv.Xp)) - 1
-		}
-	}
-	if rinha.HasUpgrade(options.GaloAdv.Upgrades, 2, 1, 0) {
-		options.GaloAuthor.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAuthor.Xp)) - 1
-		if rinha.HasUpgrade(options.GaloAdv.Upgrades, 2, 1, 0, 0) {
-			options.GaloAuthor.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAuthor.Xp)) - 1
-		}
-	}
-	if options.GaloAuthor.Xp < 0 {
-		options.GaloAuthor.Xp = 0
-	}
-	if options.GaloAdv.Xp < 0 {
-		options.GaloAdv.Xp = 0
-	}
-	options.AdvLevel = rinha.CalcLevel(options.GaloAdv.Xp)
-	options.AuthorLevel = rinha.CalcLevel(options.GaloAuthor.Xp)
-	u, _ := handler.Client.User(options.IDs[0]).Get()
-	avatar, _ := u.AvatarURL(128, true)
-	embed := &disgord.Embed{
-		Title: "Briga de galo",
-		Color: engine.RinhaColors[0],
-		Footer: &disgord.EmbedFooter{
-			Text:    u.Username,
-			IconURL: avatar,
-		},
-		Image: &disgord.EmbedImage{
-			URL: engine.GetImageTile(&options.GaloAuthor, &options.GaloAdv, 1),
-		},
-	}
-	if newEngine {
-		if 3 > options.AdvLevel || 3 > options.AuthorLevel {
-			msg.Reply(context.Background(), session, "Tem que ser pelomenos nivel 3 para batalhar na rinha com botoes")
-			return -1, nil
-		}
-	}
-	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Content: msg.Author.Mention(),
-		Embed:   embed,
-	})
-
-	if err == nil {
-		battle := rinha.CreateBattle(options.GaloAuthor, options.GaloAdv, options.NoItems, options.IDs[0], options.IDs[1])
-		embed.Fields = []*disgord.EmbedField{
-			{
-				Name:   fmt.Sprintf("%s Level %d", options.AuthorName, options.AuthorLevel),
-				Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, battle.Fighters[0].MaxLife),
-				Inline: true,
-			},
-			{
-				Name:   fmt.Sprintf("%s Level %d", options.AdvName, options.AdvLevel),
-				Value:  fmt.Sprintf("%d/%d", battle.Fighters[1].Life, battle.Fighters[1].MaxLife),
-				Inline: true,
-			},
-		}
-		engine.EditRinhaEmbed(message, embed)
-		if newEngine {
-			return engine.RinhaEngine(&battle, &options, message, embed)
-		}
-		return RinhaEngine(&battle, &options, message, embed)
-	} else {
-		return -1, nil
-	}
 }

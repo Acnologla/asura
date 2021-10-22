@@ -77,9 +77,10 @@ type TrainLimit struct {
 }
 
 type Arena struct {
-	Active bool `json:"active"`
-	Win    int  `json:"wins"`
-	Lose   int  `json:"lose"`
+	Active    bool              `json:"active"`
+	Win       int               `json:"wins"`
+	Lose      int               `json:"lose"`
+	LastFight disgord.Snowflake `json:"lastFight"`
 }
 
 type Galo struct {

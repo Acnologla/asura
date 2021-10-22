@@ -27,12 +27,13 @@ func init() {
 
 func childToQuery(str string) string {
 	return map[string]string{
-		"players":  "dungeonreset",
-		"money":    "money",
-		"level":    "xp",
-		"clan":     "xp",
-		"vitorias": "win",
-		"derrotas": "lose",
+		"players":      "dungeonreset",
+		"money":        "money",
+		"level":        "xp",
+		"clan":         "xp",
+		"clandinheiro": "money",
+		"vitorias":     "win",
+		"derrotas":     "lose",
 	}[str]
 }
 
@@ -49,7 +50,7 @@ func sortDungeon(values []db.QueryNode) []db.QueryNode {
 
 func top(topType string, session disgord.Session) (text string) {
 	query := "galo"
-	if topType == "clan" {
+	if topType == "clan" || topType == "clandinheiro" {
 		query = "clan"
 	}
 	child := childToQuery(topType)
@@ -74,9 +75,15 @@ func top(topType string, session disgord.Session) (text string) {
 				continue
 			}
 			name := result[i].Key()
-			level := rinha.ClanXpToLevel(clan.Xp)
 			maxMembers := rinha.GetMaxMembers(clan)
-			text += fmt.Sprintf("[%d] - %s (%d/%d)\nLevel: %d (%d XP)\n", len(result)-i, name, len(clan.Members), maxMembers, level, clan.Xp)
+			if topType == "clandinheiro" {
+				money := clan.Money
+				text += fmt.Sprintf("[%d] - %s (%d/%d)\nDinheiro: %d\n", len(result)-i, name, len(clan.Members), maxMembers, money)
+			} else {
+				level := rinha.ClanXpToLevel(clan.Xp)
+				text += fmt.Sprintf("[%d] - %s (%d/%d)\nLevel: %d (%d XP)\n", len(result)-i, name, len(clan.Members), maxMembers, level, clan.Xp)
+			}
+
 		} else {
 			var gal rinha.Galo
 			if err := result[i].Unmarshal(&gal); err != nil {
@@ -122,7 +129,7 @@ func runRank(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 			Content: msg.Author.Mention(),
 			Embed: &disgord.Embed{
-				Description: "Use `j!rank players` para ver os melhores jogadores\nUse `j!rank money` para ver os jogadores com mais dinheiro\nUse `j!rank clan` para ver os melhores clan\nUse `j!rank level` para ver os galos com o maior nivel\nUse `j!rank vitorias` para ver os jogadores com mais vitorias\nUse `j!rank derrotas` para ver os jogadores com mais derrotas",
+				Description: "Use `j!rank players` para ver os melhores jogadores\nUse `j!rank money` para ver os jogadores com mais dinheiro\nUse `j!rank clan` para ver os melhores clan\nUse `j!rank level` para ver os galos com o maior nivel\nUse `j!rank vitorias` para ver os jogadores com mais vitorias\nUse `j!rank derrotas` para ver os jogadores com mais derrotas\nUse `j!rank clandinheiro` para ver os clans com o maior dinheiro",
 				Title:       "Ranks",
 				Color:       65535,
 			},

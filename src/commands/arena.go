@@ -80,32 +80,35 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 	battleMutex.RLock()
 	if currentBattles[msg.Author.ID] != "" {
 		battleMutex.RUnlock()
-		msg.Reply(context.Background(), session, "Você já está lutando com o "+currentBattles[msg.Author.ID])
+		msg.Reply(context.Background(), session, "Você já esta lutando com o "+currentBattles[msg.Author.ID])
 		return
 	}
 	battleMutex.RUnlock()
-	advType := rinha.GetRarityPlusOne(rinha.Classes[galo.Type].Rarity)
-	galoAdv := rinha.Galo{
-		Xp:        rinha.CalcXP(rinha.CalcLevel(galo.Xp) + 2),
-		Type:      advType,
-		GaloReset: galo.GaloReset,
-		Upgrades:  galo.Upgrades,
-	}
-	LockEvent(msg.Author.ID, "Arena "+rinha.Classes[galoAdv.Type].Name)
+	LockEvent(msg.Author.ID, "Arena")
 	defer UnlockEvent(msg.Author.ID)
-	winner, _ := ExecuteRinha(msg, session, engine.RinhaOptions{
-		GaloAuthor:  galo,
-		GaloAdv:     galoAdv,
-		AuthorName:  rinha.GetName(msg.Author.Username, galo),
-		AdvName:     "Arena " + rinha.Classes[galoAdv.Type].Name,
-		AuthorLevel: rinha.CalcLevel(galo.Xp),
-		AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
-		NoItems:     true,
-	}, false)
-	if winner == -1 {
+	message, err := msg.Reply(context.Background(), session, &disgord.Embed{
+		Color: 65535,
+		Title: "Procurando oponente",
+	})
+	if err != nil {
 		return
 	}
-	if winner == 0 {
+	c := engine.AddToMatchMaking(msg.Author, galo.Arena.LastFight, message)
+	result := <-c
+	if result == engine.TimeExceeded {
+		mes := session.Channel(message.ChannelID).Message(message.ID)
+		msgUpdater := mes.UpdateBuilder()
+		msgUpdater.SetEmbed(&disgord.Embed{
+			Title: "Nao consegui achar um oponente para voce",
+			Color: 65535,
+		})
+		msgUpdater.Execute()
+		return
+	}
+	if result == engine.ArenaTie {
+		return
+	}
+	if result == engine.ArenaWin {
 		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 			gal.Arena.Win++
 			if gal.Arena.Win >= 12 {
@@ -127,7 +130,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 				return gal, nil
 			}
 		})
-	} else {
+	} else if result == engine.ArenaLose {
 		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 			gal.Arena.Lose++
 			if gal.Arena.Lose >= 3 {

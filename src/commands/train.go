@@ -53,7 +53,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		LockEvent(msg.Author.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
 		defer UnlockEvent(msg.Author.ID)
-		winner, _ := ExecuteRinha(msg, session, engine.RinhaOptions{
+		winner, _ := engine.ExecuteRinha(msg, session, engine.RinhaOptions{
 			GaloAuthor:  galo,
 			GaloAdv:     galoAdv,
 			AuthorName:  rinha.GetName(msg.Author.Username, galo),
