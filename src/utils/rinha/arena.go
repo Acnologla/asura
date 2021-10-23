@@ -1,11 +1,17 @@
 package rinha
 
+type ArenaResult = int
+
+const (
+	TimeExceeded ArenaResult = iota
+	ArenaWin
+	ArenaLose
+	ArenaTie
+)
+
 func CalcArena(gal Galo) (Galo, int, int) {
 	wins := gal.Arena.Win
 	money := 65 * wins
-	if money == 0 {
-		money = 40
-	}
 	xp := 20 * wins
 	gal.Xp += xp
 	gal.Money += money

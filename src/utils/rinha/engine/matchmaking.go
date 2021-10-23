@@ -9,19 +9,10 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-type ArenaResult = int
-
-const (
-	TimeExceeded ArenaResult = iota
-	ArenaWin
-	ArenaLose
-	ArenaTie
-)
-
 type Finder struct {
 	ID        disgord.Snowflake
 	Username  string
-	C         chan ArenaResult
+	C         chan rinha.ArenaResult
 	Message   *disgord.Message
 	LastFight disgord.Snowflake
 	Timestamp time.Time
@@ -38,11 +29,11 @@ func isInMatchMaking(id disgord.Snowflake) int {
 	}
 	return -1
 }
-func AddToMatchMaking(u *disgord.User, lastFight disgord.Snowflake, message *disgord.Message) chan ArenaResult {
+func AddToMatchMaking(u *disgord.User, lastFight disgord.Snowflake, message *disgord.Message) chan rinha.ArenaResult {
 	waitingQueueMutex.Lock()
 	defer waitingQueueMutex.Unlock()
 	i := isInMatchMaking(u.ID)
-	c := make(chan ArenaResult)
+	c := make(chan rinha.ArenaResult)
 	if i == -1 {
 		waitingQueue = append(waitingQueue, &Finder{
 			ID:        u.ID,
@@ -74,8 +65,8 @@ func initBattle(first, second *Finder) {
 	winner, _ := ExecuteRinha(nil, handler.Client, RinhaOptions{
 		GaloAuthor:  galo,
 		GaloAdv:     advGalo,
-		AdvName:     rinha.GetName(first.Username, advGalo),
-		AuthorName:  rinha.GetName(second.Username, galo),
+		AdvName:     rinha.GetName(second.Username, advGalo),
+		AuthorName:  rinha.GetName(first.Username, galo),
 		AdvLevel:    advLevel,
 		AuthorLevel: authorLevel,
 		MessageID:   [2]*disgord.Message{first.Message, second.Message},
@@ -90,16 +81,16 @@ func initBattle(first, second *Finder) {
 		return galo, nil
 	})
 	if winner == -1 {
-		first.C <- ArenaTie
-		second.C <- ArenaTie
+		first.C <- rinha.ArenaTie
+		second.C <- rinha.ArenaTie
 	}
 	if winner == 0 {
-		first.C <- ArenaWin
-		second.C <- ArenaLose
+		first.C <- rinha.ArenaWin
+		second.C <- rinha.ArenaLose
 	}
 	if winner == 1 {
-		first.C <- ArenaLose
-		second.C <- ArenaWin
+		first.C <- rinha.ArenaLose
+		second.C <- rinha.ArenaWin
 	}
 }
 
@@ -143,7 +134,7 @@ func init() {
 			toFilter := []int{}
 			for i, finder := range waitingQueue {
 				if time.Since(finder.Timestamp).Minutes() >= 1 {
-					finder.C <- TimeExceeded
+					finder.C <- rinha.TimeExceeded
 					toFilter = append(toFilter, i)
 				}
 			}

@@ -95,7 +95,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	c := engine.AddToMatchMaking(msg.Author, galo.Arena.LastFight, message)
 	result := <-c
-	if result == engine.TimeExceeded {
+	if result == rinha.TimeExceeded {
 		mes := session.Channel(message.ChannelID).Message(message.ID)
 		msgUpdater := mes.UpdateBuilder()
 		msgUpdater.SetEmbed(&disgord.Embed{
@@ -105,10 +105,10 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		msgUpdater.Execute()
 		return
 	}
-	if result == engine.ArenaTie {
+	if result == rinha.ArenaTie {
 		return
 	}
-	if result == engine.ArenaWin {
+	if result == rinha.ArenaWin {
 		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 			gal.Arena.Win++
 			if gal.Arena.Win >= 12 {
@@ -130,7 +130,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 				return gal, nil
 			}
 		})
-	} else if result == engine.ArenaLose {
+	} else if result == rinha.ArenaLose {
 		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
 			gal.Arena.Lose++
 			if gal.Arena.Lose >= 3 {
