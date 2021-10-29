@@ -36,6 +36,7 @@ func LevelToString(level int) string {
 		2: "epico",
 		3: "lendario",
 		4: "especial",
+		5: "evento",
 	}[level]
 }
 
@@ -70,9 +71,16 @@ func ItemToString(item *Item) string {
 	if item.Effect == 7 {
 		return fmt.Sprintf("Voce reflete todo o dano levado de ataques em **%d%%** ", int(item.Payload*100))
 	}
+	if item.Effect == 8 {
+		return fmt.Sprintf("Voce ganha **%d** de xp adicional por train", int(item.Payload))
+	}
 	return ""
 }
 
 func GetRandItem() int {
 	return utils.RandInt(len(Items))
+}
+
+func GetItem(galo Galo) *Item {
+	return Items[galo.Items[0]]
 }

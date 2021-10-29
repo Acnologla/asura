@@ -17,7 +17,7 @@ func init() {
 		Aliases:   []string{"clan", "guilda"},
 		Run:       runClan,
 		Available: true,
-		Cooldown:  3,
+		Cooldown:  10,
 		Usage:     "j!clan",
 		Help:      "Informação sobre o cla",
 		Category:  1,
@@ -90,12 +90,27 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce saiu do clan **"+galo.Clan+"** com sucesso")
 				return
 			}
+			if strings.ToLower(args[0]) == "background" {
+				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
+					if clan.Money < 10000 {
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", O clan precisa ter 10.000 de dinheiro para trocar o background")
+						return clan, nil
+					}
+					bg := rinha.OpenCosmeticBg()
+					clan.Background = bg
+					clan.Money -= 10000
+					background := rinha.Cosmetics[bg]
+					msg.Reply(context.Background(), session, fmt.Sprintf("O background do clan foi alterado para **%s** (**%s**)", background.Name, background.Rarity.String()))
+					return clan, nil
+				})
+				return
+			}
 			if strings.ToLower(args[0]) == "banco" {
 				clan = rinha.UpdateClanBank(clan, galo.Clan)
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Title:       "Banco do clan",
 					Color:       65535,
-					Description: fmt.Sprintf("Dinheiro: **%d** (Rendendo %d%% a cada 50 horas)\nTempo para o proximo rendimento: **%d horas**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan (%d)\n[**Bancos**] - Banco adicional (%d)\n[**Missao**] - Bonus para missao do clan (%d)\n\nUse j!clan depositar <dinheiro> para depositar dinheiro\nUse j!clan upgrade <upgrade> para dar upgrade em algo", clan.Money, clan.Upgrades.Banks+1, rinha.CalcClanIncomeTime(clan), rinha.CalcClanUpgrade(clan.Upgrades.Members, 1), rinha.CalcClanUpgrade(clan.Upgrades.Banks, 1), rinha.CalcClanUpgrade(clan.Upgrades.Mission, 2)),
+					Description: fmt.Sprintf("Dinheiro: **%d** (Rendendo %d%% a cada 50 horas)\nTempo para o proximo rendimento: **%d horas**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan (%d)\n[**Bancos**] - Banco adicional (%d)\n[**Missao**] - Bonus para missao do clan (%d)\n\nUse j!clan depositar <dinheiro> para depositar dinheiro\nUse j!clan upgrade <upgrade> para dar upgrade em algo\nUse j!clan background para comprar um background aleatorio para seu clan (custa 10000)", clan.Money, clan.Upgrades.Banks+1, rinha.CalcClanIncomeTime(clan), rinha.CalcClanUpgrade(clan.Upgrades.Members, 1), rinha.CalcClanUpgrade(clan.Upgrades.Banks, 2), rinha.CalcClanUpgrade(clan.Upgrades.Mission, 2)),
 				})
 				return
 			}
@@ -141,7 +156,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 							return clan, nil
 						})
 					} else if txt == "bancos" {
-						price := rinha.CalcClanUpgrade(clan.Upgrades.Banks, 1)
+						price := rinha.CalcClanUpgrade(clan.Upgrades.Banks, 2)
 						rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
 							if clan.Money >= price {
 								clan.Upgrades.Banks++
@@ -291,13 +306,20 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		benefits := rinha.GetBenefits(clan.Xp)
 		maxMembers := rinha.GetMaxMembers(clan)
-		msg.Reply(context.Background(), session, &disgord.Embed{
+		bg := rinha.GetClanBackground(clan)
+		embed := &disgord.Embed{
 			Title: galo.Clan,
 			Color: 65535,
 			Footer: &disgord.EmbedFooter{
 				Text: "Use j!clan invite <user> para convidar | j!clan remove <user> para remover | j!clan admin <user> para promover membros",
 			},
 			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/%d):\n %s\nUse **j!clan missao** para ver a missão mensal do clan\nUse **j!clan banco** para ver o banco do clan", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), maxMembers, memberMsg),
-		})
+		}
+		if bg != nil {
+			embed.Image = &disgord.EmbedImage{
+				URL: bg.Value,
+			}
+		}
+		msg.Reply(context.Background(), session, embed)
 	}
 }

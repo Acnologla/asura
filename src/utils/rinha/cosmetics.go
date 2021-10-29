@@ -27,6 +27,21 @@ func (cosmetic Cosmetic) String() string {
 	return fmt.Sprintf("(%s) - %s %s", cosmetic.Rarity.String(), cosmeticType, cosmetic.Name)
 }
 
+func GetCosmeticRandBgByType(rarity Rarity) int {
+	cosmeticArr := []*Cosmetic{}
+	for _, cosmetic := range Cosmetics {
+		if cosmetic.Rarity == rarity && cosmetic.Type == Background {
+			cosmeticArr = append(cosmeticArr, cosmetic)
+		}
+	}
+	selected := cosmeticArr[utils.RandInt(len(cosmeticArr))]
+	for i, cosmetic := range Cosmetics {
+		if cosmetic.Name == selected.Name {
+			return i
+		}
+	}
+	return -1
+}
 func GetCosmeticRandByType(rarity Rarity) int {
 	cosmeticArr := []*Cosmetic{}
 	for _, cosmetic := range Cosmetics {
@@ -42,6 +57,18 @@ func GetCosmeticRandByType(rarity Rarity) int {
 	}
 	return -1
 
+}
+
+func OpenCosmeticBg() int {
+	value := utils.RandInt(1001)
+	if 15 >= value {
+		return GetCosmeticRandBgByType(Legendary)
+	} else if 120 >= value {
+		return GetCosmeticRandBgByType(Epic)
+	} else if 460 >= value {
+		return GetCosmeticRandBgByType(Rare)
+	}
+	return GetCosmeticRandBgByType(Common)
 }
 
 func OpenCosmetic() int {

@@ -226,5 +226,35 @@
         "effect": 2,
         "level": 4,
         "payload": 17
+    },
+    {
+        "name": "Farmador",
+        "effect": 8,
+        "level": 0,
+        "payload": 1
+    },
+    {
+        "name": "Farmador melhorado",
+        "effect": 8,
+        "level": 1,
+        "payload": 2
+    },
+    {
+        "name": "Farmador duplo",
+        "effect": 8,
+        "level": 2,
+        "payload": 3
+    },
+    {
+        "name": "Farmador divino",
+        "effect": 8,
+        "level": 3,
+        "payload": 5
+    },
+    {
+        "name": "Beta Farmador",
+        "effect": 8,
+        "level": 4,
+        "payload": 7
     }
 ]

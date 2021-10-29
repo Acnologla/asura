@@ -77,6 +77,12 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 			}
 			xpOb += int(rinha.Classes[galoAdv.Type].Rarity-rinha.Classes[galo.Type].Rarity) * 2
+			if len(galo.Items) > 0 {
+				item := rinha.GetItem(galo)
+				if item.Effect == 8 {
+					xpOb += int(item.Payload)
+				}
+			}
 			if galo.GaloReset > 0 {
 				xpOb = xpOb / (galo.GaloReset + 1)
 			}

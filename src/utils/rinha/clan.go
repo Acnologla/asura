@@ -43,12 +43,20 @@ type ClanUpgrades struct {
 type Clan struct {
 	Xp              int          `json:"xp"`
 	CreatedAt       uint64       `json:"createdAt"`
+	Background      int          `json:"background"`
 	Members         []ClanMember `json:"members"`
 	Money           int          `json:"money"`
 	Upgrades        ClanUpgrades `json:"upgrades"`
 	LastIncome      uint64       `json:"lastIncome"`
 	Mission         uint64       `json:"mission"`
 	MissionProgress int          `json:"missionProgress"`
+}
+
+func GetClanBackground(clan Clan) *Cosmetic {
+	if clan.Background == 0 {
+		return nil
+	}
+	return Cosmetics[clan.Background]
 }
 
 func GetClan(name string) Clan {
