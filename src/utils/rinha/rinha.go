@@ -83,6 +83,11 @@ type Arena struct {
 	LastFight disgord.Snowflake `json:"lastFight"`
 }
 
+type Daily struct {
+	Last   uint64 `json:"last"`
+	Strike int    `json:"strike"`
+}
+
 type Galo struct {
 	UserXp           int        `json:"userXp"`
 	Upgrades         []int      `json:"upgrades"`
@@ -97,9 +102,11 @@ type Galo struct {
 	CommonLootbox    int        `json:"commonLootbox"`
 	RareLootbox      int        `json:"rareLootbox"`
 	EpicLootbox      int        `json:"epicLootbox"`
+	Pity             int        `json:"pity"`
 	LegendaryLootbox int        `json:"legendaryLootbox"`
 	ItemsLootbox     int        `json:"itemsLootbox"`
 	Galos            []SubGalo  `json:"galos"`
+	Daily            Daily      `json:"realDaily"`
 	Money            int        `json:"money"`
 	Clan             string     `json:"clan"`
 	Dungeon          int        `json:"dungeon"`

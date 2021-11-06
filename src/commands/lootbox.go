@@ -34,7 +34,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Title:       "Lootbox",
 			Color:       65535,
-			Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n[1750] Lootbox epica: **%d**\n[2 AsuraCoins] Lootbox lendaria: **%d**\n[4 AsuraCoins] Lootbox items: **%d**\n[300] Lootbox cosmetica: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 money)\n\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**", galo.Money, galo.AsuraCoin, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox, galo.EpicLootbox, galo.LegendaryLootbox, galo.ItemsLootbox, galo.CosmeticLootbox),
+			Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\nPity: **%d%%**\n\n[100] Lootbox comum: **%d**\n[400] Lootbox normal: **%d**\n[800] Lootbox rara: **%d**\n[1750] Lootbox epica: **%d**\n[2 AsuraCoins] Lootbox lendaria: **%d**\n[4 AsuraCoins] Lootbox items: **%d**\n[300] Lootbox cosmetica: **%d**\n\nUse `j!lootbox buy <tipo>` para comprar lootbox\nUse `j!lootbox open <tipo>` para abrir lootbox\n Use `j!changename` para trocar o nome do galo (precisa de 100 money)\n\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**", galo.Money, galo.AsuraCoin, galo.Pity*5, galo.CommonLootbox, galo.Lootbox, galo.RareLootbox, galo.EpicLootbox, galo.LegendaryLootbox, galo.ItemsLootbox, galo.CosmeticLootbox),
 		})
 	}
 	if len(args) == 0 {
@@ -68,8 +68,10 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		battleMutex.RUnlock()
-		result := rinha.Open(lootType)
+		result, pity := rinha.Open(lootType, galo)
 		avatar, _ := msg.Author.AvatarURL(512, true)
+		extraMsg := ""
+		sold := "no"
 		embed := &disgord.Embed{
 			Title: "Abrindo lootbox...",
 		}
@@ -79,7 +81,13 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 				galo = rinha.GetNewLb(lootType, galo, false)
 				if !rinha.IsIntInList(result, galo.Cosmetics) {
 					galo.Cosmetics = append(galo.Cosmetics, result)
+				} else {
+					price := 250
+					sold = "yes"
+					galo.Money += price
+					extraMsg = fmt.Sprintf("\nComo você ja tinha esse background voce ganhou **%d** de dinheiro", price)
 				}
+				galo.Pity = pity
 				return galo, nil
 			})
 			message, err := msg.Reply(context.Background(), session, embed)
@@ -90,7 +98,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 					if i == 5 {
 						embed.Title = "Lootbox open"
 						rand = result
-						embed.Description = "Voce abriu uma lootbox " + lootType + " e ganhou o cosmetico **" + newCosmetic.Name + "**\nRaridade: " + newCosmetic.Rarity.String()
+						embed.Description = "Voce abriu uma lootbox " + lootType + " e ganhou o cosmetico **" + newCosmetic.Name + "**\nRaridade: " + newCosmetic.Rarity.String() + extraMsg
 						embed.Footer = &disgord.EmbedFooter{
 							IconURL: avatar,
 							Text:    rinha.CosmeticCommand(*newCosmetic),
@@ -119,6 +127,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 				if !rinha.IsIntInList(result, galo.Items) {
 					galo.Items = append(galo.Items, result)
 				}
+				galo.Pity = pity
 				return galo, nil
 			})
 			embed.Title = "Lootbox open"
@@ -128,8 +137,6 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		newGalo := rinha.Classes[result]
 		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
-		extraMsg := ""
-		sold := "no"
 		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 			galo = rinha.GetNewLb(lootType, galo, false)
 			if !rinha.HaveGalo(result, galo.Galos) && galo.Type != result {
@@ -143,6 +150,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 				galo.Money += price
 				extraMsg = fmt.Sprintf("\nComo você ja tinha esse galo voce ganhou **%d** de dinheiro", price)
 			}
+			galo.Pity = pity
 			return galo, nil
 		})
 		telemetry.Debug(fmt.Sprintf("%s wins %s", tag, newGalo.Name), map[string]string{

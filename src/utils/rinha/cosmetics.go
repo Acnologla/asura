@@ -71,16 +71,17 @@ func OpenCosmeticBg() int {
 	return GetCosmeticRandBgByType(Common)
 }
 
-func OpenCosmetic() int {
+func OpenCosmetic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	if 15 >= value {
-		return GetCosmeticRandByType(Legendary)
+	pitVal := CalcPity(pity) * 15
+	if 15+pitVal >= value {
+		return GetCosmeticRandByType(Legendary), true
 	} else if 120 >= value {
-		return GetCosmeticRandByType(Epic)
+		return GetCosmeticRandByType(Epic), false
 	} else if 460 >= value {
-		return GetCosmeticRandByType(Rare)
+		return GetCosmeticRandByType(Rare), false
 	}
-	return GetCosmeticRandByType(Common)
+	return GetCosmeticRandByType(Common), false
 }
 
 func GetRandCosmetic() int {

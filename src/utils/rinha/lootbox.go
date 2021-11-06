@@ -22,80 +22,106 @@ func _Open(lootType int) int {
 	return GetRandByType(Common)
 }
 */
-func OpenEpic() int {
+
+func CalcPity(pity int) int {
+	return (pity * 5) / 100
+}
+
+func OpenEpic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	if 8 >= value {
-		return GetRandByType(Legendary)
+	pitVal := CalcPity(pity) * 8
+
+	if 8+pitVal >= value {
+		return GetRandByType(Legendary), true
 	} else if 241 >= value {
-		return GetRandByType(Epic)
+		return GetRandByType(Epic), false
 	}
-	return GetRandByType(Rare)
+	return GetRandByType(Rare), false
 }
 
-func OpenRare() int {
+func OpenRare(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	if 120 >= value {
-		return GetRandByType(Epic)
+	pitVal := CalcPity(pity) * 120
+	if 120+pitVal >= value {
+		return GetRandByType(Epic), true
 	} else if 500 >= value {
-		return GetRandByType(Rare)
+		return GetRandByType(Rare), false
 	}
-	return GetRandByType(Common)
+	return GetRandByType(Common), false
 }
 
-func OpenNormal() int {
+func OpenNormal(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	if 5 >= value {
-		return GetRandByType(Epic)
+	pitVal := CalcPity(pity) * 5
+	if 5+pitVal >= value {
+		return GetRandByType(Epic), true
 	} else if 25 >= value {
-		return GetRandByType(Rare)
+		return GetRandByType(Rare), false
 	}
-	return GetRandByType(Common)
+	return GetRandByType(Common), false
 }
 
-func OpenCommon() int {
+func OpenCommon(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	if 4 >= value {
-		return GetRandByType(Rare)
+	pitVal := CalcPity(pity) * 4
+	if 4+pitVal >= value {
+		return GetRandByType(Rare), true
 	}
-	return GetRandByType(Common)
+	return GetRandByType(Common), false
 }
 
-func OpenLegendary() int {
+func OpenLegendary(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	if 4 >= value {
-		return GetRandByType(Legendary)
+	pitVal := CalcPity(pity) * 4
+	if 4+pitVal >= value {
+		return GetRandByType(Legendary), true
 	}
-	return GetRandByType(Epic)
+	return GetRandByType(Epic), false
 }
 
-func OpenItems() int {
+func OpenItems(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	if 10 >= value {
-		return GetItemByLevel(4)
+	pitVal := CalcPity(pity) * 10
+	if 10+pitVal >= value {
+		return GetItemByLevel(4), true
 	}
-	return GetItemByLevel(3)
+	return GetItemByLevel(3), false
 }
 
-func Open(lootType string) int {
+func Open(lootType string, galo Galo) (int, int) {
+	var gal int
+	var isRarest bool
 	if lootType == "comum" {
-		return OpenCommon()
+		gal, isRarest = OpenCommon(galo.Pity)
 	}
 	if lootType == "rara" {
-		return OpenRare()
+		gal, isRarest = OpenRare(galo.Pity)
 	}
 	if lootType == "epica" {
-		return OpenEpic()
+		gal, isRarest = OpenEpic(galo.Pity)
 	}
 	if lootType == "cosmetica" {
-		return OpenCosmetic()
+		gal, isRarest = OpenCosmetic(galo.Pity)
 	}
 	if lootType == "items" {
-		return OpenItems()
+		gal, isRarest = OpenItems(galo.Pity)
 	}
 	if lootType == "lendaria" {
-		return OpenLegendary()
+		gal, isRarest = OpenLegendary(galo.Pity)
 	}
-	return OpenNormal()
+	if lootType == "normal" {
+		gal, isRarest = OpenNormal(galo.Pity)
+	}
+	if isRarest {
+		return gal, 0
+	}
+	price, asuraCoins := GetPrice(lootType)
+	money := price
+	if asuraCoins > 0 {
+		money = asuraCoins * 1750
+	}
+	newPity := money / 100
+	return gal, newPity + galo.Pity
 }
 
 func GetPrice(lootType string) (int, int) {
