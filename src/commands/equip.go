@@ -116,6 +116,9 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 							asuraCoins int
 						)
 						rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+							if value < 0 || len(galo.Galos) <= value {
+								return galo, nil
+							}
 							gal = galo.Galos[value]
 							for i := value; i < len(galo.Galos)-1; i++ {
 								galo.Galos[i] = galo.Galos[i+1]
