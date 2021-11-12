@@ -5,13 +5,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
-	chessImage "github.com/cjsaylor/chessimage"
-	"github.com/notnil/chess"
 	"image/png"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/andersfylling/disgord"
+	chessImage "github.com/cjsaylor/chessimage"
+	"github.com/notnil/chess"
 )
 
 type chessGame struct {
@@ -153,8 +154,10 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 				gameImage := getGameImage(board)
 				msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-					Files: []disgord.CreateMessageFileParams{
-						{gameImage, "chess.png", false},
+					Files: []disgord.CreateMessageFileParams{{
+						Reader:     gameImage,
+						FileName:   "chess.png",
+						SpoilerTag: false},
 					},
 					Embed: embed,
 				})
@@ -193,8 +196,10 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 	gameImage := getGameImage(board)
 	avatar, _ := msg.Author.AvatarURL(512, true)
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Files: []disgord.CreateMessageFileParams{
-			{gameImage, "chess.png", false},
+		Files: []disgord.CreateMessageFileParams{{
+			Reader:     gameImage,
+			FileName:   "chess.png",
+			SpoilerTag: false},
 		},
 		Embed: &disgord.Embed{
 			Color:       65535,
@@ -225,8 +230,10 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 			board, _ := chessImage.NewRendererFromFEN(chessPlayers[msg.Author.ID].game.FEN())
 			gameImage := getGameImage(board)
 			msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-				Files: []disgord.CreateMessageFileParams{
-					{gameImage, "chess.png", false},
+				Files: []disgord.CreateMessageFileParams{{
+					Reader:     gameImage,
+					FileName:   "chess.png",
+					SpoilerTag: false},
 				},
 				Embed: &disgord.Embed{
 					Color:       65535,

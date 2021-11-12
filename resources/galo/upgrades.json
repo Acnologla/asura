@@ -84,7 +84,7 @@
                     {
                         "name": "Buff de dano",
                         "value": "Os ataques do seu galo tem 2 de dano adicional",
-                        "chillds": [
+                        "childs": [
                             {
                                 "name": "Buff de dano aprimorado",
                                 "value":  "Os ataques do seu galo tem 3 de dano adicional"
@@ -95,7 +95,7 @@
                     {
                         "name": "Efeitos mais fortes",
                         "value": "Os Efeitos do seu galo tem 2 de dano adicional",
-                        "chillds": [
+                        "childs": [
                             {
                                 "name": "Efeitos ainda mais fortes",
                                 "value": "Os Efeitos do seu galo tem 3 de dano adicional"

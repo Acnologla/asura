@@ -190,8 +190,10 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	png.Encode(pw, dc.Image())
 
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Files: []disgord.CreateMessageFileParams{
-			{bytes.NewReader(b.Bytes()), "profile.jpg", false},
+		Files: []disgord.CreateMessageFileParams{{
+			Reader:     bytes.NewReader(b.Bytes()),
+			FileName:   "profile.jpg",
+			SpoilerTag: false},
 		},
 	})
 }

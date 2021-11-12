@@ -57,8 +57,10 @@ func runMonkey(session disgord.Session, msg *disgord.Message, args []string) {
 	png.Encode(pw, dc.Image())
 
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Files: []disgord.CreateMessageFileParams{
-			{bytes.NewReader(b.Bytes()), "monkey.png", false},
+		Files: []disgord.CreateMessageFileParams{{
+			Reader:     bytes.NewReader(b.Bytes()),
+			FileName:   "monkey.png",
+			SpoilerTag: false},
 		},
 	})
 }

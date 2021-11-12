@@ -183,8 +183,10 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Content: content,
-		Files: []disgord.CreateMessageFileParams{
-			{bytes.NewReader(b.Bytes()), "galo.jpg", false},
+		Files: []disgord.CreateMessageFileParams{{
+			Reader:     bytes.NewReader(b.Bytes()),
+			FileName:   "galo.jpg",
+			SpoilerTag: false},
 		},
 	})
 }

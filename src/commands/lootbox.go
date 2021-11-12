@@ -82,7 +82,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 				if !rinha.IsIntInList(result, galo.Cosmetics) {
 					galo.Cosmetics = append(galo.Cosmetics, result)
 				} else {
-					price := 250
+					price := 150
 					sold = "yes"
 					galo.Money += price
 					extraMsg = fmt.Sprintf("\nComo você ja tinha esse background voce ganhou **%d** de dinheiro", price)

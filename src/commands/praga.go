@@ -62,8 +62,10 @@ func runPraga(session disgord.Session, msg *disgord.Message, args []string) {
 	})
 
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Files: []disgord.CreateMessageFileParams{
-			{bytes.NewReader(b.Bytes()), "lixeira.jpg", false},
+		Files: []disgord.CreateMessageFileParams{{
+			Reader:     bytes.NewReader(b.Bytes()),
+			FileName:   "lixeira.jpg",
+			SpoilerTag: false},
 		},
 	})
 }

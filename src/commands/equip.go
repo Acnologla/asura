@@ -3,6 +3,7 @@ package commands
 import (
 	"asura/src/handler"
 	"asura/src/telemetry"
+	"asura/src/utils"
 	"asura/src/utils/rinha"
 	"bytes"
 	"context"
@@ -76,8 +77,10 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 		png.Encode(pw, dc.Image())
 		avatar, _ := msg.Author.AvatarURL(512, true)
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-			Files: []disgord.CreateMessageFileParams{
-				{bytes.NewReader(b.Bytes()), "galos.jpg", false},
+			Files: []disgord.CreateMessageFileParams{{
+				Reader:     bytes.NewReader(b.Bytes()),
+				FileName:   "galos.jpg",
+				SpoilerTag: false},
 			},
 			Embed: &disgord.Embed{
 				Footer: &disgord.EmbedFooter{
@@ -106,37 +109,39 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 		if value >= 0 && len(galo.Galos) > value {
 			if len(args) >= 2 {
 				if args[1] == "remove" || args[1] == "vender" {
-					var gal rinha.SubGalo
-					var (
-						price,
-						asuraCoins int
-					)
-					rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
-						gal = galo.Galos[value]
-						for i := value; i < len(galo.Galos)-1; i++ {
-							galo.Galos[i] = galo.Galos[i+1]
+					utils.Confirm(fmt.Sprintf("Voce deseja vender o galo **%s**?", rinha.Classes[galo.Galos[value].Type].Name), msg.ChannelID, msg.Author.ID, func() {
+						var gal rinha.SubGalo
+						var (
+							price,
+							asuraCoins int
+						)
+						rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+							gal = galo.Galos[value]
+							for i := value; i < len(galo.Galos)-1; i++ {
+								galo.Galos[i] = galo.Galos[i+1]
+							}
+							price, asuraCoins = rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp, gal.GaloReset)
+							if gal.GaloReset > 0 {
+								price = 0
+								galo.AsuraCoin += asuraCoins
+							}
+							galo.Money += price
+							galo.Galos = galo.Galos[0 : len(galo.Galos)-1]
+							return galo, nil
+						})
+						newGalo := rinha.Classes[gal.Type]
+						tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
+						telemetry.Debug(fmt.Sprintf("%s Sell %s", tag, newGalo.Name), map[string]string{
+							"galo":   newGalo.Name,
+							"user":   strconv.FormatUint(uint64(msg.Author.ID), 10),
+							"rarity": newGalo.Rarity.String(),
+						})
+						if asuraCoins > 0 {
+							msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o galo **%s** por **%d** asuraCoins com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, asuraCoins))
+							return
 						}
-						price, asuraCoins = rinha.Sell(rinha.Classes[gal.Type].Rarity, gal.Xp, gal.GaloReset)
-						if gal.GaloReset > 0 {
-							price = 0
-							galo.AsuraCoin += asuraCoins
-						}
-						galo.Money += price
-						galo.Galos = galo.Galos[0 : len(galo.Galos)-1]
-						return galo, nil
+						msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o galo **%s** por **%d** de dinheiro com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, price))
 					})
-					newGalo := rinha.Classes[gal.Type]
-					tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
-					telemetry.Debug(fmt.Sprintf("%s Sell %s", tag, newGalo.Name), map[string]string{
-						"galo":   newGalo.Name,
-						"user":   strconv.FormatUint(uint64(msg.Author.ID), 10),
-						"rarity": newGalo.Rarity.String(),
-					})
-					if asuraCoins > 0 {
-						msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o galo **%s** por **%d** asuraCoins com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, asuraCoins))
-						return
-					}
-					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o galo **%s** por **%d** de dinheiro com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, price))
 					return
 				}
 			}

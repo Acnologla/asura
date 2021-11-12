@@ -7,9 +7,7 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"sort"
 
-	"firebase.google.com/go/db"
 	"github.com/andersfylling/disgord"
 )
 
@@ -37,17 +35,6 @@ func childToQuery(str string) string {
 	}[str]
 }
 
-func sortDungeon(values []db.QueryNode) []db.QueryNode {
-	sort.Slice(values, func(i, j int) bool {
-		var val1 rinha.Galo
-		var val2 rinha.Galo
-		values[i].Unmarshal(&val1)
-		values[j].Unmarshal(&val2)
-		return val1.Dungeon*(val1.DungeonReset+1) < val2.Dungeon*(val2.DungeonReset+1)
-	})
-	return values
-}
-
 func top(topType string, session disgord.Session) (text string) {
 	query := "galo"
 	if topType == "clan" || topType == "clandinheiro" {
@@ -61,9 +48,6 @@ func top(topType string, session disgord.Session) (text string) {
 	}
 	q = q.LimitToLast(15)
 	result, err := q.GetOrdered(context.Background())
-	if topType == "players" {
-		result = sortDungeon(result)
-	}
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -103,8 +87,8 @@ func top(topType string, session disgord.Session) (text string) {
 				value = gal.Money
 			}
 			if child == "dungeonreset" {
-				name = "Andar da dungeon"
-				value = 18*(gal.DungeonReset) + gal.Dungeon
+				name = "Reset da dungeon"
+				value = gal.DungeonReset
 			}
 			if child == "xp" {
 				name = "Level"

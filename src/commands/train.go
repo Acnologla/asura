@@ -66,7 +66,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
 		if winner == 0 {
-			xpOb := utils.RandInt(10) + 9
+			xpOb := utils.RandInt(10) + 10
 			if rinha.HasUpgrade(galo.Upgrades, 0) {
 				xpOb++
 				if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1) {
@@ -84,7 +84,9 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 			}
 			if galo.GaloReset > 0 {
-				xpOb = xpOb / (galo.GaloReset + 1)
+				for i := 0; i < galo.GaloReset; i++ {
+					xpOb = int(float64(xpOb) * 0.75)
+				}
 			}
 			money := 5
 			if rinha.HasUpgrade(galo.Upgrades, 0, 1, 0) {
@@ -129,6 +131,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					go rinha.CompleteClanMission(galo.Clan, msg.Author.ID)
 					clanMsg = "\nGanhou **1** de xp para seu clan"
 				}
+				galo.Win++
 				galo.Xp += xpOb
 				galo.Money += money
 				return galo, nil
@@ -141,6 +144,10 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			galo.Xp += xpOb
 			sendLevelUpEmbed(msg, session, &galo, msg.Author, xpOb)
 		} else {
+			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+				galo.Lose++
+				return galo, nil
+			})
 			msg.Reply(context.Background(), session, &disgord.Embed{
 				Color:       16711680,
 				Title:       "Train",

@@ -5,14 +5,15 @@ import (
 	"asura/src/utils"
 	"bytes"
 	"context"
-	"github.com/andersfylling/disgord"
-	"github.com/fogleman/gg"
-	"github.com/nfnt/resize"
 	"image/color"
 	"image/draw"
 	"image/png"
 	"io"
 	"strings"
+
+	"github.com/andersfylling/disgord"
+	"github.com/fogleman/gg"
+	"github.com/nfnt/resize"
 )
 
 func init() {
@@ -65,8 +66,10 @@ func runInvert(session disgord.Session, msg *disgord.Message, args []string) {
 	png.Encode(pw, dc.Image())
 
 	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Files: []disgord.CreateMessageFileParams{
-			{bytes.NewReader(b.Bytes()), "inverted.png", false},
+		Files: []disgord.CreateMessageFileParams{{
+			Reader:     bytes.NewReader(b.Bytes()),
+			FileName:   "inverted.png",
+			SpoilerTag: false},
 		},
 	})
 }

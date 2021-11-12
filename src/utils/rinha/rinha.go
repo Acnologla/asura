@@ -32,7 +32,7 @@ func (rarity Rarity) String() string {
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 140, 500, 1600, 500}[rarity]
+	return [...]int{30, 140, 500, 1300, 500}[rarity]
 }
 
 func (rarity Rarity) Color() int {
@@ -88,6 +88,10 @@ type Daily struct {
 	Strike int    `json:"strike"`
 }
 
+type Rank struct {
+	Mmr int `json:"mmr"`
+}
+
 type Galo struct {
 	UserXp           int        `json:"userXp"`
 	Upgrades         []int      `json:"upgrades"`
@@ -122,6 +126,7 @@ type Galo struct {
 	TrainLimit       TrainLimit `json:"trainLimit"`
 	Arena            Arena      `json:"arena"`
 	AsuraCoin        int        `json:"asuraCoin"`
+	Rank             Rank       `json:"rank"`
 }
 
 var Dungeon []*Room
