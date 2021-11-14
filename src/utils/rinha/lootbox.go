@@ -2,6 +2,7 @@ package rinha
 
 import (
 	"asura/src/utils"
+	"fmt"
 )
 
 /* var lootChances = [][3]int{
@@ -23,16 +24,16 @@ func _Open(lootType int) int {
 }
 */
 
-const PityMultiplier = 3
+const PityMultiplier = 2
 
-func CalcPity(pity int) int {
-	return (pity * PityMultiplier) / 100
+func CalcPity(pity int) float64 {
+	return (float64(pity) * PityMultiplier) / 100
 }
 
 func OpenEpic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := CalcPity(pity) * 8
-
+	pitVal := int(CalcPity(pity) * 8)
+	fmt.Println(pitVal)
 	if 8+pitVal >= value {
 		return GetRandByType(Legendary), true
 	} else if 241 >= value {
@@ -43,7 +44,7 @@ func OpenEpic(pity int) (int, bool) {
 
 func OpenRare(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := CalcPity(pity) * 120
+	pitVal := int(CalcPity(pity) * 120)
 	if 120+pitVal >= value {
 		return GetRandByType(Epic), true
 	} else if 500 >= value {
@@ -54,7 +55,7 @@ func OpenRare(pity int) (int, bool) {
 
 func OpenNormal(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := CalcPity(pity) * 5
+	pitVal := int(CalcPity(pity) * 5)
 	if 5+pitVal >= value {
 		return GetRandByType(Epic), true
 	} else if 25 >= value {
@@ -65,7 +66,7 @@ func OpenNormal(pity int) (int, bool) {
 
 func OpenCommon(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := CalcPity(pity) * 4
+	pitVal := int(CalcPity(pity) * 4)
 	if 4+pitVal >= value {
 		return GetRandByType(Rare), true
 	}
@@ -74,7 +75,7 @@ func OpenCommon(pity int) (int, bool) {
 
 func OpenLegendary(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := CalcPity(pity) * 4
+	pitVal := int(CalcPity(pity) * 4)
 	if 4+pitVal >= value {
 		return GetRandByType(Legendary), true
 	}
@@ -83,7 +84,7 @@ func OpenLegendary(pity int) (int, bool) {
 
 func OpenItems(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := CalcPity(pity) * 10
+	pitVal := int(CalcPity(pity) * 10)
 	if 10+pitVal >= value {
 		return GetItemByLevel(4), true
 	}

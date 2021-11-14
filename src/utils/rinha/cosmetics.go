@@ -73,7 +73,7 @@ func OpenCosmeticBg() int {
 
 func OpenCosmetic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := CalcPity(pity) * 15
+	pitVal := int(CalcPity(pity) * 15)
 	if 15+pitVal >= value {
 		return GetCosmeticRandByType(Legendary), true
 	} else if 120 >= value {
