@@ -24,7 +24,7 @@ func _Open(lootType int) int {
 */
 
 func CalcPity(pity int) int {
-	return (pity * 5) / 100
+	return (pity * 3) / 100
 }
 
 func OpenEpic(pity int) (int, bool) {

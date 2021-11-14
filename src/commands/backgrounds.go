@@ -2,11 +2,13 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/utils"
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"strconv"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -56,6 +58,23 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 			return
 		}
 		battleMutex.RUnlock()
+		if len(args) >= 2 {
+			if args[0] == "vip" {
+				if rinha.IsVip(galo) {
+					if utils.CheckImage(args[1]) {
+						rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+							galo.VipBackground = args[1]
+							return galo, nil
+						})
+						msg.Reply(context.Background(), session, "Background VIP alterado com sucesso")
+						return
+					} else {
+						msg.Reply(context.Background(), session, "Imagem invalida")
+						return
+					}
+				}
+			}
+		}
 		value, err := strconv.Atoi(args[0])
 		if err != nil {
 			msg.Reply(context.Background(), session, "Use j!background <número do background> para equipar um background")

@@ -120,6 +120,7 @@ type Galo struct {
 	MissionTrade     uint64     `json:"missionTrade"`
 	LastMission      uint64     `json:"lastMission"`
 	Vip              uint64     `json:"vip"`
+	VipBackground    string     `json:"vipBackground"`
 	Cosmetics        []int      `json:"cosmetics"`
 	Background       int        `json:"bg"`
 	CosmeticLootbox  int        `json:"cosmeticLootbox"`

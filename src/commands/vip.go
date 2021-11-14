@@ -6,9 +6,10 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"strconv"
 	"time"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {

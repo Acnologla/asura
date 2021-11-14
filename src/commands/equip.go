@@ -109,7 +109,9 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 		if value >= 0 && len(galo.Galos) > value {
 			if len(args) >= 2 {
 				if args[1] == "remove" || args[1] == "vender" {
-					utils.Confirm(fmt.Sprintf("Voce deseja vender o galo **%s**?", rinha.Classes[galo.Galos[value].Type].Name), msg.ChannelID, msg.Author.ID, func() {
+					sellG := galo.Galos[value]
+					priceToSell, asuraC := rinha.Sell(rinha.Classes[galo.Galos[value].Type].Rarity, sellG.Xp, sellG.GaloReset)
+					utils.Confirm(fmt.Sprintf("Voce deseja vender o galo **%s** por **%d** de dinheiro e **%d** asura coins?", rinha.Classes[sellG.Type].Name, priceToSell, asuraC), msg.ChannelID, msg.Author.ID, func() {
 						var gal rinha.SubGalo
 						var (
 							price,

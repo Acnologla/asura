@@ -68,6 +68,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		battleMutex.RUnlock()
+		oldPity := galo.Pity
 		result, pity := rinha.Open(lootType, galo)
 		avatar, _ := msg.Author.AvatarURL(512, true)
 		extraMsg := ""
@@ -159,6 +160,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			"rarity":   newGalo.Rarity.String(),
 			"lootType": lootType,
 			"sold":     sold,
+			"pity":     strconv.Itoa(oldPity),
 		})
 		message, err := msg.Reply(context.Background(), session, embed)
 		if err == nil {

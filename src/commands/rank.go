@@ -86,10 +86,6 @@ func top(topType string, session disgord.Session) (text string) {
 			if child == "money" {
 				value = gal.Money
 			}
-			if child == "dungeonreset" {
-				name = "Reset da dungeon"
-				value = gal.DungeonReset
-			}
 			if child == "xp" {
 				name = "Level"
 				value = rinha.CalcLevel(gal.Xp)
@@ -102,7 +98,11 @@ func top(topType string, session disgord.Session) (text string) {
 				name = "Derrotas"
 				value = gal.Lose
 			}
-			text += fmt.Sprintf("[%d] - %s\n%s: %d\n", len(result)-i, username, name, value)
+			if child == "dungeonreset" {
+				text += fmt.Sprintf("[%d] - %s\nReset da dungeon: %d (Andar: %d)\n", len(result)-i, username, gal.DungeonReset, gal.Dungeon)
+			} else {
+				text += fmt.Sprintf("[%d] - %s\n%s: %d\n", len(result)-i, username, name, value)
+			}
 		}
 	}
 	return
