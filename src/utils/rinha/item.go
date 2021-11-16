@@ -4,6 +4,7 @@ import (
 	"asura/src/utils"
 	"fmt"
 	"math"
+	"time"
 )
 
 type Item struct {
@@ -47,6 +48,11 @@ func AddItem(level int, items []int) ([]int, string) {
 	}
 	msg := fmt.Sprintf("Ganhou um item %s\n**%s** (use **j!items** para equipar seu item)", LevelToString(level), Items[item].Name)
 	return items, msg
+}
+
+func CanTrade(galo Galo) bool {
+	now := uint64(time.Now().Unix())
+	return (now-galo.Cooldowns.TradeItem)/60/60/24 >= 3
 }
 
 func ItemToString(item *Item) string {

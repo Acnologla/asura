@@ -32,7 +32,7 @@ func (rarity Rarity) String() string {
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 140, 500, 1300, 500}[rarity]
+	return [...]int{30, 140, 480, 1200, 500}[rarity]
 }
 
 func (rarity Rarity) Color() int {
@@ -92,6 +92,10 @@ type Rank struct {
 	Mmr int `json:"mmr"`
 }
 
+type Cooldowns struct {
+	TradeItem uint64 `json:"tradeItem"`
+}
+
 type Galo struct {
 	UserXp           int        `json:"userXp"`
 	Upgrades         []int      `json:"upgrades"`
@@ -128,6 +132,7 @@ type Galo struct {
 	Arena            Arena      `json:"arena"`
 	AsuraCoin        int        `json:"asuraCoin"`
 	Rank             Rank       `json:"rank"`
+	Cooldowns        Cooldowns  `json:"cooldowns"`
 }
 
 var Dungeon []*Room
@@ -173,6 +178,14 @@ func init() {
 	json.Unmarshal([]byte(byteValueUpgrades), &Upgrades)
 }
 
+func VipMessage(galo Galo) string {
+	now := uint64(time.Now().Unix())
+	if now >= galo.Vip {
+		return ""
+	}
+	return fmt.Sprintf("Vip por **%d** dias", (galo.Vip-now)/60/60/24)
+}
+
 func IsVip(galo Galo) bool {
 	return uint64(time.Now().Unix()) <= galo.Vip
 }
@@ -186,23 +199,23 @@ func findClassIndex(class string) int {
 	return -1
 }
 
+func calcDamage(min, max int, galo Galo) (int, int) {
+	if galo.GaloReset > 0 {
+		min += int(float64(min) * 0.15 * float64(galo.GaloReset))
+		max += int(float64(max) * 0.15 * float64(galo.GaloReset))
+	}
+	return min, max
+}
+
 func CalcDamage(skill *Skill, galo Galo) (min int, max int) {
 	min = skill.Damage[0]
 	max = skill.Damage[1]
-	if galo.GaloReset > 0 {
-		min += min / 10 * galo.GaloReset
-		max += max / 10 * galo.GaloReset
-	}
-	return
+	return calcDamage(min, max, galo)
 }
 func CalcEffectRange(effect *Effect, galo Galo) (min int, max int) {
 	min = effect.Range[0]
 	max = effect.Range[1]
-	if galo.GaloReset > 0 {
-		min += min / 10 * galo.GaloReset
-		max += max / 10 * galo.GaloReset
-	}
-	return
+	return calcDamage(min, max, galo)
 }
 
 func SkillToStringFormated(skill *Skill, galo Galo) (text string) {

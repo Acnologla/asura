@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/andersfylling/disgord"
 )
@@ -62,6 +63,17 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 		defer unlockBattle(msg.Author.ID, msg.Mentions[0].ID)
 		galo, _ := rinha.GetGaloDB(msg.Author.ID)
 		galoAdv, _ := rinha.GetGaloDB(user.ID)
+		now := uint64(time.Now().Unix())
+		if !rinha.CanTrade(galo) {
+			calc := 72 - ((now - galo.Cooldowns.TradeItem) / 60 / 60)
+			msg.Reply(context.Background(), session, fmt.Sprintf("%s voce precisa esperar mais %d horas para trocar outro item", msg.Author.Username, calc))
+			return
+		}
+		if !rinha.CanTrade(galoAdv) {
+			calc := 72 - ((now - galoAdv.Cooldowns.TradeItem) / 60 / 60)
+			msg.Reply(context.Background(), session, fmt.Sprintf("%s voce precisa esperar mais %d horas para trocar outro item", user.Username, calc))
+			return
+		}
 		items := itemsToText(galo, -1)
 		newMsg := &disgord.CreateMessageParams{
 			Embed: &disgord.Embed{
@@ -126,10 +138,12 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 		galoAdv.Items[j] = firstItem
 		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 			galo.Items[i] = secondItem
+			galo.Cooldowns.TradeItem = uint64(time.Now().Unix())
 			return galo, nil
 		})
 		rinha.UpdateGaloDB(user.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 			galo.Items[j] = firstItem
+			galo.Cooldowns.TradeItem = uint64(time.Now().Unix())
 			return galo, nil
 		})
 		msg.Reply(context.Background(), session, fmt.Sprintf("%s voce trocou o item **%s** pelo item **%s** com sucesso", msg.Author.Mention(), rinha.Items[firstItem].Name, rinha.Items[secondItem].Name))

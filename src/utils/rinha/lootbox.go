@@ -121,7 +121,7 @@ func Open(lootType string, galo Galo) (int, int) {
 	price, asuraCoins := GetPrice(lootType)
 	money := price
 	if asuraCoins > 0 {
-		money = asuraCoins * 1750
+		money = asuraCoins * 1800
 	}
 	newPity := money / 100
 	return gal, newPity + galo.Pity
@@ -135,7 +135,7 @@ func GetPrice(lootType string) (int, int) {
 		return 800, 0
 	}
 	if lootType == "epica" {
-		return 1750, 0
+		return 2050, 0
 	}
 	if lootType == "cosmetica" {
 		return 300, 0
