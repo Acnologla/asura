@@ -2,6 +2,7 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/telemetry"
 	"asura/src/utils"
 	"asura/src/utils/rinha"
 	"context"
@@ -73,6 +74,42 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 						return
 					}
 				}
+			}
+			if args[1] == "remove" || args[1] == "vender" {
+				value, err := strconv.Atoi(args[0])
+				if err != nil {
+					msg.Reply(context.Background(), session, "Use j!background <número do background> remove para vender um background")
+					return
+				}
+				if value < 0 || len(galo.Cosmetics) <= value {
+					msg.Reply(context.Background(), session, "Background inválido")
+					return
+				}
+				sellBg := galo.Cosmetics[value]
+				cosmetic := rinha.Cosmetics[sellBg]
+				priceToSell := rinha.SellCosmetic(*cosmetic)
+				utils.Confirm(fmt.Sprintf("Voce deseja vender o Background **%s** por **%d** de dinheiro", cosmetic.Name, priceToSell), msg.ChannelID, msg.Author.ID, func() {
+					var price int
+					rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+						sellBg = galo.Cosmetics[value]
+						cosmetic = rinha.Cosmetics[sellBg]
+						for i := value; i < len(galo.Cosmetics)-1; i++ {
+							galo.Cosmetics[i] = galo.Cosmetics[i+1]
+						}
+						price = rinha.SellCosmetic(*cosmetic)
+						galo.Money += price
+						galo.Cosmetics = galo.Cosmetics[0 : len(galo.Cosmetics)-1]
+						return galo, nil
+					})
+					tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
+					telemetry.Debug(fmt.Sprintf("%s Sell %s", tag, cosmetic.Name), map[string]string{
+						"cosmetic": cosmetic.Name,
+						"user":     strconv.FormatUint(uint64(msg.Author.ID), 10),
+						"rarity":   cosmetic.Rarity.String(),
+					})
+					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o background **%s** por **%d** de dinheiro com sucesso", msg.Author.Mention(), cosmetic.Name, price))
+				})
+				return
 			}
 		}
 		value, err := strconv.Atoi(args[0])

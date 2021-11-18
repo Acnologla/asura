@@ -32,9 +32,9 @@ func CalcPity(pity int) float64 {
 
 func OpenEpic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 8)
+	pitVal := int(CalcPity(pity) * 7)
 	fmt.Println(pitVal)
-	if 8+pitVal >= value {
+	if 7+pitVal >= value {
 		return GetRandByType(Legendary), true
 	} else if 241 >= value {
 		return GetRandByType(Epic), false
