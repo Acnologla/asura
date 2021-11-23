@@ -31,6 +31,10 @@ func init() {
 
 func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
+	if galo.Type == 0 {
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem um galo, use j!galo para criar um")
+		return
+	}
 	if len(args) == 0 {
 		lenGalos := len(galo.Galos)
 		dc := gg.NewContext(510, 95*int(math.Round((float64(lenGalos)/2))))
