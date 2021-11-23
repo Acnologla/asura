@@ -25,20 +25,20 @@
     },
     {
         "name": "Fogo",
-        "damage": [10,15],
+        "damage": [10,20],
         "level": 5,
         "effect": [1,9]
     },
     {
         "name": "Benção da lua",
-        "damage": [12,20],
+        "damage": [15,20],
         "level": 7,
         "effect": [1,2],
         "self": true
     },
     {
         "name": "Chamas potentes",
-        "damage": [20,25],
+        "damage": [20,30],
         "effect": [1,9],
         "level": 8
     },
@@ -57,13 +57,13 @@
     },
     {
         "name": "Frio luar",
-        "damage": [20,25],
+        "damage": [20,30],
         "level": 13,
         "effect": [1,41]
     },
     {
         "name": "Emissão continua",
-        "damage": [25,35],
+        "damage": [30,35],
         "level": 15,
         "effect": [1, 13]
     },
@@ -81,26 +81,26 @@
     },
     {
         "name": "Congelamento luar",
-        "damage": [30,50],
+        "damage": [40,50],
         "level": 21,
         "effect": [1,41]
     },
     {
         "name": "Cremação solar",
-        "damage": [45,50],
+        "damage": [45,60],
         "level": 22,
         "effect": [1,31]
     },
     {
         "name": "Milagre da lua",
-        "damage": [50,80],
+        "damage": [50,85],
         "level": 25,
         "effect": [1,14],
         "self":  true
     },
     {
         "name": "Eclipse eterno",
-        "damage": [65, 80],
+        "damage": [70, 80],
         "level": 30,
         "effect": [1,45]
     }

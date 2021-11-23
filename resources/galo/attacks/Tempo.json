@@ -40,25 +40,25 @@
     },
     {
         "name": "Esmagamento temporal",
-        "damage": [35,55],
+        "damage": [40,55],
         "level": 10
     },
     {
         "name": "Voltar minutos",
-        "damage": [15, 25],
+        "damage": [20, 25],
         "level": 12,
         "self": true,
         "effect": [1,14]
     },
     {
         "name": "Envelhecer",
-        "damage": [30,40],
+        "damage": [35,40],
         "level": 13,
         "effect":[1,46]
     },
     {
         "name": "Tempo destruitivel",
-        "damage": [40,60],
+        "damage": [40,65],
         "level": 15
     },
     {
@@ -68,7 +68,7 @@
     },
     {
         "name": "Voltar horas",
-        "damage": [20,35],
+        "damage": [20,40],
         "effect": [1, 47],
         "level": 19,
         "self": true
@@ -87,13 +87,13 @@
     },
     {
         "name": "Viajar para o futuro",
-        "damage": [15,20],
+        "damage": [15,25],
         "level": 25,
         "effect": [1,48]
     },
     {
         "name": "Destruiçao da linha temporal",
-        "damage": [90, 150],
+        "damage": [100, 150],
         "level": 30
     }
 ]

@@ -2,7 +2,6 @@ package rinha
 
 import (
 	"asura/src/utils"
-	"fmt"
 )
 
 /* var lootChances = [][3]int{
@@ -24,7 +23,7 @@ func _Open(lootType int) int {
 }
 */
 
-const PityMultiplier = 2
+const PityMultiplier = 1
 
 func CalcPity(pity int) float64 {
 	return (float64(pity) * PityMultiplier) / 100
@@ -32,9 +31,8 @@ func CalcPity(pity int) float64 {
 
 func OpenEpic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 7)
-	fmt.Println(pitVal)
-	if 7+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 6)
+	if 6+pitVal >= value {
 		return GetRandByType(Legendary), true
 	} else if 241 >= value {
 		return GetRandByType(Epic), false
