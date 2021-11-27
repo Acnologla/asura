@@ -259,7 +259,7 @@ func CompleteClanMission(clanName string, id disgord.Snowflake) {
 }
 
 func GetMaxMembers(clan Clan) int {
-	return 15 + clan.Upgrades.Members
+	return 15 + (clan.Upgrades.Members * 2)
 }
 
 func CalcClanUpgrade(x, price int) int {

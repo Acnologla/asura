@@ -71,12 +71,12 @@
     },
     {
         "name": "Chuva de meteoros",
-        "damage": [45,69],
+        "damage": [50,72],
         "level": 21
     },
     {
         "name": "NodeModules",
-        "damage": [49,75],
+        "damage": [50,80],
         "level": 22
     },
     {

@@ -361,10 +361,10 @@
     {
         "name": "Envelhecer",
         "turns": 2,
-        "type": 1,
+        "type": 6,
         "self": false,
         "phrase": "%s está envelhecendo! (-%d)",
-        "range": [25,30]
+        "range": [100,100]
     },
     {
         "name": "Cura divina",

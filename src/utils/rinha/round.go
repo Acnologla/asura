@@ -178,7 +178,7 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 				receiver.Life = receiver.MaxLife
 			} else {
 				if round.FragilityUser == receiver {
-					effect_damage = int(float32(effect_damage) * round.Fragility)
+					effect_damage = int(float32(effect_damage) * (1 - round.Fragility))
 				}
 				receiver.Life += effect_damage
 			}

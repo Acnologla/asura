@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"image/color"
 	"image/png"
 	"io"
 	"strconv"
@@ -107,8 +108,20 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 
 	dc.DrawCircle(160, 70, radius+3)
 	//	dc.SetRGB(1, 1, 1)
-	color := rinha.Classes[galo.Type].Rarity.Color()
-	dc.SetHexColor(fmt.Sprintf("%06x", color))
+	if rinha.Classes[galo.Type].Rarity == rinha.Mythic {
+		grad := gg.NewConicGradient(160, 70, radius+3)
+		grad.AddColorStop(0, color.RGBA{255, 0, 0, 255})
+		grad.AddColorStop(0.2, color.RGBA{0, 255, 0, 255})
+		grad.AddColorStop(0.4, color.RGBA{0, 0, 255, 255})
+		grad.AddColorStop(0.6, color.RGBA{255, 255, 0, 255})
+		grad.AddColorStop(0.8, color.RGBA{255, 0, 255, 255})
+		grad.AddColorStop(1, color.RGBA{0, 255, 255, 255})
+		dc.SetFillStyle(grad)
+	} else {
+		color := rinha.Classes[galo.Type].Rarity.Color()
+		dc.SetHexColor(fmt.Sprintf("%06x", color))
+	}
+
 	dc.Fill()
 	dc.SetRGB(0, 0, 0)
 	dc.DrawCircle(160, 70, radius)

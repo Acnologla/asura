@@ -98,6 +98,7 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 						}
 						price = rinha.SellCosmetic(*cosmetic)
 						galo.Money += price
+						galo.Background = 0
 						galo.Cosmetics = galo.Cosmetics[0 : len(galo.Cosmetics)-1]
 						return galo, nil
 					})

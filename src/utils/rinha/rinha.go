@@ -25,18 +25,19 @@ const (
 	Epic
 	Legendary
 	Special
+	Mythic
 )
 
 func (rarity Rarity) String() string {
-	return [...]string{"Comum", "Raro", "Epico", "Lendario", "Especial"}[rarity]
+	return [...]string{"Comum", "Raro", "Epico", "Lendario", "Especial", "Mitico"}[rarity]
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 140, 480, 1200, 500}[rarity]
+	return [...]int{30, 140, 480, 1200, 500, 2500}[rarity]
 }
 
 func (rarity Rarity) Color() int {
-	return [...]int{13493247, 255, 9699539, 16748544, 16728128}[rarity]
+	return [...]int{13493247, 255, 9699539, 16748544, 16728128, 16777201}[rarity]
 }
 
 type Effect struct {

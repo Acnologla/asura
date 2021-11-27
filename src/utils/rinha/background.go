@@ -1,14 +1,16 @@
 package rinha
 
 func GetBackground(galo Galo) string {
-	bgs, _ := GetBackgrounds(galo.Cosmetics)
+	bgs, indexes := GetBackgrounds(galo.Cosmetics)
 	if IsVip(galo) {
 		if galo.VipBackground != "" {
 			return galo.VipBackground
 		}
 	}
 	if len(bgs) != 0 {
-		return Cosmetics[galo.Cosmetics[galo.Background]].Value
+		if galo.Background <= indexes[len(indexes)-1] {
+			return Cosmetics[galo.Cosmetics[galo.Background]].Value
+		}
 	}
 	return "https://i.imgur.com/F64ybgg.jpg"
 }

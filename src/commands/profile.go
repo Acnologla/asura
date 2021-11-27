@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"image"
+	"image/color"
 	"image/png"
 	"io"
 	"strconv"
@@ -166,9 +167,20 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 		dc.DrawRectangle(float64(220+i*75), 265, 55, 55)
 		dc.Fill()
 	}
-	color := rinha.Classes[galo.Type].Rarity.Color()
+	colorE := rinha.Classes[galo.Type].Rarity.Color()
 
-	dc.SetHexColor(fmt.Sprintf("%06x", color))
+	if rinha.Classes[galo.Type].Rarity == rinha.Mythic {
+		grad := gg.NewLinearGradient(218, 263, 218+59, 263+59)
+		grad.AddColorStop(0, color.RGBA{255, 0, 0, 255})
+		grad.AddColorStop(0.2, color.RGBA{0, 255, 0, 255})
+		grad.AddColorStop(0.4, color.RGBA{0, 0, 255, 255})
+		grad.AddColorStop(0.6, color.RGBA{255, 255, 0, 255})
+		grad.AddColorStop(0.8, color.RGBA{255, 0, 255, 255})
+		grad.AddColorStop(1, color.RGBA{0, 255, 255, 255})
+		dc.SetFillStyle(grad)
+	} else {
+		dc.SetHexColor(fmt.Sprintf("%06x", colorE))
+	}
 	dc.DrawRectangle(218, 263, 59, 59)
 	dc.Fill()
 	dc.DrawImage(downloadedSprites[galo.Type-1], 220, 265)
@@ -177,9 +189,22 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 		if i == 4 {
 			break
 		}
-		color = rinha.Classes[galo.Galos[i].Type].Rarity.Color()
-		dc.SetHexColor(fmt.Sprintf("%06x", color))
+		if rinha.Classes[galo.Galos[i].Type].Rarity == rinha.Mythic {
+			grad := gg.NewLinearGradient(float64(218+(i+1)*75), 263, float64(218+(i+1)*75)+59, 263+59)
+			grad.AddColorStop(0, color.RGBA{255, 0, 0, 255})
+			grad.AddColorStop(0.2, color.RGBA{0, 255, 0, 255})
+			grad.AddColorStop(0.4, color.RGBA{0, 0, 255, 255})
+			grad.AddColorStop(0.6, color.RGBA{255, 255, 0, 255})
+			grad.AddColorStop(0.8, color.RGBA{255, 0, 255, 255})
+			grad.AddColorStop(1, color.RGBA{0, 255, 255, 255})
+			dc.SetFillStyle(grad)
+		} else {
+			colorE = rinha.Classes[galo.Galos[i].Type].Rarity.Color()
+			dc.SetHexColor(fmt.Sprintf("%06x", colorE))
+		}
+
 		userGaloImg := downloadedSprites[galo.Galos[i].Type-1]
+
 		dc.DrawRectangle(float64(218+(i+1)*75), 263, 59, 59)
 		dc.Fill()
 		dc.DrawImage(userGaloImg, 220+(i+1)*75, 265)

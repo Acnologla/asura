@@ -72,10 +72,12 @@ func OpenCommon(pity int) (int, bool) {
 }
 
 func OpenLegendary(pity int) (int, bool) {
-	value := utils.RandInt(101)
+	value := utils.RandInt(1001)
 	pitVal := int(CalcPity(pity) * 4)
 	if 4+pitVal >= value {
-		return GetRandByType(Legendary), true
+		return GetRandByType(Mythic), true
+	} else if 50 >= value {
+		return GetRandByType(Legendary), false
 	}
 	return GetRandByType(Epic), false
 }
