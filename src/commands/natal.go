@@ -22,8 +22,8 @@ func init() {
 }
 
 func runNatal(session disgord.Session, msg *disgord.Message, args []string) {
-	ids := []disgord.Snowflake{}
-	usernames := []string{}
+	ids := []disgord.Snowflake{msg.Author.ID}
+	usernames := []string{msg.Author.Username}
 	if len(msg.Mentions) > 5 {
 		return
 	}

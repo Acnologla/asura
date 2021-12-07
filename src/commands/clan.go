@@ -91,6 +91,10 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				return
 			}
 			if strings.ToLower(args[0]) == "background" {
+				role := rinha.GetMember(clan, msg.Author.ID)
+				if role.Role < rinha.Admin {
+					return
+				}
 				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
 					if clan.Money < 10000 {
 						msg.Reply(context.Background(), session, msg.Author.Mention()+", O clan precisa ter 10.000 de dinheiro para trocar o background")

@@ -312,7 +312,7 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, message *disgord.M
 		embed.Color = RinhaColors[battle.GetReverseTurn()]
 		embed.Description = lastEffects + "\n" + text
 		level := rinha.CalcLevel(battle.Fighters[0].Galo.Xp)
-		name := GetUsername(battle.Fighters[0].Username, options.AdvName)
+		name := GetUsername(battle.Fighters[0].Username, options.AuthorName)
 		embed.Fields = []*disgord.EmbedField{
 			{
 				Name:   fmt.Sprintf("%s Level %d", name, level),

@@ -269,11 +269,13 @@ func (battle *Battle) Play(skill int) []*Result {
 		battle.Turn = !battle.Turn
 	}
 	if !battle.Turn && !battle.FirstRound {
-		battle.WaitingN++
-		if battle.WaitingN >= len(battle.Waiting) {
-			battle.WaitingN = 0
+		if len(battle.Waiting) > 0 {
+			battle.WaitingN++
+			if battle.WaitingN >= len(battle.Waiting) {
+				battle.WaitingN = 0
+			}
+			battle.Fighters[0] = battle.Waiting[battle.WaitingN]
 		}
-		battle.Fighters[0] = battle.Waiting[battle.WaitingN]
 	}
 	round := Round{
 		Results:   []*Result{},
