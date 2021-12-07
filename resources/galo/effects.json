@@ -360,7 +360,7 @@
     },
     {
         "name": "Envelhecer",
-        "turns": 2,
+        "turns": 4,
         "type": 6,
         "self": false,
         "phrase": "%s está envelhecendo! (-%d)",

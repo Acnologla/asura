@@ -22,6 +22,8 @@ type RinhaOptions struct {
 	AdvName     string
 	NoItems     bool
 	IDs         [2]disgord.Snowflake
+	Waiting     []rinha.Galo
+	Usernames   []string
 }
 
 var RinhaColors = [2]int{65280, 16711680}
@@ -228,7 +230,6 @@ func RinhaEngineNew(battle *rinha.Battle, options *RinhaOptions, message *disgor
 
 		u, _ := handler.Client.User(options.IDs[turn]).Get()
 		avatar, _ := u.AvatarURL(128, true)
-
 		embed.Fields = []*disgord.EmbedField{
 			{
 				Name:   fmt.Sprintf("%s Level %d", options.AuthorName, options.AuthorLevel),
@@ -270,6 +271,13 @@ func RinhaEngineNew(battle *rinha.Battle, options *RinhaOptions, message *disgor
 	}
 }
 
+func GetUsername(name, realName string) string {
+	if name == "" {
+		return realName
+	}
+	return name
+}
+
 func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, message *disgord.Message, embed *disgord.Embed) (int, *rinha.Battle) {
 	var lastEffects string
 	round := 0
@@ -277,14 +285,14 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, message *disgord.M
 		effects := battle.Play(-1)
 		var text string
 
-		authorName := options.AuthorName
+		authorName := GetUsername(battle.Fighters[0].Username, options.AuthorName)
 		affectedName := options.AdvName
 
 		turn := battle.GetTurn()
 
 		if turn == 0 {
 			authorName = options.AdvName
-			affectedName = options.AuthorName
+			affectedName = GetUsername(battle.Fighters[0].Username, options.AuthorName)
 		}
 
 		for _, effect := range effects {
@@ -303,10 +311,11 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, message *disgord.M
 		}
 		embed.Color = RinhaColors[battle.GetReverseTurn()]
 		embed.Description = lastEffects + "\n" + text
-
+		level := rinha.CalcLevel(battle.Fighters[0].Galo.Xp)
+		name := GetUsername(battle.Fighters[0].Username, options.AdvName)
 		embed.Fields = []*disgord.EmbedField{
 			{
-				Name:   fmt.Sprintf("%s Level %d", options.AuthorName, options.AuthorLevel),
+				Name:   fmt.Sprintf("%s Level %d", name, level),
 				Value:  fmt.Sprintf("%d/%d", battle.Fighters[0].Life, battle.Fighters[0].MaxLife),
 				Inline: true,
 			},
@@ -318,19 +327,22 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, message *disgord.M
 		}
 
 		embed.Image = &disgord.EmbedImage{
-			URL: GetImageTile(&options.GaloAuthor, &options.GaloAdv, turn),
+			URL: GetImageTile(battle.Fighters[0].Galo, battle.Fighters[1].Galo, turn),
 		}
-
 		if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
-			winnerTurn := battle.GetReverseTurn()
-
-			if winnerTurn == 1 {
-				embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AdvName)
+			if len(battle.Waiting) > 1 {
+				battle.Waiting = SpliceWaiting(battle.Waiting, battle.WaitingN)
 			} else {
-				embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AuthorName)
+				winnerTurn := battle.GetReverseTurn()
+
+				if winnerTurn == 1 {
+					embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AdvName)
+				} else {
+					embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AuthorName)
+				}
+				EditRinhaEmbed(message, embed, options.MessageID)
+				return winnerTurn, battle
 			}
-			EditRinhaEmbed(message, embed, options.MessageID)
-			return winnerTurn, battle
 		}
 
 		EditRinhaEmbed(message, embed, options.MessageID)
@@ -339,7 +351,15 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, message *disgord.M
 		time.Sleep(4 * time.Second)
 	}
 }
-
+func SpliceWaiting(slice []*rinha.Fighter, s int) []*rinha.Fighter {
+	newArr := []*rinha.Fighter{}
+	for i, element := range slice {
+		if i != s {
+			newArr = append(newArr, element)
+		}
+	}
+	return newArr
+}
 func ExecuteRinha(msg *disgord.Message, session disgord.Session, options RinhaOptions, newEngine bool) (int, *rinha.Battle) {
 	if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0) {
 		options.GaloAdv.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAdv.Xp)) - 1
@@ -390,7 +410,7 @@ func ExecuteRinha(msg *disgord.Message, session disgord.Session, options RinhaOp
 	}
 
 	if err == nil {
-		battle := rinha.CreateBattle(options.GaloAuthor, options.GaloAdv, options.NoItems, options.IDs[0], options.IDs[1])
+		battle := rinha.CreateBattle(options.GaloAuthor, options.GaloAdv, options.NoItems, options.IDs[0], options.IDs[1], options.Waiting, options.Usernames)
 		embed.Fields = []*disgord.EmbedField{
 			{
 				Name:   fmt.Sprintf("%s Level %d", options.AuthorName, options.AuthorLevel),

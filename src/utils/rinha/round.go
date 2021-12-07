@@ -268,7 +268,13 @@ func (battle *Battle) Play(skill int) []*Result {
 		battle.ReflexType = 0
 		battle.Turn = !battle.Turn
 	}
-
+	if !battle.Turn && !battle.FirstRound {
+		battle.WaitingN++
+		if battle.WaitingN >= len(battle.Waiting) {
+			battle.WaitingN = 0
+		}
+		battle.Fighters[0] = battle.Waiting[battle.WaitingN]
+	}
 	round := Round{
 		Results:   []*Result{},
 		Integrity: 1,

@@ -78,7 +78,10 @@ func ItemToString(item *Item) string {
 		return fmt.Sprintf("Voce reflete todo o dano levado de ataques em **%d%%** ", int(item.Payload*100))
 	}
 	if item.Effect == 8 {
-		return fmt.Sprintf("Voce ganha **%d** de xp adicional por train", int(item.Payload))
+		return fmt.Sprintf("Voce ganha **%d**%% de xp adicional por train", int(item.Payload*100))
+	}
+	if item.Effect == 9 {
+		return "Voce ganha 1 de ouro extra por train"
 	}
 	return ""
 }

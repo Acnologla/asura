@@ -11,7 +11,7 @@
     },
     {
         "name": "Infinitos socos temporais",
-        "damage": [32,40],
+        "damage": [35,40],
         "level": 3
     },
     {
@@ -28,9 +28,9 @@
     },
     {
         "name": "Parar tempo",
-        "damage": [10,20],
+        "damage": [15,30],
         "level": 7,
-        "effect": [0.35,3]
+        "effect": [0.4,3]
     },
     {
         "name": "Espada do tempo",
@@ -63,7 +63,7 @@
     },
     {
         "name": "Senhor do tempo",
-        "damage": [55,75],
+        "damage": [60,75],
         "level": 17
     },
     {

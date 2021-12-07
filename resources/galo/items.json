@@ -231,30 +231,36 @@
         "name": "Farmador",
         "effect": 8,
         "level": 0,
-        "payload": 1
+        "payload": 0.05
     },
     {
         "name": "Farmador melhorado",
         "effect": 8,
         "level": 1,
-        "payload": 2
+        "payload": 0.08
     },
     {
         "name": "Farmador duplo",
         "effect": 8,
         "level": 2,
-        "payload": 3
+        "payload": 0.12
     },
     {
         "name": "Farmador divino",
         "effect": 8,
         "level": 3,
-        "payload": 4
+        "payload": 0.15
     },
     {
         "name": "Beta Farmador",
         "effect": 8,
         "level": 4,
-        "payload": 6
+        "payload": 0.2
+    },
+    {
+        "name": "Arvore de natal",
+        "effect": 9,
+        "level": 5,
+        "payload": 1
     }
 ]

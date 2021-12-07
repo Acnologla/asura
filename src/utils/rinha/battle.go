@@ -20,6 +20,7 @@ type Fighter struct {
 	ID          disgord.Snowflake
 	ItemEffect  int
 	ItemPayload float64
+	Username    string
 	MaxLife     int
 	Effect      [4]int
 }
@@ -27,6 +28,8 @@ type Fighter struct {
 type Battle struct {
 	Stopped     bool
 	Fighters    [2]*Fighter
+	Waiting     []*Fighter
+	WaitingN    int
 	Turn        bool
 	FirstRound  bool
 	Stun        bool
@@ -77,7 +80,7 @@ func InitFighter(galo *Galo, noItems bool) *Fighter {
 	}
 }
 
-func CreateBattle(first Galo, sec Galo, noItems bool, firstID, secondID disgord.Snowflake) Battle {
+func CreateBattle(first Galo, sec Galo, noItems bool, firstID, secondID disgord.Snowflake, waiting []Galo, usernames []string) Battle {
 	firstFighter := InitFighter(&first, noItems)
 	secFighter := InitFighter(&sec, noItems)
 	if HasUpgrade(firstFighter.Galo.Upgrades, 2, 1) {
@@ -108,6 +111,19 @@ func CreateBattle(first Galo, sec Galo, noItems bool, firstID, secondID disgord.
 	initEquips(secFighter)
 	firstFighter.ID = firstID
 	secFighter.ID = secondID
+	waitingBattle := []*Fighter{}
+	if len(waiting) > 0 {
+		for i, galo := range waiting {
+			galoFighter := InitFighter(&galo, noItems)
+			initEquips(galoFighter)
+			if i == 0 {
+				galoFighter = firstFighter
+			}
+			galoFighter.Username = GetName(usernames[i], galo)
+
+			waitingBattle = append(waitingBattle, galoFighter)
+		}
+	}
 	return Battle{
 		Stopped:    false,
 		Turn:       false,
@@ -116,6 +132,7 @@ func CreateBattle(first Galo, sec Galo, noItems bool, firstID, secondID disgord.
 			firstFighter,
 			secFighter,
 		},
+		Waiting: waitingBattle,
 	}
 }
 

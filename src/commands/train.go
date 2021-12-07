@@ -80,7 +80,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			if len(galo.Items) > 0 {
 				item := rinha.GetItem(galo)
 				if item.Effect == 8 {
-					xpOb += int(item.Payload)
+					xpOb += xpOb * int(item.Payload)
 				}
 			}
 			if galo.GaloReset > 0 {
