@@ -24,6 +24,9 @@ func init() {
 func runNatal(session disgord.Session, msg *disgord.Message, args []string) {
 	ids := []disgord.Snowflake{}
 	usernames := []string{}
+	if len(msg.Mentions) > 5 {
+		return
+	}
 	for _, user := range msg.Mentions {
 		if user.ID != msg.Author.ID && !user.Bot {
 			ids = append(ids, user.ID)
