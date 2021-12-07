@@ -25,8 +25,11 @@ func runNatal(session disgord.Session, msg *disgord.Message, args []string) {
 	ids := []disgord.Snowflake{}
 	usernames := []string{}
 	for _, user := range msg.Mentions {
-		ids = append(ids, user.ID)
-		usernames = append(usernames, user.Username)
+		if user.ID != msg.Author.ID && !user.Bot {
+			ids = append(ids, user.ID)
+			usernames = append(usernames, user.Username)
+		}
+
 	}
 
 	battleMutex.Lock()
