@@ -108,7 +108,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 				if rinha.IsVip(galo) {
-					xpOb += 8
+					xpOb += 9
 					money++
 				}
 				galo.UserXp++

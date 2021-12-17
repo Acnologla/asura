@@ -42,6 +42,11 @@ lines = [
     [[],[]],
     [[],[]],
     [[],[]],
+    [[],[]],
+    [[],[]],
+    [[],[]],
+    [[],[]],
+
 ]
 
 for x in data:
@@ -62,7 +67,7 @@ plt.legend(handles=[
   mpatches.Patch(color='grey', label='LUZ'),
   mpatches.Patch(color='#A06D9E', label='GRAVIDADE'),
   mpatches.Patch(color='#85FF28', label='ANGELICAL'),
-  mpatches.Patch(color='#7024F2', label='ECLIPSE'),
+  mpatches.Patch(color='#7024F2', label='EMO'),
 ])
 
 plt.plot(lines[0][0], lines[0][1], 'r',marker='o')
@@ -75,7 +80,7 @@ plt.plot(lines[6][0], lines[6][1], 'black',marker='o')
 plt.plot(lines[7][0], lines[7][1], 'orange',marker='o')
 plt.plot(lines[8][0], lines[8][1], 'brown',marker='o')
 plt.plot(lines[9][0], lines[9][1], 'grey',marker='o')
-plt.plot(lines[30][0], lines[30][1], '#7024F2',marker='o')
+plt.plot(lines[34][0], lines[34][1], '#7024F2',marker='o')
 plt.plot(lines[17][0], lines[17][1], '#A06D9E',marker='o')
 plt.plot(lines[18][0], lines[18][1], '#85FF28',marker='o')
 

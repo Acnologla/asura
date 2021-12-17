@@ -144,12 +144,21 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccker *Fighter) int {
 	min := effect.Range[0]
 	max := effect.Range[1]
-	if effect.Type == 1 {
+	if effect.Type == 1 || effect.Type == 6 {
 		min, max = CalcEffectRange(effect, *ataccker.Galo)
 	} else if effect.Type == 2 {
 		min, max = CalcEffectRange(effect, *receiver.Galo)
 	}
+	isNegative := false
+	if 0 > min {
+		min = min * -1
+		max = max * -1
+		isNegative = true
+	}
 	effect_damage := Between([2]int{min, max})
+	if isNegative {
+		effect_damage = effect_damage * -1
+	}
 	switch effect.Type {
 	case 1:
 		{
@@ -169,6 +178,9 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 			}
 			if effect_damage >= receiver.Life {
 				effect_damage = receiver.Life - 1
+			}
+			if ataccker.Galo.Type == 33 {
+				ataccker.Life += effect_damage
 			}
 			receiver.Life -= effect_damage
 		}
@@ -209,14 +221,15 @@ func (round *Round) applyEffect(id int, self bool, to_append bool) {
 	effect := Effects[id]
 
 	receiver := round.Target
-
+	ataccker := round.Attacker
 	if self {
 		receiver = round.Attacker
+		ataccker = round.Target
 	}
 
 	receiver.Effect[0]--
 
-	effect_damage := round.applyEffectDamage(receiver, effect, round.Attacker)
+	effect_damage := round.applyEffectDamage(receiver, effect, ataccker)
 
 	if to_append {
 		round.Results = append(round.Results,

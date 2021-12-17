@@ -36,7 +36,7 @@ func one(firstClass int, secClass int, firstLvl int, secLvl int) {
 		Equipped: []int{},
 	}
 
-	battle := rinha.CreateBattle(first, sec, false, 0, 0)
+	battle := rinha.CreateBattle(first, sec, false, 0, 0, []rinha.Galo{}, []string{})
 
 	for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0 {
 		turno := 0
@@ -83,7 +83,7 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, 
 			Equipped: []int{},
 		}
 
-		battle := rinha.CreateBattle(first, sec, false, 0, 0)
+		battle := rinha.CreateBattle(first, sec, false, 0, 0, []rinha.Galo{}, []string{})
 
 		for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0 {
 			if log {
@@ -153,32 +153,38 @@ func main() {
 			})
 		}
 	}
-	/*arr = []*stats{&stats{
-		Type: 23,
-	}}*/
-	/*for u := 0; u < 12; {
-		for i := 1; i < 20+u; i += 1 {
+	arr = []*stats{&stats{
+		Type: 35,
+	}}
+	lvl := 10
+	for u := 0; u < 23; {
+
+		for i := 1; i < lvl+u; i += 1 {
 			for _, class := range arr {
-				result := measure(class.Type, 19, i, i, 10000, false)
+				result := measure(class.Type, 1, i, i, 10000, false)
 				class.TotalWins += result
 				class.Wins = append(class.Wins, result)
 				class.Level = append(class.Level, i)
 			}
 		}
 		for _, class := range arr {
-			fmt.Printf("Classe: %s\nTotal %d%%\nAté o nivel: %d\n", rinha.Classes[class.Type].Name, class.TotalWins/len(class.Wins), 20+u)
+			fmt.Printf("Classe: %s\nTotal %d%%\nAté o nivel: %d\n", rinha.Classes[class.Type].Name, class.TotalWins/len(class.Wins), lvl+u)
 		}
 		if u == 0 {
+			u += 10
+		} else if u == 10 {
 			u += 6
 		} else {
 			u += 5
 		}
 	}
 	return
-	*/
+	arr = []*stats{&stats{
+		Type: 34,
+	}}
 	x := rinha.Classes[arr[0].Type]
 	for u := 0; u < 1; {
-		for i := 1; i < 31; i += 1 {
+		for i := 1; i < 20; i += 1 {
 			for _, class := range arr {
 				for l, gal := range rinha.Classes {
 					if gal.Rarity == x.Rarity && l != arr[0].Type {

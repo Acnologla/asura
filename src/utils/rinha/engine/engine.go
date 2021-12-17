@@ -330,7 +330,7 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, message *disgord.M
 			URL: GetImageTile(battle.Fighters[0].Galo, battle.Fighters[1].Galo, turn),
 		}
 		if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
-			if len(battle.Waiting) > 1 {
+			if len(battle.Waiting) > 1 && 0 >= battle.Fighters[0].Life {
 				battle.Waiting = SpliceWaiting(battle.Waiting, battle.WaitingN)
 			} else {
 				winnerTurn := battle.GetReverseTurn()

@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"image/color"
 	"image/png"
 	"io"
 	"math"
@@ -69,8 +70,19 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 				levelText += "]"
 			}
 			dc.DrawString(levelText, 70+57+width, 60+float64(i/2)*95)
-			color := rinha.Classes[galo].Rarity.Color()
-			dc.SetHexColor(fmt.Sprintf("%06x", color))
+			if rinha.Classes[_galo.Type].Rarity == rinha.Mythic {
+				grad := gg.NewLinearGradient(58+width, 18+float64(i/2)*95, 58+width+59, (18+float64(i/2)*95)+59)
+				grad.AddColorStop(0, color.RGBA{255, 0, 0, 255})
+				grad.AddColorStop(0.2, color.RGBA{0, 255, 0, 255})
+				grad.AddColorStop(0.4, color.RGBA{0, 0, 255, 255})
+				grad.AddColorStop(0.6, color.RGBA{255, 255, 0, 255})
+				grad.AddColorStop(0.8, color.RGBA{255, 0, 255, 255})
+				grad.AddColorStop(1, color.RGBA{0, 255, 255, 255})
+				dc.SetFillStyle(grad)
+			} else {
+				color := rinha.Classes[galo].Rarity.Color()
+				dc.SetHexColor(fmt.Sprintf("%06x", color))
+			}
 			dc.DrawRectangle(58+width, 18+float64(i/2)*95, 59, 59)
 			dc.Fill()
 			dc.DrawImage(img, 60+int(width), 20+(i/2)*95)

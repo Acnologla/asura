@@ -162,5 +162,17 @@
         "name": "Tempo",
         "disadvantages": [],
         "rarity": 5
-    }
+    },
+    {
+        "name": "Phoenix",
+        "rarity": 5
+    },
+    {
+        "name": "Samurai",
+        "rarity": 1
+    },
+    {
+        "name": "Emo",
+        "rarity": 0
+    }   
 ]
