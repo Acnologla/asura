@@ -1,16 +1,49 @@
 version: '3'
 services:
+
   asura:
-    image: registry.gitlab.com/acnologla/asura:latest
-    container_name: asura
+    build: .
     restart: unless-stopped
-    environment:
-    - TASK_SLOT={{.Task.Slot}}
     ports:
       - "5000:4000"
-  asuraservice:
-    image: registry.gitlab.com/acnologla/asuraservice:latest
-    container_name: asuraservice
-    restart: unless-stopped
+    networks:
+      - asura-network
+
+  redis:
+    image: redis:alpine
+    command: redis-server --requirepass acnologla
     ports:
-      - "5001:4000"
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - asura-network
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "acnologla"
+    ports:
+      - "15432:5432"
+    restart: unless-stopped
+    volumes:
+      - ./db:/var/lib/postgresql/data 
+    networks:
+      - asura-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "acnologla@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "acnologla"
+    ports:
+      - "16543:80"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    networks:
+      - asura-network
+
+
+networks:
+  asura-network:
+      driver: bridge
