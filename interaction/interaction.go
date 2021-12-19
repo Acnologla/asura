@@ -25,11 +25,19 @@ const (
 
 type Snowflake uint64
 
+type InteractionData struct {
+	ID      Snowflake                                  `json:"id"`
+	Name    string                                     `json:"name"`
+	Type    ApplicationCommandType                     `json:"type"`
+	Options []*ApplicationCommandInteractionDataOption `json:"options"`
+}
+
 //TODO implement all the struct
 type Interaction struct {
-	ID            Snowflake       `json:"id"`
-	ApplicationID Snowflake       `json:"application_id"`
-	Type          InteractionType `json:"type"`
+	ID            Snowflake        `json:"id"`
+	ApplicationID Snowflake        `json:"application_id"`
+	Type          InteractionType  `json:"type"`
+	Data          *InteractionData `json:"data"`
 }
 
 //TODO implement all the struct

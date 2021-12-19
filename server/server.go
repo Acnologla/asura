@@ -1,6 +1,7 @@
 package server
 
 import (
+	"asura/commandHandler"
 	interactionPkg "asura/interaction"
 	"encoding/json"
 
@@ -29,6 +30,9 @@ func Handler(ctx *fasthttp.RequestCtx) {
 			ctx.SetBody(val)
 			ctx.SetStatusCode(fasthttp.StatusOK)
 			return
+		}
+		if interaction.Type == interactionPkg.APPLICATION_COMMAND {
+			commandHandler.Run(interaction)
 		}
 	}
 }
