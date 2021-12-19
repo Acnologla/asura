@@ -1,0 +1,2 @@
+PORT=
+PUBLIC_KEY=

@@ -42,6 +42,13 @@ type Interaction struct {
 
 //TODO implement all the struct
 
+type InteractionCallbackData struct {
+	Tts     bool     `json:"tts"`
+	Content string   `json:"content"`
+	Embeds  []*Embed `json:"embeds"`
+}
+
 type InteractionResponse struct {
-	Type InteractionCallbackType `json:"type"`
+	Type InteractionCallbackType  `json:"type"`
+	Data *InteractionCallbackData `json:"data"`
 }
