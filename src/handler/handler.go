@@ -11,6 +11,8 @@ import (
 
 const url = "https://discord.com/api/v8/applications/%s/commands"
 
+var client = &http.Client{}
+
 type Command struct {
 	Name        string
 	Description string
@@ -59,7 +61,6 @@ func Init(appID, token string) {
 			newCommand.Description = command.Description
 			val, _ := json.Marshal(newCommand)
 			reader := bytes.NewReader(val)
-			client := &http.Client{}
 			req, _ := http.NewRequest("POST", url, reader)
 			req.Header.Add("Authorization", "Bot "+token)
 			req.Header.Add("Content-Type", "application/json")
