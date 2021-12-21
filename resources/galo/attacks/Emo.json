@@ -47,17 +47,17 @@
     },
     { 
         "name": "Lamina depressiva",
-        "damage":[30,40],
+        "damage":[28,40],
         "level":12,
         "effect": [1,1]
     },
     {
         "name": "Angústia imensurável",
-        "damage": [43,50],
+        "damage": [42,50],
         "level":14
     },{
         "name": "Depressão dupla",
-        "damage":[75,80],
+        "damage":[65,75],
         "level": 15,
         "effect": [1,50]
     },
@@ -84,7 +84,7 @@
     },
     {
         "name": "Chiyoku",
-        "damage": [120, 160],
+        "damage": [105, 145],
         "level":30,
         "effect": [1,51]
     }
