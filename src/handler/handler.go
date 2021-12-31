@@ -22,7 +22,7 @@ const BaseWorkers = 128
 var Workers = BaseWorkers
 
 var DevMod = false
-var DevIds = []disgord.Snowflake{365948625676795904, 395542409959964672, 364614407721844737}
+var DevIds = []disgord.Snowflake{365948625676795904, 395542409959964672, 364614407721844737, 205042310851854336}
 
 func isDev(id disgord.Snowflake) bool {
 	for _, devID := range DevIds {

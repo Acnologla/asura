@@ -71,7 +71,7 @@ func runNatal(session disgord.Session, msg *disgord.Message, args []string) {
 				battleMutex.Unlock()
 			}
 		}()
-		advLevel := 150 + (100 * len(ids))
+		advLevel := 200 + (100 * len(ids))
 		advReset := len(ids) - 1
 		ngaloAdv := rinha.Galo{
 			Xp:        rinha.CalcXP(advLevel) + 1,

@@ -18,7 +18,7 @@ jobs:
             name: Docker build and deploy
             command: |
                 echo "$GITLABPASSWORD" | docker login registry.gitlab.com --username acnologla --password-stdin
-                docker build -t registry.gitlab.com/acnologla/asura --build-arg TOKEN="$TOKEN" --build-arg FIREBASE_CONFIG="$FIREBASE_CONFIG" --build-arg FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" --build-arg DATADOG_API_KEY="$DATADOG_API_KEY" .
+                docker build -t registry.gitlab.com/acnologla/asura --build-arg TOKEN="$TOKEN" --build-arg FIREBASE_CONFIG="$FIREBASE_CONFIG" --build-arg FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" --build-arg TOP_TOKEN="$TOP_TOKEN" --build-arg DATADOG_API_KEY="$DATADOG_API_KEY" .
                 docker push registry.gitlab.com/acnologla/asura
 
 workflows:
