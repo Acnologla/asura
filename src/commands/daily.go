@@ -29,7 +29,12 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	calc := (uint64(time.Now().Unix()) - galo.Daily.Last) / 60 / 60 / 24
-	if calc >= 1 {
+	topGGCalc := (uint64(time.Now().Unix()) - galo.Daily.Voted) / 60 / 60 / 24
+	var voted bool
+	if calc < 1 && topGGCalc >= 1 {
+		voted = rinha.HasVoted(msg.Author.ID)
+	}
+	if calc >= 1 || (voted && topGGCalc >= 1) {
 		strike := 0
 		money := 0
 		xp := 0
@@ -37,6 +42,9 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 			galo.Daily.Last = uint64(time.Now().Unix())
 			if calc >= 2 {
 				galo.Daily.Strike = 0
+			}
+			if topGGCalc >= 1 && voted {
+				galo.Daily.Voted = uint64(time.Now().Unix())
 			}
 			money = 20 + galo.Daily.Strike/5
 			xp = 40 + galo.Daily.Strike
@@ -53,6 +61,10 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 		})
 	} else {
 		need := uint64(time.Now().Unix()) - galo.Daily.Last
-		msg.Reply(context.Background(), session, fmt.Sprintf("%s, faltam **%d** horas e **%d** minutos para voce poder usar o daily novamente", msg.Author.Mention(), 23-(need/60/60), 59-(need/60%60)))
+		var addText string
+		if topGGCalc >= 1 && !voted {
+			addText = "Você pode votar no asura no top.gg para resetar o tempo do seu daily\nhttps://top.gg/bot/470684281102925844"
+		}
+		msg.Reply(context.Background(), session, fmt.Sprintf("%s, faltam **%d** horas e **%d** minutos para voce poder usar o daily novamente,\n%s", msg.Author.Mention(), 23-(need/60/60), 59-(need/60%60), addText))
 	}
 }

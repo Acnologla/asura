@@ -42,7 +42,7 @@ func runNatal(session disgord.Session, msg *disgord.Message, args []string) {
 			arr = append(arr, utils.IDUsername{ID: id, Username: usernames[i]})
 		}
 	}
-	utils.ConfirmArray("Batalhar contra o boss", msg.ChannelID, arr, func() {
+	callback := func() {
 		battleMutex.Lock()
 		for _, id := range ids {
 			if currentBattles[id] != "" {
@@ -71,7 +71,7 @@ func runNatal(session disgord.Session, msg *disgord.Message, args []string) {
 				battleMutex.Unlock()
 			}
 		}()
-		advLevel := 250 + (100 * len(ids))
+		advLevel := 150 + (100 * len(ids))
 		advReset := len(ids) - 1
 		ngaloAdv := rinha.Galo{
 			Xp:        rinha.CalcXP(advLevel) + 1,
@@ -116,5 +116,10 @@ func runNatal(session disgord.Session, msg *disgord.Message, args []string) {
 				Description: "Parabens voces perderam",
 			})
 		}
-	})
+	}
+	if len(arr) == 0 {
+		callback()
+	} else {
+		utils.ConfirmArray("Batalhar contra o boss", msg.ChannelID, arr, callback)
+	}
 }

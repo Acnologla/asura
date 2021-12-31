@@ -104,5 +104,23 @@
         "type": 0,
         "name": "Nexus background",
         "value": "https://i.imgur.com/WdixxuS.jpg"
+    }, 
+    {
+        "rarity": 1,
+        "type": 0,
+        "name": "Earth background",
+        "value": "https://i.imgur.com/43sIhIt.jpg"
+    },
+    {
+        "rarity": 2,
+        "type": 0,
+        "name": "Red sun background",
+        "value": "https://i.imgur.com/yWLkOmW.jpg"
+    },
+    {
+        "rarity": 3,
+        "type": 0,
+        "name": "Flowers background",
+        "value": "https://i.imgur.com/nEtA5Cc.png"
     }
 ]

@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -18,6 +19,8 @@ import (
 )
 
 type Rarity int
+
+var client = &http.Client{}
 
 const (
 	Common Rarity = iota
@@ -38,6 +41,10 @@ func (rarity Rarity) Price() int {
 
 func (rarity Rarity) Color() int {
 	return [...]int{13493247, 255, 9699539, 16748544, 16728128, 16777201}[rarity]
+}
+
+type Vote struct {
+	Voted int `json:"voted"`
 }
 
 type Effect struct {
@@ -86,6 +93,7 @@ type Arena struct {
 
 type Daily struct {
 	Last   uint64 `json:"last"`
+	Voted  uint64 `json:"voted"`
 	Strike int    `json:"strike"`
 }
 
@@ -136,6 +144,7 @@ type Galo struct {
 	Cooldowns        Cooldowns  `json:"cooldowns"`
 }
 
+var TopToken string
 var Dungeon []*Room
 var Items []*Item
 var Effects []*Effect
@@ -143,6 +152,10 @@ var Classes []*Class
 var Skills []([]*Skill)
 var Sprites [][]string
 var Cosmetics []*Cosmetic
+
+func SetTopToken(token string) {
+	TopToken = token
+}
 
 func init() {
 	str, _ := os.Getwd()
@@ -425,6 +438,22 @@ func IsInLimit(galo Galo, id disgord.Snowflake) bool {
 		})
 	} else if galo.TrainLimit.Times >= max {
 		return true
+	}
+	return false
+}
+
+func HasVoted(id disgord.Snowflake) bool {
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://top.gg/api/bots/%d/check?userId=%d", 470684281102925844, id), nil)
+	if err != nil {
+		return false
+	}
+	req.Header.Add("Authorization", TopToken)
+	resp, err := client.Do(req)
+	if err == nil {
+		defer resp.Body.Close()
+		var vote Vote
+		json.NewDecoder(resp.Body).Decode(&vote)
+		return vote.Voted == 1
 	}
 	return false
 }

@@ -77,10 +77,15 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 			}
 			xpOb += int(rinha.Classes[galoAdv.Type].Rarity-rinha.Classes[galo.Type].Rarity) * 2
+			money := 5
 			if len(galo.Items) > 0 {
 				item := rinha.GetItem(galo)
 				if item.Effect == 8 {
 					xpOb += xpOb * int(item.Payload)
+				}
+				if item.Effect == 9 {
+					xpOb += 3
+					money++
 				}
 			}
 			if galo.GaloReset > 0 {
@@ -88,7 +93,6 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					xpOb = int(float64(xpOb) * 0.75)
 				}
 			}
-			money := 5
 			if rinha.HasUpgrade(galo.Upgrades, 0, 1, 0) {
 				money++
 			}

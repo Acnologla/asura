@@ -5,6 +5,7 @@ import (
 	"asura/src/database"
 	"asura/src/handler"
 	"asura/src/telemetry"
+	"asura/src/utils/rinha"
 	"fmt"
 	"math/rand"
 	"os"
@@ -34,6 +35,7 @@ func main() {
 			panic("Cannot read the motherfucking envfile")
 		}
 	}
+	rinha.SetTopToken(os.Getenv("TOP_TOKEN"))
 	//Initialize datalog services for telemetry of the application
 	telemetry.Init()
 	database.Init()
