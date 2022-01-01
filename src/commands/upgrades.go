@@ -19,7 +19,7 @@ func init() {
 		Cooldown:  5,
 		Usage:     "j!upgrades",
 		Help:      "Informação sobre seus upgrades",
-		Category:  1,
+		Category:  2,
 	})
 }
 

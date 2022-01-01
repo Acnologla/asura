@@ -19,6 +19,7 @@ func init() {
 		Cooldown:  10,
 		Usage:     "j!minifield",
 		Help:      "Jogue campo minado",
+		Category:  3,
 	})
 }
 

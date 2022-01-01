@@ -74,6 +74,7 @@ func init() {
 		Run:       run2048,
 		Available: true,
 		Cooldown:  30,
+		Category:  3,
 		Usage:     "j!2048",
 		Help:      "Jogue 2048",
 	})

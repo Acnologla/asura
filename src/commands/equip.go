@@ -26,7 +26,7 @@ func init() {
 		Cooldown:  2,
 		Usage:     "j!equipar",
 		Help:      "Equipe outro galo",
-		Category:  1,
+		Category:  2,
 	})
 }
 

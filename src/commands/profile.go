@@ -36,7 +36,7 @@ func init() {
 		Cooldown:  12,
 		Usage:     "j!profile @user",
 		Help:      "Veja o perfil",
-		Category:  1,
+		Category:  2,
 	})
 }
 
@@ -73,7 +73,7 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 
 	galo, _ := rinha.GetGaloDB(user.ID)
 	if galo.Type == 0 {
-		galoType := rinha.GetRandByType(rinha.Common)
+		galoType := rinha.GetCommonOrRare()
 		galo.Type = galoType
 		rinha.SaveGaloDB(user.ID, galo)
 	}

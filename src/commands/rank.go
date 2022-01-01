@@ -19,7 +19,7 @@ func init() {
 		Cooldown:  20,
 		Usage:     "j!rank <rank>",
 		Help:      "Veja os ranks",
-		Category:  1,
+		Category:  2,
 	})
 }
 

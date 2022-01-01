@@ -25,7 +25,7 @@ func init() {
 		Cooldown:  8,
 		Usage:     "j!galo",
 		Help:      "Informação sobre seu galo",
-		Category:  1,
+		Category:  2,
 	})
 }
 
@@ -36,7 +36,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	galo, _ := rinha.GetGaloDB(user.ID)
 	if galo.Type == 0 {
-		galoType := rinha.GetRandByType(rinha.Common)
+		galoType := rinha.GetCommonOrRare()
 		galo.Type = galoType
 		rinha.SaveGaloDB(user.ID, galo)
 	}

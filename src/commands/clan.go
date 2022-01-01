@@ -20,7 +20,7 @@ func init() {
 		Cooldown:  10,
 		Usage:     "j!clan",
 		Help:      "Informação sobre o cla",
-		Category:  1,
+		Category:  2,
 	})
 }
 

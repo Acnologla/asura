@@ -112,6 +112,12 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 						Style: disgord.Link,
 						Url:   "https://discord.gg/tdVWQGV",
 					},
+					{
+						Type:  disgord.MessageComponentButton,
+						Label: "Vote em mim",
+						Style: disgord.Link,
+						Url:   "https://top.gg/bot/470684281102925844",
+					},
 				},
 			},
 		},

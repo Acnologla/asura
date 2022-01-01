@@ -25,6 +25,7 @@ func init() {
 		Cooldown:  20,
 		Usage:     "j!connect4 @user",
 		Help:      "Jogue connect4",
+		Category:  3,
 	})
 }
 

@@ -224,6 +224,7 @@ func init() {
 		Cooldown:  2,
 		Usage:     "j!uno <ação>",
 		Help:      "Jogue uno",
+		Category:  3,
 	})
 	colors := []string{"B", "R", "Y", "G"}
 	for i := 0; i <= 9; i++ {

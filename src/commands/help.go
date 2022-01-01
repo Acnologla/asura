@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"context"
 	"fmt"
+
 	"github.com/andersfylling/disgord"
 )
 
@@ -18,6 +19,8 @@ func init() {
 	})
 }
 
+var categorys = [...]string{"Comandos gerais", "Comandos de rinha", "Comandos de perfil", "Comandos de jogos"}
+
 func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(args) > 0 {
 		command := handler.FindCommand(args[0])
@@ -27,7 +30,7 @@ func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 				aliasesText += fmt.Sprintf("`%s` ", aliase)
 			}
 		}
-		if len(command.Aliases) > 0 {
+		if len(command.Aliases) > 0 && command.Available {
 			msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 				Embed: &disgord.Embed{
 					Description: fmt.Sprintf("**%s**\n\nCooldown:\n **%d Segundos**\n\nUso:\n **%s**\n\nOutras alternativas:\n %s", command.Help, command.Cooldown, command.Usage, aliasesText),
@@ -40,19 +43,20 @@ func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 	} else {
 		commandText := ""
-		rinhaText := ""
-		for _, command := range handler.Commands {
-			if command.Available {
-				if command.Category == 0 {
+		for i, category := range categorys {
+			if i != 0 {
+				commandText += "\n\n"
+			}
+			commandText += fmt.Sprintf("**%s**\n", category)
+			for _, command := range handler.Commands {
+				if command.Category == i && command.Available {
 					commandText += fmt.Sprintf("`%s` ", command.Aliases[0])
-				} else {
-					rinhaText += fmt.Sprintf("`%s` ", command.Aliases[0])
 				}
 			}
 		}
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 			Embed: &disgord.Embed{
-				Description: commandText + "\n\n**Comandos de rinha**\n" + rinhaText + "\n\n[**Servidor de Suporte**](https://discord.gg/tdVWQGV)\n[**Website**](https://acnologla.github.io/asura-site/)",
+				Description: commandText + "\n\n[**Servidor de Suporte**](https://discord.gg/tdVWQGV)\n[**Vote em mim**](https://top.gg/bot/470684281102925844)\n[**Website**](https://acnologla.github.io/asura-site/)",
 				Footer: &disgord.EmbedFooter{
 					Text: "Use j!help <comando> para ver informações sobre um comando!",
 				},

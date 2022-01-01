@@ -384,6 +384,14 @@ func GetRarityPlusOne(rarity Rarity) int {
 	return -1
 }
 
+func GetCommonOrRare() int {
+	rand := utils.RandInt(100)
+	if 4 >= rand {
+		return GetRandByType(Rare)
+	}
+	return GetRandByType(Common)
+}
+
 func GetRandByType(classType Rarity) int {
 	classTypeArr := []*Class{}
 	for _, class := range Classes {
@@ -453,6 +461,7 @@ func HasVoted(id disgord.Snowflake) bool {
 		defer resp.Body.Close()
 		var vote Vote
 		json.NewDecoder(resp.Body).Decode(&vote)
+		fmt.Println(vote)
 		return vote.Voted == 1
 	}
 	return false

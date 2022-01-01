@@ -20,7 +20,7 @@ func init() {
 		Cooldown:  4,
 		Usage:     "j!backgrounds",
 		Help:      "Troque seu background",
-		Category:  1,
+		Category:  2,
 	})
 }
 

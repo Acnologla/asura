@@ -29,7 +29,7 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	calc := (uint64(time.Now().Unix()) - galo.Daily.Last) / 60 / 60 / 24
-	topGGCalc := (uint64(time.Now().Unix()) - galo.Daily.Voted) / 60 / 60 / 24
+	topGGCalc := (uint64(time.Now().Unix()) - galo.Daily.Voted) / 60 / 60 / 12
 	var voted bool
 	if calc < 1 && topGGCalc >= 1 {
 		voted = rinha.HasVoted(msg.Author.ID)
@@ -45,6 +45,10 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 			if topGGCalc >= 1 && voted {
 				galo.Daily.Voted = uint64(time.Now().Unix())
+			}
+			if rinha.IsVip(galo) {
+				money += 10
+				xp += 25
 			}
 			money = 20 + galo.Daily.Strike/5
 			xp = 40 + galo.Daily.Strike

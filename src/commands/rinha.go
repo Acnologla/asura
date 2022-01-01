@@ -31,7 +31,7 @@ func init() {
 
 func initGalo(galo *rinha.Galo, user *disgord.User) {
 	if galo.Type == 0 {
-		galoType := rinha.GetRandByType(rinha.Common)
+		galoType := rinha.GetCommonOrRare()
 		galo.Type = galoType
 		rinha.SaveGaloDB(user.ID, *galo)
 	}

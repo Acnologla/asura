@@ -17,6 +17,7 @@ func init() {
 		Cooldown:  15,
 		Usage:     "j!jogodavelha @usuario",
 		Help:      "Jogue jogo da velha",
+		Category:  3,
 	})
 }
 

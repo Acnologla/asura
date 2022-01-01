@@ -5,8 +5,9 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"strings"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -17,7 +18,7 @@ func init() {
 		Cooldown:  3,
 		Usage:     "j!changename",
 		Help:      "Troque o nome do seu galo",
-		Category:  1,
+		Category:  2,
 	})
 }
 

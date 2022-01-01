@@ -179,7 +179,9 @@ func HandleCommand(session disgord.Session, msg *disgord.Message) {
 					}
 				}()
 			}
-			Client.Channel(msg.ChannelID).TriggerTypingIndicator()
+			if !realCommand.Available {
+				Client.Channel(msg.ChannelID).TriggerTypingIndicator()
+			}
 			realCommand.Run(session, msg, args)
 		}
 	}

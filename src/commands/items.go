@@ -5,8 +5,9 @@ import (
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"github.com/andersfylling/disgord"
 	"strconv"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -17,7 +18,7 @@ func init() {
 		Cooldown:  2,
 		Usage:     "j!items",
 		Help:      "Equipe items",
-		Category:  1,
+		Category:  2,
 	})
 }
 

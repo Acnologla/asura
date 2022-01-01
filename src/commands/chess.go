@@ -42,6 +42,7 @@ func init() {
 		Run:       runChess,
 		Available: true,
 		Cooldown:  2,
+		Category:  3,
 		Usage:     "j!chess <user>",
 		Help:      "Jogue xadrez",
 	})
