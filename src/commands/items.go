@@ -15,7 +15,7 @@ func init() {
 		Aliases:   []string{"items"},
 		Run:       runItem,
 		Available: true,
-		Cooldown:  2,
+		Cooldown:  10,
 		Usage:     "j!items",
 		Help:      "Equipe items",
 		Category:  2,
@@ -60,6 +60,7 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, "Use j!item <numero do item> para equipar um item ou j!item <numero do item> vender para vender um item")
 			return
 		}
+		var text string
 		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 			if value >= 0 && len(galo.Items) > value {
 				newItem := galo.Items[value]
@@ -73,20 +74,20 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 					galo.Money += price
 					galo.Items = galo.Items[0 : len(galo.Items)-1]
 
-					msg.Reply(context.Background(), session, fmt.Sprintf("%s, vendeu o item %s por %d com sucesso", msg.Author.Mention(), item.Name, price))
+					text = fmt.Sprintf("%s, vendeu o item %s por %d com sucesso", msg.Author.Mention(), item.Name, price)
 
 				} else {
 					old := galo.Items[0]
 					galo.Items[0] = newItem
 					galo.Items[value] = old
-					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), item.Name))
+					text = fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), item.Name)
 				}
 				return galo, nil
 			} else {
-				msg.Reply(context.Background(), session, "Numero inválido")
+				text = "Numero inválido"
 				return galo, nil
 			}
 		})
-
+		msg.Reply(context.Background(), session, text)
 	}
 }
