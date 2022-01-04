@@ -60,8 +60,8 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, "Use j!item <numero do item> para equipar um item ou j!item <numero do item> vender para vender um item")
 			return
 		}
-		if value >= 0 && len(galo.Items) > value {
-			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+			if value >= 0 && len(galo.Items) > value {
 				newItem := galo.Items[value]
 				item := rinha.Items[newItem]
 				sell := len(args) > 1 && args[1] == "vender"
@@ -71,6 +71,8 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 						galo.Items[i] = galo.Items[i+1]
 					}
 					galo.Money += price
+					galo.Items = galo.Items[0 : len(galo.Items)-1]
+
 					msg.Reply(context.Background(), session, fmt.Sprintf("%s, vendeu o item %s por %d com sucesso", msg.Author.Mention(), item.Name, price))
 
 				} else {
@@ -79,11 +81,12 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 					galo.Items[value] = old
 					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), item.Name))
 				}
-
 				return galo, nil
-			})
-		} else {
-			msg.Reply(context.Background(), session, "Numero inválido")
-		}
+			} else {
+				msg.Reply(context.Background(), session, "Numero inválido")
+				return galo, nil
+			}
+		})
+
 	}
 }

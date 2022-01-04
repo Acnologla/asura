@@ -99,13 +99,13 @@ func GetItem(galo Galo) *Item {
 
 func LevelToPrice(item Item) int {
 	if item.Level == 0 {
-		return 80
+		return 50
 	}
 	if item.Level == 1 {
-		return 200
+		return 170
 	}
 	if item.Level == 2 {
-		return 500
+		return 390
 	}
 	if item.Level == 3 {
 		return 1000
