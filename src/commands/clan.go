@@ -119,7 +119,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Title:       "Banco do clan",
 					Color:       65535,
-					Description: fmt.Sprintf("Dinheiro: **%d**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan (%d)\n[**Artilharia**] - Artilharia (%d)\n[**Missao**] - Bonus para missao do clan (%d)\n\nUse j!clan depositar <dinheiro> para depositar dinheiro\nUse j!clan upgrade <upgrade> para dar upgrade em algo\nUse j!clan background <background> para setar um background para seu clan (custa 10000)", clan.Money, rinha.CalcClanUpgrade(clan.Upgrades.Members, 1), rinha.CalcClanUpgrade(clan.Upgrades.Artillery, 2), rinha.CalcClanUpgrade(clan.Upgrades.Mission, 2)),
+					Description: fmt.Sprintf("Dinheiro: **%d**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan (%d)\n[**Artilharia**] - Artilharia (%d)\n[**Missao**] - Bonus para missao do clan (%d)\n\nUse j!clan depositar <dinheiro> para depositar dinheiro\nUse j!clan upgrade <upgrade> para dar upgrade em algo\nUse j!clan background <background> para setar um background para seu clan (custa 10000)", clan.Money, rinha.CalcClanUpgrade(clan.Upgrades.Members, 1), rinha.CalcClanUpgrade(clan.Upgrades.Artillery, 2), rinha.CalcClanUpgrade(clan.Upgrades.Mission, 1)),
 				})
 				return
 			}

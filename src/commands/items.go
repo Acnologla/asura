@@ -67,13 +67,9 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 				sell := len(args) > 1 && args[1] == "vender"
 				if sell {
 					price := rinha.LevelToPrice(*item)
-					newItems := []int{}
-					for i, item := range galo.Items {
-						if i != value {
-							newItems = append(newItems, item)
-						}
+					for i := value; i < len(galo.Items)-1; i++ {
+						galo.Items[i] = galo.Items[i+1]
 					}
-					galo.Items = newItems
 					galo.Money += price
 					msg.Reply(context.Background(), session, fmt.Sprintf("%s, vendeu o item %s por %d com sucesso", msg.Author.Mention(), item.Name, price))
 
