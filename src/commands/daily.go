@@ -47,11 +47,11 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 				galo.Daily.Voted = uint64(time.Now().Unix())
 			}
 			if rinha.IsVip(galo) {
-				money += 10
-				xp += 25
+				money += 15
+				xp += 35
 			}
-			money = 20 + galo.Daily.Strike/5
-			xp = 40 + galo.Daily.Strike
+			money = 25 + galo.Daily.Strike/5
+			xp = 50 + galo.Daily.Strike
 			galo.Daily.Strike++
 			galo.Money += money
 			galo.Xp += xp

@@ -262,5 +262,11 @@
         "effect": 9,
         "level": 5,
         "payload": 1
+    },
+    {
+        "name": "Clan upgrader",
+        "effect": 10,
+        "level": 5,
+        "payload": 1
     }
 ]

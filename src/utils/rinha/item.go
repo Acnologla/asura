@@ -83,6 +83,9 @@ func ItemToString(item *Item) string {
 	if item.Effect == 9 {
 		return "Voce ganha 1 de ouro extra e 3 de xp adicional por train"
 	}
+	if item.Effect == 10 {
+		return "Tem chance de ganhar 1 de xp extra para seu clan nos treinos"
+	}
 	return ""
 }
 
@@ -92,4 +95,23 @@ func GetRandItem() int {
 
 func GetItem(galo Galo) *Item {
 	return Items[galo.Items[0]]
+}
+
+func LevelToPrice(item Item) int {
+	if item.Level == 0 {
+		return 80
+	}
+	if item.Level == 1 {
+		return 200
+	}
+	if item.Level == 2 {
+		return 500
+	}
+	if item.Level == 3 {
+		return 1000
+	}
+	if item.Level == 4 {
+		return 2000
+	}
+	return 0
 }

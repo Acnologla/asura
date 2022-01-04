@@ -125,7 +125,7 @@ type Galo struct {
 	Galos            []SubGalo  `json:"galos"`
 	Daily            Daily      `json:"realDaily"`
 	Money            int        `json:"money"`
-	Clan             string     `json:"clan"`
+	Clan             string     `json:"clanName"`
 	Dungeon          int        `json:"dungeon"`
 	DungeonReset     int        `json:"dungeonreset"`
 	Items            []int      `json:"items"`

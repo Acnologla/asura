@@ -42,10 +42,10 @@ func OpenEpic(pity int) (int, bool) {
 
 func OpenRare(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 130)
-	if 130+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 140)
+	if 140+pitVal >= value {
 		return GetRandByType(Epic), true
-	} else if 570 >= value {
+	} else if 600 >= value {
 		return GetRandByType(Rare), false
 	}
 	return GetRandByType(Common), false
@@ -56,7 +56,7 @@ func OpenNormal(pity int) (int, bool) {
 	pitVal := int(CalcPity(pity) * 6)
 	if 6+pitVal >= value {
 		return GetRandByType(Epic), true
-	} else if 30 >= value {
+	} else if 31 >= value {
 		return GetRandByType(Rare), false
 	}
 	return GetRandByType(Common), false
@@ -64,8 +64,8 @@ func OpenNormal(pity int) (int, bool) {
 
 func OpenCommon(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := int(CalcPity(pity) * 5)
-	if 5+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 6)
+	if 6+pitVal >= value {
 		return GetRandByType(Rare), true
 	}
 	return GetRandByType(Common), false
@@ -141,7 +141,7 @@ func GetPrice(lootType string) (int, int) {
 		return 300, 0
 	}
 	if lootType == "items" {
-		return 0, 4
+		return 0, 3
 	}
 	if lootType == "lendaria" {
 		return 0, 2

@@ -35,28 +35,20 @@ type ClanMember struct {
 }
 
 type ClanUpgrades struct {
-	Members int `json:"members"`
-	Banks   int `json:"banks"`
-	Mission int `json:"mission"`
+	Members   int `json:"members"`
+	Artillery int `json:"artillery"`
+	Mission   int `json:"mission"`
 }
 
 type Clan struct {
 	Xp              int          `json:"xp"`
 	CreatedAt       uint64       `json:"createdAt"`
-	Background      int          `json:"background"`
+	Background      string       `json:"backgroundURL"`
 	Members         []ClanMember `json:"members"`
 	Money           int          `json:"money"`
 	Upgrades        ClanUpgrades `json:"upgrades"`
-	LastIncome      uint64       `json:"lastIncome"`
 	Mission         uint64       `json:"mission"`
 	MissionProgress int          `json:"missionProgress"`
-}
-
-func GetClanBackground(clan Clan) *Cosmetic {
-	if clan.Background == 0 {
-		return nil
-	}
-	return Cosmetics[clan.Background]
 }
 
 func GetClan(name string) Clan {
@@ -89,10 +81,10 @@ func Format(text string) string {
 }
 
 func ClanXpToLevel(xp int) int {
-	return int(math.Floor(math.Sqrt(float64(xp)/4000))) + 1
+	return int(math.Floor(math.Sqrt(float64(xp)/4500))) + 1
 }
 func ClanLevelToXp(level int) int {
-	return int(math.Pow(float64(level), 2)) * 4000
+	return int(math.Pow(float64(level), 2)) * 4500
 }
 
 func GetMember(clan Clan, id disgord.Snowflake) ClanMember {
@@ -228,10 +220,10 @@ func MissionToString(clan Clan) string {
 	}
 }
 
-func CompleteClanMission(clanName string, id disgord.Snowflake) {
+func CompleteClanMission(clanName string, id disgord.Snowflake, xp int) {
 	UpdateClan(clanName, func(clan Clan) (Clan, error) {
 		clan = PopulateClanMissions(clan, clanName, false)
-		clan.Xp++
+		clan.Xp += xp
 		for i, member := range clan.Members {
 			if member.ID == uint64(id) {
 				member.Xp++
@@ -259,38 +251,9 @@ func CompleteClanMission(clanName string, id disgord.Snowflake) {
 }
 
 func GetMaxMembers(clan Clan) int {
-	return 15 + (clan.Upgrades.Members * 2)
+	return 25 + (clan.Upgrades.Members * 2)
 }
 
 func CalcClanUpgrade(x, price int) int {
-	return int(math.Pow(2, float64(x)) * (float64(price * 1000)))
-}
-
-func CalcClanIncomeTime(clan Clan) int {
-	return 50 - int((uint64(time.Now().Unix())-clan.LastIncome)/60/60)
-}
-func UpdateClanBank(clan Clan, clanName string) Clan {
-	income := int((uint64(time.Now().Unix()) - clan.LastIncome) / 60 / 60 / 50)
-	if income == 0 {
-		return clan
-	}
-	if clan.LastIncome == 0 {
-		income = 1
-	}
-	money := 0
-	for i := 0; i < income; i++ {
-		val := int(float64(clan.Money) * (float64(1+clan.Upgrades.Banks) / 100))
-		money += val
-		clan.Money += val
-	}
-	UpdateClan(clanName, func(clan Clan) (Clan, error) {
-		clan.Money += money
-		if clan.Money > MaxMoney {
-			clan.Money = MaxMoney
-		}
-		clan.LastIncome = uint64(time.Now().Unix())
-		return clan, nil
-	})
-	clan.LastIncome = uint64(time.Now().Unix())
-	return clan
+	return int(math.Pow(2, float64(x)) * (float64(price * 500)))
 }

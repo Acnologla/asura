@@ -78,8 +78,9 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 			xpOb += int(rinha.Classes[galoAdv.Type].Rarity-rinha.Classes[galo.Type].Rarity) * 2
 			money := 5
+			var item *rinha.Item
 			if len(galo.Items) > 0 {
-				item := rinha.GetItem(galo)
+				item = rinha.GetItem(galo)
 				if item.Effect == 8 {
 					xpOb += xpOb * int(item.Payload)
 				}
@@ -133,8 +134,16 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					if level >= 8 {
 						galo.UserXp++
 					}
-					go rinha.CompleteClanMission(galo.Clan, msg.Author.ID)
-					clanMsg = "\nGanhou **1** de xp para seu clan"
+					clanXpOb := 1
+					if item != nil {
+						if item.Effect == 10 {
+							if utils.RandInt(101) <= 30 {
+								clanXpOb++
+							}
+						}
+					}
+					go rinha.CompleteClanMission(galo.Clan, msg.Author.ID, clanXpOb)
+					clanMsg = fmt.Sprintf("\nGanhou **%d** de xp para seu clan", clanXpOb)
 				}
 				galo.Win++
 				galo.Xp += xpOb

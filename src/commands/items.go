@@ -51,22 +51,39 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Espere a sua rinha terminar para equipar items")
+			msg.Reply(context.Background(), session, "Espere a sua rinha terminar para equipar items ou vender items")
 			return
 		}
 		battleMutex.RUnlock()
 		value, err := strconv.Atoi(args[0])
 		if err != nil {
-			msg.Reply(context.Background(), session, "Use j!item <numero do item> para equipar um item")
+			msg.Reply(context.Background(), session, "Use j!item <numero do item> para equipar um item ou j!item <numero do item> vender para vender um item")
 			return
 		}
 		if value >= 0 && len(galo.Items) > value {
 			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 				newItem := galo.Items[value]
-				old := galo.Items[0]
-				galo.Items[0] = newItem
-				galo.Items[value] = old
-				msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), rinha.Items[newItem].Name))
+				item := rinha.Items[newItem]
+				sell := len(args) > 1 && args[1] == "vender"
+				if sell {
+					price := rinha.LevelToPrice(*item)
+					newItems := []int{}
+					for i, item := range galo.Items {
+						if i != value {
+							newItems = append(newItems, item)
+						}
+					}
+					galo.Items = newItems
+					galo.Money += price
+					msg.Reply(context.Background(), session, fmt.Sprintf("%s, vendeu o item %s por %d com sucesso", msg.Author.Mention(), item.Name, price))
+
+				} else {
+					old := galo.Items[0]
+					galo.Items[0] = newItem
+					galo.Items[value] = old
+					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), item.Name))
+				}
+
 				return galo, nil
 			})
 		} else {

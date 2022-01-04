@@ -162,6 +162,21 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 			dc.Fill()
 		}
 	}
+	badgeN := 0
+	badges := rinha.GetBadges(galo)
+	for i := 0; i < 4; i++ {
+		for j := 0; j < 2; j++ {
+			if len(badges) <= badgeN {
+				break
+			}
+			badge := badges[badgeN]
+			badgeImg, _ := utils.DownloadImage(badge.Value)
+			badgeImg = resize.Resize(40, 40, badgeImg, resize.Lanczos3)
+
+			badgeN++
+			dc.DrawImage(badgeImg, 10+i*47, 332+j*47)
+		}
+	}
 	dc.SetRGB(0.9, 0.9, 0.9)
 	for i := 0; i < 5; i++ {
 		dc.DrawRectangle(float64(220+i*75), 265, 55, 55)

@@ -26,7 +26,7 @@ func CheckImage(url string) bool {
 	}
 	defer resp.Body.Close()
 	mb, _ := strconv.Atoi(resp.Header["Content-Length"][0])
-	if mb > 10*1024*1024 {
+	if mb > 5*1024*1024 {
 		return false
 	}
 	if !strings.HasPrefix(resp.Header["Content-Type"][0], "image") {

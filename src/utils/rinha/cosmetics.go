@@ -9,6 +9,8 @@ type CosmeticType int
 
 const (
 	Background CosmeticType = iota
+	Badge
+	Skin
 )
 
 type Cosmetic struct {
@@ -19,7 +21,7 @@ type Cosmetic struct {
 }
 
 func (cosmetic Cosmetic) TypeToString() string {
-	return [...]string{"Background"}[cosmetic.Type]
+	return [...]string{"Background", "Badge", "Skin"}[cosmetic.Type]
 }
 
 func (cosmetic Cosmetic) String() string {
@@ -57,6 +59,17 @@ func GetCosmeticRandByType(rarity Rarity) int {
 	}
 	return -1
 
+}
+
+func GetBadges(galo Galo) []*Cosmetic {
+	badges := []*Cosmetic{}
+	for _, _cosmetic := range galo.Cosmetics {
+		cosmetic := Cosmetics[_cosmetic]
+		if cosmetic.Type == Badge {
+			badges = append(badges, cosmetic)
+		}
+	}
+	return badges
 }
 
 func OpenCosmeticBg() int {
