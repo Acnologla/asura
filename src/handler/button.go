@@ -28,7 +28,9 @@ func RegisterBHandler(msg *disgord.Message, callback func(*disgord.InteractionCr
 		select {
 		case <-ButtonsHandlers[msg.ID].deleteChan:
 		case <-timeChannel:
-			DeleteBHandler(msg)
+			ButtonLock.Lock()
+			delete(ButtonsHandlers, msg.ID)
+			ButtonLock.Unlock()
 		}
 	}
 }
