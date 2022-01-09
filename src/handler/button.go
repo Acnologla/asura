@@ -37,7 +37,10 @@ func RegisterBHandler(msg *disgord.Message, callback func(*disgord.InteractionCr
 
 func DeleteBHandler(msg *disgord.Message) {
 	ButtonLock.Lock()
-	ButtonsHandlers[msg.ID].deleteChan <- true
+	button, ok := ButtonsHandlers[msg.ID]
+	if ok {
+		button.deleteChan <- true
+	}
 	delete(ButtonsHandlers, msg.ID)
 	ButtonLock.Unlock()
 }
