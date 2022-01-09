@@ -8,7 +8,8 @@ import (
 )
 
 type ButtonHandler struct {
-	callback func(*disgord.InteractionCreate)
+	callback   func(*disgord.InteractionCreate)
+	deleteChan chan bool
 	sync.Mutex
 }
 
@@ -17,16 +18,24 @@ var ButtonLock = sync.RWMutex{}
 
 func RegisterBHandler(msg *disgord.Message, callback func(*disgord.InteractionCreate), timeout int) {
 	ButtonsHandlers[msg.ID] = &ButtonHandler{
-		callback: callback,
+		callback:   callback,
+		deleteChan: make(chan bool),
 	}
-	if timeout != 0 {
-		time.Sleep(time.Duration(timeout) * time.Second)
-		DeleteBHandler(msg)
+	timeChannel := time.After(time.Duration(timeout) * time.Second)
+	if timeout == 0 {
+		<-ButtonsHandlers[msg.ID].deleteChan
+	} else {
+		select {
+		case <-ButtonsHandlers[msg.ID].deleteChan:
+		case <-timeChannel:
+			DeleteBHandler(msg)
+		}
 	}
 }
 
 func DeleteBHandler(msg *disgord.Message) {
 	ButtonLock.Lock()
+	ButtonsHandlers[msg.ID].deleteChan <- true
 	delete(ButtonsHandlers, msg.ID)
 	ButtonLock.Unlock()
 }

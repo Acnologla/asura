@@ -180,11 +180,11 @@ func Confirm(title string, channel, id disgord.Snowflake, callback func()) {
 	handler.RegisterBHandler(msg, func(interaction *disgord.InteractionCreate) {
 		if id == interaction.Member.User.ID && !done {
 			done = true
-			handler.DeleteBHandler(msg)
 			go handler.Client.Channel(msg.ChannelID).Message(msg.ID).Delete()
 			if interaction.Data.CustomID == "yes" {
 				callback()
 			}
+			handler.DeleteBHandler(msg)
 		}
 	}, 120)
 }

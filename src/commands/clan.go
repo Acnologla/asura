@@ -94,27 +94,6 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce saiu do clan **"+galo.Clan+"** com sucesso")
 				return
 			}
-			if strings.ToLower(args[0]) == "background" {
-				role := rinha.GetMember(clan, msg.Author.ID)
-				if role.Role < rinha.Admin {
-					return
-				}
-				if !utils.CheckImage(args[1]) {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Imagem invalida!")
-					return
-				}
-				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
-					if clan.Money < 10000 {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", O clan precisa ter 10.000 de dinheiro para trocar o background")
-						return clan, nil
-					}
-					clan.Money -= 10000
-					clan.Background = args[1]
-					msg.Reply(context.Background(), session, "O background do clan foi alterado com sucesso")
-					return clan, nil
-				})
-				return
-			}
 			if strings.ToLower(args[0]) == "banco" {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Title:       "Banco do clan",
@@ -135,6 +114,26 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		if len(args) > 1 {
 			role := rinha.GetMember(clan, msg.Author.ID)
+			if strings.ToLower(args[0]) == "background" {
+				if role.Role < rinha.Admin {
+					return
+				}
+				if !utils.CheckImage(args[1]) {
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Imagem invalida!")
+					return
+				}
+				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
+					if clan.Money < 10000 {
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", O clan precisa ter 10.000 de dinheiro para trocar o background")
+						return clan, nil
+					}
+					clan.Money -= 10000
+					clan.Background = args[1]
+					msg.Reply(context.Background(), session, "O background do clan foi alterado com sucesso")
+					return clan, nil
+				})
+				return
+			}
 			if strings.ToLower(args[0]) == "upgrade" {
 				if role.Role >= rinha.Admin {
 					txt := strings.ToLower(args[1])

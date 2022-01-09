@@ -16,7 +16,7 @@
     },
     {
         "name": "Reflexão",
-        "damage": [18,28],
+        "damage": [1,1],
         "effect": [0.7, 30],
         "level": 4,
         "self": true
@@ -69,7 +69,7 @@
     },
     {
         "name": "Reflexão divina",
-        "damage": [20,30],
+        "damage": [1,1],
         "effect": [1, 30],
         "self": true,
         "level": 21

@@ -39,10 +39,6 @@ func main() {
 	//Initialize datalog services for telemetry of the application
 	telemetry.Init()
 	database.Init()
-	/*rinha.UpdateGaloDB(365948625676795904, func(galo rinha.Galo) (rinha.Galo, error) {
-		galo.Cosmetics = append(galo.Cosmetics, 21)
-		return galo, nil
-	})*/
 	fmt.Println("Starting bot...")
 	cache := disgord.NewBasicCache()
 	client := disgord.New(disgord.Config{

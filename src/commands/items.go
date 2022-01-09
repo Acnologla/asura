@@ -2,6 +2,7 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/utils"
 	"asura/src/utils/rinha"
 	"context"
 	"fmt"
@@ -60,28 +61,45 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, "Use j!item <numero do item> para equipar um item ou j!item <numero do item> vender para vender um item")
 			return
 		}
+		if !(value >= 0 && len(galo.Items) > value) {
+			msg.Reply(context.Background(), session, "numero invalido")
+			return
+		}
 		var text string
+		if len(args) > 1 {
+			if args[1] == "vender" {
+				utils.Confirm(fmt.Sprintf("Você deseja vender o item **%s**?", rinha.Items[galo.Items[value]].Name), msg.ChannelID, msg.Author.ID, func() {
+					rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
+						if value >= 0 && len(galo.Items) > value {
+							newItem := galo.Items[value]
+							item := rinha.Items[newItem]
+							price := rinha.LevelToPrice(*item)
+							for i := value; i < len(galo.Items)-1; i++ {
+								galo.Items[i] = galo.Items[i+1]
+							}
+							galo.Money += price
+							galo.Items = galo.Items[0 : len(galo.Items)-1]
+							text = fmt.Sprintf("%s, vendeu o item %s por %d com sucesso", msg.Author.Mention(), item.Name, price)
+							return galo, nil
+						} else {
+							text = "Numero inválido"
+							return galo, nil
+						}
+					})
+
+				})
+				msg.Reply(context.Background(), session, text)
+				return
+			}
+		}
 		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 			if value >= 0 && len(galo.Items) > value {
 				newItem := galo.Items[value]
 				item := rinha.Items[newItem]
-				sell := len(args) > 1 && args[1] == "vender"
-				if sell {
-					price := rinha.LevelToPrice(*item)
-					for i := value; i < len(galo.Items)-1; i++ {
-						galo.Items[i] = galo.Items[i+1]
-					}
-					galo.Money += price
-					galo.Items = galo.Items[0 : len(galo.Items)-1]
-
-					text = fmt.Sprintf("%s, vendeu o item %s por %d com sucesso", msg.Author.Mention(), item.Name, price)
-
-				} else {
-					old := galo.Items[0]
-					galo.Items[0] = newItem
-					galo.Items[value] = old
-					text = fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), item.Name)
-				}
+				old := galo.Items[0]
+				galo.Items[0] = newItem
+				galo.Items[value] = old
+				text = fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), item.Name)
 				return galo, nil
 			} else {
 				text = "Numero inválido"
