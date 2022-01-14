@@ -24,8 +24,14 @@ func verifyRequest(ctx *fasthttp.RequestCtx) bool {
 	return sign.Verify(PublicKey, append(append(signature, timestamp...), body...))
 }
 
+func ExecuteInteraction(interaction interactionPkg.Interaction) *interactionPkg.InteractionResponse {
+	if interaction.Type == interactionPkg.APPLICATION_COMMAND {
+		return handler.Run(interaction)
+	}
+	return nil
+}
+
 func Handler(ctx *fasthttp.RequestCtx) {
-	print("a")
 	if !verifyRequest(ctx) {
 		ctx.SetStatusCode(fasthttp.StatusUnauthorized)
 		return
@@ -37,9 +43,8 @@ func Handler(ctx *fasthttp.RequestCtx) {
 		var response *interactionPkg.InteractionResponse
 		if interaction.Type == interactionPkg.PING {
 			response.Type = interactionPkg.PONG
-		}
-		if interaction.Type == interactionPkg.APPLICATION_COMMAND {
-			response = handler.Run(interaction)
+		} else {
+			response = ExecuteInteraction(interaction)
 		}
 		val, _ := json.Marshal(response)
 		ctx.SetBody(val)
