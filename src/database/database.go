@@ -28,7 +28,7 @@ func GetEnvConfig() *DBConfig {
 	}
 }
 
-func Connect(config DBConfig) (*bun.DB, error) {
+func Connect(config *DBConfig) (*bun.DB, error) {
 	dbConfig := pgdriver.NewConnector(
 		pgdriver.WithAddr(fmt.Sprintf("%s:%s", config.Host, config.Port)),
 		pgdriver.WithUser(config.User),
@@ -43,6 +43,5 @@ func Connect(config DBConfig) (*bun.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return bun.NewDB(sqldb, pgdialect.New()), nil
 }
