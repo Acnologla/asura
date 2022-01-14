@@ -3,7 +3,6 @@ package commands
 import (
 	"asura/src/handler"
 	"asura/src/interaction"
-	"fmt"
 )
 
 func init() {
@@ -18,7 +17,7 @@ func runInvite(itc interaction.Interaction) *interaction.InteractionResponse {
 	return &interaction.InteractionResponse{
 		Type: interaction.CHANNEL_MESSAGE_WITH_SOURCE,
 		Data: &interaction.InteractionCallbackData{
-			Content: fmt.Sprintf("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8", "470684281102925844"),
+			Content: " https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%%20bot&permissions=8",
 		},
 	}
 }
