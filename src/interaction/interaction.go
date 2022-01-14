@@ -1,5 +1,7 @@
 package interaction
 
+import "github.com/andersfylling/disgord"
+
 type InteractionType int
 type InteractionCallbackType int
 
@@ -23,10 +25,8 @@ const (
 	APPLICATION_COMMAND_AUTOCOMPLETE
 )
 
-type Snowflake uint64
-
 type InteractionData struct {
-	ID      Snowflake                                  `json:"id"`
+	ID      disgord.Snowflake                          `json:"id"`
 	Name    string                                     `json:"name"`
 	Type    ApplicationCommandType                     `json:"type"`
 	Options []*ApplicationCommandInteractionDataOption `json:"options"`
@@ -34,10 +34,10 @@ type InteractionData struct {
 
 //TODO implement all the struct
 type Interaction struct {
-	ID            Snowflake        `json:"id"`
-	ApplicationID Snowflake        `json:"application_id"`
-	Type          InteractionType  `json:"type"`
-	Data          *InteractionData `json:"data"`
+	ID            disgord.Snowflake `json:"id"`
+	ApplicationID disgord.Snowflake `json:"application_id"`
+	Type          InteractionType   `json:"type"`
+	Data          *InteractionData  `json:"data"`
 }
 
 //TODO implement all the struct

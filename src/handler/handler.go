@@ -7,9 +7,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/andersfylling/disgord"
 )
 
 const url = "https://discord.com/api/v8/applications/%s/commands"
+const apiURL = "https://discord.com/api/v8"
 
 var client = &http.Client{}
 
@@ -39,29 +42,31 @@ func isInApplicationCommandSlice(command string, commands []*interaction.Applica
 	return false
 }
 
-func Init(appID, token string) {
-	resp, err := http.Get(fmt.Sprintf(url, appID))
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	defer resp.Body.Close()
+func Init(appID, token string, session *disgord.Client) {
 	var commands []*interaction.ApplicationCommand
-	err = json.NewDecoder(resp.Body).Decode(&commands)
+	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
+	client := &http.Client{}
+	request, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
 		log.Fatal(err)
-		return
+	}
+	request.Header.Set("authorization", "Bot "+token)
+	resp, err := client.Do(request)
+	json.NewDecoder(resp.Body).Decode(&commands)
+	if err != nil {
+		log.Fatal(err)
 	}
 	for name, command := range Commands {
-		if isInApplicationCommandSlice(name, commands) {
+		if !isInApplicationCommandSlice(name, commands) {
 			var newCommand interaction.ApplicationCommand
 			newCommand.Name = command.Name
+			newCommand.DefaultPermission = true
 			newCommand.Type = interaction.CHAT_INPUT
 			newCommand.Options = command.Options
 			newCommand.Description = command.Description
 			val, _ := json.Marshal(newCommand)
-			reader := bytes.NewReader(val)
-			req, _ := http.NewRequest("POST", url, reader)
+			reader := bytes.NewBuffer(val)
+			req, _ := http.NewRequest("POST", endpoint, reader)
 			req.Header.Add("Authorization", "Bot "+token)
 			req.Header.Add("Content-Type", "application/json")
 			_, err = client.Do(req)

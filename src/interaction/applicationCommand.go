@@ -1,5 +1,7 @@
 package interaction
 
+import "github.com/andersfylling/disgord"
+
 type ApplicationCommandType int
 
 const (
@@ -71,13 +73,13 @@ type ApplicationCommandOption struct {
 }
 
 type ApplicationCommand struct {
-	ID                Snowflake                                  `json:"id"`
+	ID                disgord.Snowflake                          `json:"id"`
 	Type              ApplicationCommandType                     `json:"type"`
-	ApplicationID     Snowflake                                  `json:"application_id"`
-	GuildId           Snowflake                                  `json:"guild_id"`
+	ApplicationID     disgord.Snowflake                          `json:"application_id"`
+	GuildId           disgord.Snowflake                          `json:"guild_id"`
 	Name              string                                     `json:"name"`
 	Description       string                                     `json:"description"`
 	Options           []*ApplicationCommandInteractionDataOption `json:"options"`
 	DefaultPermission bool                                       `json:"default_permission,omitempty"`
-	Version           int                                        `json:"version"`
+	Version           disgord.Snowflake                          `json:"version"`
 }
