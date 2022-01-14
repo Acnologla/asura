@@ -2,5 +2,4 @@
 .vscode
 data.json
 .idea
-db
 *.key

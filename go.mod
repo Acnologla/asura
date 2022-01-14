@@ -14,7 +14,10 @@ require (
 	github.com/kevinburke/nacl v0.0.0-20210405173606-cd9060f5f776 // indirect
 	github.com/klauspost/compress v1.14.1 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
-	github.com/uptrace/bun v1.0.19 // indirect
+	github.com/revel/cmd v1.0.3 // indirect
+	github.com/uptrace/bun v1.0.21 // indirect
+	github.com/uptrace/bun/dialect/pgdialect v1.0.21 // indirect
+	github.com/uptrace/bun/driver/pgdriver v1.0.21 // indirect
 	github.com/valyala/fasthttp v1.31.0 // indirect
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
