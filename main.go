@@ -19,7 +19,6 @@ import (
 var Port string
 
 func runTestVersion() {
-
 	client := disgord.New(disgord.Config{
 		BotToken: os.Getenv("TOKEN"),
 	})
@@ -55,6 +54,7 @@ func main() {
 		runTestVersion()
 		return
 	}
+
 	server.Init(os.Getenv("PUBLIC_KEY"))
 	Port = os.Getenv("PORT")
 	fasthttp.ListenAndServe(":"+Port, server.Handler)
