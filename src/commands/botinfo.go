@@ -98,7 +98,7 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 						Type:  disgord.MessageComponentButton,
 						Label: "Convite",
 						Style: disgord.Link,
-						Url:   "https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=bot&permissions=8",
+						Url:   " https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%20bot&permissions=8",
 					},
 					{
 						Type:  disgord.MessageComponentButton,

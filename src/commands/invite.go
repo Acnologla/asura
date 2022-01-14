@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"context"
 	"fmt"
+
 	"github.com/andersfylling/disgord"
 )
 
@@ -19,5 +20,5 @@ func init() {
 }
 
 func runInvite(session disgord.Session, msg *disgord.Message, args []string) {
-	msg.Reply(context.Background(), session, fmt.Sprintf("%s, https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=8", msg.Author.Mention(), "470684281102925844"))
+	msg.Reply(context.Background(), session, fmt.Sprintf("%s,  https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%%20bot&permissions=8", msg.Author.Mention()))
 }
