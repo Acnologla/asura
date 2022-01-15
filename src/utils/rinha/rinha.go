@@ -427,7 +427,7 @@ func GetEffectFromIndex(idx int) *Effect {
 }
 
 func IsInLimit(galo Galo, id disgord.Snowflake) bool {
-	max := 180
+	max := 200
 	if HasUpgrade(galo.Upgrades, 0, 1, 0, 0) {
 		max += 30
 	}

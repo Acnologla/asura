@@ -405,5 +405,37 @@
         "self": true,
         "phrase": "%s esta com depressão! (%d)",
         "range": [-30,-45]
+    },
+    {
+        "name": "Degeneração",
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está degenerando! (-%d)",
+        "range": [10,15]
+    },
+    {
+        "name": "Ataque zumbi",
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está degenerando! (-%d)",
+        "range": [15,30]
+    },
+    {
+        "name": "Degeneração potente",
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está degenerando! (-%d)",
+        "range": [20,35]
+    },
+    {
+        "name": "Cura infinita",
+        "turns": 1,
+        "type": 2,
+        "self": true,
+        "phrase": "%s se curou! (+%d)",
+        "range": [150,300]
     }
 ]

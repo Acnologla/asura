@@ -17,6 +17,7 @@ type Result struct {
 	Effect    EffectType
 	EffectID  int
 	Reset     bool
+	ExtraMsg  string
 	Skill     *Skill
 	Damage    int
 	Self      bool

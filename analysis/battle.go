@@ -154,33 +154,33 @@ func main() {
 		}
 	}
 	arr = []*stats{&stats{
-		Type: 35,
+		Type: 36,
 	}}
-	lvl := 10
-	for u := 0; u < 23; {
+	/*	lvl := 10
+		for u := 0; u < 23; {
 
-		for i := 1; i < lvl+u; i += 1 {
+			for i := 1; i < lvl+u; i += 1 {
+				for _, class := range arr {
+					result := measure(class.Type, 23, i, i, 20000, false)
+					class.TotalWins += result
+					class.Wins = append(class.Wins, result)
+					class.Level = append(class.Level, i)
+				}
+			}
 			for _, class := range arr {
-				result := measure(class.Type, 1, i, i, 10000, false)
-				class.TotalWins += result
-				class.Wins = append(class.Wins, result)
-				class.Level = append(class.Level, i)
+				fmt.Printf("Classe: %s\nTotal %d%%\nAté o nivel: %d\n", rinha.Classes[class.Type].Name, class.TotalWins/len(class.Wins), lvl+u)
+			}
+			if u == 0 {
+				u += 10
+			} else if u == 10 {
+				u += 6
+			} else {
+				u += 5
 			}
 		}
-		for _, class := range arr {
-			fmt.Printf("Classe: %s\nTotal %d%%\nAté o nivel: %d\n", rinha.Classes[class.Type].Name, class.TotalWins/len(class.Wins), lvl+u)
-		}
-		if u == 0 {
-			u += 10
-		} else if u == 10 {
-			u += 6
-		} else {
-			u += 5
-		}
-	}
-	return
+		return*/
 	arr = []*stats{&stats{
-		Type: 34,
+		Type: 36,
 	}}
 	x := rinha.Classes[arr[0].Type]
 	for u := 0; u < 1; {
@@ -188,7 +188,7 @@ func main() {
 			for _, class := range arr {
 				for l, gal := range rinha.Classes {
 					if gal.Rarity == x.Rarity && l != arr[0].Type {
-						result := measure(class.Type, l, i, i, 3000, false)
+						result := measure(class.Type, l, i, i, 3500, false)
 						class.TotalWins += result
 						class.Wins = append(class.Wins, result)
 						class.Level = append(class.Level, i)

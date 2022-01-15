@@ -30,9 +30,9 @@ func HasUpgrade(upgrades []int, upgradeList ...int) bool {
 func CalcUserXp(galo Galo) int {
 	n := len(galo.Upgrades)
 	if n == 0 {
-		return 200
+		return 300
 	}
-	return 200 * (6 * int(math.Pow(float64(n), 2)))
+	return 300 * (6 * int(math.Pow(float64(n), 2)))
 }
 
 func GetCurrentUpgrade(galo Galo) Upgrade {

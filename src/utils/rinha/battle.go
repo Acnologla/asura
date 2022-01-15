@@ -16,6 +16,7 @@ type NewSkill struct {
 type Fighter struct {
 	Galo        *Galo
 	Equipped    []*NewSkill
+	Revived     bool
 	Life        int
 	ID          disgord.Snowflake
 	ItemEffect  int

@@ -174,5 +174,9 @@
     {
         "name": "Emo",
         "rarity": 0
+    },
+    {
+        "name": "Zumbi",
+        "rarity": 3
     }   
 ]

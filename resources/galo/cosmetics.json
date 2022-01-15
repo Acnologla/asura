@@ -134,5 +134,11 @@
         "type": 1,
         "name": "VIP",
         "value": "https://cdn.discordapp.com/attachments/796834165986557962/922158593942364240/Fire_Badge.png"
+    },
+    {
+        "rarity": 4,
+        "type": 1,
+        "name": "Dungeon finish",
+        "value": "https://media.discordapp.net/attachments/796834165986557962/922153763798663228/TOP3.png"
     }
 ]

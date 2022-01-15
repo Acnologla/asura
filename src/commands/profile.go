@@ -164,6 +164,9 @@ func runProfile(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	badgeN := 0
 	badges := rinha.GetBadges(galo)
+	if galo.DungeonReset >= 1 {
+		badges = append([]*rinha.Cosmetic{rinha.Cosmetics[23]}, badges...)
+	}
 	if rinha.IsVip(galo) {
 		badges = append([]*rinha.Cosmetic{rinha.Cosmetics[22]}, badges...)
 	}
