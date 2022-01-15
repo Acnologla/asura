@@ -28,7 +28,7 @@ func main() {
 	name := os.Args[1]
 	migrator := migrate.NewMigrator(db, migrations)
 	_, err := migrator.CreateSQLMigrations(context.Background(), name)
-	if err != nil {
+	if err == nil {
 		fmt.Printf("Migration %s created", name)
 	}
 }

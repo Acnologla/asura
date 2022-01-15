@@ -62,7 +62,7 @@ CREATE TABLE Users(
 
 
 CREATE TABLE Rooster(
-    ID uuid DEFAULT uuid_generate_v4(),
+    ID uuid primary key DEFAULT uuid_generate_v4(),
     userID BIGINT REFERENCES Users (ID) NOT NULL,
     name VARCHAR(26),
     resets INT,
@@ -75,15 +75,15 @@ CREATE TABLE Rooster(
 
 
 CREATE TABLE ClanMember(
-    ID BigInt,
+    ID BigInt PRIMARY KEY,
     clan VARCHAR(26) REFERENCES Clan(name),
     role INT,
     xp INT
 );
 
 CREATE TABLE Item(
-    ID uuid DEFAULT uuid_generate_v4(),
-    userID BIGINT REFERENCES Users (ID),
+    ID uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    userID BIGINT REFERENCES Users (ID) NOT NULL,
     quatity INT,
     itemID INT,
 	equip BOOL
