@@ -62,7 +62,7 @@ CREATE TABLE Users(
 
 
 CREATE TABLE Rooster(
-    ID uuid primary key DEFAULT uuid_generate_v4(),
+    ID uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     userID BIGINT REFERENCES Users (ID) NOT NULL,
     name VARCHAR(26),
     resets INT,
