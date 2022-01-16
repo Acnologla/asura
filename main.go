@@ -1,6 +1,7 @@
 package main
 
 import (
+	"asura/src/cache"
 	"asura/src/handler"
 	interactionPkg "asura/src/interaction"
 	"asura/src/server"
@@ -50,6 +51,7 @@ func main() {
 			panic("Cannot read the motherfucking envfile")
 		}
 	}
+	cache.Init()
 	if os.Getenv("PRODUCTION") == "" {
 		runTestVersion()
 		return

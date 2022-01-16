@@ -6,6 +6,7 @@ require (
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	github.com/andersfylling/disgord v0.32.1
 	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/joho/godotenv v1.4.0
