@@ -2,7 +2,9 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/uptrace/bun"
@@ -11,23 +13,21 @@ import (
 )
 
 type DBConfig struct {
-	User     string
-	Host     string
-	Port     string
-	Password string
-	DbName   string
+	User     string `json:"DB_USER"`
+	Host     string `json:"DB_HOST"`
+	Port     string `json:"DB_PORT"`
+	Password string `json:"DB_PASS"`
+	DbName   string `json:"DB_NAME"`
 }
 
-func GetEnvConfig() *DBConfig {
-	return &DBConfig{
-		User:     os.Getenv("DB_USER"),
-		Host:     os.Getenv("DB_HOST"),
-		Port:     os.Getenv("DB_PORT"),
-		Password: os.Getenv("DB_PASS"),
-		DbName:   os.Getenv("DB_NAME"),
+func GetEnvConfig() (config *DBConfig) {
+	dbconfig := os.Getenv("DB_CONFIG")
+	err := json.Unmarshal([]byte(dbconfig), &config)
+	if err != nil {
+		log.Fatal(err)
 	}
+	return
 }
-
 func Connect(config *DBConfig) (*bun.DB, error) {
 	dbConfig := pgdriver.NewConnector(
 		pgdriver.WithAddr(fmt.Sprintf("%s:%s", config.Host, config.Port)),
