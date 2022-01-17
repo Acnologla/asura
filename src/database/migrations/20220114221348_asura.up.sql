@@ -63,7 +63,7 @@ CREATE TABLE Users(
 
 CREATE TABLE Rooster(
     ID uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    userID BIGINT REFERENCES Users (ID) NOT NULL,
+    userID BIGINT REFERENCES Users (ID) ON DELETE CASCADE NOT NULL,
     name VARCHAR(26),
     resets INT,
 	equip BOOL,
@@ -76,14 +76,14 @@ CREATE TABLE Rooster(
 
 CREATE TABLE ClanMember(
     ID BigInt PRIMARY KEY,
-    clan VARCHAR(26) REFERENCES Clan(name),
+    clan VARCHAR(26) REFERENCES Clan(name) ON DELETE CASCADE NOT NULL,
     role INT,
     xp INT
 );
 
 CREATE TABLE Item(
     ID uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    userID BIGINT REFERENCES Users (ID) NOT NULL,
+    userID BIGINT REFERENCES Users (ID) ON DELETE CASCADE NOT NULL,
     quatity INT,
     itemID INT,
 	equip BOOL

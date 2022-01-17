@@ -26,14 +26,12 @@ func main() {
 	if err := migrations.Discover(sqlMigrations); err != nil {
 		panic(err)
 	}
+
 	migrator := migrate.NewMigrator(db, migrations)
-	group, err := migrator.Migrate(context.Background())
+	err = migrator.Init(context.Background())
 	if err != nil {
 		log.Fatal(err)
-	}
-	if group == nil {
-		fmt.Println("No migrations to run")
 	} else {
-		fmt.Println("Migration sucess")
+		fmt.Println("Created migrations tables")
 	}
 }

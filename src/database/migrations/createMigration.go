@@ -30,5 +30,7 @@ func main() {
 	_, err := migrator.CreateSQLMigrations(context.Background(), name)
 	if err == nil {
 		fmt.Printf("Migration %s created", name)
+	} else {
+		fmt.Println(err)
 	}
 }
