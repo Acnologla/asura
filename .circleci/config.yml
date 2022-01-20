@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
     Unit-test:
       docker:
@@ -9,9 +9,9 @@ jobs:
             name: Unit test
             command: go test ./test
     Build-and-deploy:
+      resource_class: arm.medium
       docker:
          - image: 'jdrouet/docker-with-buildx:stable'
-      resource_class: arm.medium
       steps:
          - checkout
          - setup_remote_docker:
