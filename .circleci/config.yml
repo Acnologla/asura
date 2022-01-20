@@ -11,6 +11,7 @@ jobs:
     Build-and-deploy:
       docker:
          - image: 'jdrouet/docker-with-buildx:stable'
+      resource_class: arm.medium
       steps:
          - checkout
          - setup_remote_docker:
@@ -20,7 +21,8 @@ jobs:
             name: Docker build and deploy
             command: |
                 echo "$GITLABPASSWORD" | docker login registry.gitlab.com --username acnologla --password-stdin
-                docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag registry.gitlab.com/acnologla/asura --build-arg TOKEN="$TOKEN" --build-arg FIREBASE_CONFIG="$FIREBASE_CONFIG" --build-arg FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" --build-arg TOP_TOKEN="$TOP_TOKEN" --build-arg DATADOG_API_KEY="$DATADOG_API_KEY" --push .
+                docker build -t registry.gitlab.com/acnologla/asura --build-arg TOKEN="$TOKEN" --build-arg FIREBASE_CONFIG="$FIREBASE_CONFIG" --build-arg FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" --build-arg TOP_TOKEN="$TOP_TOKEN" --build-arg DATADOG_API_KEY="$DATADOG_API_KEY" .
+                docker push registry.gitlab.com/acnologla/asura
       
 
 workflows:
