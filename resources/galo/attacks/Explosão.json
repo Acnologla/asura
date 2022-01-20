@@ -26,7 +26,7 @@
     },
     {
         "name": "Chute explosivo",
-        "damage": [28,40],
+        "damage": [26,39],
         "level": 6
     },
     {

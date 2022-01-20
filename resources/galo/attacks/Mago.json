@@ -1,0 +1,104 @@
+[
+    {
+        "name": "Pedra magica",
+        "damage": [22,28],
+        "level": 1
+    },
+    {
+        "name": "Bola de fogo",
+        "damage": [10,18],
+        "level": 2,
+        "effect": [1,8]
+    },
+    {
+        "name": "Nevasca",
+        "damage": [5,15],
+        "level": 3,
+        "effect":[1,11]
+    },
+    {
+        "name": "Bomba magica",
+        "damage": [28,53],
+        "level": 4
+    },
+    {
+        "name": "Cajado da sacerdotisa",
+        "damage": [21, 25],
+        "level": 5,
+        "self":true,
+        "effect": [1,2]
+    },
+    {
+        "name": "Armadura magica",
+        "damage": [15,35],
+        "level": 7,
+        "effect": [1,4]
+    },
+    {
+        "name": "Prisão magica",
+        "damage": [5,10],
+        "level": 9,
+        "effect": [1,3]
+    },
+    {
+        "name": "Chuva de bola de fogo",
+        "damage": [20,25],
+        "level": 10,
+        "effect": [1,9]
+    },
+    {
+        "name": "Tempestade de espadas",
+        "damage": [20, 35],
+        "level": 12,
+        "effect":[1,36]
+
+    },
+    {
+        "name": "Benção divina",
+        "damage": [25,45],
+        "level": 13,
+        "self": true,
+        "effect": [1,14]
+    },
+    {
+        "name": "Magia intensa",
+        "damage": [45,60],
+        "level": 15
+    },
+    {
+        "name": "Armadura magica aprimorada",
+        "damage": [25,35],
+        "level": 17,
+        "effect": [1,4]
+    },
+    {
+        "name": "Bola solar",
+        "damage": [20,40],
+        "effect": [1, 31],
+        "level": 19
+    },
+    {
+        "name": "Frio interminavel",
+        "damage": [40,50],
+        "effect": [1, 41],
+        "level": 21
+    },
+    {
+        "name": "Prisão magica aprimorada",
+        "damage": [30,40],
+        "effect": [0.6,3],
+        "level": 22
+    },
+    {
+        "name": "Benção mitica",
+        "damage": [45,60],
+        "level": 25,
+        "self":true,
+        "effect": [1,17]
+    },
+    {
+        "name": "Magia nuclear",
+        "damage": [120, 160],
+        "level": 30
+    }
+]

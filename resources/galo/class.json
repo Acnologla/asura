@@ -178,5 +178,21 @@
     {
         "name": "Zumbi",
         "rarity": 3
-    }   
+    },
+    {
+        "name": "Dinossauro",
+        "rarity": 0
+    },
+    {
+        "name": "Ar",
+        "rarity": 1
+    },
+    {
+        "name": "Fantasma",
+        "rarity": 2
+    },
+    {
+        "name": "Mago",
+        "rarity": 3
+    }
 ]

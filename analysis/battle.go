@@ -147,21 +147,24 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	arr := []*stats{}
 	for i := 1; i < len(rinha.Classes); i++ {
-		if rinha.Classes[i].Rarity == 2 {
+		if rinha.Classes[i].Rarity == 3 {
 			arr = append(arr, &stats{
 				Type: i,
 			})
 		}
 	}
-	arr = []*stats{&stats{
-		Type: 36,
-	}}
-	/*	lvl := 10
+	arr = []*stats{
+		{
+			Type: 40,
+		},
+	}
+	/*
+		lvl := 10
 		for u := 0; u < 23; {
 
 			for i := 1; i < lvl+u; i += 1 {
 				for _, class := range arr {
-					result := measure(class.Type, 23, i, i, 20000, false)
+					result := measure(class.Type, 1, i, i, 20000, false)
 					class.TotalWins += result
 					class.Wins = append(class.Wins, result)
 					class.Level = append(class.Level, i)
@@ -178,17 +181,15 @@ func main() {
 				u += 5
 			}
 		}
-		return*/
-	arr = []*stats{&stats{
-		Type: 36,
-	}}
+		return
+	*/
 	x := rinha.Classes[arr[0].Type]
 	for u := 0; u < 1; {
-		for i := 1; i < 20; i += 1 {
+		for i := 1; i < 31; i += 1 {
 			for _, class := range arr {
 				for l, gal := range rinha.Classes {
 					if gal.Rarity == x.Rarity && l != arr[0].Type {
-						result := measure(class.Type, l, i, i, 3500, false)
+						result := measure(class.Type, l, i, i, 2000, false)
 						class.TotalWins += result
 						class.Wins = append(class.Wins, result)
 						class.Level = append(class.Level, i)
@@ -201,6 +202,8 @@ func main() {
 			fmt.Printf("Classe: %s\nTotal %d%%\nAté o nivel: %d\n", rinha.Classes[class.Type].Name, class.TotalWins/len(class.Wins), 31)
 		}
 		if u == 0 {
+			u += 10
+		} else if u == 10 {
 			u += 6
 		} else {
 			u += 5

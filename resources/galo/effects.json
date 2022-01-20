@@ -437,5 +437,21 @@
         "self": true,
         "phrase": "%s se curou! (+%d)",
         "range": [150,300]
+    },
+    {
+        "name": "Sugar oxigenio",
+        "turns": 2,
+        "type": 1,
+        "self": false,
+        "phrase": "%s está sem oxigenio! (-%d)",
+        "range": [10,20]
+    },
+    {
+        "name": "Virar ar",
+        "turns": 2,
+        "type": 4,
+        "self": true,
+        "phrase": "%s está com %d%% de proteção!",
+        "range": [100,100]
     }
 ]

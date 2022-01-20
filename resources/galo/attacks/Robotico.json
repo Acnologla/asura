@@ -1,18 +1,18 @@
 [
     {
         "name": "Laser",
-        "damage": [12,16],
+        "damage": [10,16],
         "level": 1,
-        "effect": [0.5,8]
+        "effect": [0.4,8]
     },
     {
         "name": "Foguete",
-        "damage": [18,25],
+        "damage": [18,23],
         "level": 2
     },
     {
         "name": "Pistola",
-        "damage": [9, 15],
+        "damage": [9, 12],
         "level": 3,
         "effect": [0.6,1]
     },
@@ -20,11 +20,11 @@
         "name": "Rifle",
         "damage": [15,20],
         "level": 4,
-        "effect": [0.8, 1]
+        "effect": [0.7, 1]
     },
     {
         "name": "Sniper",
-        "damage": [10,15],
+        "damage": [8,15],
         "level": 6,
         "effect": [1,1]
     },
@@ -36,7 +36,7 @@
     },
     {
         "name": "Raio laser",
-        "damage": [15,20],
+        "damage": [15,19],
         "level": 8,
         "effect": [1,1]
     },
@@ -48,12 +48,12 @@
     },
     {
         "name": "Bomba magnetica",
-        "damage": [35,45],
+        "damage": [35,40],
         "level": 12
     },
     {
         "name": "Chuva de misseis",
-        "damage": [45,50],
+        "damage": [40,50],
         "level": 14
     },
     {
@@ -78,7 +78,7 @@
     },
     {
         "name": "Empoderar",
-        "damage": [55,60],
+        "damage": [30,60],
         "level": 23,
         "effect": [1,4]
     },

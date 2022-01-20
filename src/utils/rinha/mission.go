@@ -40,15 +40,15 @@ func MissionsToString(id disgord.Snowflake, galo Galo) string {
 	for _, mission := range galo.Missions {
 		switch mission.Type {
 		case Win:
-			text += fmt.Sprintf("Vencer %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*3, mission.Progress, (mission.Level+1)*3, 30+5*mission.Level, 35*(mission.Level+1))
+			text += fmt.Sprintf("Vencer %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*3, mission.Progress, (mission.Level+1)*3, 35+5*mission.Level, 40*(mission.Level+1))
 		case Fight:
-			text += fmt.Sprintf("Batalhar contra %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*6, mission.Progress, (mission.Level+1)*6, 30+5*mission.Level, 35*(mission.Level+1))
+			text += fmt.Sprintf("Batalhar contra %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*6, mission.Progress, (mission.Level+1)*6, 35+5*mission.Level, 40*(mission.Level+1))
 		case WinGalo:
 			className := Classes[mission.Adv].Name
-			text += fmt.Sprintf("Vencer contra 4 galos do tipo %s (%d/4)\nMoney: **38**\nXp:  **80**", className, mission.Progress)
+			text += fmt.Sprintf("Vencer contra 4 galos do tipo %s (%d/4)\nMoney: **55**\nXp:  **130**", className, mission.Progress)
 		case FightGalo:
 			className := Classes[mission.Adv].Name
-			text += fmt.Sprintf("Batalhar contra 8 galos do tipo %s (%d/8)\nMoney: **38**\nXp:  **80**", className, mission.Progress)
+			text += fmt.Sprintf("Batalhar contra 8 galos do tipo %s (%d/8)\nMoney: **55**\nXp:  **130**", className, mission.Progress)
 		}
 		text += "\n"
 	}
@@ -95,24 +95,24 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 			if winner {
 				mission.Progress++
 				if mission.Progress == (mission.Level+1)*3 {
-					xp += 35 * (mission.Level + 1)
-					money += 30 + (5 * mission.Level)
+					xp += 40 * (mission.Level + 1)
+					money += 35 + (5 * mission.Level)
 					done = true
 				}
 			}
 		case Fight:
 			mission.Progress++
 			if mission.Progress == (mission.Level+1)*6 {
-				xp += 35 * (mission.Level + 1)
-				money += 30 + (5 * mission.Level)
+				xp += 40 * (mission.Level + 1)
+				money += 35 + (5 * mission.Level)
 				done = true
 			}
 		case WinGalo:
 			if winner && galoAdv.Type == mission.Adv {
 				mission.Progress++
 				if mission.Progress == 4 {
-					xp += 80
-					money += 38
+					xp += 130
+					money += 55
 					done = true
 				}
 			}
@@ -120,8 +120,8 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 			if galoAdv.Type == mission.Adv {
 				mission.Progress++
 				if mission.Progress == 8 {
-					xp += 80
-					money += 38
+					xp += 130
+					money += 55
 					done = true
 				}
 			}

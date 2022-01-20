@@ -1,0 +1,97 @@
+[
+    {
+        "name": "Vento brando",
+        "damage": [19,23],
+        "level": 1
+    },
+    {
+        "name": "Sopro",
+        "damage": [2,3],
+        "level": 2,
+        "effect": [1, 1]
+    },
+    {
+        "name": "Onda de ar",
+        "damage": [21,26],
+        "level": 3
+    },
+    {
+        "name": "Corrente de ar",
+        "damage": [5,10],
+        "level": 4,
+        "effect": [1, 1]
+    },
+    {
+        "name": "Punho de vento",
+        "damage": [25,32],
+        "level": 6
+    },
+    {
+        "name": "Vento pesado",
+        "damage": [30,33],
+        "level": 7
+    },
+    {
+        "name": "Cortina de ar",
+        "damage": [10,20],
+        "level": 8,
+        "effect": [1, 7]
+    },
+    {
+        "name": "Bola de ar",
+        "damage": [32,35],
+        "level": 10
+    },
+    {
+        "name": "Vento cortante",
+        "damage": [15,25],
+        "level": 12,
+        "effect": [1,1]
+    },
+    {
+        "name": "Tornado",
+        "damage": [35,40],
+        "level": 14
+    },
+    {
+        "name": "Lamina de ar",
+        "damage": [20,25],
+        "level": 15,
+        "effect": [1,7]
+    },
+    {
+        "name": "Cratera de ar",
+        "damage": [40,46],
+        "level": 16
+    },
+    {
+        "name": "Tiro de ar",
+        "damage": [10,20],
+        "level": 18,
+        "effect": [1,36]
+    },
+    {
+        "name": "Vento sombrio",
+        "damage": [25,45],
+        "level": 21,
+        "effect":[1,7]
+    },
+    {
+        "name": "Sugar oxigenio",
+        "damage": [15,20],
+        "level": 23,
+        "effect": [1,56]
+    },
+    {
+        "name": "Ar denso",
+        "damage": [35,50],
+        "level": 25,
+        "effect": [1, 7]
+    },
+    {
+        "name": "Virar vento",
+        "damage": [5,10],
+        "level": 30,
+        "effect": [1, 57]
+    }
+]

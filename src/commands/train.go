@@ -44,13 +44,14 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			Xp:   galo.Xp,
 			Type: rinha.GetRand(),
 		}
-		if rinha.Classes[galo.Type].Rarity == rinha.Common {
-			galoAdv.Type = rinha.GetRarityPlusOne(rinha.Common)
+		if rinha.CalcLevel(galo.Xp) > 1 {
+			galoAdv.Xp = rinha.CalcXP(rinha.CalcLevel(galo.Xp) - 1)
 		}
-		if len(galo.Items) > 0 {
-			randItem := rinha.GetItemByLevel(rinha.Items[galo.Items[0]].Level)
-			galoAdv.Items = []int{randItem}
-		}
+		/*	if len(galo.Items) > 0 {
+				randItem := rinha.GetItemByLevel(rinha.Items[galo.Items[0]].Level)
+				galoAdv.Items = []int{randItem}
+			}
+		*/
 		LockEvent(msg.Author.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
 		defer UnlockEvent(msg.Author.ID)
 		winner, _ := engine.ExecuteRinha(msg, session, engine.RinhaOptions{
@@ -66,7 +67,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		rinha.CompleteMission(msg.Author.ID, galo, galoAdv, winner == 0, msg)
 		if winner == 0 {
-			xpOb := utils.RandInt(10) + 10
+			xpOb := utils.RandInt(10) + 11
 			if rinha.HasUpgrade(galo.Upgrades, 0) {
 				xpOb++
 				if rinha.HasUpgrade(galo.Upgrades, 0, 1, 1) {
@@ -76,7 +77,16 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 					xpOb += 3
 				}
 			}
-			xpOb += int(rinha.Classes[galoAdv.Type].Rarity-rinha.Classes[galo.Type].Rarity) * 2
+			calc := int(rinha.Classes[galoAdv.Type].Rarity - rinha.Classes[galo.Type].Rarity)
+			if calc > 0 {
+				calc++
+			}
+			if calc < 0 {
+				if rinha.Classes[galo.Type].Rarity == rinha.Legendary {
+					calc -= 2
+				}
+			}
+			xpOb += calc
 			money := 5
 			var item *rinha.Item
 			if len(galo.Items) > 0 {
