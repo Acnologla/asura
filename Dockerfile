@@ -8,7 +8,7 @@ COPY go.mod .
 RUN go mod tidy
 
 COPY . .
-RUN go build -mod=mod -o main .
+RUN env GOOS=linux GOARCH=arm64 go build -mod=mod -o main .
 
 FROM alpine
 
