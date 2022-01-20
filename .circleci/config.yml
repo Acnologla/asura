@@ -10,8 +10,8 @@ jobs:
             command: go test ./test
     Build-and-deploy:
       resource_class: arm.medium
-      docker:
-         - image: 'jdrouet/docker-with-buildx:stable'
+      machine:
+         image: ubuntu-2004:202101-01
       steps:
          - checkout
          - setup_remote_docker:
