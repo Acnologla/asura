@@ -20,10 +20,16 @@ CREATE TYPE Arena as(
 CREATE TYPE Daily AS (last TIMESTAMPTZ, strikes INT);
 
 CREATE TYPE Cooldowns AS (trade TIMESTAMPTZ, daily Daily);
+CREATE TYPE MissionProgress AS (
+    type INT NOT NULL,
+    level INT,
+    progress INT,
+    adv INT
+)
 CREATE TYPE Mission AS(
     trade TIMESTAMPTZ,
     last TIMESTAMPTZ,
-    missions int []
+    missions MissionProgress []
 );
 
 CREATE TYPE Dungeon AS (floor int, resets int);
@@ -86,6 +92,7 @@ CREATE TABLE Item(
     userID BIGINT REFERENCES Users (ID) ON DELETE CASCADE NOT NULL,
     quatity INT,
     itemID INT,
-	equip BOOL
+	equip BOOL,
+    type INT
 );
 

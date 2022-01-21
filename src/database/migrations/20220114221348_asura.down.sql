@@ -9,6 +9,7 @@ DROP TABLE Clan;
 DROP TYPE Status;
 DROP TYPE Dungeon;
 DROP TYPE Mission;
+DROP TYPE MissionProgress;
 DROP TYPE Cooldowns;
 DROP TYPE Daily;
 DROP TYPE Arena;
