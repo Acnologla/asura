@@ -45,10 +45,10 @@ func MissionsToString(id disgord.Snowflake, galo Galo) string {
 			text += fmt.Sprintf("Batalhar contra %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*6, mission.Progress, (mission.Level+1)*6, 35+5*mission.Level, 40*(mission.Level+1))
 		case WinGalo:
 			className := Classes[mission.Adv].Name
-			text += fmt.Sprintf("Vencer contra 4 galos do tipo %s (%d/4)\nMoney: **55**\nXp:  **130**", className, mission.Progress)
+			text += fmt.Sprintf("Vencer contra 4 galos do tipo %s (%d/4)\nMoney: **60**\nXp:  **130**", className, mission.Progress)
 		case FightGalo:
 			className := Classes[mission.Adv].Name
-			text += fmt.Sprintf("Batalhar contra 8 galos do tipo %s (%d/8)\nMoney: **55**\nXp:  **130**", className, mission.Progress)
+			text += fmt.Sprintf("Batalhar contra 8 galos do tipo %s (%d/8)\nMoney: **60**\nXp:  **130**", className, mission.Progress)
 		}
 		text += "\n"
 	}
@@ -112,7 +112,7 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 				mission.Progress++
 				if mission.Progress == 4 {
 					xp += 130
-					money += 55
+					money += 60
 					done = true
 				}
 			}
@@ -121,7 +121,7 @@ func CompleteMission(id disgord.Snowflake, galo, galoAdv Galo, winner bool, msg 
 				mission.Progress++
 				if mission.Progress == 8 {
 					xp += 130
-					money += 55
+					money += 60
 					done = true
 				}
 			}

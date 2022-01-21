@@ -46,7 +46,7 @@ func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
 				money += 15
 				xp += 35
 			}
-			money = 35 + galo.Daily.Strike/5
+			money = 40 + galo.Daily.Strike/4
 			xp = 60 + galo.Daily.Strike
 			galo.Daily.Strike++
 			galo.Money += money

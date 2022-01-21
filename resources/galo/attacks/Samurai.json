@@ -32,7 +32,7 @@
         "level": 7
     },
     {
-        "name": "Defesa samuari",
+        "name": "Defesa samurai",
         "damage": [1,5],
         "level": 8,
         "effect": [1, 4]
