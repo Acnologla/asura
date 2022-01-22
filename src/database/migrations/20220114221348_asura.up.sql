@@ -21,11 +21,12 @@ CREATE TYPE Daily AS (last TIMESTAMPTZ, strikes INT);
 
 CREATE TYPE Cooldowns AS (trade TIMESTAMPTZ, daily Daily);
 CREATE TYPE MissionProgress AS (
-    type INT NOT NULL,
+    type INT,
     level INT,
     progress INT,
     adv INT
-)
+);
+
 CREATE TYPE Mission AS(
     trade TIMESTAMPTZ,
     last TIMESTAMPTZ,

@@ -10,7 +10,10 @@ import (
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
+	"github.com/uptrace/bun/extra/bundebug"
 )
+
+var db *bun.DB
 
 type DBConfig struct {
 	User     string `json:"DB_USER"`
@@ -28,6 +31,7 @@ func GetEnvConfig() (config *DBConfig) {
 	}
 	return
 }
+
 func Connect(config *DBConfig) (*bun.DB, error) {
 	dbConfig := pgdriver.NewConnector(
 		pgdriver.WithAddr(fmt.Sprintf("%s:%s", config.Host, config.Port)),
@@ -43,5 +47,8 @@ func Connect(config *DBConfig) (*bun.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	return bun.NewDB(sqldb, pgdialect.New()), nil
+	db = bun.NewDB(sqldb, pgdialect.New(), bun.WithDiscardUnknownColumns())
+	db.AddQueryHook(bundebug.NewQueryHook())
+
+	return db, nil
 }
