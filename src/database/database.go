@@ -13,7 +13,7 @@ import (
 	"github.com/uptrace/bun/extra/bundebug"
 )
 
-var db *bun.DB
+var Database *bun.DB
 
 type DBConfig struct {
 	User     string `json:"DB_USER"`
@@ -47,8 +47,8 @@ func Connect(config *DBConfig) (*bun.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db = bun.NewDB(sqldb, pgdialect.New(), bun.WithDiscardUnknownColumns())
-	db.AddQueryHook(bundebug.NewQueryHook())
+	Database = bun.NewDB(sqldb, pgdialect.New(), bun.WithDiscardUnknownColumns())
+	Database.AddQueryHook(bundebug.NewQueryHook())
 
-	return db, nil
+	return Database, nil
 }

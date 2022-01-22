@@ -1,9 +1,6 @@
-package database
+package entities
 
 import (
-	"context"
-	"fmt"
-
 	"github.com/andersfylling/disgord"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -93,15 +90,4 @@ type User struct {
 	Rank       int               `bun:"rank"`
 	Cooldowns  *Cooldowns        `bun:"cooldowns"`
 	Pity       int               `bun:"pity"`
-}
-
-func GetGaloDb(ID disgord.Snowflake) User {
-	var user User
-	db.NewSelect().Model(&user).Where("? = ?", bun.Ident("id"), ID).Scan(context.Background())
-	return user
-}
-
-func InsertGaloDb(galo User) {
-	_, err := db.NewInsert().Model(&galo).Exec(context.Background())
-	fmt.Println(err)
 }
