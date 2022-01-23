@@ -29,3 +29,20 @@ func (adapter UserAdapterPsql) UpdateUser(id disgord.Snowflake, callback func(en
 		return err
 	})
 }
+
+func (adapter UserAdapterPsql) SetUser(user entities.User) error {
+	_, err := adapter.Db.NewInsert().Model(&user).Exec(context.Background())
+	return err
+}
+
+func (adapter UserAdapterPsql) GetRoosters(id disgord.Snowflake) []entities.Rooster {
+	var rooster []entities.Rooster
+	adapter.Db.NewInsert().Model(&rooster).Where("? = ?", bun.Ident("userid"), id).Exec(context.Background())
+	return rooster
+}
+
+func (adapter UserAdapterPsql) GetItems(id disgord.Snowflake) []entities.Item {
+	var items []entities.Item
+	adapter.Db.NewInsert().Model(&items).Where("? = ?", bun.Ident("userid"), id).Exec(context.Background())
+	return items
+}
