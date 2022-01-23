@@ -26,8 +26,8 @@ func T(id, language string, data ...interface{}) string {
 func init() {
 	Bundle = i18n.NewBundle(language.Portuguese)
 	Bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
-	for _, lang := range []string{"pt"} {
-		for _, file := range []string{"bot", "commands"} {
+	for _, lang := range [...]string{"pt"} {
+		for _, file := range [...]string{"bot", "commands"} {
 			Bundle.MustLoadMessageFile(fmt.Sprintf("i18n/%s/%s.%s.toml", lang, file, lang))
 		}
 	}
