@@ -3,6 +3,8 @@ package commands
 import (
 	"asura/src/handler"
 	"asura/src/interaction"
+
+	"asura/src/translation"
 )
 
 func init() {
@@ -18,7 +20,7 @@ func runPing(itc interaction.Interaction) *interaction.InteractionResponse {
 	return &interaction.InteractionResponse{
 		Type: interaction.CHANNEL_MESSAGE_WITH_SOURCE,
 		Data: &interaction.InteractionCallbackData{
-			Content: "Pinguei vc lindo",
+			Content: translation.T("Ping", itc.GuildLocale, "12ms"),
 		},
 	}
 }

@@ -42,6 +42,8 @@ type Interaction struct {
 	GuildID       disgord.Snowflake `json:"guild_id"`
 	ChannelID     disgord.Snowflake `json:"channel_id"`
 	Member        *Member           `json:"member"`
+	GuildLocale   string            `json:"guild_locale"`
+	Locale        string            `json:"locale"`
 }
 
 //TODO implement all the struct
