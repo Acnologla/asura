@@ -33,6 +33,7 @@ type InteractionData struct {
 }
 
 //TODO implement all the struct
+
 type Interaction struct {
 	ID            disgord.Snowflake `json:"id"`
 	ApplicationID disgord.Snowflake `json:"application_id"`
