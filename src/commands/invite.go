@@ -3,12 +3,13 @@ package commands
 import (
 	"asura/src/handler"
 	"asura/src/interaction"
+	"asura/src/translation"
 )
 
 func init() {
 	handler.RegisterCommand(handler.Command{
 		Name:        "invite",
-		Description: "Convidar o bot para seu servidor",
+		Description: translation.T("InviteHelp", "pt"),
 		Run:         runInvite,
 		Cooldown:    5,
 	})

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"asura/src/interaction"
+	"asura/src/translation"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -33,10 +34,11 @@ func RegisterCommand(command Command) {
 func Run(itc interaction.Interaction) *interaction.InteractionResponse {
 	command := Commands[itc.Data.Name]
 	if cooldown, ok := GetCooldown(itc.Member.User.ID, command); ok {
+		needTime := command.Cooldown - int(time.Since(cooldown).Seconds())
 		return &interaction.InteractionResponse{
 			Type: interaction.CHANNEL_MESSAGE_WITH_SOURCE,
 			Data: &interaction.InteractionCallbackData{
-				Content: fmt.Sprintf("Você precisa esperar %v segundos para usar este comando novamente.", command.Cooldown-int(time.Since(cooldown).Seconds())),
+				Content: translation.T("Cooldown", itc.GuildLocale, needTime),
 			},
 		}
 	}

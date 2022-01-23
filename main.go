@@ -5,7 +5,6 @@ import (
 	"asura/src/handler"
 	interactionPkg "asura/src/interaction"
 	"asura/src/server"
-	"asura/src/translation"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -52,7 +51,6 @@ func main() {
 			panic("Cannot read the motherfucking envfile")
 		}
 	}
-	translation.Init()
 	cache.Init()
 	if os.Getenv("PRODUCTION") == "" {
 		runTestVersion()

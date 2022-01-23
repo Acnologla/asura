@@ -10,7 +10,7 @@ import (
 func init() {
 	handler.RegisterCommand(handler.Command{
 		Name:        "ping",
-		Description: "Pinga o usuario",
+		Description: translation.T("PingHelp", "pt"),
 		Run:         runPing,
 		Cooldown:    3,
 	})

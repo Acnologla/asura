@@ -1,2 +1,11 @@
 [Ping]
 other="{{.}}"
+
+[PingHelp]
+other="Veja meu ping"
+
+[InviteHelp]
+other="Convidar o bot para seu servidor"
+
+[Cooldown]
+other="Você precisa esperar {{.}} segundos para usar este comando novamente."
