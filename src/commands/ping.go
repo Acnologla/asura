@@ -10,6 +10,7 @@ func init() {
 		Name:        "ping",
 		Description: "Pinga o usuario",
 		Run:         runPing,
+		Cooldown:    3,
 	})
 }
 

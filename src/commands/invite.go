@@ -10,6 +10,7 @@ func init() {
 		Name:        "invite",
 		Description: "Convidar o bot para seu servidor",
 		Run:         runInvite,
+		Cooldown:    5,
 	})
 }
 

@@ -7,17 +7,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/andersfylling/disgord"
 )
 
-const url = "https://discord.com/api/v8/applications/%s/commands"
 const apiURL = "https://discord.com/api/v8"
 
 var client = &http.Client{}
 
 type Command struct {
 	Name        string
+	Cooldown    int
 	Description string
 	Options     []*interaction.ApplicationCommandInteractionDataOption
 	Run         func(interaction.Interaction) *interaction.InteractionResponse
@@ -30,7 +31,17 @@ func RegisterCommand(command Command) {
 }
 
 func Run(itc interaction.Interaction) *interaction.InteractionResponse {
-	return Commands[itc.Data.Name].Run(itc)
+	command := Commands[itc.Data.Name]
+	if cooldown, ok := GetCooldown(itc.Member.User.ID, command); ok {
+		return &interaction.InteractionResponse{
+			Type: interaction.CHANNEL_MESSAGE_WITH_SOURCE,
+			Data: &interaction.InteractionCallbackData{
+				Content: fmt.Sprintf("Você precisa esperar %v segundos para usar este comando novamente.", command.Cooldown-int(time.Since(cooldown).Seconds())),
+			},
+		}
+	}
+	SetCooldown(itc.Member.User.ID, command)
+	return command.Run(itc)
 }
 
 func isInApplicationCommandSlice(command string, commands []*interaction.ApplicationCommand) bool {
@@ -45,7 +56,6 @@ func isInApplicationCommandSlice(command string, commands []*interaction.Applica
 func Init(appID, token string, session *disgord.Client) {
 	var commands []*interaction.ApplicationCommand
 	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
-	client := &http.Client{}
 	request, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
 		log.Fatal(err)
