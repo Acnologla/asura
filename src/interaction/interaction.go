@@ -38,6 +38,9 @@ type Interaction struct {
 	ApplicationID disgord.Snowflake `json:"application_id"`
 	Type          InteractionType   `json:"type"`
 	Data          *InteractionData  `json:"data"`
+	GuildID       disgord.Snowflake `json:"guild_id"`
+	ChannelID     disgord.Snowflake `json:"channel_id"`
+	Member        *Member           `json:"member"`
 }
 
 //TODO implement all the struct
