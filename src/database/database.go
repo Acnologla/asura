@@ -1,11 +1,13 @@
 package database
 
 import (
+	"asura/src/adapter"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -22,6 +24,8 @@ type DBConfig struct {
 	Password string `json:"DB_PASS"`
 	DbName   string `json:"DB_NAME"`
 }
+
+var Client adapter.UserAdapter
 
 func GetEnvConfig() (config *DBConfig) {
 	dbconfig := os.Getenv("DB_CONFIG")
@@ -48,7 +52,12 @@ func Connect(config *DBConfig) (*bun.DB, error) {
 		return nil, err
 	}
 	Database = bun.NewDB(sqldb, pgdialect.New(), bun.WithDiscardUnknownColumns())
+	maxOpenConns := 4 * runtime.GOMAXPROCS(0)
+	Database.SetMaxOpenConns(maxOpenConns)
+	Database.SetMaxIdleConns(maxOpenConns)
 	Database.AddQueryHook(bundebug.NewQueryHook())
-
+	Client = adapter.UserAdapterPsql{
+		Db: Database,
+	}
 	return Database, nil
 }
