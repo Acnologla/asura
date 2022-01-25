@@ -46,9 +46,43 @@ func Run(itc interaction.Interaction) *interaction.InteractionResponse {
 	return command.Run(itc)
 }
 
-func isInApplicationCommandSlice(command string, commands []*interaction.ApplicationCommand) bool {
+func findCommand(command string, commands []*interaction.ApplicationCommand) *interaction.ApplicationCommand {
 	for _, c := range commands {
 		if c.Name == command {
+			return c
+		}
+	}
+	return nil
+}
+
+func HasChanged(command *interaction.ApplicationCommand, realCommand Command) bool {
+	if command.Description != realCommand.Description {
+		return true
+	}
+	if len(command.Options) != len(realCommand.Options) {
+		return true
+	}
+	for i, option := range command.Options {
+		if option.Name != realCommand.Options[i].Name {
+			return true
+		}
+		if option.Type != realCommand.Options[i].Type {
+			return true
+		}
+		if option.Description != realCommand.Options[i].Description {
+			return true
+		}
+		if option.Required != realCommand.Options[i].Required {
+			return true
+		}
+		if option.MaxValue != realCommand.Options[i].MaxValue {
+			return true
+		}
+		if option.MinValue != realCommand.Options[i].MinValue {
+
+			return true
+		}
+		if option.AutoComplete != realCommand.Options[i].AutoComplete {
 			return true
 		}
 	}
@@ -69,7 +103,8 @@ func Init(appID, token string, session *disgord.Client) {
 		log.Fatal(err)
 	}
 	for name, command := range Commands {
-		if !isInApplicationCommandSlice(name, commands) {
+		commandR := findCommand(name, commands)
+		request := func(method string) {
 			var newCommand interaction.ApplicationCommand
 			newCommand.Name = command.Name
 			newCommand.DefaultPermission = true
@@ -78,13 +113,22 @@ func Init(appID, token string, session *disgord.Client) {
 			newCommand.Description = command.Description
 			val, _ := json.Marshal(newCommand)
 			reader := bytes.NewBuffer(val)
-			req, _ := http.NewRequest("POST", endpoint, reader)
+			_endpoint := endpoint
+			if method == "PATCH" {
+				_endpoint += fmt.Sprintf("/%d", commandR.ID)
+			}
+			req, _ := http.NewRequest(method, _endpoint, reader)
 			req.Header.Add("Authorization", "Bot "+token)
 			req.Header.Add("Content-Type", "application/json")
-			_, err = client.Do(req)
+			_, err := client.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
+		}
+		if commandR == nil {
+			request("POST")
+		} else if HasChanged(commandR, command) {
+			request("PATCH")
 		}
 	}
 }
