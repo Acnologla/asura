@@ -6,47 +6,13 @@ import (
 	"github.com/uptrace/bun"
 )
 
-type Arena struct {
-	Active    bool              `bun:"active"`
-	Win       int               `bun:"win"`
-	Lose      int               `bun:"lose"`
-	LastFight disgord.Snowflake `bun:"lastFight"`
-}
-
-type Daily struct {
-	Last    uint64 `bun:"last"`
-	Strikes int    `bun:"strikes"`
-}
-
-type Cooldowns struct {
-	Trade uint64 `bun:"trade"`
-	Daily Daily  `bun:"daily"`
-}
-
-type Vip struct {
-	Vip        uint64 `bun:"vip"`
-	Background string `bun:"background"`
-}
-
-type Dungeon struct {
-	Floor  int `bun:"floor"`
-	Resets int `bun:"resets"`
-}
-type Status struct {
-	Win  int `bun:"win"`
-	Lose int `bun:"lose"`
-}
-
-type MissionProgress struct {
-	Type     int `bun:"type"`
-	Level    int `bun:"level"`
-	Progress int `bun:"progress"`
-	Adv      int `bun:"adv"`
-}
 type Mission struct {
-	Trade    uint64             `bun:"trade"`
-	Last     uint64             `bun:"last"`
-	Missions []*MissionProgress `bun:"missions,array"`
+	bun.BaseModel `bun:"table:mission,alias:mission"`
+	UserID        disgord.Snowflake `bun:"userID, pk"`
+	Type          int               `bun:"type"`
+	Level         int               `bun:"level"`
+	Progress      int               `bun:"progress"`
+	Adv           int               `bun:"adv"`
 }
 
 type Item struct {
@@ -73,21 +39,31 @@ type Rooster struct {
 type User struct {
 	bun.BaseModel `bun:"table:users,alias:u"`
 
-	ID         disgord.Snowflake `bun:"id,pk"`
-	Xp         int               `bun:"xp"`
-	Galos      []*Rooster        `bun:"rel:has-many,join:id=userID"`
-	Items      []*Item           `bun:"rel:has-many,join:id=userID"`
-	Upgrades   []int             `bun:"upgrades,array"`
-	Status     *Status           `bun:"status"`
-	Money      int               `bun:"money"`
-	Clan       string            `bun:"clan,nullzero"`
-	Dungeon    *Dungeon          `bun:"dungeon"`
-	Mission    *Mission          `bun:"mission"`
-	Vip        *Vip              `bun:"vip"`
-	TrainLimit int               `bun:"trainlimit"`
-	AsuraCoin  int               `bun:"asuracoin"`
-	Arena      *Arena            `bun:"arena"`
-	Rank       int               `bun:"rank"`
-	Cooldowns  *Cooldowns        `bun:"cooldowns"`
-	Pity       int               `bun:"pity"`
+	ID             disgord.Snowflake `bun:"id,pk"`
+	Xp             int               `bun:"xp"`
+	Galos          []*Rooster        `bun:"rel:has-many,join:id=userID"`
+	Items          []*Item           `bun:"rel:has-many,join:id=userID"`
+	Upgrades       []int             `bun:"upgrades,array"`
+	Win            int               `bun:"win"`
+	Lose           int               `bun:"lose"`
+	Money          int               `bun:"money"`
+	Clan           string            `bun:"clan,nullzero"`
+	Dungeon        int               `bun:"dungeon"`
+	DungeonReset   int               `bun:"dungeonReset"`
+	TradeMission   uint64            `bun:"tradeMission"`
+	LastMission    uint64            `bun:"lastMission"`
+	Missions       []*Mission        `bun:"rel:has-many,join:id=userID"`
+	Vip            uint64            `bun:"vip"`
+	VipBackground  string            `bun:"vipBackground"`
+	TrainLimit     int               `bun:"trainlimit"`
+	AsuraCoin      int               `bun:"asuracoin"`
+	ArenaActive    bool              `bun:"arenaActive"`
+	ArenaWin       int               `bun:"arenaWin"`
+	ArenaLose      int               `bun:"arenaLose"`
+	ArenaLastFight disgord.Snowflake `bun:"arenaLastFight"`
+	Rank           int               `bun:"rank"`
+	TradeItem      uint64            `bun:"tradeItem"`
+	Daily          uint64            `bun:"daily"`
+	DailyStrikes   int               `bun:"dailyStrikes"`
+	Pity           int               `bun:"pity"`
 }

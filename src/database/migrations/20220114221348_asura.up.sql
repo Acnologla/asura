@@ -6,36 +6,7 @@ CREATE TYPE ClanUpgrades AS (
     banks INT,
     missions INT
 );
-CREATE TYPE Vip as (
-    vip TIMESTAMPTZ,
-    background varchar(200)
-);
-CREATE TYPE Arena as(
-    active BOOL,
-    win INT,
-    lose INT,
-    lastFight BigInt
-);
 
-CREATE TYPE Daily AS (last TIMESTAMPTZ, strikes INT);
-
-CREATE TYPE Cooldowns AS (trade TIMESTAMPTZ, daily Daily);
-CREATE TYPE MissionProgress AS (
-    type INT,
-    level INT,
-    progress INT,
-    adv INT
-);
-
-CREATE TYPE Mission AS(
-    trade TIMESTAMPTZ,
-    last TIMESTAMPTZ,
-    missions MissionProgress []
-);
-
-CREATE TYPE Dungeon AS (floor int, resets int);
-
-CREATE TYPE Status AS (win int, lose int);
 
 CREATE TABLE Clan(
     name VARCHAR(25) PRIMARY KEY,
@@ -53,20 +24,36 @@ CREATE TABLE Users(
     ID BigInt PRIMARY KEY,
     xp INT,
     upgrades INT [],
-    status Status,
+    win int,
+    lose int,
     money INT,
     clan VARCHAR(26) REFERENCES Clan(name),
-    dungeon Dungeon,
-    mission Mission,
-    vip Vip,
+    dungeon INT,
+    dungonReset INT,
+    tradeMission TIMESTAMPTZ,
+    lastMission TIMESTAMPTZ,
+    vip TIMESTAMPTZ,
+    vipBackground varchar(200),
     trainLimit INT,
     asuraCoin INT,
-    arena Arena,
+    arenaActive BOOLEAN,
+    arenaWin INT,
+    arenaLose INT,
+    arenaLastFight BIGINT,
     rank INT,
-    cooldowns Cooldowns,
+    tradeItem TIMESTAMPTZ,
+    daily TIMESTAMPTZ,
+    dailySrikes INT,
     pity INT
 );
 
+CREATE TABLE Mission(
+    userId BIGINT REFERENCES Users(ID) PRIMARY KEY,
+    type INT, 
+    level INT,
+    progress INT,
+    adv int
+);
 
 CREATE TABLE Rooster(
     ID uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
