@@ -21,7 +21,7 @@ type Command struct {
 	Name        string
 	Cooldown    int
 	Description string
-	Options     []*interaction.ApplicationCommandInteractionDataOption
+	Options     []*interaction.ApplicationCommandOption
 	Run         func(interaction.Interaction) *interaction.InteractionResponse
 }
 
