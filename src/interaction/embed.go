@@ -4,6 +4,7 @@ type Footer struct {
 }
 
 type Image struct {
+	URL string `json:"url"`
 }
 
 type Thumbnail struct {
@@ -21,4 +22,5 @@ type Embed struct {
 	Description string `json:"description"`
 	Url         string `json:"url"`
 	Color       int    `json:"color"`
+	Image       *Image `json:"image"`
 }

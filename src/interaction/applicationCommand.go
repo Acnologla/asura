@@ -73,13 +73,13 @@ type ApplicationCommandOption struct {
 }
 
 type ApplicationCommand struct {
-	ID                disgord.Snowflake                          `json:"id"`
-	Type              ApplicationCommandType                     `json:"type"`
-	ApplicationID     disgord.Snowflake                          `json:"application_id"`
-	GuildId           disgord.Snowflake                          `json:"guild_id"`
-	Name              string                                     `json:"name"`
-	Description       string                                     `json:"description"`
-	Options           []*ApplicationCommandInteractionDataOption `json:"options"`
-	DefaultPermission bool                                       `json:"default_permission,omitempty"`
-	Version           disgord.Snowflake                          `json:"version"`
+	ID                disgord.Snowflake           `json:"id"`
+	Type              ApplicationCommandType      `json:"type"`
+	ApplicationID     disgord.Snowflake           `json:"application_id"`
+	GuildId           disgord.Snowflake           `json:"guild_id"`
+	Name              string                      `json:"name"`
+	Description       string                      `json:"description"`
+	Options           []*ApplicationCommandOption `json:"options"`
+	DefaultPermission bool                        `json:"default_permission,omitempty"`
+	Version           disgord.Snowflake           `json:"version"`
 }
