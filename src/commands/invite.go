@@ -2,8 +2,9 @@ package commands
 
 import (
 	"asura/src/handler"
-	"asura/src/interaction"
 	"asura/src/translation"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -15,10 +16,10 @@ func init() {
 	})
 }
 
-func runInvite(itc interaction.Interaction) *interaction.InteractionResponse {
-	return &interaction.InteractionResponse{
-		Type: interaction.CHANNEL_MESSAGE_WITH_SOURCE,
-		Data: &interaction.InteractionCallbackData{
+func runInvite(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+	return &disgord.InteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.InteractionApplicationCommandCallbackData{
 			Content: " https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%%20bot&permissions=8",
 		},
 	}

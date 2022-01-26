@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"asura/src/interaction"
 	"asura/src/translation"
 	"bytes"
 	"encoding/json"
@@ -15,14 +14,15 @@ import (
 
 const apiURL = "https://discord.com/api/v8"
 
+var Client *disgord.Client
 var client = &http.Client{}
 
 type Command struct {
 	Name        string
 	Cooldown    int
 	Description string
-	Options     []*interaction.ApplicationCommandOption
-	Run         func(interaction.Interaction) *interaction.InteractionResponse
+	Options     []*disgord.ApplicationCommandOption
+	Run         func(*disgord.InteractionCreate) *disgord.InteractionResponse
 }
 
 var Commands = map[string]Command{}
@@ -31,14 +31,15 @@ func RegisterCommand(command Command) {
 	Commands[command.Name] = command
 }
 
-func Run(itc interaction.Interaction) *interaction.InteractionResponse {
+func Run(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	command := Commands[itc.Data.Name]
+	locale := translation.GetLocale(itc)
 	if cooldown, ok := GetCooldown(itc.Member.User.ID, command); ok {
 		needTime := command.Cooldown - int(time.Since(cooldown).Seconds())
-		return &interaction.InteractionResponse{
-			Type: interaction.CHANNEL_MESSAGE_WITH_SOURCE,
-			Data: &interaction.InteractionCallbackData{
-				Content: translation.T("Cooldown", itc.GuildLocale, needTime),
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Content: translation.T("Cooldown", locale, needTime),
 			},
 		}
 	}
@@ -46,7 +47,7 @@ func Run(itc interaction.Interaction) *interaction.InteractionResponse {
 	return command.Run(itc)
 }
 
-func findCommand(command string, commands []*interaction.ApplicationCommand) *interaction.ApplicationCommand {
+func findCommand(command string, commands []*disgord.ApplicationCommand) *disgord.ApplicationCommand {
 	for _, c := range commands {
 		if c.Name == command {
 			return c
@@ -55,7 +56,7 @@ func findCommand(command string, commands []*interaction.ApplicationCommand) *in
 	return nil
 }
 
-func HasChanged(command *interaction.ApplicationCommand, realCommand Command) bool {
+func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
 	if command.Description != realCommand.Description {
 		return true
 	}
@@ -75,22 +76,24 @@ func HasChanged(command *interaction.ApplicationCommand, realCommand Command) bo
 		if option.Required != realCommand.Options[i].Required {
 			return true
 		}
-		if option.MaxValue != realCommand.Options[i].MaxValue {
-			return true
-		}
-		if option.MinValue != realCommand.Options[i].MinValue {
+		/*
+			if option.MaxValue != realCommand.Options[i].MaxValue {
+				return true
+			}
+			if option.MinValue != realCommand.Options[i].MinValue {
 
-			return true
-		}
-		if option.AutoComplete != realCommand.Options[i].AutoComplete {
-			return true
-		}
+				return true
+			}
+			if option.AutoComplete != realCommand.Options[i].AutoComplete {
+				return true
+			}
+		*/
 	}
 	return false
 }
 
 func Init(appID, token string, session *disgord.Client) {
-	var commands []*interaction.ApplicationCommand
+	var commands []*disgord.ApplicationCommand
 	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
 	request, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
@@ -105,10 +108,10 @@ func Init(appID, token string, session *disgord.Client) {
 	for name, command := range Commands {
 		commandR := findCommand(name, commands)
 		request := func(method string) {
-			var newCommand interaction.ApplicationCommand
+			var newCommand disgord.ApplicationCommand
 			newCommand.Name = command.Name
 			newCommand.DefaultPermission = true
-			newCommand.Type = interaction.CHAT_INPUT
+			newCommand.Type = disgord.ApplicationCommandChatInput
 			newCommand.Options = command.Options
 			newCommand.Description = command.Description
 			val, _ := json.Marshal(newCommand)
@@ -131,4 +134,5 @@ func Init(appID, token string, session *disgord.Client) {
 			request("PATCH")
 		}
 	}
+	Client = session
 }

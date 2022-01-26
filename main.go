@@ -3,10 +3,8 @@ package main
 import (
 	"asura/src/cache"
 	"asura/src/handler"
-	interactionPkg "asura/src/interaction"
 	"asura/src/server"
 	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 
@@ -32,14 +30,8 @@ func runTestVersion() {
 	})
 	client.Gateway().InteractionCreate(func(s disgord.Session, h *disgord.InteractionCreate) {
 		if h.Type == disgord.InteractionApplicationCommand {
-			var interaction interactionPkg.Interaction
-			temp, _ := json.Marshal(h)
-			json.Unmarshal(temp, &interaction)
-			response := server.ExecuteInteraction(interaction)
-			var realResponse *disgord.InteractionResponse
-			temp, _ = json.Marshal(response)
-			json.Unmarshal(temp, &realResponse)
-			s.SendInteractionResponse(context.Background(), h, realResponse)
+			response := server.ExecuteInteraction(h)
+			s.SendInteractionResponse(context.Background(), h, response)
 		}
 	})
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/BurntSushi/toml"
+	"github.com/andersfylling/disgord"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
 )
@@ -31,4 +32,8 @@ func init() {
 			Bundle.MustLoadMessageFile(fmt.Sprintf("i18n/%s/%s.%s.toml", lang, file, lang))
 		}
 	}
+}
+
+func GetLocale(itc *disgord.InteractionCreate) string {
+	return "pt"
 }

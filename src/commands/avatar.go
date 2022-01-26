@@ -2,9 +2,10 @@ package commands
 
 import (
 	"asura/src/handler"
-	"asura/src/interaction"
 	"asura/src/translation"
 	"asura/src/utils"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -13,25 +14,26 @@ func init() {
 		Description: translation.T("AvatarHelp", "pt"),
 		Run:         runAvatar,
 		Cooldown:    5,
-		Options: utils.GenerateOptions(&interaction.ApplicationCommandOption{
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",
-			Type:        interaction.USER,
+			Type:        disgord.OptionTypeUser,
 			Description: "user avatar",
 			Required:    true,
 		}),
 	})
 }
 
-func runAvatar(itc interaction.Interaction) *interaction.InteractionResponse {
+func runAvatar(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	user := utils.GetUser(itc.Data.Options, 0)
-	return &interaction.InteractionResponse{
-		Type: interaction.CHANNEL_MESSAGE_WITH_SOURCE,
-		Data: &interaction.InteractionCallbackData{
-			Embeds: []*interaction.Embed{
+	avatar, _ := user.AvatarURL(1024, true)
+	return &disgord.InteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.InteractionApplicationCommandCallbackData{
+			Embeds: []*disgord.Embed{
 				{
 					Title: user.Username,
-					Image: &interaction.Image{
-						URL: user.AvatarURL(128),
+					Image: &disgord.EmbedImage{
+						URL: avatar,
 					},
 				},
 			},

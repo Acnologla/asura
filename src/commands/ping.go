@@ -2,9 +2,10 @@ package commands
 
 import (
 	"asura/src/handler"
-	"asura/src/interaction"
 
 	"asura/src/translation"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
@@ -16,11 +17,11 @@ func init() {
 	})
 }
 
-func runPing(itc interaction.Interaction) *interaction.InteractionResponse {
-	return &interaction.InteractionResponse{
-		Type: interaction.CHANNEL_MESSAGE_WITH_SOURCE,
-		Data: &interaction.InteractionCallbackData{
-			Content: translation.T("Ping", itc.GuildLocale, "12ms"),
+func runPing(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+	return &disgord.InteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.InteractionApplicationCommandCallbackData{
+			Content: translation.T("Ping", translation.GetLocale(itc), "12ms"),
 		},
 	}
 }
