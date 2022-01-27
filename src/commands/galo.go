@@ -48,9 +48,9 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 					galo.GaloReset++
 					galo.Xp = 0
 					galo.Equipped = []int{}
-					msg.Reply(context.Background(), session, "Voce evoluiu seu galo com sucesso")
+					msg.Reply(context.Background(), session, "Você evoluiu seu galo com sucesso")
 				} else {
-					msg.Reply(context.Background(), session, "Seu galo precisa ser pelomenos nivel 35 para evoluir ele")
+					msg.Reply(context.Background(), session, "Seu galo precisa ser pelo menos nível 35 para evoluir ele")
 				}
 				return galo, nil
 			})
@@ -71,7 +71,7 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	avatar, err := utils.DownloadImage(rinha.Sprites[0][galo.Type-1])
 
 	if err != nil {
-		msg.Reply(context.Background(), session, "Invalid image")
+		msg.Reply(context.Background(), session, "Imagem inv")
 		return
 	}
 
