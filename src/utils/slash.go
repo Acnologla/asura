@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"asura/src/handler"
 	"strconv"
 
 	"github.com/andersfylling/disgord"
@@ -11,9 +10,15 @@ func GenerateOptions(options ...*disgord.ApplicationCommandOption) []*disgord.Ap
 	return options
 }
 
-func GetUser(options []*disgord.ApplicationCommandDataOption, i int) *disgord.User {
-	idStr := options[i].Value.(string)
+func GetUser(itc *disgord.InteractionCreate, i int) *disgord.User {
+	idStr := itc.Data.Options[i].Value.(string)
 	id, _ := strconv.ParseUint(idStr, 10, 64)
-	user, _ := handler.Client.User(disgord.Snowflake(id)).Get()
-	return user
+	return itc.Data.Resolved.Users[disgord.Snowflake(id)]
+}
+
+func GetUserOrAuthor(itc *disgord.InteractionCreate, i int) *disgord.User {
+	if i < len(itc.Data.Options) {
+		return GetUser(itc, i)
+	}
+	return itc.Member.User
 }

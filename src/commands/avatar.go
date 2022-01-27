@@ -24,7 +24,7 @@ func init() {
 }
 
 func runAvatar(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
-	user := utils.GetUser(itc.Data.Options, 0)
+	user := utils.GetUser(itc, 0)
 	avatar, _ := user.AvatarURL(1024, true)
 	return &disgord.InteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,

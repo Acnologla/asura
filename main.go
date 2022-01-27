@@ -31,7 +31,9 @@ func runTestVersion() {
 	client.Gateway().InteractionCreate(func(s disgord.Session, h *disgord.InteractionCreate) {
 		if h.Type == disgord.InteractionApplicationCommand {
 			response := server.ExecuteInteraction(h)
-			s.SendInteractionResponse(context.Background(), h, response)
+			if response != nil {
+				s.SendInteractionResponse(context.Background(), h, response)
+			}
 		}
 	})
 }

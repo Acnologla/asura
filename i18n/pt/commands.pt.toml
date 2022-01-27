@@ -9,3 +9,24 @@ other="Convide o bot para seu servidor"
 
 [AvatarHelp]
 other="Veja o avatar de um usuario"
+
+[InvertHelp]
+other="Inverta uma imagem"
+
+[InvertOpt1]
+other="Inverta o avatar de um usuario"
+
+[InvertOpt2]
+other="Url da imagem para inverter"
+
+[EscreverHelp]
+other="Escreva mensagens engraçadas"
+
+[ChifreSizeHelp]
+other="Veja o tamanho do chifre de alguem"
+
+[ChifreSizeUser]
+other="Usuario para ver o tamanho do chifre"
+
+[ChifreSizeDescription]
+other="{{.username}} Seu chifre tem **{{.height}}** cms de altura e **{{.circumference}}** cms de circunferencia"
