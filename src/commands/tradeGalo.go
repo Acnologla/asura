@@ -39,12 +39,12 @@ func galoToText(galo rinha.Galo, filter rinha.Rarity, galoType int) string {
 
 func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(msg.Mentions) == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", mencione alguem para trocar galos")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", mencione alguém para trocar galos")
 		return
 	}
 	user := msg.Mentions[0]
 	if user.Bot || user.ID == msg.Author.ID {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuário inválido")
 		return
 	}
 	text := fmt.Sprintf("**%s** você foi convidado para trocar galos com %s", user.Username, msg.Author.Username)
@@ -52,12 +52,12 @@ func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Você ja esta lutando com o "+currentBattles[msg.Author.ID])
+			msg.Reply(context.Background(), session, "Você já esta lutando com o "+currentBattles[msg.Author.ID])
 			return
 		}
 		if currentBattles[msg.Mentions[0].ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Este usuário ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+			msg.Reply(context.Background(), session, "Este usuário já está lutando com o "+currentBattles[msg.Mentions[0].ID])
 			return
 		}
 		battleMutex.RUnlock()
@@ -72,7 +72,7 @@ func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 				Color:       65535,
 				Description: galos,
 				Footer: &disgord.EmbedFooter{
-					Text: "Digite no chat o numero do galo que deseja trocar",
+					Text: "Digite no chat o número do galo que deseja trocar",
 				},
 			},
 			Content: msg.Author.Mention(),
@@ -89,11 +89,11 @@ func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		i, err := strconv.Atoi(message.Content)
 		if err != nil {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", número invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", número inválido.\nTroca cancelada")
 			return
 		}
 		if 0 > i || i >= len(galo.Galos) {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", número invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", número inválido.\nTroca cancelada")
 			return
 		}
 		firstGalo := galo.Galos[i]
@@ -113,17 +113,17 @@ func runTradeGal(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		j, err := strconv.Atoi(message.Content)
 		if err != nil {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", número invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", número inválido.\nTroca cancelada")
 			return
 		}
 		if 0 > j || j >= len(galoAdv.Galos) {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", número invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", número inválido.\nTroca cancelada")
 			return
 		}
 		session.Channel(secondTradeMsg.ChannelID).Message(secondTradeMsg.ID).Delete()
 		secondGalo := galoAdv.Galos[j]
 		if rinha.Classes[secondGalo.Type].Rarity != rinha.Classes[firstGalo.Type].Rarity {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", número invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", número invlido.\nTroca cancelada")
 			return
 		}
 		if rinha.HaveGalo(secondGalo.Type, galo.Galos) || rinha.HaveGalo(firstGalo.Type, galoAdv.Galos) {
