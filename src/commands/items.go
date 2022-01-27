@@ -62,7 +62,7 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		if !(value >= 0 && len(galo.Items) > value) {
-			msg.Reply(context.Background(), session, "numero invalido")
+			msg.Reply(context.Background(), session, "Número inválido")
 			return
 		}
 		var text string
@@ -99,7 +99,7 @@ func runItem(session disgord.Session, msg *disgord.Message, args []string) {
 				old := galo.Items[0]
 				galo.Items[0] = newItem
 				galo.Items[value] = old
-				text = fmt.Sprintf("%s, Voce equipou o item %s", msg.Author.Mention(), item.Name)
+				text = fmt.Sprintf("%s, Voc equipou o item %s", msg.Author.Mention(), item.Name)
 				return galo, nil
 			} else {
 				text = "Numero inválido"
