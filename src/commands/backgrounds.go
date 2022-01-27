@@ -70,7 +70,7 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 						msg.Reply(context.Background(), session, "Background VIP alterado com sucesso")
 						return
 					} else {
-						msg.Reply(context.Background(), session, "Imagem invalida")
+						msg.Reply(context.Background(), session, "Imagem inválida")
 						return
 					}
 				}
@@ -88,7 +88,7 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 				sellBg := galo.Cosmetics[value]
 				cosmetic := rinha.Cosmetics[sellBg]
 				priceToSell := rinha.SellCosmetic(*cosmetic)
-				utils.Confirm(fmt.Sprintf("Voce deseja vender o Background **%s** por **%d** de dinheiro", cosmetic.Name, priceToSell), msg.ChannelID, msg.Author.ID, func() {
+				utils.Confirm(fmt.Sprintf("Você deseja vender o Background **%s** por **%d** de dinheiro", cosmetic.Name, priceToSell), msg.ChannelID, msg.Author.ID, func() {
 					var price int
 					rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
 						sellBg = galo.Cosmetics[value]
@@ -108,7 +108,7 @@ func runBackground(session disgord.Session, msg *disgord.Message, args []string)
 						"user":     strconv.FormatUint(uint64(msg.Author.ID), 10),
 						"rarity":   cosmetic.Rarity.String(),
 					})
-					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o background **%s** por **%d** de dinheiro com sucesso", msg.Author.Mention(), cosmetic.Name, price))
+					msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você vendeu o background **%s** por **%d** de dinheiro com sucesso", msg.Author.Mention(), cosmetic.Name, price))
 				})
 				return
 			}
