@@ -22,7 +22,7 @@ func init() {
 		Available: true,
 		Cooldown:  5,
 		Usage:     "j!monkey @user",
-		Help:      "Transforme alguem em um macaco",
+		Help:      "Transforme algum em um macaco",
 	})
 }
 
