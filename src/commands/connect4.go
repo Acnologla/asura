@@ -94,12 +94,12 @@ func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
 	ctx := context.Background()
 	board := utils.MakeBoard(8, 8)
 	if len(msg.Mentions) == 0 {
-		msg.Reply(ctx, session, msg.Author.Mention()+", Voce precisa mencionar alguem para jogar connect4")
+		msg.Reply(ctx, session, msg.Author.Mention()+", Você precisa mencionar alguém para jogar connect4")
 		return
 	}
 	user := msg.Mentions[0]
 	if user.Bot || user.ID == msg.Author.ID {
-		msg.Reply(ctx, session, msg.Author.Mention()+", Usuario invalido")
+		msg.Reply(ctx, session, msg.Author.Mention()+", Usurio inválido")
 		return
 	}
 	message, err := msg.Reply(ctx, session, connect4Emojis[1]+"\n\n"+drawConnect4Board(board))
