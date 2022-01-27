@@ -99,7 +99,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 		mes := session.Channel(message.ChannelID).Message(message.ID)
 		msgUpdater := mes.UpdateBuilder()
 		msgUpdater.SetEmbed(&disgord.Embed{
-			Title: "Nao consegui achar um oponente para voce",
+			Title: "Não consegui achar um oponente para você",
 			Color: 65535,
 		})
 		msgUpdater.Execute()
@@ -117,7 +117,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Color:       16776960,
 					Title:       "Arena",
-					Description: fmt.Sprintf("Parabens %s, voce atingiu o limite de vitorias na arena\nPremios:\nXp: **%d**\nMoney: **%d**", msg.Author.Username, xp, money),
+					Description: fmt.Sprintf("Parabéns %s, você atingiu o limite de vitórias na arena\nPrêmios:\nXp: **%d**\nMoney: **%d**", msg.Author.Username, xp, money),
 				})
 				logArenaFinish(msg.Author, xp, money)
 				return gal, nil
@@ -125,7 +125,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Color:       16776960,
 					Title:       "Arena",
-					Description: fmt.Sprintf("Parabens %s, voce venceu\n %d/12 Vitorias", msg.Author.Username, gal.Arena.Win),
+					Description: fmt.Sprintf("Parabéns %s, você venceu\n %d/12 Vitorias", msg.Author.Username, gal.Arena.Win),
 				})
 				return gal, nil
 			}
@@ -139,7 +139,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Color:       16711680,
 					Title:       "Arena",
-					Description: fmt.Sprintf("Parabens %s, voce atingiu o limite de derrotas na arena\nPremios:\nXp: **%d**\nMoney: **%d**", msg.Author.Username, xp, money),
+					Description: fmt.Sprintf("Parabéns %s, você atingiu o limite de derrotas na arena\nPremios:\nXp: **%d**\nMoney: **%d**", msg.Author.Username, xp, money),
 				})
 				logArenaFinish(msg.Author, xp, money)
 				return gal, nil
@@ -147,7 +147,7 @@ func runArena(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Color:       16711680,
 					Title:       "Arena",
-					Description: fmt.Sprintf("Parabens %s, voce perdeu. %d/3 Derrotas", msg.Author.Username, gal.Arena.Lose),
+					Description: fmt.Sprintf("Parabéns %s, voc perdeu. %d/3 Derrotas", msg.Author.Username, gal.Arena.Lose),
 				})
 				return gal, nil
 			}
