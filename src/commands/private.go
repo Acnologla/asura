@@ -16,7 +16,7 @@ func init() {
 		Available: true,
 		Cooldown:  1,
 		Usage:     "j!private",
-		Help:      "Prive seu historico de avatares",
+		Help:      "Prive seu histórico de avatares",
 	})
 }
 
@@ -34,7 +34,7 @@ func runPrivate(session disgord.Session, msg *disgord.Message, args []string) {
 		return
 	}
 	if acc {
-		msg.Reply(ctx, session, msg.Author.Mention()+", Seu perfil nao esta mais privado")
+		msg.Reply(ctx, session, msg.Author.Mention()+", Seu perfil no esta mais privado")
 	} else {
 		msg.Reply(ctx, session, msg.Author.Mention()+", Seu perfil foi privado com sucesso")
 	}
