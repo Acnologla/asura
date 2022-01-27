@@ -84,17 +84,17 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Você ja esta lutando com o "+currentBattles[msg.Author.ID])
+			msg.Reply(context.Background(), session, "Você já está lutando com o "+currentBattles[msg.Author.ID])
 			return
 		}
 		if currentBattles[msg.Mentions[0].ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Este usuário ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+			msg.Reply(context.Background(), session, "Este usuário já está lutando com o "+currentBattles[msg.Mentions[0].ID])
 			return
 		}
 
 		battleMutex.RUnlock()
-		text := fmt.Sprintf("**%s** voce foi convidado para um duelo com %s", msg.Mentions[0].Username, msg.Author.Username)
+		text := fmt.Sprintf("**%s** você foi convidado para um duelo com %s", msg.Mentions[0].Username, msg.Author.Username)
 		utils.Confirm(text, msg.ChannelID, msg.Mentions[0].ID, func() {
 			battleMutex.RLock()
 			if currentBattles[msg.Author.ID] != "" {
@@ -104,7 +104,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 			if currentBattles[msg.Mentions[0].ID] != "" {
 				battleMutex.RUnlock()
-				msg.Reply(context.Background(), session, "Este usuário ja esta lutando com o "+currentBattles[msg.Mentions[0].ID])
+				msg.Reply(context.Background(), session, "Este usuário já esta lutando com o "+currentBattles[msg.Mentions[0].ID])
 				return
 			}
 			battleMutex.RUnlock()
@@ -116,7 +116,7 @@ func runRinha(session disgord.Session, msg *disgord.Message, args []string) {
 		})
 
 	} else {
-		msg.Reply(context.Background(), session, "Você precisa mencionar alguem")
+		msg.Reply(context.Background(), session, "Você precisa mencionar alguém")
 	}
 }
 
@@ -126,7 +126,7 @@ func sendLevelUpEmbed(msg *disgord.Message, session disgord.Session, galoWinner 
 		nextSkill := rinha.GetNextSkill(*galoWinner)
 		nextSkillStr := ""
 		if len(nextSkill) != 0 {
-			nextSkillStr = fmt.Sprintf("e desbloqueando a habilidade %s", nextSkill[0].Name)
+			nextSkillStr = fmt.Sprintf("E desbloqueando a habilidade %s", nextSkill[0].Name)
 		}
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 			Embed: &disgord.Embed{
