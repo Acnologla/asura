@@ -19,7 +19,7 @@ func init() {
 		Available: false,
 		Cooldown:  1,
 		Usage:     "j!vip @user",
-		Help:      "vip",
+		Help:      "VIP",
 	})
 }
 
