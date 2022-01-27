@@ -40,7 +40,7 @@ func runUpgrades(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 		}
 		if rinha.HavePoint(galo) {
-			desc += "\nVoce tem um ponto de upgrade disponivel.\nUse **j!upgrade <id do upgrade>** para dar updgrade.\n\nUpgrades:\n\n" + rinha.UpgradesToString(galo)
+			desc += "\nVocê tem um ponto de upgrade disponível.\nUse **j!upgrade <id do upgrade>** para dar updgrade.\n\nUpgrades:\n\n" + rinha.UpgradesToString(galo)
 		}
 		msg.Reply(context.Background(), session, disgord.CreateMessageParams{
 			Content: msg.Author.Mention(),
@@ -57,12 +57,12 @@ func runUpgrades(session disgord.Session, msg *disgord.Message, args []string) {
 			return
 		}
 		if err != nil {
-			msg.Reply(context.Background(), session, "Id do upgrade invalido use j!upgrade para ver os upgrades disponiveis")
+			msg.Reply(context.Background(), session, "ID do upgrade invalido use j!upgrade para ver os upgrades disponveis")
 			return
 		}
 		upgrades := rinha.GetCurrentUpgrade(galo)
 		if 0 > i || i >= len(upgrades.Childs) {
-			msg.Reply(context.Background(), session, "Id do upgrade inválido use j!upgrade para ver os upgrades disponiveis")
+			msg.Reply(context.Background(), session, "ID do upgrade inválido use j!upgrade para ver os upgrades disponíveis")
 			return
 		}
 		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
