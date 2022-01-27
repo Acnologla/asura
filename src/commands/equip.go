@@ -33,7 +33,7 @@ func init() {
 func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	if galo.Type == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem um galo, use j!galo para criar um")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voc não tem um galo, use j!galo para criar um")
 		return
 	}
 	if len(args) == 0 {
@@ -127,7 +127,7 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 				if args[1] == "remove" || args[1] == "vender" {
 					sellG := galo.Galos[value]
 					priceToSell, asuraC := rinha.Sell(rinha.Classes[galo.Galos[value].Type].Rarity, sellG.Xp, sellG.GaloReset)
-					utils.Confirm(fmt.Sprintf("Voce deseja vender o galo **%s** por **%d** de dinheiro e **%d** asura coins?", rinha.Classes[sellG.Type].Name, priceToSell, asuraC), msg.ChannelID, msg.Author.ID, func() {
+					utils.Confirm(fmt.Sprintf("Você deseja vender o galo **%s** por **%d** de dinheiro e **%d** asura coins?", rinha.Classes[sellG.Type].Name, priceToSell, asuraC), msg.ChannelID, msg.Author.ID, func() {
 						var gal rinha.SubGalo
 						var (
 							price,
@@ -158,10 +158,10 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 							"rarity": newGalo.Rarity.String(),
 						})
 						if asuraCoins > 0 {
-							msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o galo **%s** por **%d** asuraCoins com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, asuraCoins))
+							msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você vendeu o galo **%s** por **%d** asuraCoins com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, asuraCoins))
 							return
 						}
-						msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce vendeu o galo **%s** por **%d** de dinheiro com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, price))
+						msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você vendeu o galo **%s** por **%d** de dinheiro com sucesso", msg.Author.Mention(), rinha.Classes[gal.Type].Name, price))
 					})
 					return
 				}
@@ -180,12 +180,12 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 				galo.Name = newGalo.Name
 				galo.Galos[value] = old
 				galo.Equipped = []int{}
-				msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce trocou seu galo **%s** por **%s**", msg.Author.Mention(), rinha.Classes[old.Type].Name, rinha.Classes[galo.Type].Name))
+				msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você trocou seu galo **%s** por **%s**", msg.Author.Mention(), rinha.Classes[old.Type].Name, rinha.Classes[galo.Type].Name))
 				return galo, nil
 			})
 
 		} else {
-			msg.Reply(context.Background(), session, "Numero invalido")
+			msg.Reply(context.Background(), session, "Número invlido")
 
 		}
 	}
