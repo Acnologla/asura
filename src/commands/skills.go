@@ -28,7 +28,7 @@ func runSkills(session disgord.Session, msg *disgord.Message, args []string) {
 
 	skills := rinha.GetSkills(galo)
 	if len(skills) == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce ainda nao batalhou nenhuma vez")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Você ainda não batalhou nenhuma vez")
 		return
 	}
 	if len(args) == 0 || (args[0] != "use" && args[0] != "remove") {
