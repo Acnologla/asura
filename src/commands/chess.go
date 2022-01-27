@@ -63,7 +63,7 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 				args[2] = strings.ToLower(args[2])
 				currentGame := chessPlayers[msg.Author.ID]
 				if currentGame == nil {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao esta jogando xadrez com ninguem, use j!chess <user> para começar a jogar")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Você não esta jogando xadrez com ninguém, use j!chess <user> para começar a jogar")
 					return
 				}
 				if (currentGame.black == msg.Author.ID && currentGame.turn == 0) || (currentGame.white == msg.Author.ID && currentGame.turn == 1) {
@@ -75,13 +75,13 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 				validMove := moveIncludes(moves, args[1]+args[2])
 				if validMove == -1 {
 					chessMutex.Unlock()
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Movimento invalido")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Movimento inválido")
 					return
 				}
 				err := currentGame.game.Move(moves[validMove])
 				if err != nil {
 					chessMutex.Unlock()
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Movimento invalido")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Movimento invlido")
 					return
 				}
 				var turnType string
@@ -174,7 +174,7 @@ func runChess(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	user := msg.Mentions[0]
 	if msg.Author.ID == user.ID {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario inválido")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usurio inválido")
 		return
 	} else if chessPlayers[msg.Author.ID] != nil {
 		msg.Reply(context.Background(), session, msg.Author.Mention()+", Você já esta em uma partida de xadrez")
