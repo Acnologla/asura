@@ -18,7 +18,7 @@ func init() {
 		Available: true,
 		Cooldown:  15,
 		Usage:     "j!botinfo",
-		Help:      "Veja as informaçoes do bot",
+		Help:      "Veja as informações do bot",
 	})
 }
 
