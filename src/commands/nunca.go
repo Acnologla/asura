@@ -43,7 +43,7 @@ func runNunca(session disgord.Session, msg *disgord.Message, args []string) {
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
 
 	if err != nil {
-		msg.Reply(context.Background(), session, "Invalid image")
+		msg.Reply(context.Background(), session, "Imagem inválida")
 		return
 	}
 	// Resize the images
