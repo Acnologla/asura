@@ -121,7 +121,7 @@ func runRank(session disgord.Session, msg *disgord.Message, args []string) {
 	} else {
 		text := args[0]
 		if childToQuery(args[0]) == "" {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", rank invalido\nuse `j!ranks` para ver os ranks disponiveis")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Rank inválido\nuse `j!ranks` para ver os ranks disponveis")
 			return
 		}
 		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
