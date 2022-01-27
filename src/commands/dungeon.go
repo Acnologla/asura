@@ -27,7 +27,7 @@ func init() {
 func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	if galo.Type == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem um galo, use j!galo para criar um")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Você não tem um galo, use j!galo para criar um")
 		return
 	}
 	if len(args) == 0 {
@@ -53,7 +53,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 	if len(rinha.Dungeon) == galo.Dungeon {
 		galo.Dungeon = 0
 		galo.DungeonReset += 1
-		msg.Reply(context.Background(), session, "Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!")
+		msg.Reply(context.Background(), session, "Parabéns, você terminou a dungeon e agora pode recomeçar (cuidado)!")
 	}
 
 	dungeon := rinha.Dungeon[galo.Dungeon]
@@ -109,7 +109,7 @@ func runDungeon(session disgord.Session, msg *disgord.Message, args []string) {
 		msg.Reply(context.Background(), session, &disgord.Embed{
 			Color:       16776960,
 			Title:       "Dungeon",
-			Description: fmt.Sprintf("Parabens %s você consegiu derrotar o boss e avançar para o andar **%d** %s", msg.Author.Username, galo.Dungeon+1, endMsg),
+			Description: fmt.Sprintf("Parabns %s você consegiu derrotar o boss e avançar para o andar **%d** %s", msg.Author.Username, galo.Dungeon+1, endMsg),
 		})
 	} else {
 		msg.Reply(context.Background(), session, &disgord.Embed{
