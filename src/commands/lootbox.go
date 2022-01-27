@@ -48,7 +48,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		lootType := strings.ToLower(args[1])
 		if !utils.Includes(lootTypes, lootType) {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Tipo de caixa invalido, use j!lootbox para ver os tipos")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Tipo de caixa inválido, use j!lootbox para ver os tipos")
 			return
 		}
 		if !rinha.HaveLootbox(galo, lootType) {
@@ -58,7 +58,7 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 		isCosmetic := lootType == "cosmetica"
 		isItem := lootType == "items"
 		if len(galo.Galos) >= 10 && !isCosmetic && !isItem {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", Você atingiu o limite maximo de galos (10) use `j!equip` para remover um galo")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", Você atingiu o limite mximo de galos (10) use `j!equip` para remover um galo")
 			return
 		}
 		battleMutex.RLock()
@@ -93,13 +93,13 @@ func runLootbox(session disgord.Session, msg *disgord.Message, args []string) {
 			})
 			message, err := msg.Reply(context.Background(), session, embed)
 			if err == nil {
-				embed.Description = "Selecionando cosmetico..."
+				embed.Description = "Selecionando cosmtico..."
 				for i := 0; i < 6; i++ {
 					rand := rinha.GetRandCosmetic()
 					if i == 5 {
 						embed.Title = "Lootbox open"
 						rand = result
-						embed.Description = "Voce abriu uma lootbox " + lootType + " e ganhou o cosmetico **" + newCosmetic.Name + "**\nRaridade: " + newCosmetic.Rarity.String() + extraMsg
+						embed.Description = "Você abriu uma lootbox " + lootType + " e ganhou o cosmetico **" + newCosmetic.Name + "**\nRaridade: " + newCosmetic.Rarity.String() + extraMsg
 						embed.Footer = &disgord.EmbedFooter{
 							IconURL: avatar,
 							Text:    rinha.CosmeticCommand(*newCosmetic),
