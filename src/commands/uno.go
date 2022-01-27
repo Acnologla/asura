@@ -93,7 +93,7 @@ func (game *unoGame) buy(p *player, count int) {
 func (game *unoGame) play(p *player, cards []string) string {
 	card := findCard(p.cards, cards[0])
 	if card == "" {
-		return "Voce não tem essa carta copia a  da id de cima da carta"
+		return "Você não tem essa carta copia a da id de cima da carta"
 	}
 	last := game.last()
 	if last[0] == card[0] || card[0] == 'W' || card[1:] == last[1:] {
@@ -137,7 +137,7 @@ func (game *unoGame) play(p *player, cards []string) string {
 		}
 		return ""
 	} else {
-		return "Jogada invalida"
+		return "Jogada invlida"
 	}
 }
 func (game *unoGame) addToLast() {
