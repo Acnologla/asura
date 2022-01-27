@@ -28,7 +28,7 @@ func init() {
 func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 	galo, _ := rinha.GetGaloDB(msg.Author.ID)
 	if galo.Type == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem um galo, use j!galo para criar um")
+		msg.Reply(context.Background(), session, msg.Author.Mention()+", Você não tem um galo, use j!galo para criar um")
 		return
 	}
 	text := fmt.Sprintf("**%s** gostaria de treinar seu galo?", msg.Author.Username)
@@ -36,7 +36,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 		battleMutex.RLock()
 		if currentBattles[msg.Author.ID] != "" {
 			battleMutex.RUnlock()
-			msg.Reply(context.Background(), session, "Você ja esta lutando com o "+currentBattles[msg.Author.ID])
+			msg.Reply(context.Background(), session, "Você já est lutando com o "+currentBattles[msg.Author.ID])
 			return
 		}
 		battleMutex.RUnlock()
@@ -114,7 +114,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 				msg.Reply(context.Background(), session, &disgord.Embed{
 					Color:       16776960,
 					Title:       "Train",
-					Description: fmt.Sprintf("Voce excedeu seu limite de trains ganhos por dia. Faltam %d horas e %d minutos para voce poder usar mais", 23-(need/60/60), 59-(need/60%60)),
+					Description: fmt.Sprintf("Você excedeu seu limite de trains ganhos por dia. Faltam %d horas e %d minutos para voc poder usar mais", 23-(need/60/60), 59-(need/60%60)),
 				})
 				telemetry.Debug(fmt.Sprintf("%s in rinha limit", msg.Author.Username), map[string]string{
 					"user": fmt.Sprintf("%d", msg.Author.ID),
@@ -163,7 +163,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, &disgord.Embed{
 				Color:       16776960,
 				Title:       "Train",
-				Description: fmt.Sprintf("Parabens %s, você venceu\nGanhou **%d** de dinheiro e **%d** de xp%s", msg.Author.Username, money, xpOb, clanMsg),
+				Description: fmt.Sprintf("Parabns %s, você venceu\nGanhou **%d** de dinheiro e **%d** de xp%s", msg.Author.Username, money, xpOb, clanMsg),
 			})
 			galo.Xp += xpOb
 			sendLevelUpEmbed(msg, session, &galo, msg.Author, xpOb)
@@ -175,7 +175,7 @@ func runTrain(session disgord.Session, msg *disgord.Message, args []string) {
 			msg.Reply(context.Background(), session, &disgord.Embed{
 				Color:       16711680,
 				Title:       "Train",
-				Description: fmt.Sprintf("Parabens %s, você perdeu. Use j!train para treinar novamente", msg.Author.Username),
+				Description: fmt.Sprintf("Parabéns %s, você perdeu. Use j!train para treinar novamente", msg.Author.Username),
 			})
 		}
 	})
