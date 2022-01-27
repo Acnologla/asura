@@ -15,7 +15,7 @@ func init() {
 		Available: true,
 		Cooldown:  2,
 		Usage:     "j!avatar <usuario>",
-		Help:      "Veja o avatar de alguem",
+		Help:      "Veja o avatar de algum",
 	})
 }
 
