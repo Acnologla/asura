@@ -31,7 +31,7 @@ func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
 	database.Database.NewRef("users/"+id).Get(ctx, &userinfo)
 	database.Database.NewRef("private/"+id).Get(ctx, &private)
 	if private {
-		msg.Reply(ctx, session, msg.Author.Mention()+", O histírico de avatar desse usuario é privado")
+		msg.Reply(ctx, session, msg.Author.Mention()+", O histrico de avatar desse usuario é privado")
 		return
 	}
 	if len(userinfo.Avatars) == 0 {
