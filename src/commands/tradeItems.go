@@ -81,7 +81,7 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 				Color:       65535,
 				Description: items,
 				Footer: &disgord.EmbedFooter{
-					Text: "Digite no chat o numero do item que deseja trocar",
+					Text: "Digite no chat o número do item que deseja trocar",
 				},
 			},
 			Content: msg.Author.Mention(),
@@ -98,18 +98,18 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		i, err := strconv.Atoi(message.Content)
 		if err != nil {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", numero inválido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", número inválido.\nTroca cancelada")
 			return
 		}
 		if 0 > i || i >= len(galo.Items) {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", numero inválido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, msg.Author.Mention()+", número inválido.\nTroca cancelada")
 			return
 		}
 		firstItem := galo.Items[i]
 		advItems := itemsToText(galoAdv, rinha.Items[firstItem].Level)
 		newMsg.Content = user.Mention()
 		session.Channel(tradeMsg.ChannelID).Message(tradeMsg.ID).Delete()
-		newMsg.Embed.Description = advItems + "\n\nItem que voce ira receber: **" + rinha.Items[firstItem].Name + "**"
+		newMsg.Embed.Description = advItems + "\n\nItem que você irá receber: **" + rinha.Items[firstItem].Name + "**"
 		secondTradeMsg, err := msg.Reply(context.Background(), session, newMsg)
 		if err != nil {
 			return
@@ -122,17 +122,17 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 		}
 		j, err := strconv.Atoi(message.Content)
 		if err != nil {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", número inválido.\nTroca cancelada")
 			return
 		}
 		if 0 > j || j >= len(galoAdv.Items) {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", número inválido.\nTroca cancelada")
 			return
 		}
 		session.Channel(secondTradeMsg.ChannelID).Message(secondTradeMsg.ID).Delete()
 		secondItem := galoAdv.Items[j]
 		if rinha.Items[secondItem].Level != rinha.Items[firstItem].Level {
-			msg.Reply(context.Background(), session, message.Author.Mention()+", numero invalido.\nTroca cancelada")
+			msg.Reply(context.Background(), session, message.Author.Mention()+", número inválido.\nTroca cancelada")
 			return
 		}
 		galoAdv.Items[j] = firstItem
@@ -146,7 +146,7 @@ func runTrade(session disgord.Session, msg *disgord.Message, args []string) {
 			galo.Cooldowns.TradeItem = uint64(time.Now().Unix())
 			return galo, nil
 		})
-		msg.Reply(context.Background(), session, fmt.Sprintf("%s voce trocou o item **%s** pelo item **%s** com sucesso", msg.Author.Mention(), rinha.Items[firstItem].Name, rinha.Items[secondItem].Name))
+		msg.Reply(context.Background(), session, fmt.Sprintf("%s voc trocou o item **%s** pelo item **%s** com sucesso", msg.Author.Mention(), rinha.Items[firstItem].Name, rinha.Items[secondItem].Name))
 	})
 
 }
