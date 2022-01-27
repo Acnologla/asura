@@ -19,7 +19,7 @@ func init() {
 		Available: true,
 		Cooldown:  10,
 		Usage:     "j!clan",
-		Help:      "Informação sobre o cla",
+		Help:      "Informação sobre o clan",
 		Category:  2,
 	})
 }
@@ -56,7 +56,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					gal.Clan = text
 					return gal, nil
 				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", Clan **"+text+"** criado com sucesso!\nUse **j!clan invite <usuario>** para convidar membros")
+				msg.Reply(context.Background(), session, msg.Author.Mention()+", Clan **"+text+"** criado com sucesso!\nUse **j!clan invite <usurio>** para convidar membros")
 				return
 			}
 		}
@@ -138,7 +138,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				if role.Role >= rinha.Admin {
 					txt := strings.ToLower(args[1])
 					if txt != "membros" && txt != "artilharia" && txt != "missao" {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Upgrade invalido")
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Upgrade invlido")
 						return
 					}
 					done := false
@@ -192,14 +192,14 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 				}
 				err = rinha.ChangeMoney(msg.Author.ID, -money, money)
 				if err != nil {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem esse dinheiro")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Você nao tem esse dinheiro")
 					return
 				}
 				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
 					clan.Money += money
 					return clan, nil
 				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce depositou dinheiro no clan com sucesso")
+				msg.Reply(context.Background(), session, msg.Author.Mention()+", Você depositou dinheiro no clan com sucesso")
 				return
 			}
 			if strings.ToLower(args[0]) == "invite" {
@@ -221,16 +221,16 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					clan = rinha.GetClan(galo.Clan)
 					maxMembers := rinha.GetMaxMembers(clan)
 					if rinha.IsInClan(clan, user.ID) {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuário ja esta no clan")
 						return
 					}
 					if len(clan.Members) >= maxMembers {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este clan ja esta cheio\nRemova algum usuario usando j!clan remove @user")
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este clan já está cheio\nRemova algum usuário usando j!clan remove @user")
 						return
 					}
 					invited, _ := rinha.GetGaloDB(user.ID)
 					if invited.Clan != "" {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario esta em outro clan ("+invited.Clan+")")
+						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuário está em outro clan ("+invited.Clan+")")
 						return
 					}
 					clan.Members = append(clan.Members, rinha.ClanMember{
@@ -245,7 +245,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 						gal.Clan = galo.Clan
 						return gal, nil
 					})
-					msg.Reply(context.Background(), session, user.Mention()+", Voce entrou para o clan **"+galo.Clan+"** com sucesso")
+					msg.Reply(context.Background(), session, user.Mention()+", Você entrou para o clan **"+galo.Clan+"** com sucesso")
 				})
 
 				return
@@ -253,7 +253,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 			if strings.ToLower(args[0]) == "admin" {
 				user := utils.GetUser(msg, args[1:], session)
 				if user.ID == msg.Author.ID || user.Bot {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuário invalido")
 					return
 				}
 				if role.Role != rinha.Owner {
@@ -261,7 +261,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					return
 				}
 				if !rinha.IsInClan(clan, user.ID) {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario nao esta no clan")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuário nao está no clan")
 					return
 				}
 				members := rinha.PromoteMember(clan, user.ID)
@@ -269,13 +269,13 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					clan.Members = members
 					return clan, nil
 				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", O usuario **"+user.Username+"** foi promovido com sucesso")
+				msg.Reply(context.Background(), session, msg.Author.Mention()+", O usuário **"+user.Username+"** foi promovido com sucesso")
 				return
 			}
 			if strings.ToLower(args[0]) == "remove" {
 				user := utils.GetUser(msg, args[1:], session)
 				if user.ID == msg.Author.ID || user.Bot {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuário invalido")
 					return
 				}
 				if role.Role == rinha.Member {
@@ -283,12 +283,12 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					return
 				}
 				if !rinha.IsInClan(clan, user.ID) {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario nao esta no clan")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuário não está no clan")
 					return
 				}
 				member := rinha.GetMember(clan, user.ID)
 				if member.Role >= role.Role {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce não tem permissoes para remover esse usuario")
+					msg.Reply(context.Background(), session, msg.Author.Mention()+", Você não tem permissões para remover esse usuário")
 					return
 				}
 				members := rinha.RemoveMember(clan, user.ID)
@@ -300,7 +300,7 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 					gal.Clan = ""
 					return gal, nil
 				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", O usuario **"+user.Username+"** foi removido com sucesso")
+				msg.Reply(context.Background(), session, msg.Author.Mention()+", O usuário **"+user.Username+"** foi removido com sucesso")
 				return
 			}
 		}
