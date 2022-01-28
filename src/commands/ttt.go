@@ -17,7 +17,7 @@ func init() {
 		Name:        "ttt",
 		Description: translation.T("TTTHelp", "pt"),
 		Run:         runTTT,
-		Cooldown:    3,
+		Cooldown:    10,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Type:        disgord.OptionTypeUser,
 			Required:    true,

@@ -57,3 +57,9 @@ other="Comando de jogos"
 
 [HelpCommandNotFound]
 other="Não achei este comando"
+
+[2048Help]
+other="Jogue o jogo 2048"
+
+[2048Size]
+other="Tamanho do tabuleiro de 2048"
