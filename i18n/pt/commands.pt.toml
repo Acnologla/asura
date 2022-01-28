@@ -10,6 +10,16 @@ other="Convide o bot para seu servidor"
 [AvatarHelp]
 other="Veja o avatar de um usuario"
 
+[AvatarsHelp]
+other="Veja os avatares antigos de um usuario"
+
+[Private]
+other="O historico esse usuario é privado"
+
+
+[NotFoundAvatars]
+other="Não tenho o historico de avatares desse usuario"
+
 [InvertHelp]
 other="Inverta uma imagem"
 
