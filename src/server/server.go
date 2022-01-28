@@ -2,7 +2,6 @@ package server
 
 import (
 	"asura/src/handler"
-
 	"encoding/json"
 
 	"github.com/andersfylling/disgord"
@@ -23,13 +22,6 @@ func verifyRequest(ctx *fasthttp.RequestCtx) bool {
 	return sign.Verify(PublicKey, append(append(signature, timestamp...), body...))
 }
 
-func ExecuteInteraction(interaction *disgord.InteractionCreate) *disgord.InteractionResponse {
-	if interaction.Type == disgord.InteractionApplicationCommand {
-		return handler.Run(interaction)
-	}
-	return nil
-}
-
 func Handler(ctx *fasthttp.RequestCtx) {
 	if !verifyRequest(ctx) {
 		ctx.SetStatusCode(fasthttp.StatusUnauthorized)
@@ -43,7 +35,7 @@ func Handler(ctx *fasthttp.RequestCtx) {
 		if interaction.Type == disgord.InteractionPing {
 			response.Type = disgord.InteractionCallbackPong
 		} else {
-			response = ExecuteInteraction(interaction)
+			response = handler.ExecuteInteraction(interaction)
 		}
 		val, _ := json.Marshal(response)
 		ctx.SetBody(val)

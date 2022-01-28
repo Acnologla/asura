@@ -30,3 +30,9 @@ other="Usuario para ver o tamanho do chifre"
 
 [ChifreSizeDescription]
 other="{{.username}} Seu chifre tem **{{.height}}** cms de altura e **{{.circumference}}** cms de circunferencia"
+
+[TTTHelp]
+other="Jogue jogo da velha"
+
+[TTTDesc]
+other="Usuario para jogar jogo da velha"
