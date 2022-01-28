@@ -39,6 +39,8 @@ type Command struct {
 	Description string
 	Options     []*disgord.ApplicationCommandOption
 	Run         func(*disgord.InteractionCreate) *disgord.InteractionResponse
+	Category    CommandCategory
+	Dev         bool
 }
 
 var Commands = map[string]Command{}
@@ -161,6 +163,9 @@ func Init(appID, token string, session *disgord.Client) {
 }
 
 func HandleInteraction(itc *disgord.InteractionCreate) {
+	if itc.Member == nil {
+		return
+	}
 	if itc.Type == disgord.InteractionApplicationCommand {
 		response := ExecuteInteraction(itc)
 		if response != nil {
