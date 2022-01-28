@@ -2,12 +2,12 @@ package main
 
 import (
 	"asura/src/cache"
+	_ "asura/src/commands"
+	"asura/src/firebase"
 	"asura/src/handler"
 	"asura/src/server"
 	"fmt"
 	"os"
-
-	_ "asura/src/commands"
 
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
@@ -22,6 +22,7 @@ func runTestVersion() {
 	})
 	appID := os.Getenv("APP_ID")
 	token := os.Getenv("TOKEN")
+	firebase.Init()
 	handler.Init(appID, token, client)
 	defer client.Gateway().StayConnectedUntilInterrupted()
 	client.Gateway().BotReady(func() {

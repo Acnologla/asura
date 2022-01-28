@@ -3,7 +3,10 @@ module asura
 go 1.16
 
 require (
+	cloud.google.com/go/firestore v1.6.1 // indirect
+	cloud.google.com/go/storage v1.19.0 // indirect
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
+	firebase.google.com/go v3.13.0+incompatible // indirect
 	github.com/BurntSushi/toml v1.0.0 // indirect
 	github.com/andersfylling/disgord v0.32.3
 	github.com/andybalholm/brotli v1.0.4 // indirect
@@ -11,7 +14,6 @@ require (
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/joho/godotenv v1.4.0
 	github.com/kevinburke/nacl v0.0.0-20210405173606-cd9060f5f776
@@ -28,5 +30,6 @@ require (
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7 // indirect
+	google.golang.org/api v0.66.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
