@@ -36,3 +36,24 @@ other="Jogue jogo da velha"
 
 [TTTDesc]
 other="Usuario para jogar jogo da velha"
+
+[HelpHelp]
+other="Veja meus comandos"
+
+[HelpOptionCommand]
+other="Ver ajuda sobre comando especifico"
+
+[GeneralCommands]
+other="Comandos gerais"
+
+[RinhaCommands]
+other="Comandos de rinha"
+
+[ProfileCommands]
+other="Comandos de perfil"
+
+[GameCommands]
+other="Comando de jogos"
+
+[HelpCommandNotFound]
+other="Não achei este comando"

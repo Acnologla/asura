@@ -24,6 +24,7 @@ func init() {
 			Name:        "user",
 			Description: translation.T("TTTDesc", "pt"),
 		}),
+		Category: handler.Games,
 	})
 }
 
