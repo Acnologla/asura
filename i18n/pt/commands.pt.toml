@@ -63,3 +63,9 @@ other="Jogue o jogo 2048"
 
 [2048Size]
 other="Tamanho do tabuleiro de 2048"
+
+[BotInfoHelp]
+other="Veja informaçoes sobre o bot"
+
+[BotInfoDescription]
+other="Workers: **{{.workers}}** (**{{.freeWorkers}}** Livres)\nBot criado a **{{.createdTime}}** dias\nServidores: **{{.guilds}}**\nRam usada: **{{.ram}}**MB\nPing: **{{.ping}}ms**\nShards: **{{.shards}}**\nBot online a {{.days}} dias {{.hours}} horas {{.minutes}} minutos"
