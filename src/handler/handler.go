@@ -19,6 +19,8 @@ var WorkersArray = make([]bool, Workers)
 
 var InteractionChannel = make(chan *disgord.InteractionCreate)
 
+var ReadyAt = time.Now()
+
 type CommandCategory int
 
 const (
@@ -188,4 +190,14 @@ func init() {
 	for i := 0; i < Workers; i++ {
 		go Worker(i)
 	}
+}
+
+func GetFreeWorkers() int {
+	freeWorkers := 0
+	for _, worker := range WorkersArray {
+		if !worker {
+			freeWorkers++
+		}
+	}
+	return freeWorkers
 }
