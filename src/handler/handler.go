@@ -3,6 +3,7 @@ package handler
 import (
 	"asura/src/translation"
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -10,6 +11,21 @@ import (
 	"time"
 
 	"github.com/andersfylling/disgord"
+)
+
+const Workers = 128
+
+var WorkersArray = make([]bool, Workers)
+
+var InteractionChannel = make(chan *disgord.InteractionCreate)
+
+type CommandCategory int
+
+const (
+	General CommandCategory = iota
+	Rinha
+	Profile
+	Games
 )
 
 const apiURL = "https://discord.com/api/v8"
@@ -29,6 +45,13 @@ var Commands = map[string]Command{}
 
 func RegisterCommand(command Command) {
 	Commands[command.Name] = command
+}
+
+func ExecuteInteraction(interaction *disgord.InteractionCreate) *disgord.InteractionResponse {
+	if interaction.Type == disgord.InteractionApplicationCommand {
+		return Run(interaction)
+	}
+	return nil
 }
 
 func Run(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
@@ -135,4 +158,29 @@ func Init(appID, token string, session *disgord.Client) {
 		}
 	}
 	Client = session
+}
+
+func HandleInteraction(itc *disgord.InteractionCreate) {
+	if itc.Type == disgord.InteractionApplicationCommand {
+		response := ExecuteInteraction(itc)
+		if response != nil {
+			Client.SendInteractionResponse(context.Background(), itc, response)
+		}
+	} else if itc.Type == disgord.InteractionMessageComponent {
+		ComponentInteraction(Client, itc)
+	}
+}
+
+func Worker(id int) {
+	for interaction := range InteractionChannel {
+		WorkersArray[id] = true
+		HandleInteraction(interaction)
+		WorkersArray[id] = false
+	}
+}
+
+func init() {
+	for i := 0; i < Workers; i++ {
+		go Worker(i)
+	}
 }

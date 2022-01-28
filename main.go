@@ -4,7 +4,6 @@ import (
 	"asura/src/cache"
 	"asura/src/handler"
 	"asura/src/server"
-	"context"
 	"fmt"
 	"os"
 
@@ -28,13 +27,9 @@ func runTestVersion() {
 	client.Gateway().BotReady(func() {
 		fmt.Println("Logged in")
 	})
+	//TODO worker pool
 	client.Gateway().InteractionCreate(func(s disgord.Session, h *disgord.InteractionCreate) {
-		if h.Type == disgord.InteractionApplicationCommand {
-			response := server.ExecuteInteraction(h)
-			if response != nil {
-				s.SendInteractionResponse(context.Background(), h, response)
-			}
-		}
+		handler.InteractionChannel <- h
 	})
 }
 
