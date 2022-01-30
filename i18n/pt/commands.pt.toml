@@ -14,7 +14,7 @@ other="Veja o avatar de um usuario"
 other="Veja os avatares antigos de um usuario"
 
 [Private]
-other="O historico esse usuario é privado"
+other="O historico esse usuario é privado use j!private para desprivar"
 
 
 [NotFoundAvatars]
@@ -101,3 +101,22 @@ other="Jogue campo minado"
 
 [MinifieldPlay]
 other="Clique nos botoes para jogar"
+
+[UserinfoHelp]
+other="Veja informaçoes sobre um usuario"
+
+[NoUsernames]
+other="Nenhum nome antigo registrado"
+
+[NoAvatars]
+other="Nenhum avatar antigo registrado"
+
+
+[OldUsernames]
+other="Nomes Antigos"
+
+[OldAvatars]
+other="Avatares antigos"
+
+[AccountCreated]
+other="Conta criada a **{{.}}** dias"

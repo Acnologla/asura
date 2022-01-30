@@ -19,6 +19,7 @@ func init() {
 		Description: translation.T("MinifieldHelp", "pt"),
 		Run:         runMinifield,
 		Cooldown:    15,
+		Category:    handler.Games,
 	})
 }
 
