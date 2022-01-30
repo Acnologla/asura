@@ -95,3 +95,9 @@ other="Jogue o jogo connect4"
 
 [Connect4Desc]
 other="Usuario para jogar connect4"
+
+[MinifieldHelp]
+other="Jogue campo minado"
+
+[MinifieldPlay]
+other="Clique nos botoes para jogar"
