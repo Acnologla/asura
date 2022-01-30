@@ -29,9 +29,7 @@ func DeepClone(board []([]int)) []([]int) {
 	arr := []([]int){}
 	for _, row := range board {
 		newRow := []int{}
-		for _, tile := range row {
-			newRow = append(newRow, tile)
-		}
+		newRow = append(newRow, row...)
 		arr = append(arr, newRow)
 	}
 	return arr

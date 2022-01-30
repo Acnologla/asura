@@ -89,3 +89,9 @@ other="Privou seu perfil com sucesso"
 
 [PrivateDisabled]
 other="Desprivou seu perfil com sucesso"
+
+[Connect4Help]
+other="Jogue o jogo connect4"
+
+[Connect4Desc]
+other="Usuario para jogar connect4"
