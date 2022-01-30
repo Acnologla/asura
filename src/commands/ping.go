@@ -2,6 +2,7 @@ package commands
 
 import (
 	"asura/src/handler"
+	"fmt"
 
 	"asura/src/translation"
 
@@ -18,10 +19,13 @@ func init() {
 }
 
 func runPing(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+	ping, _ := handler.Client.HeartbeatLatencies()
+	botInfo, _ := handler.Client.Gateway().GetBot()
+	shard := disgord.ShardID(itc.GuildID, botInfo.Shards)
 	return &disgord.InteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.InteractionApplicationCommandCallbackData{
-			Content: translation.T("Ping", translation.GetLocale(itc), "12ms"),
+			Content: fmt.Sprintf("%dms", ping[shard].Milliseconds()),
 		},
 	}
 }
