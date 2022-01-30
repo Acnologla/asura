@@ -79,3 +79,13 @@ other="Veja informaçoes sobre o bot"
 
 [BotInfoDescription]
 other="Workers: **{{.workers}}** (**{{.freeWorkers}}** Livres)\nBot criado a **{{.createdTime}}** dias\nServidores: **{{.guilds}}**\nRam usada: **{{.ram}}**MB\nPing: **{{.ping}}ms**\nShards: **{{.shards}}**\nBot online a {{.days}} dias {{.hours}} horas {{.minutes}} minutos"
+
+
+[PrivateHelp]
+other="Prive seus avatares antigos e nomes antigos"
+
+[PrivateEnabled]
+other="Privou seu perfil com sucesso"
+
+[PrivateDisabled]
+other="Desprivou seu perfil com sucesso"
