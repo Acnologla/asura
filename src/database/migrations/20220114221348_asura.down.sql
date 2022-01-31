@@ -7,5 +7,4 @@ DROP TABLE Rooster;
 DROP TABLE Users;
 DROP TABLE Clan;
 DROP TABLE Mission;
-DROP TYPE ClanUpgrades;
 

@@ -1,12 +1,6 @@
 SET statement_timeout = 0;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE TYPE ClanUpgrades AS (
-    members INT,
-    banks INT,
-    missions INT
-);
-
 
 CREATE TABLE Clan(
     name VARCHAR(25) PRIMARY KEY,
@@ -14,8 +8,9 @@ CREATE TABLE Clan(
     createdAt TIMESTAMPTZ,
     background VARCHAR(300),
     money INT,
-    upgrades ClanUpgrades,
-    lastIncome TIMESTAMPTZ,
+    membersUpgrade INT,
+    banksUpgrade INT,
+    missionsUpgrade INT,
     mission TIMESTAMPTZ,
     missionProgress INT
 );
