@@ -7,59 +7,56 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-type ButtonHandler struct {
+type ComponentHandler struct {
 	callback   func(*disgord.InteractionCreate)
 	deleteChan chan bool
 	sync.Mutex
 }
 
-var ButtonsHandlers = map[disgord.Snowflake]*ButtonHandler{}
-var ButtonLock = sync.RWMutex{}
+var ComponentHandlers = map[disgord.Snowflake]*ComponentHandler{}
+var ComponentLock = sync.Mutex{}
 
-func RegisterBHandler(itc *disgord.InteractionCreate, callback func(*disgord.InteractionCreate), timeout int) {
-	ButtonsHandlers[itc.ID] = &ButtonHandler{
+func RegisterHandler(itc *disgord.InteractionCreate, callback func(*disgord.InteractionCreate), timeout int) {
+	ComponentHandlers[itc.ID] = &ComponentHandler{
 		callback:   callback,
 		deleteChan: make(chan bool),
 	}
 	timeChannel := time.After(time.Duration(timeout) * time.Second)
 	if timeout == 0 {
-		<-ButtonsHandlers[itc.ID].deleteChan
+		<-ComponentHandlers[itc.ID].deleteChan
 	} else {
 		select {
-		case <-ButtonsHandlers[itc.ID].deleteChan:
+		case <-ComponentHandlers[itc.ID].deleteChan:
 		case <-timeChannel:
-			ButtonLock.Lock()
-			delete(ButtonsHandlers, itc.ID)
-			ButtonLock.Unlock()
+			ComponentLock.Lock()
+			delete(ComponentHandlers, itc.ID)
+			ComponentLock.Unlock()
 		}
 	}
 
 }
 
-func DeleteBHandler(itc *disgord.InteractionCreate) {
-	ButtonLock.Lock()
-	button, ok := ButtonsHandlers[itc.ID]
+func DeleteHandler(itc *disgord.InteractionCreate) {
+	ComponentLock.Lock()
+	button, ok := ComponentHandlers[itc.ID]
 	if ok {
 		button.deleteChan <- true
 	}
-	delete(ButtonsHandlers, itc.ID)
-	ButtonLock.Unlock()
+	delete(ComponentHandlers, itc.ID)
+	ComponentLock.Unlock()
 }
 
-func HandleButton(interaction *disgord.InteractionCreate) {
-	ButtonLock.RLock()
-	if btn, found := ButtonsHandlers[interaction.Message.Interaction.ID]; found {
-		ButtonLock.RUnlock()
-		btn.Lock()
-		defer btn.Unlock()
+func HandleComponent(interaction *disgord.InteractionCreate) {
+	ComponentLock.Lock()
+	defer ComponentLock.Unlock()
+	if btn, found := ComponentHandlers[interaction.Message.Interaction.ID]; found {
 		btn.callback(interaction)
 		return
 	}
-	ButtonLock.RUnlock()
 }
 
 func ComponentInteraction(session disgord.Session, evt *disgord.InteractionCreate) {
 	if evt.Member != nil {
-		go HandleButton(evt)
+		go HandleComponent(evt)
 	}
 }

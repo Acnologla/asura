@@ -43,6 +43,7 @@ type Command struct {
 	Run         func(*disgord.InteractionCreate) *disgord.InteractionResponse
 	Category    CommandCategory
 	Dev         bool
+	Aliases     []string
 }
 
 var Commands = map[string]Command{}
@@ -60,6 +61,16 @@ func ExecuteInteraction(interaction *disgord.InteractionCreate) *disgord.Interac
 
 func Run(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	command := Commands[itc.Data.Name]
+	if command.Name == "" {
+		for _, cmd := range Commands {
+			for _, alias := range cmd.Aliases {
+				if alias == itc.Data.Name {
+					command = cmd
+					break
+				}
+			}
+		}
+	}
 	locale := translation.GetLocale(itc)
 	if cooldown, ok := GetCooldown(itc.Member.User.ID, command); ok {
 		needTime := command.Cooldown - int(time.Since(cooldown).Seconds())
@@ -134,9 +145,9 @@ func Init(appID, token string, session *disgord.Client) {
 	}
 	for name, command := range Commands {
 		commandR := findCommand(name, commands)
-		request := func(method string) {
+		request := func(method string, name string) {
 			var newCommand disgord.ApplicationCommand
-			newCommand.Name = command.Name
+			newCommand.Name = name
 			newCommand.DefaultPermission = true
 			newCommand.Type = disgord.ApplicationCommandChatInput
 			newCommand.Options = command.Options
@@ -156,9 +167,12 @@ func Init(appID, token string, session *disgord.Client) {
 			}
 		}
 		if commandR == nil {
-			request("POST")
+			request("POST", command.Name)
+			for _, alias := range command.Aliases {
+				request("POST", alias)
+			}
 		} else if HasChanged(commandR, command) {
-			request("PATCH")
+			request("PATCH", command.Name)
 		}
 	}
 	Client = session
