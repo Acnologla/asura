@@ -6,19 +6,17 @@ import (
 	"asura/src/database"
 	"asura/src/firebase"
 	"asura/src/handler"
-	"asura/src/server"
 	"asura/src/telemetry"
 	"fmt"
 	"os"
 
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
-	"github.com/valyala/fasthttp"
 )
 
 var Port string
 
-func runTestVersion() {
+func initBot() {
 	client := disgord.New(disgord.Config{
 		BotToken: os.Getenv("TOKEN"),
 	})
@@ -31,7 +29,6 @@ func runTestVersion() {
 		go telemetry.MetricUpdate(client)
 		fmt.Println("Logged in")
 	})
-	//TODO worker pool
 	client.Gateway().InteractionCreate(func(s disgord.Session, h *disgord.InteractionCreate) {
 		handler.InteractionChannel <- h
 	})
@@ -47,14 +44,5 @@ func main() {
 	telemetry.Init()
 	cache.Init()
 	database.Connect(database.GetEnvConfig())
-	if os.Getenv("PRODUCTION") == "" {
-		runTestVersion()
-		return
-	}
-
-	server.Init(os.Getenv("PUBLIC_KEY"))
-	Port = os.Getenv("PORT")
-	fasthttp.ListenAndServe(":"+Port, server.Handler)
-	fmt.Println("server started")
-
+	initBot()
 }
