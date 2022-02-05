@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"os"
 	"strings"
@@ -30,7 +31,7 @@ func (rarity Rarity) String() string {
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 140, 480, 1200, 500, 2500}[rarity]
+	return [...]int{30, 140, 480, 1200, 500, 3000}[rarity]
 }
 
 func (rarity Rarity) Color() int {
@@ -150,4 +151,32 @@ func GetCommonOrRare() int {
 		return GetRandByType(Rare)
 	}
 	return GetRandByType(Common)
+}
+
+func HaveRooster(galos []*entities.Rooster, galoType int) bool {
+	for _, galo := range galos {
+		if galo.Type == galoType {
+			return true
+		}
+	}
+	return false
+
+}
+func CalcLevel(xp int) int {
+	return int(math.Floor(math.Sqrt(float64(xp)/30))) + 1
+}
+func Sell(rarity Rarity, xp int, reset int) (int, int) {
+	level := float64(CalcLevel(xp)+(reset*30)) - 1
+	price := float64(rarity.Price())
+	if reset == 0 {
+		return int(price * (level/5 + 1)), 0
+	}
+	asuraCoins := reset
+	if rarity > Rare {
+		asuraCoins++
+	}
+	if rarity == Legendary {
+		asuraCoins += 2
+	}
+	return 0, asuraCoins
 }

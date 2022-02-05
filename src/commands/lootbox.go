@@ -5,9 +5,11 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
+	"asura/src/telemetry"
 	"asura/src/utils"
 	"context"
 	"fmt"
+	"strconv"
 
 	"asura/src/translation"
 
@@ -174,11 +176,12 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			lb := interaction.Data.Values[0]
 			i := rinha.GetLbIndex(lb)
 			image := ""
-			color := 65535
 			name := ""
 			newVal := 0
 			winType := ""
 			pity := 0
+			extraMsg := ""
+			var rarity rinha.Rarity
 			database.Client.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
 				lbID, ok := rinha.GetLbID(u.Items, i)
 				if !ok {
@@ -192,13 +195,21 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				} else if lb == "items" {
 					database.Client.InsertItem(itc.Member.UserID, u.Items, newVal, entities.NormalType)
 				} else {
-					database.Client.InsertRooster(&entities.Rooster{
-						UserID: itc.Member.UserID,
-						Type:   newVal,
-					})
+					if !rinha.HaveRooster(u.Galos, newVal) {
+						database.Client.InsertRooster(&entities.Rooster{
+							UserID: itc.Member.UserID,
+							Type:   newVal,
+						})
+					} else {
+						gal := rinha.Classes[newVal]
+						money, _ := rinha.Sell(gal.Rarity, 0, 0)
+						u.Money += money
+						extraMsg = translation.T("SellRepeated", translation.GetLocale(interaction), money)
+					}
+
 				}
 				return u
-			}, "Items")
+			}, "Items", "Galos")
 			if pity == 0 {
 				return
 			}
@@ -207,16 +218,21 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				image = cosmetic.Value
 				winType = "cosmetico"
 				name = cosmetic.Name
-				color = cosmetic.Rarity.Color()
+				rarity = cosmetic.Rarity
 			} else if lb == "items" {
 				item := rinha.Items[newVal]
+				if item.Level == 4 {
+					rarity = rinha.Mythic
+				} else {
+					rarity = rinha.Legendary
+				}
 				winType = "item"
 				name = item.Name
 			} else {
 				galo := rinha.Classes[newVal]
-				color = galo.Rarity.Color()
 				image = rinha.Sprites[0][newVal-1]
 				name = galo.Name
+				rarity = galo.Rarity
 				winType = "galo"
 			}
 			handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
@@ -224,19 +240,29 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				Data: &disgord.InteractionApplicationCommandCallbackData{
 					Embeds: []*disgord.Embed{
 						{
-							Color: color,
+							Color: rarity.Color(),
 							Image: &disgord.EmbedImage{
 								URL: image,
 							},
 							Description: translation.T("LootboxOpen", translation.GetLocale(interaction), map[string]interface{}{
-								"name":    name,
-								"type":    winType,
-								"lootbox": lb,
+								"name":     name,
+								"type":     winType,
+								"lootbox":  lb,
+								"extraMsg": extraMsg,
 							}),
 							Title: "Lootbox open",
 						},
 					},
 				},
+			})
+			author := itc.Member.User
+			tag := author.Username + "#" + author.Discriminator.String()
+			telemetry.Debug(fmt.Sprintf("%s wins %s", tag, name), map[string]string{
+				"value":    name,
+				"user":     strconv.FormatUint(uint64(author.ID), 10),
+				"rarity":   rarity.String(),
+				"lootType": lb,
+				"pity":     strconv.Itoa(pity),
 			})
 		}, 120)
 	}

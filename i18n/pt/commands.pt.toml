@@ -143,4 +143,7 @@ other="Comprou a lootbox {{.}} com sucesso"
 other="Dinheiro insuficiente use **/lootbox** para ver seu dinheiro"
 
 [LootboxOpen]
-other="Voce abriu uma lootbox {{.lootbox}} e ganhou um {{.type}} {{.name}}"
+other="Voce abriu uma lootbox {{.lootbox}} e ganhou um {{.type}} {{.name}}\n{{.extraMsg}}"
+
+[SellRepeated]
+other="Como voce ja tinha esse galo, ele foi automaticamente vendido por **{{.}}** de dinheiro"
