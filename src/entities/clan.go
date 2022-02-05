@@ -28,12 +28,12 @@ type Clan struct {
 	Members         []*ClanMember `bun:"rel:has-many,join:name=clan"`
 	Name            string        `bun:"name, pk"`
 	Xp              int           `bun:"xp"`
-	CreatedAt       uint64        `bun:"createdAt"`
+	CreatedAt       uint64        `bun:"createdat"`
 	Background      string        `bun:"background"`
 	Money           int           `bun:"money"`
-	MembersUpgrade  int           `bun:"membersUpgrade"`
-	BanksUpgrade    int           `bun:"banksUpgrade"`
-	MissionsUpgrade int           `bun:"missionsUpgrade"`
+	MembersUpgrade  int           `bun:"membersupgrade"`
+	BanksUpgrade    int           `bun:"banksupgrade"`
+	MissionsUpgrade int           `bun:"missionsupgrade"`
 	Mission         uint64        `bun:"mission"`
-	MissionProgress int           `bun:"missionProgress"`
+	MissionProgress int           `bun:"missionprogress"`
 }

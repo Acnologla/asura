@@ -47,7 +47,6 @@ func Connect(config *DBConfig) (*bun.DB, error) {
 
 	sqldb := sql.OpenDB(dbConfig)
 	err := sqldb.Ping()
-
 	if err != nil {
 		return nil, err
 	}
