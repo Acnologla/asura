@@ -1,0 +1,97 @@
+[
+    {
+        "name": "Mao metalica",
+        "damage": [10,29],
+        "level": 1
+    },
+    {
+        "name": "Perna metalica",
+        "damage": [15,28],
+        "level": 2
+    },
+    {
+        "name": "Corpo metalico",
+        "damage": [20,25],
+        "level": 3
+    },
+    {
+        "name": "Laminas de metal",
+        "damage": [1,5],
+        "level": 4,
+        "effect": [1,1]
+    },
+    {
+        "name": "Parede de metal",
+        "damage": [1,2],
+        "level": 5,
+        "effect": [1,4]
+    },
+    {
+        "name": "Bola de metal",
+        "damage": [25,30],
+        "level": 7
+    },
+    {
+        "name": "Aço",
+        "damage": [28,35],
+        "level": 8
+    },
+    {
+        "name": "Punho de aço",
+        "damage": [30,38],
+        "level": 9
+    },
+    {
+        "name": "Espinhos de aço",
+        "damage": [15,20],
+        "level": 11,
+        "effect": [1,1]
+    },
+    {
+        "name": "Adagas de aço",
+        "damage": [25,30],
+        "level": 13,
+        "effect": [1,7]
+    },
+    {
+        "name": "Metal fervido",
+        "damage": [25,35],
+        "level": 15,
+        "effect": [1,8]
+    },
+    {
+        "name": "Muralha de aço",
+        "damage": [25,35],
+        "level": 16,
+        "effect": [1,4]
+
+    },
+    {
+        "name": "Avalanche de metal",
+        "damage": [35,50],
+        "level": 19
+    },
+    {
+        "name": "Poço de metal derretido",
+        "damage": [25,30],
+        "level": 21,
+        "effect":[1,9]
+    },
+    {
+        "name": "Metal condensado",
+        "damage": [40,55],
+        "level": 23
+    },
+    {
+        "name": "Metalização",
+        "damage": [30,40],
+        "level": 25,
+        "effect": [1,7]
+    },
+    {
+        "name": "Escudo divino",
+        "damage": [20,30],
+        "level": 30,
+        "effect": [1,29]
+    }
+]

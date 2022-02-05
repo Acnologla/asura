@@ -1,0 +1,91 @@
+[
+    {
+        "name":"Bicada depressiva",
+        "damage":[15,22],
+        "level":1
+    },
+    {
+        "name": "Galada depressiva",
+        "damage": [11,25],
+        "level":2
+    },
+    {
+        "name": "Chute depressivo",
+        "damage": [21,28],
+        "level":3
+    },
+    {
+        "name": "Rasteira depressiva",
+        "damage": [26,30],
+        "level": 4
+    },
+    {
+        "name": "Investida depressiva",
+        "damage": [25,33],
+        "level":5
+    },
+    {
+        "name": "Depressão",
+        "damage":[52,70],
+        "level":7,
+        "effect": [1,50]
+    },
+    {
+        "name":"Depressão avassaladora",
+        "damage": [31,37],
+        "level":8
+    },
+    {
+        "name":"Tristeza pertubadora",
+        "damage": [36,40],
+        "level":9
+    },
+    {
+        "name": "Felicidade inversa",
+        "damage": [36,43],
+        "level":11
+    },
+    { 
+        "name": "Lamina depressiva",
+        "damage":[28,40],
+        "level":12,
+        "effect": [1,1]
+    },
+    {
+        "name": "Angústia imensurável",
+        "damage": [42,50],
+        "level":14
+    },{
+        "name": "Depressão dupla",
+        "damage":[65,75],
+        "level": 15,
+        "effect": [1,50]
+    },
+    {
+        "name": "Pilar da depressão",
+        "damage": [45,51],
+        "level":18
+    },
+    {
+        "name": "Rasteira relampago depressiva",
+        "damage": [48,55],
+        "level":20
+    },
+    {
+        "name" : "Bicada dupla depressiva",
+        "damage": [40,45],
+        "level":22,
+        "effect": [1,7]
+    },
+    {
+        "name": "O fim da felicidade",
+        "damage": [50,70],
+        "level":25
+    },
+    {
+        "name": "Chiyoku",
+        "damage": [105, 145],
+        "level":30,
+        "effect": [1,51]
+    }
+]

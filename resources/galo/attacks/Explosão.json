@@ -1,0 +1,87 @@
+[
+    {
+        "name": "Micro explosão",
+        "damage": [13,28],
+        "level": 1
+    },
+    {
+        "name": "Socos explosivos",
+        "damage": [15,24],
+        "level": 2
+    },
+    {
+        "name": "Mini explosão",
+        "damage": [16,33],
+        "level": 3
+    },
+    {
+        "name": "Parede explosiva",
+        "damage": [19,36],
+        "level": 4    
+    },
+    {
+        "name": "C4",
+        "damage": [25,37],
+        "level": 5
+    },
+    {
+        "name": "Chute explosivo",
+        "damage": [26,39],
+        "level": 6
+    },
+    {
+        "name": "Explosão",
+        "damage": [29,41],
+        "level": 7
+    },
+    {
+        "name": "Implosão",
+        "damage": [33,42],
+        "level": 8
+    },
+    {
+        "name": "Pilar explosivo",
+        "damage": [35,45],
+        "level": 9
+    },
+    {
+        "name": "Explosão grande",
+        "damage": [40,47],
+        "level": 11
+    },
+    {
+        "name": "Chuva explosiva",
+        "damage": [40,53],
+        "level": 13
+    },
+    {
+        "name": "Bonecos explosivos",
+        "damage": [45,54],
+        "level": 14
+    },
+    {
+        "name": "Implosão destrutiva",
+        "damage": [50,55],
+        "level": 16
+    },
+    {
+        "name": "Explosão nuclear",
+        "damage": [55,60],
+        "level": 19
+    },
+    {
+        "name": "Exercito de explosivos",
+        "damage": [60,75],
+        "level": 22
+    },
+    {
+        "name": "Balas explosivas",
+        "damage": [60,90],
+        "level": 24
+    },
+    {
+        "name": "Explosão subatômica",
+        "damage": [80,100],
+        "level": 30
+    }
+]

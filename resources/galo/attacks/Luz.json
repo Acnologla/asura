@@ -1,0 +1,97 @@
+[
+    {
+        "name": "Feixe de luz",
+        "damage": [19,24],
+        "level": 1
+    },
+    {
+        "name": "Chute de luz",
+        "damage": [21,25],
+        "level": 2
+    },
+    {
+        "name": "Banho de luz",
+        "damage": [1,5],
+        "level": 3,
+        "effect": [1,2],
+        "self": true
+    },
+    {
+        "name": "Chuva de luz",
+        "damage": [10,15],
+        "level": 4,
+        "effect": [1,2],
+        "self": true
+    },
+    {
+        "name": "Pistola de luz",
+        "damage": [25,35],
+        "level": 5
+    },
+    {
+        "name": "Luz radiante",
+        "damage": [35,40],
+        "level": 7
+    },
+    {
+        "name": "Prisma",
+        "damage": [40,43],
+        "level": 9
+    },
+    {
+        "name": "Banho de luz aprimorado",
+        "damage": [5,10],
+        "effect": [1,14],
+        "level": 10,
+        "self": true
+    },
+    {
+        "name": "Explosão de luz",
+        "damage": [50,55],
+        "level": 12
+    },
+    {
+        "name": "Full regen",
+        "damage": [5,10],
+        "level": 13,
+        "effect": [0.5,17],
+        "self":  true
+    },
+    {
+        "name": "Velocidade da luz",
+        "damage": [55,58],
+        "level": 15
+    },
+    {
+        "name": "Multiplos feixes de luz",
+        "damage": [56,60],
+        "level": 17
+    },
+    {
+        "name": "Supernova",
+        "damage": [60,63],
+        "level": 19
+    },
+    {
+        "name": "Chuva de feixes de luz",
+        "damage": [62,65],
+        "level": 21
+    },
+    {
+        "name": "Iluminação",
+        "damage": [10,20],
+        "level": 22,
+        "effect": [1,17],
+        "self":  true
+    },
+    {
+        "name": "Genki dama",
+        "damage": [1,150],
+        "level": 25
+    },
+    {
+        "name": "Prisma empoderado",
+        "damage": [60, 90],
+        "level": 30
+    }
+]

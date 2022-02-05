@@ -1,0 +1,104 @@
+[
+    {
+        "name": "Mao de plasma",
+        "damage": [1,10],
+        "level": 1,
+        "effect": [1,18]
+    },
+    {
+        "name": "Raio de plasma",
+        "damage": [5,10],
+        "level": 2,
+        "effect": [1,18]
+    },
+    {
+        "name": "Laser de plasma",
+        "damage": [10,15],
+        "level": 3,
+        "effect": [1,18]
+
+    },
+    {
+        "name": "Chuva de plasma",
+        "damage": [12,15],
+        "level": 4,
+        "effect": [1,18]
+    },
+    {
+        "name": "Chute de plasma",
+        "damage": [12,18],
+        "effect": [1,18],
+        "level": 5
+    },
+    {
+        "name": "Rajada de plasma",
+        "damage": [15,18],
+        "level": 6,
+        "effect": [1,18]
+    },
+    {
+        "name": "Arma de plasma",
+        "damage": [25,30],
+        "level": 7
+    },
+    {
+        "name": "Espiral de plasma",
+        "damage": [15,25],
+        "level": 8,
+        "effect": [1,18]
+    },
+    {
+        "name": "Plasma denso",
+        "damage": [5,15],
+        "effect": [1,19],
+        "level": 9
+    },
+    {
+        "name": "Projetil de plasma",
+        "damage": [20,25],
+        "level": 11,
+        "effect": [1,18]
+    },
+    {
+        "name": "Explosão de plasma",
+        "damage": [20,30],
+        "level": 12,
+        "effect": [1,19]
+    },
+    {
+        "name": "Plasma divino",
+        "damage": [1,8],
+        "level": 14,
+        "effect": [1,20]
+    },
+    {
+        "name": "Prisao de plasma",
+        "damage": [25,35],
+        "level": 16,
+        "effect":[1, 18]
+    },
+    {
+        "name": "Rajada de plasma denso",
+        "damage": [25,30],
+        "level": 18,
+        "effect": [1,19]
+    },
+    {
+        "name": "Raio duplo de plasma",
+        "damage": [30,35],
+        "level": 21,
+        "effect": [1,18]
+    },
+    {
+        "name": "Rajada de plasma divino",
+        "damage": [20,30],
+        "level": 24,
+        "effect": [1,20]
+
+    },
+    {
+        "name": "Explosão de poder",
+        "damage": [50,80],
+        "level": 30
+    }
+]

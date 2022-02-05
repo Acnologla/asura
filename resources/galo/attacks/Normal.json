@@ -1,0 +1,90 @@
+[
+    {
+        "name":"Bicada",
+        "damage":[14,23],
+        "level":1
+    },
+    {
+        "name": "Galada",
+        "damage": [10,26],
+        "level":2
+    },
+    {
+        "name": "Chute",
+        "damage": [20,29],
+        "level":3
+    },
+    {
+        "name": "Rasteira",
+        "damage": [25,29],
+        "level": 4
+    },
+    {
+        "name": "Investida",
+        "damage": [23,32],
+        "level":5
+    },
+    {
+        "name": "Investida pesada",
+        "damage":[26,35],
+        "level":7
+    },
+    {
+        "name":"Voadora planar",
+        "damage": [30,38],
+        "level":8
+    },
+    {
+        "name":"Planada",
+        "damage": [35,41],
+        "level":9
+    },
+    {
+        "name": "Bicada de ferro",
+        "damage": [35,44],
+        "level":11,
+        "effect": [1,1]
+    },
+    { 
+        "name": "Stomp",
+        "damage":[38,47],
+        "level":12
+    },
+    {
+        "name": "Chute dominante",
+        "damage": [41,50],
+        "level":14
+    },{
+        "name": "Bicada suprema",
+        "damage":[35,40],
+        "level": 15,
+        "effect": [1,0]
+    },
+    {
+        "name": "Relampago de chutes",
+        "damage": [44,52],
+        "level":18
+    },
+    {
+        "name": "Rasteira relampago",
+        "damage": [47,55],
+        "level":20
+    },
+    {
+        "name" : "Bicada dupla",
+        "damage": [30,35],
+        "level":22,
+        "effect": [1,7]
+    },
+    {
+        "name": "Chute divino",
+        "damage": [35,50],
+        "level":24,
+        "effect": [1,4]
+    },
+    {
+        "name": "Bicada dos deuses",
+        "damage": [50, 70],
+        "level":30
+    }
+]

@@ -1,0 +1,97 @@
+[
+    {
+        "name": "Raio",
+        "damage": [10,14],
+        "level": 1,
+        "effect": [0.5, 8]
+    },
+    {
+        "name": "Choque",
+        "damage": [1,2],
+        "level": 2,
+        "effect": [1, 26]
+    },
+    {
+        "name": "Descarga eletrica",
+        "damage": [15,25],
+        "level": 3
+    },
+    {
+        "name": "Choque do trovão",
+        "damage": [20,30],
+        "level": 4
+    },
+    {
+        "name": "Raio revigorante",
+        "damage": [1,5],
+        "effect": [1, 2],
+        "level": 5
+    },
+    {
+        "name": "Bola relampago",
+        "damage": [22,26],
+        "level": 6
+    },
+    {
+        "name": "Raio paralisante",
+        "damage": [18,23],
+        "level": 7,
+        "effect": [0.5, 3]
+    },
+    {
+        "name": "Chuva de raios",
+        "damage": [30,43],
+        "level": 8
+    },
+    {
+        "name": "Adagas eletricas",
+        "damage": [5,12],
+        "effect": [1,26],
+        "level": 10
+    },
+    {
+        "name": "Flash",
+        "damage": [35,40],
+        "level": 11
+    },
+    {
+        "name": "Palma do trovão",
+        "damage": [25,35],
+        "level": 13,
+        "effect": [1,8]
+    },
+    {
+        "name": "Choque forte",
+        "damage": [1, 5],
+        "level": 14,
+        "effect": [1,27]
+    },
+    {
+        "name": "Dobra do trovão",
+        "damage": [15, 25],
+        "level": 16,
+        "effect":[1,26]
+    },
+    {
+        "name": "Chuva de raios revigorantes",
+        "damage": [15,20],
+        "level": 19,
+        "effect": [1, 14]
+    },
+    {
+        "name": "Chute relampago",
+        "damage": [5,10],
+        "level": 22,
+        "effect": [0.7,3]
+    },
+    {
+        "name": "Raio divino",
+        "damage": [60,70],
+        "level": 24
+    },
+    {
+        "name": "Raio negro",
+        "damage": [65,85],
+        "level": 30
+    }
+]

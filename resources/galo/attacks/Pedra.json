@@ -1,0 +1,92 @@
+[
+    {
+        "name": "Chuva de pedra",
+        "damage": [17,22],
+        "level": 1
+    },
+    {
+        "name": "Pedrada",
+        "damage": [20,25],
+        "level": 2
+    },
+    {
+        "name": "Tiro de pedra",
+        "damage": [10,30],
+        "level": 3
+    },
+    {
+        "name": "Prisão de pedra",
+        "damage": [15,20],
+        "level": 4,
+        "effect": [0.3,3]
+    },
+    {
+        "name": "Soco de pedra",
+        "damage": [27,35],
+        "level": 6
+    },
+    {
+        "name": "Terremoto",
+        "damage": [10,60],
+        "level": 7
+    },
+    {
+        "name": "Chute de pedra",
+        "damage": [35,38],
+        "level": 8
+    },
+    {
+        "name": "Esmagamento tectonico",
+        "damage": [35,40],
+        "level": 10
+    },
+    {
+        "name": "Escudada",
+        "damage": [15,25],
+        "level": 12,
+        "effect": [1,4]
+    },
+    {
+        "name": "Vulcão",
+        "damage": [43,48],
+        "level": 14 
+    },
+    {
+        "name": "Rompimento tectonico",
+        "damage": [20,30],
+        "level": 15,
+        "effect": [0.33,3]
+    },
+    {
+        "name": "Pedra suprema",
+        "damage": [50,58],
+        "level": 16
+    },
+    {
+        "name": "Esmagamento",
+        "damage": [55,60],
+        "level": 19
+    },
+    {
+        "name": "Escudo supremo",
+        "damage": [20,30],
+        "level": 21,
+        "effect":[1,4]
+    },
+    {
+        "name": "Chuva de obisidiana",
+        "damage": [56,63],
+        "level": 23
+    },
+    {
+        "name": "Tijolada",
+        "damage": [35,45],
+        "level": 25,
+        "effect": [0.5, 3]
+    },
+    {
+        "name": "Meteoros",
+        "damage": [50,75],
+        "level": 30
+    }
+]

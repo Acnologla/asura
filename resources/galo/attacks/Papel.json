@@ -1,0 +1,93 @@
+[
+    {
+        "name": "Chuva de papel",
+        "damage": [10,27],
+        "level": 1
+    },
+    {
+        "name": "Clone de papel",
+        "damage": [1,5],
+        "level": 2,
+        "effect": [1, 0]
+    },
+    {
+        "name": "Papelada",
+        "damage": [15,20],
+        "level": 3
+    },
+    {
+        "name": "Espada de papel",
+        "damage": [15,18],
+        "level": 4,
+        "effect": [1,1]
+    },
+    {
+        "name": "Meteoro de papel",
+        "damage": [25,30],
+        "level": 5
+    },
+    {
+        "name": "Papel explosivo",
+        "damage": [27,30],
+        "level": 6
+    },
+    {
+        "name": "Tormenta de papel",
+        "damage": [28,31],
+        "level": 7
+    },
+    {
+        "name": "Furia dos papeis",
+        "damage": [30,32],
+        "level": 8
+    },
+    {
+        "name": "Papel negro",
+        "damage": [33,40],
+        "level": 10
+    },
+    {
+        "name": "Chuva de papel negro",
+        "damage": [40,50],
+        "level": 12
+    },
+    {
+        "name": "Papel magico",
+        "damage": [35,40],
+        "level": 13,
+        "effect": [1,2],
+        "self": true
+    },
+    {
+        "name": "Estrela de papel",
+        "damage": [50,60],
+        "level": 15
+    },
+    {
+        "name": "Chuva de papel magico",
+        "damage": [42,47],
+        "level": 17,
+        "self":true,
+        "effect":[1,2]
+    },
+    {
+        "name": "Papel escarlate",
+        "damage": [50,57],
+        "level": 18
+    },
+    {
+        "name": "Catastofre",
+        "damage": [5,100],
+        "level": 22
+    },
+    {
+        "name": "Big bang de papel",
+        "damage": [55,63],
+        "level": 24
+    },
+    {
+        "name": "Universo de papel",
+        "damage": [65,90],
+        "level": 30
+    }
+]

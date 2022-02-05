@@ -1,0 +1,96 @@
+[
+    {
+        "name": "Espada",
+        "damage": [19,23],
+        "level": 1
+    },
+    {
+        "name": "Kote",
+        "damage": [10,18],
+        "level": 2,
+        "effect": [0.5, 1]
+    },
+    {
+        "name": "Espadona",
+        "damage": [26,29],
+        "level": 3
+    },
+    {
+        "name": "Tecnica samurai",
+        "damage": [30,35],
+        "level": 4
+    },
+    {
+        "name": "Espada samurai",
+        "damage": [10,25],
+        "level": 6,
+        "effect": [1,1]
+    },
+    {
+        "name": "Katana",
+        "damage": [35,36],
+        "level": 7
+    },
+    {
+        "name": "Defesa samurai",
+        "damage": [1,5],
+        "level": 8,
+        "effect": [1, 4]
+    },
+    {
+        "name": "Espirito samurai",
+        "damage": [35,40],
+        "level": 10
+    },
+    {
+        "name": "Lamina degoladora",
+        "damage": [10,20],
+        "level": 12,
+        "effect": [1,7]
+    },
+    {
+        "name": "Katana forte",
+        "damage": [38,42],
+        "level": 14
+    },
+    {
+        "name": "Corte de mil espadas",
+        "damage": [30,55],
+        "level": 15
+    },
+    {
+        "name": "Tsuki",
+        "damage": [5,10],
+        "level": 16,
+        "effect": [1,36]
+    },
+    {
+        "name": "Golpe perfeito",
+        "damage": [45,50],
+        "level": 18
+    },
+    {
+        "name": "Espada dupla",
+        "damage": [32,38],
+        "level": 21,
+        "effect":[1,1]
+    },
+    {
+        "name": "Dô",
+        "damage": [20,35],
+        "level": 23,
+        "effect" :[1,7]
+    },
+    {
+        "name": "Katana demoniaca",
+        "damage": [55,70],
+        "level": 25
+    },
+    {
+        "name": "Men",
+        "damage": [30,50],
+        "level": 30,
+        "effect": [1,36]
+
+    }
+]

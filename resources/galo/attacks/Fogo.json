@@ -1,0 +1,97 @@
+[
+    {
+        "name": "Punho de chama",
+        "damage": [13,24],
+        "level": 1
+    },
+    {
+        "name": "Chama",
+        "damage": [1,5],
+        "level": 2,
+        "effect": [1, 8]
+    },
+    {
+        "name": "Chamas dançantes",
+        "damage": [10,25],
+        "level": 3
+    },
+    {
+        "name": "Espada flamejante",
+        "damage": [13,20],
+        "level": 4,
+        "effect": [1,8]
+    },
+    {
+        "name": "Fogareu",
+        "damage": [15,20],
+        "effect": [1,8],
+        "level": 5
+    },
+    {
+        "name": "Fogo extenso",
+        "damage": [20,25],
+        "level": 6
+    },
+    {
+        "name": "Tornado de fogo",
+        "damage": [25,30],
+        "level": 7
+    },
+    {
+        "name": "Chamas potentes",
+        "damage": [5,10],
+        "effect": [1,9],
+        "level": 8
+    },
+    {
+        "name": "Bola de fogo",
+        "damage": [27,32],
+        "level": 9
+    },
+    {
+        "name": "Chuva de bola de fogo",
+        "damage": [32,40],
+        "level": 11
+    },
+    {
+        "name": "Chama furiosa",
+        "damage": [25,27],
+        "level": 13,
+        "effect": [1,9]
+    },
+    {
+        "name": "Fogo estelar",
+        "damage": [1,5],
+        "level": 14,
+        "effect": [1,10]
+    },
+    {
+        "name": "Pilar de fogo",
+        "damage": [43,48],
+        "level": 17,
+        "effect":[1,8]
+    },
+    {
+        "name": "Fogo azul",
+        "damage": [10,15],
+        "level": 18,
+        "effect": [1,10]
+    },
+    {
+        "name": "Cremação estelar",
+        "damage": [18,23],
+        "level": 22,
+        "effect": [1,10]
+    },
+    {
+        "name": "Sol",
+        "damage": [58,65],
+        "level": 24
+    },
+    {
+        "name": "Estrela",
+        "damage": [20, 30],
+        "level": 30,
+        "effect": [1,9]
+    }
+]

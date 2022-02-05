@@ -1,0 +1,100 @@
+[
+    {
+        "name": "Raiz",
+        "damage": [10,20],
+        "level": 1,
+        "effect": [0.5,1]
+    },
+    {
+        "name": "Folha cortante",
+        "damage": [20,25],
+        "level": 2
+    },
+    {
+        "name": "Enraizamento",
+        "damage": [10,15],
+        "level": 3,
+        "effect": [0.5,3]
+    },
+    {
+        "name": "Plantas carnivoras",
+        "damage": [23,30],
+        "level": 4
+    },
+    {
+        "name": "Floresta densa",
+        "damage": [30,35],
+        "level": 6
+    },
+    {
+        "name": "Ataque animal",
+        "damage": [33,38],
+        "level": 7
+    },
+    {
+        "name": "Raiz forte",
+        "damage": [10,25],
+        "level": 8,
+        "effect": [1,8]
+    },
+    {
+        "name": "Fruto divino",
+        "damage": [15,23],
+        "level": 10,
+        "effect": [1,2],
+        "self": true
+    },
+    {
+        "name": "Grama amaldiçoada",
+        "damage": [10,20],
+        "level": 12,
+        "effect": [1,15]
+    },
+    {
+        "name": "Folhas petrificadas",
+        "damage": [33,36],
+        "level": 14,
+        "effect": [1,1]
+    },
+    {
+        "name": "Morte",
+        "damage": [1,70],
+        "level": 15
+    },
+    {
+        "name": "Floresta amaldiçoada",
+        "damage": [15,25],
+        "level": 16,
+        "effect": [1,15]
+
+    },
+    {
+        "name": "Espada de grama",
+        "damage": [25,35],
+        "level": 18,
+        "effect": [1,1]
+    },
+    {
+        "name": "Flor venenosa",
+        "damage": [10,20],
+        "level": 21,
+        "effect":[1,16]
+    },
+    {
+        "name": "Raiz divina",
+        "damage": [55,60],
+        "level": 23
+    },
+    {
+        "name": "Arvore divina",
+        "damage": [20,30],
+        "level": 25,
+        "self": true,
+        "effect": [1, 14]
+    },
+    {
+        "name": "Fruto anjelical",
+        "damage": [70,90],
+        "level": 30
+    }
+]

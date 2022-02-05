@@ -1,0 +1,98 @@
+[
+    {
+        "name": "Tesourada",
+        "damage": [17,22],
+        "level": 1
+    },
+    {
+        "name": "Tesourada intermitente",
+        "damage": [20,25],
+        "level": 2,
+        "effect": [0.3, 1]
+    },
+    {
+        "name": "Navalhada",
+        "damage": [10,30],
+        "level": 3,
+        "effect": [0.2, 1]
+    },
+    {
+        "name": "Dupla navalhada",
+        "damage": [5,15],
+        "level": 4,
+        "effect": [0.4, 1]
+    },
+    {
+        "name": "Acupuntura ofensiva",
+        "damage": [24,32],
+        "level": 6
+    },
+    {
+        "name": "Explosão de tesouras",
+        "damage": [20,60],
+        "level": 7
+    },
+    {
+        "name": "Caixa de ferro",
+        "damage": [31,35],
+        "level": 8,
+        "effect": [1,5]
+    },
+    {
+        "name": "Machadada",
+        "damage": [41,43],
+        "level": 10
+    },
+    {
+        "name": "Dama de ferro",
+        "damage": [35,40],
+        "level": 12,
+        "effect": [1,5]
+    },
+    {
+        "name": "Tesourada estilo Katana",
+        "damage": [47,50],
+        "level": 14 
+    },
+    {
+        "name": "Katanada intermitente",
+        "damage": [35,38],
+        "level": 15,
+        "effect": [0.3, 1]
+    },
+    {
+        "name": "Cortadora de principes",
+        "damage": [42,50],
+        "level": 16,
+        "effect": [1, 1]
+    },
+    {
+        "name": "Mãos de tesoura",
+        "damage": [50,60],
+        "level": 19
+    },
+    {
+        "name": "Machadada interestelar",
+        "damage": [40,45],
+        "level": 21,
+        "effect":[1,6]
+    },
+    {
+        "name": "Cem mil tesouradas",
+        "damage": [40,50],
+        "level": 23,
+        "effect":[1,6]
+    },
+    {
+        "name": "Guilhotina",
+        "damage": [25,35],
+        "level": 25,
+        "effect": [1, 6]
+    },
+    {
+        "name": "Escalibur",
+        "damage": [55,80],
+        "level": 30,
+        "effect": [1, 1]
+    }
+]

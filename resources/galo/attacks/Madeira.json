@@ -1,0 +1,94 @@
+[
+    {
+        "name": "Madeirada",
+        "damage": [17,22],
+        "level": 1
+    },
+    {
+        "name": "Faca de madeira",
+        "damage": [1,10],
+        "level": 2,
+        "effect": [1,1]
+    },
+    {
+        "name": "Matagal",
+        "damage": [13, 25],
+        "level": 3
+    },
+    {
+        "name": "Raizes afiadas",
+        "damage": [25,30],
+        "level": 4
+    },
+    {
+        "name": "Arvore da cura",
+        "damage": [1,5],
+        "self": true,
+        "effect": [1,2],
+        "level": 5
+    },
+    {
+        "name": "Arvore gigante",
+        "damage": [30,31],
+        "level": 7
+    },
+    {
+        "name": "Raiz endurecida",
+        "damage": [37,40],
+        "level": 8
+    },
+    {
+        "name": "Prisão de madeira",
+        "damage": [20,25],
+        "level": 10,
+        "effect": [0.6, 3]
+    },
+    {
+        "name": "Madeira negra",
+        "damage": [40,45],
+        "level": 12
+    },
+    {
+        "name":  "Arvore devastadora",
+        "damage": [45,50],
+        "level": 14 
+    },
+    {
+        "name": "Floresta de arvores gigantes",
+        "damage": [45,50],
+        "level": 15
+    },
+    {
+        "name": "Raizes da morte",
+        "damage": [50,58],
+        "level": 16
+    },
+    {
+        "name": "Raizes da cura",
+        "damage": [35,40],
+        "level": 19,
+        "effect": [1,2],
+        "self": true
+    },
+    {
+        "name": "Punho da natureza",
+        "damage": [53,60],
+        "level": 21
+    },
+    {
+        "name": "Ataque de animais",
+        "damage": [55,64],
+        "level": 23
+    },
+    {
+        "name": "Floresta de arvores devastadoras",
+        "damage": [58,67],
+        "level": 25
+    },
+    {
+        "name": "Arvore do mundo",
+        "damage": [30,55],
+        "level": 30,
+        "effect":[1,14]
+    }
+]

@@ -1,0 +1,98 @@
+[
+    {
+        "name": "Feixe solar",
+        "damage": [1,4],
+        "level": 1,
+        "effect": [1,8]
+    },
+    {
+        "name": "Fogo brando",
+        "damage": [20,24],
+        "level": 2
+    },
+    {
+        "name": "Fusão nuclear",
+        "damage": [25,30],
+        "level": 3
+    },
+    {
+        "name": "Fogo",
+        "damage": [3,7],
+        "level": 4,
+        "effect": [1,9]
+    },
+    {
+        "name": "Raio ultravioleta",
+        "damage": [27,32],
+        "level": 5
+    },
+    {
+        "name": "Potencia solar",
+        "damage": [10,20],
+        "level": 7,
+        "effect": [1,8]
+    },
+    {
+        "name": "Vento solar",
+        "damage": [10,15],
+        "level": 9,
+        "effect": [1,9]
+    },
+    {
+        "name": "Raio de neutrinos",
+        "damage": [3, 5],
+        "effect": [1,10],
+        "level": 10
+    },
+    {
+        "name": "Emissão continua",
+        "damage": [3,5],
+        "level": 12,
+        "effect": [1, 13]
+    },
+    {
+        "name": "Mancha solar",
+        "damage": [30, 42],
+        "level": 13
+    },
+    {
+        "name": "Ciclo solar",
+        "damage": [30,35],
+        "level": 15,
+        "effect": [1,8]
+    },
+    {
+        "name": "Tempestade geomagnetica",
+        "damage": [50,55],
+        "level": 17
+    },
+    {
+        "name": "Erupçao solar",
+        "damage": [20,30],
+        "level": 19,
+        "effect": [1,10]
+    },
+    {
+        "name": "Cremação solar",
+        "damage": [1,5],
+        "level": 21,
+        "effect": [1,31]
+    },
+    {
+        "name": "Estrela de garnet",
+        "damage": [15,30],
+        "level": 22,
+        "effect": [1,13]
+    },
+    {
+        "name": "Particulas carregadas",
+        "damage": [30,50],
+        "level": 25,
+        "effect":[1,9]
+    },
+    {
+        "name": "Betelgeuse",
+        "damage": [50, 100],
+        "level": 30
+    }
+]
