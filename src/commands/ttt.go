@@ -105,7 +105,7 @@ func runTTT(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: board(tiles),
 	})
-	defer handler.RegisterBHandler(itc, func(interaction *disgord.InteractionCreate) {
+	defer handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
 		turnUser := user
 		letter := ":x:"
 		if turn == 1 {
@@ -133,7 +133,7 @@ func runTTT(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					if winner == 0 {
 						letter = ":no_good:"
 					}
-					handler.DeleteBHandler(itc)
+					handler.DeleteHandler(itc)
 				}
 				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
 					Type: disgord.InteractionCallbackUpdateMessage,

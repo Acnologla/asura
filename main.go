@@ -3,6 +3,7 @@ package main
 import (
 	"asura/src/cache"
 	_ "asura/src/commands"
+	"asura/src/database"
 	"asura/src/firebase"
 	"asura/src/handler"
 	"asura/src/server"
@@ -42,6 +43,7 @@ func main() {
 		}
 	}
 	cache.Init()
+	database.Connect(database.GetEnvConfig())
 	if os.Getenv("PRODUCTION") == "" {
 		runTestVersion()
 		return

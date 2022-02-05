@@ -52,8 +52,8 @@ func runUserinfo(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	oldUsernames := ""
 	date := ((uint64(user.ID) >> 22) + 1420070400000) / 1000
 	if len(userinfo.Usernames) > 0 && !private {
-		if len(userinfo.Usernames) > 10 {
-			oldUsernames = strings.Join(userinfo.Usernames[:10], "** | **")
+		if len(userinfo.Usernames) > 20 {
+			oldUsernames = strings.Join(userinfo.Usernames[:20], "** | **")
 		} else {
 			oldUsernames = strings.Join(userinfo.Usernames, "** | **")
 		}
