@@ -141,3 +141,6 @@ other="Comprou a lootbox {{.}} com sucesso"
 
 [NoMoney]
 other="Dinheiro insuficiente use **/lootbox** para ver seu dinheiro"
+
+[LootboxOpen]
+other="Voce abriu uma lootbox {{.lootbox}} e ganhou um {{.type}} {{.name}}"

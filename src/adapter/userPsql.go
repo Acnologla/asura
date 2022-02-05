@@ -2,11 +2,13 @@ package adapter
 
 import (
 	"asura/src/entities"
+	"asura/src/rinha"
 	"context"
 	"database/sql"
 	"fmt"
 
 	"github.com/andersfylling/disgord"
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
@@ -23,6 +25,10 @@ func (adapter UserAdapterPsql) GetUser(id disgord.Snowflake, relations ...string
 	if user.ID == 0 {
 		user.ID = id
 		adapter.SetUser(user)
+		adapter.InsertRooster(&entities.Rooster{
+			Type:   rinha.GetCommonOrRare(),
+			UserID: id,
+		})
 	}
 	return user
 }
@@ -55,13 +61,11 @@ func (adapter UserAdapterPsql) GetItems(id disgord.Snowflake) []entities.Item {
 	return items
 }
 
-func (adapter UserAdapterPsql) InsertLootbox(id disgord.Snowflake, items []*entities.Item, lootType int) error {
+func (adapter UserAdapterPsql) InsertItem(id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType) error {
 	var itemUpdate *entities.Item
 	for _, item := range items {
-		if item.Type == entities.LootboxType {
-			if item.ItemID == lootType {
-				itemUpdate = item
-			}
+		if item.Type == itemType && item.ItemID == itemID {
+			itemUpdate = item
 		}
 	}
 	if itemUpdate != nil {
@@ -71,11 +75,32 @@ func (adapter UserAdapterPsql) InsertLootbox(id disgord.Snowflake, items []*enti
 		return err
 	}
 	newItem := entities.Item{
-		Type:     entities.LootboxType,
+		Type:     itemType,
 		Quantity: 1,
-		ItemID:   lootType,
+		ItemID:   itemID,
 		UserID:   id,
 	}
 	_, err := adapter.Db.NewInsert().Model(&newItem).Exec(context.Background())
+	return err
+}
+
+func (adapter UserAdapterPsql) RemoveItem(items []*entities.Item, itemUUID uuid.UUID) error {
+	for _, item := range items {
+		if item.ID == itemUUID {
+			if item.Quantity > 1 {
+				item.Quantity--
+				_, err := adapter.Db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(context.Background())
+				return err
+			} else {
+				_, err := adapter.Db.NewDelete().Model(item).Where("id = ?", item.ID).Exec(context.Background())
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (adapter UserAdapterPsql) InsertRooster(rooster *entities.Rooster) error {
+	_, err := adapter.Db.NewInsert().Model(rooster).Exec(context.Background())
 	return err
 }

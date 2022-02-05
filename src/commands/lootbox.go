@@ -42,8 +42,8 @@ func init() {
 
 }
 
-func GenerateBuyOptions() (opts []*disgord.SelectMenuOption) {
-	for _, name := range rinha.LootNames {
+func GenerateBuyOptions(arr []string) (opts []*disgord.SelectMenuOption) {
+	for _, name := range arr {
 		opts = append(opts, &disgord.SelectMenuOption{
 			Label:       name,
 			Description: fmt.Sprintf("%s lootbox", name),
@@ -89,7 +89,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 						Components: []*disgord.MessageComponent{
 							{
 								Type:        disgord.MessageComponentButton + 1,
-								Options:     GenerateBuyOptions(),
+								Options:     GenerateBuyOptions(rinha.LootNames[:]),
 								CustomID:    "type",
 								MaxValues:   1,
 								Placeholder: "Select lootbox",
@@ -118,7 +118,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					done = true
 				}
 				if done {
-					database.Client.InsertLootbox(itc.Member.UserID, u.Items, i)
+					database.Client.InsertItem(itc.Member.UserID, u.Items, i, entities.LootboxType)
 				}
 				return u
 			}, "Items")
@@ -139,14 +139,106 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			}
 
 		}, 120)
+	case "open":
+		lootbox := rinha.GetLootboxes(&user)
+		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Embeds: []*disgord.Embed{
+					{
+						Title:       "Lootbox open",
+						Color:       65535,
+						Description: fmt.Sprintf("Lootbox comum: **%d**\nLootbox normal: **%d**\nLootbox rara: **%d**\nLootbox epica: **%d**\nLootbox lendaria: **%d**\nLootbox items: **%d**\nLootbox cosmetica: **%d**", lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic),
+					},
+				},
+				Components: []*disgord.MessageComponent{
+					{
+						Type: disgord.MessageComponentActionRow,
+						Components: []*disgord.MessageComponent{
+							{
+								Type:        disgord.MessageComponentButton + 1,
+								Options:     GenerateBuyOptions(rinha.GetUserLootboxes(&user)),
+								CustomID:    "type",
+								MaxValues:   1,
+								Placeholder: "Select lootbox",
+							},
+						},
+					},
+				},
+			},
+		})
+		handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
+			if len(interaction.Data.Values) == 0 {
+				return
+			}
+			lb := interaction.Data.Values[0]
+			i := rinha.GetLbIndex(lb)
+			image := ""
+			color := 65535
+			name := ""
+			newVal := 0
+			winType := ""
+			pity := 0
+			database.Client.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+				lbID, ok := rinha.GetLbID(u.Items, i)
+				if !ok {
+					return u
+				}
+				database.Client.RemoveItem(u.Items, lbID)
+				newVal, pity = rinha.Open(i, &user)
+				u.Pity = pity
+				if lb == "cosmetica" {
+					database.Client.InsertItem(itc.Member.UserID, u.Items, newVal, entities.CosmeticType)
+				} else if lb == "items" {
+					database.Client.InsertItem(itc.Member.UserID, u.Items, newVal, entities.NormalType)
+				} else {
+					database.Client.InsertRooster(&entities.Rooster{
+						UserID: itc.Member.UserID,
+						Type:   newVal,
+					})
+				}
+				return u
+			}, "Items")
+			if pity == 0 {
+				return
+			}
+			if lb == "cosmetica" {
+				cosmetic := rinha.Cosmetics[newVal]
+				image = cosmetic.Value
+				winType = "cosmetico"
+				name = cosmetic.Name
+				color = cosmetic.Rarity.Color()
+			} else if lb == "items" {
+				item := rinha.Items[newVal]
+				winType = "item"
+				name = item.Name
+			} else {
+				galo := rinha.Classes[newVal]
+				color = galo.Rarity.Color()
+				image = rinha.Sprites[0][newVal-1]
+				name = galo.Name
+				winType = "galo"
+			}
+			handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Embeds: []*disgord.Embed{
+						{
+							Color: color,
+							Image: &disgord.EmbedImage{
+								URL: image,
+							},
+							Description: translation.T("LootboxOpen", translation.GetLocale(interaction), map[string]interface{}{
+								"name":    name,
+								"type":    winType,
+								"lootbox": lb,
+							}),
+							Title: "Lootbox open",
+						},
+					},
+				},
+			})
+		}, 120)
 	}
-	ping, _ := handler.Client.HeartbeatLatencies()
-	botInfo, _ := handler.Client.Gateway().GetBot()
-	shard := disgord.ShardID(itc.GuildID, botInfo.Shards)
-	return &disgord.InteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
-			Content: fmt.Sprintf("%dms", ping[shard].Milliseconds()),
-		},
-	}
+	return nil
 }

@@ -4,6 +4,7 @@ import (
 	"asura/src/entities"
 
 	"github.com/andersfylling/disgord"
+	"github.com/google/uuid"
 )
 
 type UserAdapter interface {
@@ -12,5 +13,7 @@ type UserAdapter interface {
 	GetItems(id disgord.Snowflake) []entities.Item
 	SetUser(user entities.User) error
 	UpdateUser(id disgord.Snowflake, callback func(entities.User) entities.User, relations ...string) error
-	InsertLootbox(id disgord.Snowflake, items []*entities.Item, lootType int) error
+	InsertItem(id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType) error
+	RemoveItem(items []*entities.Item, itemUUID uuid.UUID) error
+	InsertRooster(rooster *entities.Rooster) error
 }
