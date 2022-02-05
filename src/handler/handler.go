@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"asura/src/telemetry"
 	"asura/src/translation"
 	"bytes"
 	"context"
@@ -8,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/andersfylling/disgord"
@@ -59,18 +61,23 @@ func ExecuteInteraction(interaction *disgord.InteractionCreate) *disgord.Interac
 	return nil
 }
 
-func Run(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
-	command := Commands[itc.Data.Name]
+func GetCommand(name string) Command {
+	command := Commands[name]
 	if command.Name == "" {
 		for _, cmd := range Commands {
 			for _, alias := range cmd.Aliases {
-				if alias == itc.Data.Name {
+				if alias == name {
 					command = cmd
 					break
 				}
 			}
 		}
 	}
+	return command
+}
+
+func Run(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+	command := GetCommand(itc.Data.Name)
 	locale := translation.GetLocale(itc)
 	if cooldown, ok := GetCooldown(itc.Member.User.ID, command); ok {
 		needTime := command.Cooldown - int(time.Since(cooldown).Seconds())
@@ -187,6 +194,15 @@ func HandleInteraction(itc *disgord.InteractionCreate) {
 		if response != nil {
 			Client.SendInteractionResponse(context.Background(), itc, response)
 		}
+		author := itc.Member.User
+		tag := author.Username + "#" + author.Discriminator.String()
+		name := GetCommand(itc.Data.Name).Name
+		telemetry.Info(fmt.Sprintf("Command %s used by %s", name, tag), map[string]string{
+			"guild":   strconv.FormatUint(uint64(itc.GuildID), 10),
+			"user":    strconv.FormatUint(uint64(author.ID), 10),
+			"command": name,
+			"channel": strconv.FormatUint(uint64(itc.ChannelID), 10),
+		})
 	} else if itc.Type == disgord.InteractionMessageComponent {
 		ComponentInteraction(Client, itc)
 	}

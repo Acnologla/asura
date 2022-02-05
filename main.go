@@ -7,6 +7,7 @@ import (
 	"asura/src/firebase"
 	"asura/src/handler"
 	"asura/src/server"
+	"asura/src/telemetry"
 	"fmt"
 	"os"
 
@@ -27,6 +28,7 @@ func runTestVersion() {
 	handler.Init(appID, token, client)
 	defer client.Gateway().StayConnectedUntilInterrupted()
 	client.Gateway().BotReady(func() {
+		go telemetry.MetricUpdate(client)
 		fmt.Println("Logged in")
 	})
 	//TODO worker pool
@@ -42,6 +44,7 @@ func main() {
 			panic("Cannot read the motherfucking envfile")
 		}
 	}
+	telemetry.Init()
 	cache.Init()
 	database.Connect(database.GetEnvConfig())
 	if os.Getenv("PRODUCTION") == "" {
