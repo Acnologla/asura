@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math"
 	"net/http"
 	"os"
@@ -179,4 +180,86 @@ func Sell(rarity Rarity, xp int, reset int) (int, int) {
 		asuraCoins += 2
 	}
 	return 0, asuraCoins
+}
+
+func GetEquippedGalo(user *entities.User) *entities.Rooster {
+	for _, galo := range user.Galos {
+		if galo.Equip {
+			return galo
+		}
+	}
+	log.Fatal("excuse me wtf")
+	return nil
+}
+
+func GetName(username string, galo entities.Rooster) string {
+	if galo.Name == "" {
+		return username
+	}
+	return galo.Name
+}
+
+func IsIntInList(a int, arry []int) bool {
+	for _, b := range arry {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}
+
+func GetSkills(galo entities.Rooster) []int {
+	skills := []int{}
+	lvl := CalcLevel(galo.Xp)
+	if galo.Type == 0 {
+		return skills
+	}
+	for i := 0; i < len(Skills[galo.Type-1]); i++ {
+		if Skills[galo.Type-1][i].Level > lvl {
+			continue
+		}
+		skills = append(skills, i)
+	}
+	return skills
+}
+
+func calcDamage(min, max int, galo *entities.Rooster) (int, int) {
+	if galo.Resets > 0 {
+		min += int(float64(min) * 0.15 * float64(galo.Resets))
+		max += int(float64(max) * 0.15 * float64(galo.Resets))
+	}
+	return min, max
+}
+
+func CalcDamage(skill *Skill, galo *entities.Rooster) (min int, max int) {
+	min = skill.Damage[0]
+	max = skill.Damage[1]
+	return calcDamage(min, max, galo)
+}
+func CalcEffectRange(effect *Effect, galo *entities.Rooster) (min int, max int) {
+	min = effect.Range[0]
+	max = effect.Range[1]
+	return calcDamage(min, max, galo)
+}
+
+func Between(damage [2]int) int {
+	if damage[1] == damage[0] {
+		return damage[1]
+	}
+	return utils.RandInt(damage[1]-damage[0]) + damage[0]
+}
+
+func CalcXP(level int) int {
+	return int(math.Pow(float64(level-1), 2)) * 30
+}
+
+func GetNextSkill(galo entities.Rooster) []*Skill {
+	skills := []*Skill{}
+	lvl := CalcLevel(galo.Xp)
+	for i := 0; i < len(Skills[galo.Type-1]); i++ {
+		if Skills[galo.Type-1][i].Level == lvl {
+			skills = append(skills, Skills[galo.Type-1][i])
+		}
+	}
+	return skills
 }

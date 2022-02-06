@@ -104,3 +104,11 @@ func (adapter UserAdapterPsql) InsertRooster(rooster *entities.Rooster) error {
 	_, err := adapter.Db.NewInsert().Model(rooster).Exec(context.Background())
 	return err
 }
+
+func (adapter UserAdapterPsql) UpdateEquippedRooster(user entities.User, callback func(entities.Rooster) entities.Rooster) error {
+	galo := rinha.GetEquippedGalo(&user)
+	cb := callback(*galo)
+	galo = &cb
+	_, err := adapter.Db.NewUpdate().Model(galo).Where("id = ?", galo.ID).Exec(context.Background())
+	return err
+}

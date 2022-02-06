@@ -2,6 +2,7 @@ package utils
 
 import (
 	"asura/src/handler"
+	"context"
 	"strconv"
 
 	"github.com/andersfylling/disgord"
@@ -30,4 +31,48 @@ func GetUserOrAuthor(itc *disgord.InteractionCreate, i int) *disgord.User {
 		return GetUser(itc, i)
 	}
 	return itc.Member.User
+}
+
+func Confirm(title string, itc *disgord.InteractionCreate, id disgord.Snowflake, callback func()) {
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.InteractionApplicationCommandCallbackData{
+			Embeds: []*disgord.Embed{
+				{
+					Title: title,
+					Color: 65535,
+				},
+			},
+			Components: []*disgord.MessageComponent{
+				{
+					Type: disgord.MessageComponentActionRow,
+					Components: []*disgord.MessageComponent{
+						{
+							Type:     disgord.MessageComponentButton,
+							Label:    "Aceitar",
+							Style:    disgord.Success,
+							CustomID: "yes",
+						},
+						{
+							Type:     disgord.MessageComponentButton,
+							Label:    "Recusar",
+							Style:    disgord.Danger,
+							CustomID: "no",
+						},
+					},
+				},
+			},
+		},
+	})
+	done := false
+	handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
+		if id == interaction.Member.User.ID && !done {
+			done = true
+			go handler.Client.Channel(itc.ChannelID).Message(itc.Message.ID).Delete()
+			if interaction.Data.CustomID == "yes" {
+				callback()
+			}
+			handler.DeleteHandler(itc)
+		}
+	}, 120)
 }

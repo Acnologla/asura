@@ -147,3 +147,15 @@ other="Voce abriu uma lootbox {{.lootbox}} e ganhou um {{.type}} {{.name}}\n{{.e
 
 [SellRepeated]
 other="Como voce ja tinha esse galo, ele foi automaticamente vendido por **{{.}}** de dinheiro"
+
+[RinhaHelp]
+other="Batalhe contra um jogador"
+
+[RinhaMessage]
+other="O usuario {{.username}} ja esta lutando com o {{.text}}"
+
+[RinhaDuel]
+other="**{{.adv}}** voce foi convidado para um duelo com {{.author}}"
+
+[WinDuel]
+other="**{{.}}** venceu a batalha"

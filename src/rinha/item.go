@@ -1,6 +1,9 @@
 package rinha
 
-import "asura/src/utils"
+import (
+	"asura/src/entities"
+	"asura/src/utils"
+)
 
 type Item struct {
 	Name    string  `json:"name"`
@@ -34,4 +37,13 @@ func LevelToString(level int) string {
 		4: "especial",
 		5: "evento",
 	}[level]
+}
+
+func GetEquippedItem(user *entities.User) int {
+	for _, item := range user.Items {
+		if item.Type == entities.NormalType && item.Equip {
+			return item.ItemID
+		}
+	}
+	return -1
 }
