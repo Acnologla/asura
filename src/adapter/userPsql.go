@@ -28,7 +28,9 @@ func (adapter UserAdapterPsql) GetUser(id disgord.Snowflake, relations ...string
 		adapter.InsertRooster(&entities.Rooster{
 			Type:   rinha.GetCommonOrRare(),
 			UserID: id,
+			Equip:  true,
 		})
+		user = adapter.GetUser(id, relations...)
 	}
 	return user
 }

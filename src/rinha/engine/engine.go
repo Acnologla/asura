@@ -16,7 +16,7 @@ import (
 type RinhaOptions struct {
 	GaloAuthor  *entities.User
 	GaloAdv     *entities.User
-	MessageID   [2]*disgord.InteractionCreate
+	MessageID   [2]*disgord.Message
 	AuthorLevel int
 	AdvLevel    int
 	AuthorName  string
@@ -53,22 +53,22 @@ func EditRinhaComponents(message *disgord.Message, newMessage *disgord.CreateMes
 	}, 5)
 }
 
-func editRinhaEmbed(itc *disgord.InteractionCreate, embed *disgord.Embed) {
+func editRinhaEmbed(msg *disgord.Message, embed *disgord.Embed) {
 	utils.Try(func() error {
-		err := handler.Client.EditInteractionResponse(context.Background(), itc, &disgord.Message{
-			Embeds: []*disgord.Embed{embed},
-		})
+		msgUpdater := handler.Client.Channel(msg.ChannelID).Message(msg.ID).UpdateBuilder()
+		msgUpdater.SetEmbed(embed)
+		_, err := msgUpdater.Execute()
 		return err
 	}, 5)
 }
 
-func EditRinhaEmbed(itc *disgord.InteractionCreate, embed *disgord.Embed, msgs [2]*disgord.InteractionCreate) {
+func EditRinhaEmbed(msg *disgord.Message, embed *disgord.Embed, msgs [2]*disgord.Message) {
 	if msgs[0] != nil {
-		for _, itc := range msgs {
-			editRinhaEmbed(itc, embed)
+		for _, msg := range msgs {
+			editRinhaEmbed(msg, embed)
 		}
 	} else {
-		editRinhaEmbed(itc, embed)
+		editRinhaEmbed(msg, embed)
 	}
 
 }
@@ -286,7 +286,7 @@ func GetUsername(name, realName string) string {
 	return name
 }
 
-func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, itc *disgord.InteractionCreate, embed *disgord.Embed) (int, *rinha.Battle) {
+func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, msg *disgord.Message, embed *disgord.Embed) (int, *rinha.Battle) {
 	var lastEffects string
 	round := 0
 	for {
@@ -348,12 +348,12 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, itc *disgord.Inter
 				} else {
 					embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AuthorName)
 				}
-				EditRinhaEmbed(itc, embed, options.MessageID)
+				EditRinhaEmbed(msg, embed, options.MessageID)
 				return winnerTurn, battle
 			}
 		}
 
-		EditRinhaEmbed(itc, embed, options.MessageID)
+		EditRinhaEmbed(msg, embed, options.MessageID)
 		lastEffects = text
 		round++
 		time.Sleep(4 * time.Second)
@@ -407,14 +407,16 @@ func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, optio
 			return -1, nil
 		}
 	}
+	var msg *disgord.Message
+	var err error
 	if options.MessageID[0] == nil {
-		session.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
-			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
-				Content: itc.Member.User.Mention(),
-				Embeds:  []*disgord.Embed{embed},
-			},
+		msg, err = session.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+			Content: itc.Member.User.Mention(),
+			Embeds:  []*disgord.Embed{embed},
 		})
+		if err != nil {
+			return -1, nil
+		}
 	}
 
 	battle := rinha.CreateBattle(options.GaloAuthor, options.GaloAdv, options.NoItems, options.IDs[0], options.IDs[1], options.Waiting, options.Usernames)
@@ -430,10 +432,10 @@ func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, optio
 			Inline: true,
 		},
 	}
-	EditRinhaEmbed(itc, embed, options.MessageID)
+	EditRinhaEmbed(msg, embed, options.MessageID)
 	/*	if newEngine {
 			return RinhaEngineNew(&battle, &options, message, embed)
 		}
 	*/
-	return RinhaEngine(&battle, &options, itc, embed)
+	return RinhaEngine(&battle, &options, msg, embed)
 }

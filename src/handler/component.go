@@ -14,7 +14,7 @@ type ComponentHandler struct {
 }
 
 var ComponentHandlers = map[disgord.Snowflake]*ComponentHandler{}
-var ComponentLock = sync.Mutex{}
+var ComponentLock = sync.RWMutex{}
 
 func RegisterHandler(itc *disgord.InteractionCreate, callback func(*disgord.InteractionCreate), timeout int) {
 	ComponentHandlers[itc.ID] = &ComponentHandler{
@@ -47,12 +47,15 @@ func DeleteHandler(itc *disgord.InteractionCreate) {
 }
 
 func HandleComponent(interaction *disgord.InteractionCreate) {
-	ComponentLock.Lock()
-	defer ComponentLock.Unlock()
+	ComponentLock.RLock()
 	if btn, found := ComponentHandlers[interaction.Message.Interaction.ID]; found {
+		ComponentLock.RUnlock()
+		btn.Lock()
+		defer btn.Unlock()
 		btn.callback(interaction)
 		return
 	}
+	ComponentLock.RUnlock()
 }
 
 func ComponentInteraction(session disgord.Session, evt *disgord.InteractionCreate) {

@@ -98,12 +98,16 @@ func runRinha(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	utils.Confirm(text, itc, user.ID, func() {
 		userRinha := isInRinha(user)
 		if userRinha != "" {
-			handler.Client.SendInteractionResponse(context.Background(), itc, rinhaMessage(user.Username, userRinha))
+			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+				Content: rinhaMessage(user.Username, userRinha).Data.Content,
+			})
 			return
 		}
 		authorRinha := isInRinha(itc.Member.User)
 		if authorRinha != "" {
-			handler.Client.SendInteractionResponse(context.Background(), itc, rinhaMessage(user.Username, userRinha))
+			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+				Content: rinhaMessage(author.Username, userRinha).Data.Content,
+			})
 			return
 		}
 		executePVP(itc)

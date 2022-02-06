@@ -8,6 +8,7 @@ import (
 	"asura/src/handler"
 	"asura/src/telemetry"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/andersfylling/disgord"
@@ -43,6 +44,9 @@ func main() {
 	}
 	telemetry.Init()
 	cache.Init()
-	database.Connect(database.GetEnvConfig())
+	_, err := database.Connect(database.GetEnvConfig())
+	if err != nil {
+		log.Fatal(err)
+	}
 	initBot()
 }

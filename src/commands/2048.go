@@ -136,14 +136,13 @@ func run2048(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	}
 	lastPlay := time.Now()
 	points := 0
-	err := handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.InteractionApplicationCommandCallbackData{
 			Content:    ":zero:\n\n" + draw2048Board(board),
 			Components: generate2048Buttons(),
 		},
 	})
-	fmt.Println(err)
 	go func() {
 		for {
 			time.Sleep(time.Second)
