@@ -59,11 +59,6 @@ func unlockBattle(author, adv disgord.Snowflake) {
 		return nil
 	})
 }
-
-func setRinha(user *disgord.User, target string) {
-	cache.Client.Set(context.Background(), "/rinha/"+user.ID.String(), target, time.Minute*4)
-}
-
 func rinhaMessage(username, text string) *disgord.InteractionResponse {
 	return &disgord.InteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
