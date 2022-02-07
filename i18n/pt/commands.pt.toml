@@ -20,6 +20,11 @@ other="O historico esse usuario é privado use /private para desprivar"
 [NotFoundAvatars]
 other="Não tenho o historico de avatares desse usuario"
 
+
+[InvalidImage]
+other="Imagem invalida"
+
+
 [InvertHelp]
 other="Inverta uma imagem"
 
@@ -249,3 +254,19 @@ other="O usuario {{.}} agora é um administrador"
 
 [ClanBankDesc]
 other="Dinheiro: **{{.money}}**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan ({{.membersUpgrade}})\n[**Missao**] - Bonus para missao do clan ({{.missionUpgrade}})\n\nUse /clan depositar <dinheiro> para depositar dinheiro\nUse /clan upgrade <upgrade> para dar upgrade em algo\nUse /clan background <background> para setar um background para seu clan (custa 10000)"
+
+[ClanMoneyAdd]
+other="Voce depositou **{{.}}** de dinheiro no seu clan com sucesso"
+
+
+[ClanNoMoney]
+other="Seu clan nao tem esse dinheiro disponivel"
+
+[ClanBankMinified]
+other="Dinheiro: **{{.money}}**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan ({{.membersUpgrade}})\n[**Missao**] - Bonus para missao do clan ({{.missionUpgrade}})"
+
+[ClanUpgradePuchased]
+other="Comprou o upgrade **{{.}}** com sucesso"
+
+[ChangedClanBackground]
+other="Background do clan foi alterado com sucesso"

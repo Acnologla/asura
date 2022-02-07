@@ -94,3 +94,7 @@ func PopulateClanMissions(clan *entities.Clan) *entities.Clan {
 	}
 	return clan
 }
+
+func CalcClanUpgrade(x, price int) int {
+	return int(math.Pow(2, float64(x)) * (float64(price * 500)))
+}

@@ -7,6 +7,7 @@ import (
 	"asura/src/rinha"
 	"asura/src/translation"
 	"asura/src/utils"
+	"context"
 	"fmt"
 
 	"github.com/andersfylling/disgord"
@@ -17,7 +18,7 @@ func init() {
 		Name:        "clan",
 		Description: translation.T("ClanHelp", "pt"),
 		Run:         runClan,
-		Cooldown:    10,
+		Cooldown:    8,
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
@@ -117,6 +118,16 @@ func init() {
 
 }
 
+func generateUpgradesOptions() (opts []*disgord.SelectMenuOption) {
+	for _, name := range [...]string{"membros", "missão"} {
+		opts = append(opts, &disgord.SelectMenuOption{
+			Label:       name,
+			Description: fmt.Sprintf("%s upgrade", name),
+			Value:       name,
+		})
+	}
+	return
+}
 func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	command := itc.Data.Options[0].Name
 	user := database.User.GetUser(itc.Member.UserID)
@@ -282,20 +293,16 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 						database.Clan.InsertMember(&c, &entities.ClanMember{
 							ID: user.ID,
 						})
+						msg = "SucessInvite"
 					}
 				}
 				return c
 			})
 		})
-		if msg == "" {
-			ch.CreateMessage(&disgord.CreateMessage{
-				Content: translation.T("SucessInvite", translation.GetLocale(itc), user.Username),
-			})
-		} else {
-			ch.CreateMessage(&disgord.CreateMessage{
-				Content: translation.T(msg, translation.GetLocale(itc)),
-			})
-		}
+
+		ch.CreateMessage(&disgord.CreateMessage{
+			Content: translation.T(msg, translation.GetLocale(itc), user.Username),
+		})
 	case "remove":
 		if len(itc.Data.Options[0].Options) == 0 {
 			return &disgord.InteractionResponse{
@@ -314,25 +321,18 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				if member.Role <= uClan.Member.Role {
 					msg = "NoPermission"
 				} else {
+					msg = "SucessRemove"
 					database.Clan.RemoveMember(&c, user.ID)
 				}
 			}
 			return c
 		})
-		if msg == "" {
-			return &disgord.InteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
-					Content: translation.T("SucessRemove", translation.GetLocale(itc), user.Username),
-				},
-			}
-		} else {
-			return &disgord.InteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
-					Content: translation.T(msg, translation.GetLocale(itc)),
-				},
-			}
+
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Content: translation.T(msg, translation.GetLocale(itc), user.Username),
+			},
 		}
 	case "admin":
 		if len(itc.Data.Options[0].Options) == 0 {
@@ -354,24 +354,16 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				} else {
 					uClan.Member.Role = entities.Administrator
 					database.Clan.UpdateMember(&c, uClan.Member)
+					msg = "SucessAdmin"
 				}
 			}
 			return c
 		})
-		if msg == "" {
-			return &disgord.InteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
-					Content: translation.T("SucessAdmin", translation.GetLocale(itc), user.Username),
-				},
-			}
-		} else {
-			return &disgord.InteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
-					Content: translation.T(msg, translation.GetLocale(itc)),
-				},
-			}
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Content: translation.T(msg, translation.GetLocale(itc), user.Username),
+			},
 		}
 	case "banco":
 		return &disgord.InteractionResponse{
@@ -383,11 +375,126 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 						Color: 65535,
 						Description: translation.T("ClanBankDesc", translation.GetLocale(itc), map[string]interface{}{
 							"money":          clan.Money,
-							"membersUpgrade": clan.MembersUpgrade,
-							"missionUpgrade": clan.MissionsUpgrade,
+							"membersUpgrade": rinha.CalcClanUpgrade(clan.MembersUpgrade, 1),
+							"missionUpgrade": rinha.CalcClanUpgrade(clan.MissionsUpgrade, 1),
 						}),
 					},
 				},
+			},
+		}
+	case "depositar":
+		money := int(itc.Data.Options[0].Options[0].Value.(float64))
+		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+			if u.Money < money {
+				msg = "NoMoney"
+			} else {
+				u.Money -= money
+				database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+					c.Money += money
+					return c
+				})
+				msg = "ClanMoneyAdd"
+			}
+			return u
+		})
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Content: translation.T(msg, translation.GetLocale(itc), money),
+			},
+		}
+	case "upgrade":
+		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Embeds: []*disgord.Embed{
+					{
+						Title: "Upgrades",
+						Color: 65535,
+						Description: translation.T("ClanBankMinified", translation.GetLocale(itc), map[string]interface{}{
+							"money":          clan.Money,
+							"membersUpgrade": rinha.CalcClanUpgrade(clan.MembersUpgrade, 1),
+							"missionUpgrade": rinha.CalcClanUpgrade(clan.MissionsUpgrade, 1),
+						}),
+					},
+				},
+				Components: []*disgord.MessageComponent{
+					{
+						Type: disgord.MessageComponentActionRow,
+						Components: []*disgord.MessageComponent{
+							{
+								Type:        disgord.MessageComponentButton + 1,
+								Options:     generateUpgradesOptions(),
+								CustomID:    "upgrade",
+								MaxValues:   1,
+								Placeholder: "Select upgrade",
+							},
+						},
+					},
+				},
+			},
+		})
+		handler.RegisterHandler(itc, func(ic *disgord.InteractionCreate) {
+			if len(ic.Data.Values) == 0 {
+				return
+			}
+			upgrade := ic.Data.Values[0]
+			if ic.Member.UserID == itc.Member.UserID {
+				database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+					var money int
+					if upgrade == "membros" {
+						money = rinha.CalcClanUpgrade(clan.MembersUpgrade, 1)
+					}
+					if upgrade == "missão" {
+						money = rinha.CalcClanUpgrade(clan.MissionsUpgrade, 1)
+					}
+					if money > c.Money {
+						msg = "ClanNoMoney"
+					} else {
+						msg = "ClanUpgradePuchased"
+						c.Money -= money
+						if upgrade == "membros" {
+							c.MembersUpgrade++
+						}
+						if upgrade == "missão" {
+							c.MissionsUpgrade++
+						}
+					}
+					return c
+				})
+				handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.InteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.InteractionApplicationCommandCallbackData{
+						Content: translation.T(msg, translation.GetLocale(itc), upgrade),
+					},
+				})
+			}
+		}, 100)
+
+	case "background":
+		img := itc.Data.Options[0].Options[0].Value.(string)
+		if !utils.CheckImage(img) {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: translation.T("InvalidImage", translation.GetLocale(itc)),
+				},
+			}
+		}
+		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+			if c.Money < 10000 {
+				msg = "ClanNoMoney"
+			} else {
+				c.Money -= 10000
+				c.Background = img
+				msg = "ChangedClanBackground"
+			}
+			return c
+		})
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Content: translation.T(msg, translation.GetLocale(itc)),
 			},
 		}
 	}
