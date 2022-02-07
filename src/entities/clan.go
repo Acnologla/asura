@@ -31,6 +31,7 @@ type Clan struct {
 
 	Members         []*ClanMember `bun:"rel:has-many,join:name=clan"`
 	Name            string        `bun:"name,pk"`
+	ID              uint          `bun:"id"`
 	Xp              int           `bun:"xp"`
 	CreatedAt       uint64        `bun:"createdat"`
 	Background      string        `bun:"background"`

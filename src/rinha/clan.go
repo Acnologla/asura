@@ -2,10 +2,17 @@ package rinha
 
 import (
 	"asura/src/entities"
+	"fmt"
 	"math"
 	"strings"
+	"time"
 )
 
+const (
+	missionN     = 20000
+	missionMoney = 625
+	missionXp    = 2125
+)
 const allowedChars = "abcdefghijklmnopqrstuvwxyz123456789 -_"
 
 const MaxMoney = 10000000
@@ -62,4 +69,28 @@ func GetBenefits(xp int) (text string) {
 		text += "Aumenta o limite de trains"
 	}
 	return
+}
+
+func calcMissionPrize(clan *entities.Clan) (int, int) {
+	return missionMoney + (10 * clan.MissionsUpgrade), missionXp + (50 * clan.MissionsUpgrade)
+}
+
+func MissionToString(clan *entities.Clan) string {
+	money, xp := calcMissionPrize(clan)
+	done := clan.MissionProgress >= missionN
+
+	if done {
+		need := uint64(time.Now().Unix()) - clan.Mission
+		return fmt.Sprintf("Espere mais %d dias e %d horas para seu clan receber uma nova missão", 30-(need/60/60/24), 23-(need/60/60%24))
+	} else {
+		return fmt.Sprintf("Derrote %d/%d galos na rinha\nMoney: **%d**\nXp: **%d**", clan.MissionProgress, missionN, money, xp)
+	}
+}
+
+func PopulateClanMissions(clan *entities.Clan) *entities.Clan {
+	if uint64((uint64(time.Now().Unix())-clan.Mission)/60/60/24) >= 30 {
+		clan.Mission = uint64(time.Now().Unix())
+		clan.MissionProgress = 0
+	}
+	return clan
 }

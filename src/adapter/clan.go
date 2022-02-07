@@ -9,6 +9,7 @@ import (
 type ClanAdapter interface {
 	GetClan(name string, relations ...string) entities.Clan
 	CreateClan(clan entities.Clan, id disgord.Snowflake) error
-	InsertMember(clan entities.Clan, member *entities.ClanMember) error
+	InsertMember(clan *entities.Clan, member *entities.ClanMember) error
 	GetUserClan(id disgord.Snowflake, relations ...string) entities.Clan
+	UpdateClan(clan *entities.Clan, callback func(entities.Clan) entities.Clan, relations ...string) error
 }

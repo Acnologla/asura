@@ -146,14 +146,6 @@ func GetRandByType(classType Rarity) int {
 	return -1
 }
 
-func GetCommonOrRare() int {
-	rand := utils.RandInt(100)
-	if 4 >= rand {
-		return GetRandByType(Rare)
-	}
-	return GetRandByType(Common)
-}
-
 func HaveRooster(galos []*entities.Rooster, galoType int) bool {
 	for _, galo := range galos {
 		if galo.Type == galoType {
@@ -262,4 +254,12 @@ func GetNextSkill(galo entities.Rooster) []*Skill {
 		}
 	}
 	return skills
+}
+
+func GetCommonOrRare() int {
+	rand := utils.RandInt(100)
+	if 4 >= rand {
+		return GetRandByType(Rare)
+	}
+	return GetRandByType(Common)
 }

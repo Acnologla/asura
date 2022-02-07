@@ -210,7 +210,23 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				Embeds: []*disgord.Embed{embed},
 			},
 		}
-
+	case "mission":
+		clan = *rinha.PopulateClanMissions(&clan)
+		database.Clan.UpdateClan(&clan, func(clanUpdate entities.Clan) entities.Clan {
+			clanUpdate.Mission = clan.Mission
+			clanUpdate.MissionProgress = clan.MissionProgress
+			return clanUpdate
+		})
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Embeds: []*disgord.Embed{{
+					Title:       "Clan mission",
+					Description: rinha.MissionToString(&clan),
+					Color:       65535,
+				}},
+			},
+		}
 	}
 	return nil
 }

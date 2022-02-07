@@ -4,6 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE Clan(
     name VARCHAR(25) PRIMARY KEY,
+    id SERIAL,
     xp INT,
     createdAt BigInt,
     background VARCHAR(300),
