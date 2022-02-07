@@ -114,12 +114,3 @@ func (adapter UserAdapterPsql) UpdateEquippedRooster(user entities.User, callbac
 	_, err := adapter.Db.NewUpdate().Model(galo).Where("id = ?", galo.ID).Exec(context.Background())
 	return err
 }
-
-func (adapter UserAdapterPsql) GetClan(id disgord.Snowflake) (clan entities.Clan) {
-	var clanMember entities.ClanMember
-	clanMember.ID = id
-	adapter.Db.NewSelect().Model(&clanMember).Scan(context.Background())
-	clan.Name = clanMember.Clan
-	adapter.Db.NewSelect().Model(&clan).Scan(context.Background())
-	return
-}

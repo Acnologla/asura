@@ -7,6 +7,7 @@ import (
 	"asura/src/rinha"
 	"asura/src/translation"
 	"asura/src/utils"
+	"fmt"
 
 	"github.com/andersfylling/disgord"
 )
@@ -103,6 +104,15 @@ func init() {
 func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	command := itc.Data.Options[0].Name
 	user := database.User.GetUser(itc.Member.UserID)
+	clan := database.Clan.GetUserClan(user.ID, "Members")
+	if command != "create" && clan.Name == "" {
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Content: translation.T("NoClan", translation.GetLocale(itc)),
+			},
+		}
+	}
 	switch command {
 	case "create":
 		var msg string
@@ -158,6 +168,49 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				Content: translation.T("ClanCreated", translation.GetLocale(itc), name),
 			},
 		}
+	case "view":
+		level := rinha.ClanXpToLevel(clan.Xp)
+		memberMsg := ""
+		for _, member := range clan.Members {
+			user, err := handler.Client.User(disgord.Snowflake(member.ID)).Get()
+			if err == nil {
+				memberMsg += fmt.Sprintf("[**%s**] %s (**%d** XP)\n", member.Role.ToString(), user.Username, member.Xp)
+			}
+		}
+		if len(memberMsg) > 1500 {
+			memberMsg = memberMsg[:1500]
+		}
+		benefits := rinha.GetBenefits(clan.Xp)
+		maxMembers := rinha.GetMaxMembers(&clan)
+		bg := clan.Background
+		embed := &disgord.Embed{
+			Title: clan.Name,
+			Color: 65535,
+			Footer: &disgord.EmbedFooter{
+				Text: translation.T("ClanFooter", translation.GetLocale(itc)),
+			},
+			Description: translation.T("ClanDescription", translation.GetLocale(itc), map[string]interface{}{
+				"level":       level,
+				"xp":          clan.Xp,
+				"needXp":      rinha.ClanLevelToXp(level),
+				"benefits":    benefits,
+				"members":     len(clan.Members),
+				"maxMembers":  maxMembers,
+				"membersText": memberMsg,
+			}),
+		}
+		if bg != "" {
+			embed.Image = &disgord.EmbedImage{
+				URL: bg,
+			}
+		}
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Embeds: []*disgord.Embed{embed},
+			},
+		}
+
 	}
 	return nil
 }

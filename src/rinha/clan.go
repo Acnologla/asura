@@ -1,6 +1,7 @@
 package rinha
 
 import (
+	"asura/src/entities"
 	"math"
 	"strings"
 )
@@ -33,4 +34,32 @@ func includesString(strOne rune, strTwo string) bool {
 		}
 	}
 	return false
+}
+
+func GetMaxMembers(clan *entities.Clan) int {
+	return 25 + (clan.MembersUpgrade * 2)
+}
+
+func GetBenefits(xp int) (text string) {
+	level := ClanXpToLevel(xp)
+	text = "10% de xp adicional por rinha ganha\n"
+	if level >= 2 {
+		text += "10% de xp adicional por rinha ganha\n"
+	}
+	if level >= 3 {
+		text += "Maior chance de galos raros nas caixas\n"
+	}
+	if level >= 4 {
+		text += "1 de ouro adicional por rinha ganha\n"
+	}
+	if level >= 6 {
+		text += "1 de ouro adicional por rinha ganha\n"
+	}
+	if level >= 8 {
+		text += "1 de xp de upgrade a mais por rinha ganha\n"
+	}
+	if level >= 10 {
+		text += "Aumenta o limite de trains"
+	}
+	return
 }
