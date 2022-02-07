@@ -13,6 +13,10 @@ const (
 	Owner
 )
 
+func (role Role) ToString() string {
+	return [...]string{"Membro", "Administrador", "Dono"}[role]
+}
+
 type ClanMember struct {
 	bun.BaseModel `bun:"table:clanmember,alias:clanmember"`
 
@@ -26,7 +30,7 @@ type Clan struct {
 	bun.BaseModel `bun:"table:clan,alias:clan"`
 
 	Members         []*ClanMember `bun:"rel:has-many,join:name=clan"`
-	Name            string        `bun:"name, pk"`
+	Name            string        `bun:"name,pk"`
 	Xp              int           `bun:"xp"`
 	CreatedAt       uint64        `bun:"createdat"`
 	Background      string        `bun:"background"`

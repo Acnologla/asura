@@ -22,7 +22,6 @@ func init() {
 		Description: translation.T("LootboxHelp", "pt"),
 		Run:         runLootbox,
 		Cooldown:    8,
-		Aliases:     []string{"money"},
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
@@ -57,7 +56,7 @@ func GenerateBuyOptions(arr []string) (opts []*disgord.SelectMenuOption) {
 
 func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	command := itc.Data.Options[0].Name
-	user := database.Client.GetUser(itc.Member.UserID, "Items")
+	user := database.User.GetUser(itc.Member.UserID, "Items")
 	switch command {
 	case "view":
 		text := translation.T("LootboxView", "pt", rinha.VipMessage(&user))
@@ -109,7 +108,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			i := rinha.GetLbIndex(lb)
 			price := rinha.Prices[i]
 			done := false
-			database.Client.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+			database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
 				if price[0] == 0 {
 					if u.AsuraCoin >= price[1] {
 						done = true
@@ -120,7 +119,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					done = true
 				}
 				if done {
-					database.Client.InsertItem(itc.Member.UserID, u.Items, i, entities.LootboxType)
+					database.User.InsertItem(itc.Member.UserID, u.Items, i, entities.LootboxType)
 				}
 				return u
 			}, "Items")
@@ -182,21 +181,21 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			pity := 0
 			extraMsg := ""
 			var rarity rinha.Rarity
-			database.Client.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+			database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
 				lbID, ok := rinha.GetLbID(u.Items, i)
 				if !ok {
 					return u
 				}
-				database.Client.RemoveItem(u.Items, lbID)
+				database.User.RemoveItem(u.Items, lbID)
 				newVal, pity = rinha.Open(i, &user)
 				u.Pity = pity
 				if lb == "cosmetica" {
-					database.Client.InsertItem(itc.Member.UserID, u.Items, newVal, entities.CosmeticType)
+					database.User.InsertItem(itc.Member.UserID, u.Items, newVal, entities.CosmeticType)
 				} else if lb == "items" {
-					database.Client.InsertItem(itc.Member.UserID, u.Items, newVal, entities.NormalType)
+					database.User.InsertItem(itc.Member.UserID, u.Items, newVal, entities.NormalType)
 				} else {
 					if !rinha.HaveRooster(u.Galos, newVal) {
-						database.Client.InsertRooster(&entities.Rooster{
+						database.User.InsertRooster(&entities.Rooster{
 							UserID: itc.Member.UserID,
 							Type:   newVal,
 						})

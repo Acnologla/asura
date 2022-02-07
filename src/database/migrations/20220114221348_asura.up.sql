@@ -22,7 +22,6 @@ CREATE TABLE Users(
     win int,
     lose int,
     money INT,
-    clan VARCHAR(26) REFERENCES Clan(name),
     dungeon INT,
     dungeonReset INT,
     tradeMission BigInt,
@@ -64,7 +63,7 @@ CREATE TABLE Rooster(
 
 
 CREATE TABLE ClanMember(
-    ID BigInt PRIMARY KEY,
+    ID BigInt PRIMARY KEY REFERENCES Users (ID) ON DELETE CASCADE,
     clan VARCHAR(26) REFERENCES Clan(name) ON DELETE CASCADE NOT NULL,
     role INT,
     xp INT

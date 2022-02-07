@@ -10,6 +10,7 @@ import (
 type UserAdapter interface {
 	GetUser(id disgord.Snowflake, relations ...string) entities.User
 	GetRoosters(id disgord.Snowflake) []entities.Rooster
+	GetClan(id disgord.Snowflake) entities.Clan
 	GetItems(id disgord.Snowflake) []entities.Item
 	SetUser(user entities.User) error
 	UpdateUser(id disgord.Snowflake, callback func(entities.User) entities.User, relations ...string) error

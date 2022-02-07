@@ -25,7 +25,8 @@ type DBConfig struct {
 	DbName   string `json:"DB_NAME"`
 }
 
-var Client adapter.UserAdapter
+var User adapter.UserAdapter
+var Clan adapter.ClanAdapter
 
 func GetEnvConfig() (config *DBConfig) {
 	dbconfig := os.Getenv("DB_CONFIG")
@@ -55,7 +56,10 @@ func Connect(config *DBConfig) (*bun.DB, error) {
 	Database.SetMaxOpenConns(maxOpenConns)
 	Database.SetMaxIdleConns(maxOpenConns)
 	Database.AddQueryHook(bundebug.NewQueryHook())
-	Client = adapter.UserAdapterPsql{
+	User = adapter.UserAdapterPsql{
+		Db: Database,
+	}
+	Clan = adapter.ClanAdapterPsql{
 		Db: Database,
 	}
 	return Database, nil

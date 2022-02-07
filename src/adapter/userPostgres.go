@@ -32,7 +32,7 @@ func (adapter UserAdapterPsql) GetUser(id disgord.Snowflake, relations ...string
 		})
 		user = adapter.GetUser(id, relations...)
 	}
-	return user
+	return
 }
 
 func (adapter UserAdapterPsql) UpdateUser(id disgord.Snowflake, callback func(entities.User) entities.User, relations ...string) error {
@@ -113,4 +113,13 @@ func (adapter UserAdapterPsql) UpdateEquippedRooster(user entities.User, callbac
 	galo = &cb
 	_, err := adapter.Db.NewUpdate().Model(galo).Where("id = ?", galo.ID).Exec(context.Background())
 	return err
+}
+
+func (adapter UserAdapterPsql) GetClan(id disgord.Snowflake) (clan entities.Clan) {
+	var clanMember entities.ClanMember
+	clanMember.ID = id
+	adapter.Db.NewSelect().Model(&clanMember).Scan(context.Background())
+	clan.Name = clanMember.Clan
+	adapter.Db.NewSelect().Model(&clan).Scan(context.Background())
+	return
 }

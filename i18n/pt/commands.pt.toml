@@ -159,3 +159,49 @@ other="**{{.adv}}** voce foi convidado para um duelo com {{.author}}"
 
 [WinDuel]
 other="**{{.}}** venceu a batalha"
+
+[ClanHelp]
+other="Crie um clan e edite o seu clan"
+
+[ClanView]
+other="Veja as informaçoes do seu clan"
+
+[ClanInvite]
+other="Convide um usuario para seu clan"
+
+[ClanAdmin]
+other="Promova um usuario do seu clan para administrator"
+
+[ClanMoney]
+other="Deposite dinheiro no banco do seu clan"
+
+
+[ClanUpgrade]
+other="Upgrades para o seu clan"
+
+[ClanBank]
+other="Veja o banco do seu clan"
+
+[ClanBackground]
+other="Altere o background do seu clan"
+
+[ClanCreate]
+other="Crie um clan"
+
+[ClanAlreadyIn]
+other="Voce ja esta em um clan"
+
+[ClanNotEnoughMoney]
+other="Precisa de **1000** de dinheiro para criar um clan"
+
+[ClanNameLength]
+other="O nome do clan precisa ter entre 4 a 25 caracteres"
+
+[ClanArleadyExists]
+other="Ja existe um clan com esse nome"
+
+[ClanCreated]
+other="Voce criou o clan **{{.}}** com sucesso"
+
+[ClanViewHelp]
+other="Veja informaçoes sobre seu clan"

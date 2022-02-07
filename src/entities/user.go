@@ -58,7 +58,6 @@ type User struct {
 	Win            int               `bun:"win"`
 	Lose           int               `bun:"lose"`
 	Money          int               `bun:"money"`
-	Clan           string            `bun:"clan,nullzero"`
 	Dungeon        int               `bun:"dungeon"`
 	DungeonReset   int               `bun:"dungeonreset"`
 	TradeMission   uint64            `bun:"trademission"`
