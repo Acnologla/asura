@@ -68,3 +68,8 @@ func (adapter ClanAdapterPsql) RemoveMember(clan *entities.Clan, member disgord.
 	_, err := adapter.Db.NewDelete().Model(&entities.ClanMember{}).Where("id = ? ", member).Exec(context.Background())
 	return err
 }
+
+func (adapter ClanAdapterPsql) UpdateMember(clan *entities.Clan, member *entities.ClanMember) error {
+	_, err := adapter.Db.NewUpdate().Model(member).Where("id = ? ", member.ID).Exec(context.Background())
+	return err
+}

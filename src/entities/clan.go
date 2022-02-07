@@ -37,7 +37,6 @@ type Clan struct {
 	Background      string        `bun:"background"`
 	Money           int           `bun:"money"`
 	MembersUpgrade  int           `bun:"membersupgrade"`
-	BanksUpgrade    int           `bun:"banksupgrade"`
 	MissionsUpgrade int           `bun:"missionsupgrade"`
 	Mission         uint64        `bun:"mission"`
 	MissionProgress int           `bun:"missionprogress"`

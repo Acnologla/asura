@@ -14,7 +14,7 @@ other="Veja o avatar de um usuario"
 other="Veja os avatares antigos de um usuario"
 
 [Private]
-other="O historico esse usuario é privado use j!private para desprivar"
+other="O historico esse usuario é privado use /private para desprivar"
 
 
 [NotFoundAvatars]
@@ -210,13 +210,13 @@ other="Veja informaçoes sobre seu clan"
 other="Voce não esta em um clan"
 
 [ClanFooter]
-other="Use j!clan invite <user> para convidar | j!clan remove <user> para remover | j!clan admin <user> para promover membros"
+other="Use /clan invite <user> para convidar | /clan remove <user> para remover | /clan admin <user> para promover membros"
 
 [ClanRemove]
 other="Retirar um usuario do seu clan"
 
 [ClanDescription]
-other="Level: **{{.level}}** ({{.xp}}/{{.needXp}})\nVantagens do clan:\n {{.benefits}}\nMembros ({{.members}}/{{.maxMembers}}):\n {{.membersText}}\nUse **j!clan missao** para ver a missão mensal do clan\nUse **j!clan banco** para ver o banco do clan"
+other="Level: **{{.level}}** ({{.xp}}/{{.needXp}})\nVantagens do clan:\n {{.benefits}}\nMembros ({{.members}}/{{.maxMembers}}):\n {{.membersText}}\nUse **/clan missao** para ver a missão mensal do clan\nUse **/clan banco** para ver o banco do clan"
 
 
 [UserArleadyInClan]
@@ -243,3 +243,9 @@ other="Voce não tem permissão para realizar esta ação"
 
 [UserNotInClan]
 other="O usuario nao esta no clan"
+
+[SucessAdmin]
+other="O usuario {{.}} agora é um administrador"
+
+[ClanBankDesc]
+other="Dinheiro: **{{.money}}**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan ({{.membersUpgrade}})\n[**Missao**] - Bonus para missao do clan ({{.missionUpgrade}})\n\nUse /clan depositar <dinheiro> para depositar dinheiro\nUse /clan upgrade <upgrade> para dar upgrade em algo\nUse /clan background <background> para setar um background para seu clan (custa 10000)"

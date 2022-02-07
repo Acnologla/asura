@@ -21,6 +21,11 @@ func init() {
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
+				Name:        "view",
+				Description: translation.T("ClanViewHelp", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
 				Name:        "create",
 				Description: translation.T("ClanCreate", "pt"),
 				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
@@ -29,11 +34,6 @@ func init() {
 					Name:        "name",
 					Description: "clan name",
 				}),
-			},
-			&disgord.ApplicationCommandOption{
-				Type:        disgord.OptionTypeSubCommand,
-				Name:        "view",
-				Description: translation.T("ClanViewHelp", "pt"),
 			},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
@@ -53,6 +53,11 @@ func init() {
 			},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
+				Name:        "banco",
+				Description: translation.T("ClanBank", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
 				Name:        "remove",
 				Description: translation.T("ClanRemove", "pt"),
 				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
@@ -65,28 +70,6 @@ func init() {
 					Required:    false,
 					Name:        "user_id",
 					Description: "User id to remove",
-				}),
-			},
-			&disgord.ApplicationCommandOption{
-				Type:        disgord.OptionTypeSubCommand,
-				Name:        "admin",
-				Description: translation.T("ClanAdmin", "pt"),
-				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
-					Type:        disgord.OptionTypeUser,
-					Required:    true,
-					Name:        "user",
-					Description: "User admin",
-				}),
-			},
-			&disgord.ApplicationCommandOption{
-				Type:        disgord.OptionTypeSubCommand,
-				Name:        "background",
-				Description: translation.T("ClanBackground", "pt"),
-				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
-					Type:        disgord.OptionTypeString,
-					Required:    true,
-					Name:        "background",
-					Description: "background url",
 				}),
 			},
 			&disgord.ApplicationCommandOption{
@@ -104,13 +87,30 @@ func init() {
 			},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
+				Name:        "background",
+				Description: translation.T("ClanBackground", "pt"),
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeString,
+					Required:    true,
+					Name:        "background",
+					Description: "background url",
+				}),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
 				Name:        "upgrade",
 				Description: translation.T("ClanUpgrade", "pt"),
 			},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
-				Name:        "banco",
-				Description: translation.T("ClanBank", "pt"),
+				Name:        "admin",
+				Description: translation.T("ClanAdmin", "pt"),
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeUser,
+					Required:    true,
+					Name:        "user",
+					Description: "User admin",
+				}),
 			},
 		),
 	})
@@ -333,6 +333,62 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					Content: translation.T(msg, translation.GetLocale(itc)),
 				},
 			}
+		}
+	case "admin":
+		if len(itc.Data.Options[0].Options) == 0 {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: "Invalid user",
+				},
+			}
+		}
+		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
+		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+			uClan := database.Clan.GetUserClan(user.ID)
+			if uClan.Clan.Name != clan.Name {
+				msg = "UserNotInClan"
+			} else {
+				if member.Role != entities.Owner || uClan.Member.Role == entities.Owner {
+					msg = "NoPermission"
+				} else {
+					uClan.Member.Role = entities.Administrator
+					database.Clan.UpdateMember(&c, uClan.Member)
+				}
+			}
+			return c
+		})
+		if msg == "" {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: translation.T("SucessAdmin", translation.GetLocale(itc), user.Username),
+				},
+			}
+		} else {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: translation.T(msg, translation.GetLocale(itc)),
+				},
+			}
+		}
+	case "banco":
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Embeds: []*disgord.Embed{
+					{
+						Title: "Banco",
+						Color: 65535,
+						Description: translation.T("ClanBankDesc", translation.GetLocale(itc), map[string]interface{}{
+							"money":          clan.Money,
+							"membersUpgrade": clan.MembersUpgrade,
+							"missionUpgrade": clan.MissionsUpgrade,
+						}),
+					},
+				},
+			},
 		}
 	}
 	return nil

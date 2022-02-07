@@ -10,7 +10,6 @@ CREATE TABLE Clan(
     background VARCHAR(300),
     money INT,
     membersUpgrade INT,
-    banksUpgrade INT,
     missionsUpgrade INT,
     mission BigInt,
     missionProgress INT
