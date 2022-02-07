@@ -16,8 +16,7 @@ type ClanAdapterPsql struct {
 }
 
 func (adapter ClanAdapterPsql) GetClan(name string, relations ...string) (clan entities.Clan) {
-	clan.Name = name
-	query := adapter.Db.NewSelect().Model(&clan)
+	query := adapter.Db.NewSelect().Where("name = ?", name).Model(&clan)
 	for _, relation := range relations {
 		query = query.Relation(relation)
 	}
@@ -44,12 +43,14 @@ func (adapter ClanAdapterPsql) CreateClan(clan entities.Clan, id disgord.Snowfla
 	return err
 }
 
-func (adapter ClanAdapterPsql) GetUserClan(id disgord.Snowflake, relations ...string) entities.Clan {
+func (adapter ClanAdapterPsql) GetUserClan(id disgord.Snowflake, relations ...string) UserClan {
 	var clanMember entities.ClanMember
-	clanMember.ID = id
-	adapter.Db.NewSelect().Model(&clanMember).Scan(context.Background())
-	return adapter.GetClan(clanMember.Clan, relations...)
-
+	adapter.Db.NewSelect().Model(&clanMember).Where("id =?", id).Scan(context.Background())
+	clan := adapter.GetClan(clanMember.Clan, relations...)
+	return UserClan{
+		Clan:   &clan,
+		Member: &clanMember,
+	}
 }
 
 func (adapter ClanAdapterPsql) UpdateClan(clanQuery *entities.Clan, callback func(entities.Clan) entities.Clan, relations ...string) error {

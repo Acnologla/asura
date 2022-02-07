@@ -12,6 +12,17 @@ func GenerateOptions(options ...*disgord.ApplicationCommandOption) []*disgord.Ap
 	return options
 }
 
+func GetOptionsUser(options []*disgord.ApplicationCommandDataOption, itc *disgord.InteractionCreate, i int) *disgord.User {
+	opt := options[i]
+	idStr := opt.Value.(string)
+	id, _ := strconv.ParseUint(idStr, 10, 64)
+	if opt.Type == disgord.OptionTypeString {
+		u, _ := handler.Client.User(disgord.Snowflake(id)).Get()
+		return u
+	}
+	return itc.Data.Resolved.Users[disgord.Snowflake(id)]
+}
+
 func GetUser(itc *disgord.InteractionCreate, i int) *disgord.User {
 	opt := itc.Data.Options[i]
 	idStr := opt.Value.(string)

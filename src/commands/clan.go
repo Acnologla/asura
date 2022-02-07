@@ -53,6 +53,22 @@ func init() {
 			},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
+				Name:        "remove",
+				Description: translation.T("ClanRemove", "pt"),
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeUser,
+					Required:    false,
+					Name:        "user",
+					Description: "User to remove",
+				}, &disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeString,
+					Required:    false,
+					Name:        "user id",
+					Description: "User id to remove",
+				}),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
 				Name:        "admin",
 				Description: translation.T("ClanAdmin", "pt"),
 				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
@@ -104,7 +120,10 @@ func init() {
 func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	command := itc.Data.Options[0].Name
 	user := database.User.GetUser(itc.Member.UserID)
-	clan := database.Clan.GetUserClan(user.ID, "Members")
+	userClan := database.Clan.GetUserClan(user.ID, "Members")
+	clan := userClan.Clan
+	maxMembers := rinha.GetMaxMembers(clan)
+	member := userClan.Member
 	if command != "create" && clan.Name == "" {
 		return &disgord.InteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -181,7 +200,6 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			memberMsg = memberMsg[:1500]
 		}
 		benefits := rinha.GetBenefits(clan.Xp)
-		maxMembers := rinha.GetMaxMembers(&clan)
 		bg := clan.Background
 		embed := &disgord.Embed{
 			Title: clan.Name,
@@ -211,8 +229,8 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			},
 		}
 	case "mission":
-		clan = *rinha.PopulateClanMissions(&clan)
-		database.Clan.UpdateClan(&clan, func(clanUpdate entities.Clan) entities.Clan {
+		clan = rinha.PopulateClanMissions(clan)
+		database.Clan.UpdateClan(clan, func(clanUpdate entities.Clan) entities.Clan {
 			clanUpdate.Mission = clan.Mission
 			clanUpdate.MissionProgress = clan.MissionProgress
 			return clanUpdate
@@ -222,10 +240,70 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			Data: &disgord.InteractionApplicationCommandCallbackData{
 				Embeds: []*disgord.Embed{{
 					Title:       "Clan mission",
-					Description: rinha.MissionToString(&clan),
+					Description: rinha.MissionToString(clan),
 					Color:       65535,
 				}},
 			},
+		}
+	case "invite":
+		if member.Role == entities.Member {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: translation.T("MissingPermissions", translation.GetLocale(itc)),
+				},
+			}
+		}
+		if len(itc.Data.Options[0].Options) == 0 {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: "Invalid user",
+				},
+			}
+		}
+		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
+		if user == nil {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: "Invalid user",
+				},
+			}
+		}
+		text := translation.T("InviteToClan", translation.GetLocale(itc), map[string]interface{}{
+			"clan":     clan.Name,
+			"username": user.Username,
+		})
+		var msg string
+		utils.Confirm(text, itc, user.ID, func() {
+			database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+
+				uClan := database.Clan.GetUserClan(user.ID)
+				if uClan.Clan.Name != "" {
+					msg = "UserArleadyInClan"
+				} else {
+					if len(c.Members) >= maxMembers {
+						msg = "ClanMaxMembers"
+					} else {
+						database.User.GetUser(user.ID)
+						database.Clan.InsertMember(&c, &entities.ClanMember{
+							ID: user.ID,
+						})
+					}
+				}
+				return c
+			})
+		})
+		ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
+		if msg == "" {
+			ch.CreateMessage(&disgord.CreateMessage{
+				Content: translation.T("SucessInvite", translation.GetLocale(itc), user.Username),
+			})
+		} else {
+			ch.CreateMessage(&disgord.CreateMessage{
+				Content: translation.T(msg, translation.GetLocale(itc)),
+			})
 		}
 	}
 	return nil

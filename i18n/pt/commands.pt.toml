@@ -212,5 +212,24 @@ other="Voce não esta em um clan"
 [ClanFooter]
 other="Use j!clan invite <user> para convidar | j!clan remove <user> para remover | j!clan admin <user> para promover membros"
 
+[ClanRemove]
+other="Retirar um usuario do seu clan"
+
 [ClanDescription]
 other="Level: **{{.level}}** ({{.xp}}/{{.needXp}})\nVantagens do clan:\n {{.benefits}}\nMembros ({{.members}}/{{.maxMembers}}):\n {{.membersText}}\nUse **j!clan missao** para ver a missão mensal do clan\nUse **j!clan banco** para ver o banco do clan"
+
+
+[UserArleadyInClan]
+other="Este usuario ja esta em um clan"
+
+[InviteToClan]
+other="{{.username}} Voce foi convidado para o clan {{.clan}}"
+
+[MissingPermissions]
+other="Apenas adminitradores e donos do clan podem realizar esta ação"
+
+[ClanMaxMembers]
+other="Seu clan ja esta cheio"
+
+[SucessInvite]
+other= "O usuario {{.}} aceitou o convite para o clan"
