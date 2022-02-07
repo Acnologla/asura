@@ -270,3 +270,12 @@ other="Comprou o upgrade **{{.}}** com sucesso"
 
 [ChangedClanBackground]
 other="Background do clan foi alterado com sucesso"
+
+[GiveMoneyHelp]
+other="De dinheiro a alguem"
+
+[GiveMoneyInvalid]
+other = "Quantia invalida"
+
+[GiveMoney]
+other="Voce deu **{{.}}** de dinheiro com sucesso"

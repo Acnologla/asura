@@ -18,6 +18,7 @@ func init() {
 		Name:        "clan",
 		Description: translation.T("ClanHelp", "pt"),
 		Run:         runClan,
+		Category:    handler.Rinha,
 		Cooldown:    8,
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{

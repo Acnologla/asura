@@ -121,14 +121,15 @@ func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
 		if option.Required != realCommand.Options[i].Required {
 			return true
 		}
-		/*
-			if option.MaxValue != realCommand.Options[i].MaxValue {
-				return true
-			}
-			if option.MinValue != realCommand.Options[i].MinValue {
 
-				return true
-			}
+		if option.MaxValue != realCommand.Options[i].MaxValue {
+			return true
+		}
+		if option.MinValue != realCommand.Options[i].MinValue {
+
+			return true
+		}
+		/*
 			if option.AutoComplete != realCommand.Options[i].AutoComplete {
 				return true
 			}
@@ -179,6 +180,7 @@ func Init(appID, token string, session *disgord.Client) {
 				request("POST", alias)
 			}
 		} else if HasChanged(commandR, command) {
+			fmt.Println("atualizando")
 			request("PATCH", command.Name)
 		}
 	}

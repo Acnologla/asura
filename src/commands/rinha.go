@@ -74,6 +74,7 @@ func init() {
 		Description: translation.T("RinhaHelp", "pt"),
 		Run:         runRinha,
 		Cooldown:    15,
+		Category:    handler.Rinha,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",
 			Type:        disgord.OptionTypeUser,
