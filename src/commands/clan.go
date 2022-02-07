@@ -63,7 +63,7 @@ func init() {
 				}, &disgord.ApplicationCommandOption{
 					Type:        disgord.OptionTypeString,
 					Required:    false,
-					Name:        "user id",
+					Name:        "user_id",
 					Description: "User id to remove",
 				}),
 			},
@@ -124,6 +124,8 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	clan := userClan.Clan
 	maxMembers := rinha.GetMaxMembers(clan)
 	member := userClan.Member
+	ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
+	var msg string
 	if command != "create" && clan.Name == "" {
 		return &disgord.InteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -132,9 +134,17 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			},
 		}
 	}
+	if (command == "invite" || command == "remove" || command == "admin" || command == "background" || command == "upgrade") && member.Role == entities.Member {
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Content: translation.T("MissingPermissions", translation.GetLocale(itc)),
+			},
+		}
+
+	}
 	switch command {
 	case "create":
-		var msg string
 		name := itc.Data.Options[0].Options[0].Value.(string)
 		name = rinha.Format(name)
 		if name == "_test" {
@@ -246,22 +256,6 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			},
 		}
 	case "invite":
-		if member.Role == entities.Member {
-			return &disgord.InteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
-					Content: translation.T("MissingPermissions", translation.GetLocale(itc)),
-				},
-			}
-		}
-		if len(itc.Data.Options[0].Options) == 0 {
-			return &disgord.InteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
-					Content: "Invalid user",
-				},
-			}
-		}
 		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
 		if user == nil {
 			return &disgord.InteractionResponse{
@@ -275,10 +269,8 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			"clan":     clan.Name,
 			"username": user.Username,
 		})
-		var msg string
 		utils.Confirm(text, itc, user.ID, func() {
 			database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
-
 				uClan := database.Clan.GetUserClan(user.ID)
 				if uClan.Clan.Name != "" {
 					msg = "UserArleadyInClan"
@@ -295,7 +287,6 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				return c
 			})
 		})
-		ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
 		if msg == "" {
 			ch.CreateMessage(&disgord.CreateMessage{
 				Content: translation.T("SucessInvite", translation.GetLocale(itc), user.Username),
@@ -304,6 +295,44 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			ch.CreateMessage(&disgord.CreateMessage{
 				Content: translation.T(msg, translation.GetLocale(itc)),
 			})
+		}
+	case "remove":
+		if len(itc.Data.Options[0].Options) == 0 {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: "Invalid user",
+				},
+			}
+		}
+		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
+		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+			uClan := database.Clan.GetUserClan(user.ID)
+			if uClan.Clan.Name != clan.Name {
+				msg = "UserNotInClan"
+			} else {
+				if member.Role <= uClan.Member.Role {
+					msg = "NoPermission"
+				} else {
+					database.Clan.RemoveMember(&c, user.ID)
+				}
+			}
+			return c
+		})
+		if msg == "" {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: translation.T("SucessRemove", translation.GetLocale(itc), user.Username),
+				},
+			}
+		} else {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: translation.T(msg, translation.GetLocale(itc)),
+				},
+			}
 		}
 	}
 	return nil

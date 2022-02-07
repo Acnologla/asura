@@ -63,3 +63,8 @@ func (adapter ClanAdapterPsql) UpdateClan(clanQuery *entities.Clan, callback fun
 		return err
 	})
 }
+
+func (adapter ClanAdapterPsql) RemoveMember(clan *entities.Clan, member disgord.Snowflake) error {
+	_, err := adapter.Db.NewDelete().Model(&entities.ClanMember{}).Where("id = ? ", member).Exec(context.Background())
+	return err
+}

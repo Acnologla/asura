@@ -233,3 +233,13 @@ other="Seu clan ja esta cheio"
 
 [SucessInvite]
 other= "O usuario {{.}} aceitou o convite para o clan"
+
+[SucessRemove]
+other="O usuario {{.}} foi removido com sucesso"
+
+
+[NoPermission]
+other="Voce não tem permissão para realizar esta ação"
+
+[UserNotInClan]
+other="O usuario nao esta no clan"
