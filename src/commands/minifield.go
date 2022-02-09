@@ -148,7 +148,7 @@ func runMinifield(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			Components: data,
 		},
 	})
-	handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
+	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 		if interaction.Member.User.ID != itc.Member.UserID {
 			return
 		}
@@ -171,11 +171,11 @@ func runMinifield(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		if totalUsed == total {
 			endMinifield(board)
 			content = "Você ganhou"
-			handler.DeleteHandler(itc)
+			handler.DeleteHandler(itc.ID)
 		} else if cell.Type == 1 {
 			endMinifield(board)
 			content = "Você perdeu"
-			handler.DeleteHandler(itc)
+			handler.DeleteHandler(itc.ID)
 		}
 		newMsg := generateMinifieldBoard(board)
 		handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{

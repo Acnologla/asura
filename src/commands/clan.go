@@ -435,7 +435,7 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				},
 			},
 		})
-		handler.RegisterHandler(itc, func(ic *disgord.InteractionCreate) {
+		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
 			if len(ic.Data.Values) == 0 {
 				return
 			}

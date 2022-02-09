@@ -147,7 +147,7 @@ func run2048(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		for {
 			time.Sleep(time.Second)
 			if time.Since(lastPlay).Seconds()/60 >= 2 {
-				handler.DeleteHandler(itc)
+				handler.DeleteHandler(itc.ID)
 
 				handler.Client.EditInteractionResponse(context.Background(), itc, &disgord.Message{
 					Content:    fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), draw2048Board(board)),
@@ -158,7 +158,7 @@ func run2048(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		}
 	}()
 
-	handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
+	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 		u := interaction.Member.UserID
 		if u == itc.Member.UserID {
 			oldBoard := utils.DeepClone(board)

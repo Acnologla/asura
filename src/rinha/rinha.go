@@ -12,6 +12,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Rarity int
@@ -262,4 +264,31 @@ func GetCommonOrRare() int {
 		return GetRandByType(Rare)
 	}
 	return GetRandByType(Common)
+}
+
+func HaveGalo(galos []*entities.Rooster, id uuid.UUID) bool {
+	for _, galo := range galos {
+		if galo.ID == id {
+			return true
+		}
+	}
+	return false
+}
+
+func GetGaloByID(galos []*entities.Rooster, id uuid.UUID) *entities.Rooster {
+	for _, galo := range galos {
+		if galo.ID == id {
+			return galo
+		}
+	}
+	return nil
+}
+
+func GetItemByID(items []*entities.Item, id uuid.UUID) *entities.Item {
+	for _, item := range items {
+		if item.ID == id {
+			return item
+		}
+	}
+	return nil
 }

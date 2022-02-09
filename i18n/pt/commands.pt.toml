@@ -279,3 +279,22 @@ other = "Quantia invalida"
 
 [GiveMoney]
 other="Voce deu **{{.}}** de dinheiro com sucesso"
+
+[TradeHelp]
+other="Trocar itens e galos"
+
+
+[TradeMsg]
+other="{{.mentionedUsername}} aceita a troca de {{.username}}"
+
+[TradeDone]
+other="Troca concluida"
+
+[UserAcceptTrade]
+other="**{{.}}** aceitou a troca"
+
+[UserMinLevelTrade]
+other="É necessario os 2 usuarios terem no minimo **{{.}}** de userxp para aceitarem essa troca use /upgrades para ver seu userxp"
+
+[TradeDesc]
+other="Ambos os usuarios precisam ter no minimo **{{.minLvl}}** de user xp para realizar essa troca\n{{.extraMsg}}"

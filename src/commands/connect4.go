@@ -140,7 +140,7 @@ func runConnect4(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		},
 	})
 	turn := 1
-	handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
+	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 		turnUser := user
 		num := 2
 		u := interaction.Member.UserID

@@ -100,7 +100,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				},
 			},
 		})
-		handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
+		handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 			if len(interaction.Data.Values) == 0 {
 				return
 			}
@@ -168,7 +168,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				},
 			},
 		})
-		handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
+		handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 			if len(interaction.Data.Values) == 0 {
 				return
 			}

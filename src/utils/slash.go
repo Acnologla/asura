@@ -76,14 +76,15 @@ func Confirm(title string, itc *disgord.InteractionCreate, id disgord.Snowflake,
 		},
 	})
 	done := false
-	handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
+	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 		if id == interaction.Member.User.ID && !done {
 			done = true
 			go handler.Client.Channel(interaction.ChannelID).Message(interaction.Message.ID).Delete()
+
 			if interaction.Data.CustomID == "yes" {
 				callback()
 			}
-			handler.DeleteHandler(itc)
+			handler.DeleteHandler(itc.ID)
 		}
 	}, 120)
 }

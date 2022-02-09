@@ -91,7 +91,7 @@ func runAvatars(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			},
 		},
 	})
-	handler.RegisterHandler(itc, func(interaction *disgord.InteractionCreate) {
+	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 		if itc.Member.User.ID == interaction.Member.User.ID {
 			if interaction.Data.CustomID == "back" {
 				if count == 0 {

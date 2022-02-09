@@ -16,5 +16,6 @@ type UserAdapter interface {
 	InsertItem(id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType) error
 	RemoveItem(items []*entities.Item, itemUUID uuid.UUID) error
 	InsertRooster(rooster *entities.Rooster) error
+	RemoveRooster(id uuid.UUID) error
 	UpdateEquippedRooster(user entities.User, callback func(entities.Rooster) entities.Rooster) error
 }
