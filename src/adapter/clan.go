@@ -14,9 +14,10 @@ type UserClan struct {
 type ClanAdapter interface {
 	GetClan(name string, relations ...string) entities.Clan
 	CreateClan(clan entities.Clan, id disgord.Snowflake) error
+	GetMember(id disgord.Snowflake) (member entities.ClanMember)
 	InsertMember(clan *entities.Clan, member *entities.ClanMember) error
 	UpdateMember(clan *entities.Clan, member *entities.ClanMember) error
-	RemoveMember(clan *entities.Clan, member disgord.Snowflake) error
+	RemoveMember(clan *entities.Clan, member disgord.Snowflake, leave bool) error
 	GetUserClan(id disgord.Snowflake, relations ...string) UserClan
 	UpdateClan(clan *entities.Clan, callback func(entities.Clan) entities.Clan, relations ...string) error
 }

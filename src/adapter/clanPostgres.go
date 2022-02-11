@@ -24,6 +24,11 @@ func (adapter ClanAdapterPsql) GetClan(name string, relations ...string) (clan e
 	return
 }
 
+func (adapter ClanAdapterPsql) GetMember(id disgord.Snowflake) (member entities.ClanMember) {
+	query := adapter.Db.NewSelect().Where("id = ?", id).Model(&member)
+	query.Scan(context.Background())
+	return
+}
 func (adapter ClanAdapterPsql) InsertMember(clan *entities.Clan, member *entities.ClanMember) error {
 	member.Clan = clan.Name
 	_, err := adapter.Db.NewInsert().Model(member).Exec(context.Background())
@@ -64,8 +69,21 @@ func (adapter ClanAdapterPsql) UpdateClan(clanQuery *entities.Clan, callback fun
 	})
 }
 
-func (adapter ClanAdapterPsql) RemoveMember(clan *entities.Clan, member disgord.Snowflake) error {
-	_, err := adapter.Db.NewDelete().Model(&entities.ClanMember{}).Where("id = ? ", member).Exec(context.Background())
+func (adapter ClanAdapterPsql) RemoveMember(clan *entities.Clan, member disgord.Snowflake, leave bool) error {
+	var err error
+	if leave {
+		m := adapter.GetMember(member)
+		if m.Role == entities.Owner {
+			if len(clan.Members) == 1 {
+				_, err = adapter.Db.NewDelete().Model(clan).Where("name = ?", clan.Name).Exec(context.Background())
+			} else {
+				_, err = adapter.Db.NewDelete().Model(&entities.ClanMember{}).Where("id = ? ", member).Exec(context.Background())
+				adapter.Db.NewUpdate().Model((*entities.ClanMember)(nil)).Set("role = ?", entities.Owner).Where("id = ?", clan.Members[1].ID).Exec(context.Background())
+			}
+		}
+	} else {
+		_, err = adapter.Db.NewDelete().Model(&entities.ClanMember{}).Where("id = ? ", member).Exec(context.Background())
+	}
 	return err
 }
 

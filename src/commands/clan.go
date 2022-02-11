@@ -105,6 +105,11 @@ func init() {
 			},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
+				Name:        "leave",
+				Description: translation.T("ClanLeave", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
 				Name:        "admin",
 				Description: translation.T("ClanAdmin", "pt"),
 				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
@@ -171,7 +176,7 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			}
 		}
 		clan := database.Clan.GetClan(name)
-		if clan.Name == "" {
+		if clan.Name != "" {
 			return &disgord.InteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.InteractionApplicationCommandCallbackData{
@@ -181,7 +186,7 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		}
 		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
 			clan := database.Clan.GetClan(name)
-			if clan.Name == "" {
+			if clan.Name != "" {
 				msg = "ClanAlreadyIn"
 				return u
 			}
@@ -323,7 +328,7 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					msg = "NoPermission"
 				} else {
 					msg = "SucessRemove"
-					database.Clan.RemoveMember(&c, user.ID)
+					database.Clan.RemoveMember(&c, user.ID, false)
 				}
 			}
 			return c
@@ -471,7 +476,21 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				})
 			}
 		}, 100)
-
+	case "leave":
+		var msg string
+		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+			err := database.Clan.RemoveMember(&c, user.ID, true)
+			if err == nil {
+				msg = "sucessLeaveClan"
+			}
+			return c
+		}, "Members")
+		return &disgord.InteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.InteractionApplicationCommandCallbackData{
+				Content: translation.T(msg, translation.GetLocale(itc), clan.Name),
+			},
+		}
 	case "background":
 		img := itc.Data.Options[0].Options[0].Value.(string)
 		if !utils.CheckImage(img) {

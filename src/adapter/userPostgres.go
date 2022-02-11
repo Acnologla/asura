@@ -5,6 +5,7 @@ import (
 	"asura/src/rinha"
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/andersfylling/disgord"
@@ -99,7 +100,7 @@ func (adapter UserAdapterPsql) RemoveItem(items []*entities.Item, itemUUID uuid.
 			}
 		}
 	}
-	return nil
+	return errors.New("Item not found")
 }
 
 func (adapter UserAdapterPsql) InsertRooster(rooster *entities.Rooster) error {

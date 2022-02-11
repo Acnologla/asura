@@ -128,7 +128,7 @@ func generate2048Buttons() (buttons []*disgord.MessageComponent) {
 func run2048(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	size := 4
 	if len(itc.Data.Options) > 0 {
-		size = itc.Data.Options[0].Value.(int)
+		size = int(itc.Data.Options[0].Value.(float64))
 	}
 	board := utils.MakeBoard(size, size)
 	for i := 0; i < 2; i++ {

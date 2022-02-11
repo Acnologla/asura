@@ -17,6 +17,7 @@ func init() {
 		Description: translation.T("GiveMoneyHelp", "pt"),
 		Run:         runGiveMoney,
 		Cooldown:    15,
+		Category:    handler.Profile,
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeUser,

@@ -22,6 +22,7 @@ func init() {
 		Description: translation.T("LootboxHelp", "pt"),
 		Run:         runLootbox,
 		Cooldown:    8,
+		Category:    handler.Profile,
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
@@ -142,6 +143,15 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		}, 120)
 	case "open":
 		lootbox := rinha.GetLootboxes(&user)
+		loots := rinha.GetUserLootboxes(&user)
+		if len(loots) == 0 {
+			return &disgord.InteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.InteractionApplicationCommandCallbackData{
+					Content: translation.T("NoLootbox", translation.GetLocale(itc)),
+				},
+			}
+		}
 		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.InteractionApplicationCommandCallbackData{
@@ -158,7 +168,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 						Components: []*disgord.MessageComponent{
 							{
 								Type:        disgord.MessageComponentButton + 1,
-								Options:     GenerateBuyOptions(rinha.GetUserLootboxes(&user)),
+								Options:     GenerateBuyOptions(loots),
 								CustomID:    "type",
 								MaxValues:   1,
 								Placeholder: "Select lootbox",

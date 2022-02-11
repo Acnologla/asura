@@ -45,3 +45,19 @@ func GetCosmeticRandByType(rarity Rarity) int {
 	return -1
 
 }
+
+func SellCosmetic(cosmetic Cosmetic) int {
+	if cosmetic.Rarity == Common {
+		return 15
+	}
+	if cosmetic.Rarity == Rare {
+		return 90
+	}
+	if cosmetic.Rarity == Epic {
+		return 235
+	}
+	if cosmetic.Rarity == Legendary {
+		return 500
+	}
+	return 0
+}

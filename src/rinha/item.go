@@ -47,3 +47,22 @@ func GetEquippedItem(user *entities.User) int {
 	}
 	return -1
 }
+
+func SellItem(item Item) int {
+	if item.Level == 0 {
+		return 50
+	}
+	if item.Level == 1 {
+		return 170
+	}
+	if item.Level == 2 {
+		return 390
+	}
+	if item.Level == 3 {
+		return 1000
+	}
+	if item.Level == 4 {
+		return 2000
+	}
+	return 0
+}

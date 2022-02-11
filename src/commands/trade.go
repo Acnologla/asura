@@ -7,6 +7,7 @@ import (
 	"asura/src/rinha"
 	"asura/src/utils"
 	"context"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -28,6 +29,7 @@ func init() {
 			Name:        "user",
 			Description: "user trade",
 		}),
+		Category: handler.Profile,
 	})
 }
 
@@ -123,7 +125,7 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 			}
 			opts = append(opts, &disgord.SelectMenuOption{
 				Label:       "Galo " + galo.Name,
-				Value:       "rooster|" + rooster.ID.String(),
+				Value:       fmt.Sprintf("rooster|%s|%d", rooster.ID.String(), lvl),
 				Description: "Adicionar ou remover da troca",
 			})
 		}
@@ -150,7 +152,7 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 				opts = append(opts, &disgord.SelectMenuOption{
 					Label:       "Item " + name,
 					Description: "Adicionar ou remover da troca",
-					Value:       "item|" + item.ID.String(),
+					Value:       fmt.Sprintf("item|%s|%d", item.ID.String(), lvl),
 				})
 			}
 
@@ -204,6 +206,7 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		minLevel := 0
 		optsUser := itemsToOptions(&userGalo, &minLevel)
 		optsAuthor := itemsToOptions(&authorGalo, &minLevel)
+		minLevel = 0
 		msg, err := ch.CreateMessage(&disgord.CreateMessage{
 			Embeds: []*disgord.Embed{{
 				Title: "Trade",
@@ -312,6 +315,7 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 									Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, translation.T("UserMinLevelTrade", translation.GetLocale(itc), minLevel))},
 								},
 							})
+							return
 						}
 						database.User.UpdateUser(authorUser.ID, func(a entities.User) entities.User {
 							database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
@@ -389,11 +393,12 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					_id, _ := strconv.ParseUint(name, 10, 64)
 					id := disgord.Snowflake(_id)
 					split := strings.Split(item, "|")
-					if len(split) != 2 {
+					if len(split) != 3 {
 						return
 					}
 					_itemType := split[0]
 					itemID := split[1]
+					lvl, _ := strconv.Atoi(split[2])
 					var itemType tradeItemType
 					if _itemType == "rooster" {
 						itemType = roosterTradeType
@@ -407,6 +412,9 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 								if isInItemTrade(itemID, itemsUser) {
 									itemsUser = removeItemFromItemTrade(itemID, itemsUser)
 								} else {
+									if lvl > minLevel {
+										minLevel = lvl
+									}
 									itemsUser = append(itemsUser, &ItemTrade{
 										Type: itemType,
 										Name: item.Label,
@@ -420,6 +428,9 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 								if isInItemTrade(itemID, itemsAuthor) {
 									itemsAuthor = removeItemFromItemTrade(itemID, itemsAuthor)
 								} else {
+									if lvl > minLevel {
+										minLevel = lvl
+									}
 									itemsAuthor = append(itemsAuthor, &ItemTrade{
 										Type: itemType,
 										Name: item.Label,

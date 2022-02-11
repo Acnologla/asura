@@ -298,3 +298,35 @@ other="É necessario os 2 usuarios terem no minimo **{{.}}** de userxp para acei
 
 [TradeDesc]
 other="Ambos os usuarios precisam ter no minimo **{{.minLvl}}** de user xp para realizar essa troca\n{{.extraMsg}}"
+
+[RunSell]
+other="Venda seus itens e galos"
+
+
+[SellTitle]
+other="Selecione um item abaixo para vender"
+
+[SellGaloPlaceholder]
+other="Selecione o galo para vender"
+
+[SellItemPlaceholder]
+other="Selecione o item para vender"
+
+[IsInRinha]
+other="Voce esta em uma rinha, espere sua rinha acabar antes de fazer esta ação"
+
+[SellItem]
+other="Voce vendeu o item com sucesso por **{{.}}** de dinheiro"
+
+[SellItemAsuraCoin]
+other="Voce vendeu o item com sucesso por **{{.}}** de asura coins"
+
+
+[ClanLeave]
+other="Sair do clan"
+
+[sucessLeaveClan]
+other="Voce saiu do clan com sucesso"
+
+[NoLootbox]
+other="Voce não tem lootboxes para abrir"
