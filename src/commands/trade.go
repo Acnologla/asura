@@ -68,7 +68,7 @@ func removeItemFromItemTrade(id string, arr []*ItemTrade) []*ItemTrade {
 
 func findOptionById(id string, options []*disgord.SelectMenuOption) *disgord.SelectMenuOption {
 	for _, opt := range options {
-		if strings.HasSuffix(opt.Value, id) {
+		if strings.Contains(opt.Value, id) {
 			return opt
 		}
 	}
@@ -120,6 +120,9 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 		if !rooster.Equip {
 			galo := rinha.Classes[rooster.Type]
 			lvl := int(galo.Rarity) * 50
+			if galo.Rarity >= rinha.Legendary {
+				lvl += 150
+			}
 			if lvl > *minLevel {
 				*minLevel = lvl
 			}
@@ -138,6 +141,9 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 			case entities.NormalType:
 				_item := rinha.Items[item.ItemID]
 				lvl = int(_item.Level) * 50
+				if _item.Level >= 3 {
+					lvl += 100
+				}
 				name = _item.Name
 			case entities.CosmeticType:
 				_item := rinha.Cosmetics[item.ItemID]
