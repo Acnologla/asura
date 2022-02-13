@@ -330,3 +330,35 @@ other="Voce saiu do clan com sucesso"
 
 [NoLootbox]
 other="Voce não tem lootboxes para abrir"
+
+[RankHelp]
+other="Veja os ranks"
+
+[RankUserHelp]
+other="Veja os ranks dos usuarios"
+
+[RankClanHelp]
+other="Veja os ranks dos clans"
+
+[RankUserPlayersHelp]
+other="Veja os jogadores com maior andar na dungeon"
+
+[RankUserMoneyHelp]
+other="Veja os jogadores mais ricos"
+
+
+[RankUserLevelHelp]
+other="Veja os jogadores com o galo mais upado"
+
+[RankUserWinsHelp]
+other="Veja os jogadores que mais ganharam rinhas"
+
+
+[RankUserDefeatsHelp]
+other="Veja os jogadores que mais perderam rinhas"
+
+[RankClanPlayersHelp]
+other="Veja os clans com maior xp"
+
+[RankClanMoneyHelp]
+other="Veja os clans com o maior dinheiro"

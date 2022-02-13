@@ -18,4 +18,6 @@ type UserAdapter interface {
 	InsertRooster(rooster *entities.Rooster) error
 	RemoveRooster(id uuid.UUID) error
 	UpdateEquippedRooster(user entities.User, callback func(entities.Rooster) entities.Rooster) error
+	SortUsers(limit int, propertys ...string) []*entities.User
+	SortUsersByRooster(limit int, propertys ...string) []*entities.User
 }

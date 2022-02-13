@@ -91,3 +91,8 @@ func (adapter ClanAdapterPsql) UpdateMember(clan *entities.Clan, member *entitie
 	_, err := adapter.Db.NewUpdate().Model(member).Where("id = ? ", member.ID).Exec(context.Background())
 	return err
 }
+
+func (adapter ClanAdapterPsql) SortClan(property string, limit int) (clans []*entities.Clan) {
+	adapter.Db.NewSelect().Model(&clans).Order(fmt.Sprintf("%s DESC", property)).Limit(limit).Scan(context.Background())
+	return
+}

@@ -100,7 +100,7 @@ func (adapter UserAdapterPsql) RemoveItem(items []*entities.Item, itemUUID uuid.
 			}
 		}
 	}
-	return errors.New("Item not found")
+	return errors.New("item not found")
 }
 
 func (adapter UserAdapterPsql) InsertRooster(rooster *entities.Rooster) error {
@@ -119,4 +119,29 @@ func (adapter UserAdapterPsql) UpdateEquippedRooster(user entities.User, callbac
 	galo = &cb
 	_, err := adapter.Db.NewUpdate().Model(galo).Where("id = ?", galo.ID).Exec(context.Background())
 	return err
+}
+
+func (adapter UserAdapterPsql) SortUsers(limit int, propertys ...string) (users []*entities.User) {
+	query := adapter.Db.NewSelect().Model(&users)
+	for _, property := range propertys {
+		query = query.Order(fmt.Sprintf("%s DESC", property))
+	}
+	query.Limit(limit).Scan(context.Background())
+	return
+}
+
+func (adapter UserAdapterPsql) SortUsersByRooster(limit int, propertys ...string) (users []*entities.User) {
+	var roosters []*entities.Rooster
+	query := adapter.Db.NewSelect().Model(&roosters)
+	for _, property := range propertys {
+		query = query.Order(fmt.Sprintf("%s DESC", property))
+	}
+	query.Limit(limit).Scan(context.Background())
+	for _, rooster := range roosters {
+		users = append(users, &entities.User{
+			ID:    rooster.UserID,
+			Galos: []*entities.Rooster{rooster},
+		})
+	}
+	return
 }
