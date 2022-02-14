@@ -2,6 +2,7 @@ package adapter
 
 import (
 	"asura/src/entities"
+	"asura/src/rinha"
 	"context"
 	"database/sql"
 	"fmt"
@@ -95,4 +96,41 @@ func (adapter ClanAdapterPsql) UpdateMember(clan *entities.Clan, member *entitie
 func (adapter ClanAdapterPsql) SortClan(property string, limit int) (clans []*entities.Clan) {
 	adapter.Db.NewSelect().Model(&clans).Order(fmt.Sprintf("%s DESC", property)).Limit(limit).Scan(context.Background())
 	return
+}
+
+//TODO move this function to another file
+func (adapter ClanAdapterPsql) CompleteClanMission(clan *entities.Clan, id disgord.Snowflake, xp int) {
+	adapter.UpdateClan(clan, func(clan entities.Clan) entities.Clan {
+		clan = *rinha.PopulateClanMissions(&clan)
+		clan.Xp += xp
+		for _, member := range clan.Members {
+			if member.ID == id {
+				member.Xp++
+				adapter.UpdateMember(&clan, member)
+				break
+			}
+		}
+		money, xp := rinha.CalcMissionPrize(&clan)
+		done := clan.MissionProgress >= rinha.MissionN
+		if !done {
+			clan.MissionProgress++
+			if clan.MissionProgress >= rinha.MissionN {
+				for _, member := range clan.Members {
+					adapter.Db.NewUpdate()
+					adapter.Db.RunInTx(context.Background(), &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+						tx.ExecContext(ctx, fmt.Sprintf("SELECT pg_advisory_xact_lock(%d)", id))
+						user := &entities.User{}
+						adapter.Db.NewSelect().Model(user).Relation("Galos").Where("id = ?", member.ID).Scan(ctx)
+						user.Money += money
+						galo := rinha.GetEquippedGalo(user)
+						galo.Xp += xp
+						adapter.Db.NewUpdate().Model(galo).WherePK().Exec(ctx)
+						_, err := adapter.Db.NewUpdate().Model(&user).Where("id = ?", user.ID).Exec(context.Background())
+						return err
+					})
+				}
+			}
+		}
+		return clan
+	}, "Members")
 }

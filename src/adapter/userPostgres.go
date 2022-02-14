@@ -145,3 +145,15 @@ func (adapter UserAdapterPsql) SortUsersByRooster(limit int, propertys ...string
 	}
 	return
 }
+func (adapter UserAdapterPsql) InsertMission(id disgord.Snowflake, mission *entities.Mission) {
+	mission.UserID = id
+	adapter.Db.NewInsert().Model(mission).Exec(context.Background())
+}
+
+func (adapter UserAdapterPsql) UpdateMissions(id disgord.Snowflake, mission *entities.Mission, done bool) {
+	if done {
+		adapter.Db.NewDelete().Model(mission).WherePK().Exec(context.Background())
+	} else {
+		adapter.Db.NewUpdate().Model(mission).WherePK().Exec(context.Background())
+	}
+}

@@ -362,3 +362,18 @@ other="Veja os clans com maior xp"
 
 [RankClanMoneyHelp]
 other="Veja os clans com o maior dinheiro"
+
+[TrainHelp]
+other="Treine seu galo ganhando dinheiro e xp"
+
+[TrainMessage]
+other="**{{.}}** gostaria de treinar seu galo?"
+
+[TrainLose]
+other="Parabens {{.}}, você perdeu. Use /train para treinar novamente"
+
+[TrainWin]
+other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}"
+
+[TrainLimit]
+other="Voce excedeu seu limite de trains ganhos por dia. Faltam {{.hours}} horas e {{.minutes}} minutos para voce poder usar mais"

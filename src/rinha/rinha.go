@@ -116,6 +116,10 @@ func init() {
 
 const PityMultiplier = 1
 
+func IsVip(user *entities.User) bool {
+	return uint64(time.Now().Unix()) <= user.Vip
+}
+
 func VipMessage(user *entities.User) string {
 	now := uint64(time.Now().Unix())
 	if now >= user.Vip {
@@ -283,6 +287,9 @@ func GetGaloByID(galos []*entities.Rooster, id uuid.UUID) *entities.Rooster {
 	}
 	return nil
 }
+func GetRand() int {
+	return utils.RandInt(len(Classes)-1) + 1
+}
 
 func GetItemByID(items []*entities.Item, id uuid.UUID) *entities.Item {
 	for _, item := range items {
@@ -291,4 +298,12 @@ func GetItemByID(items []*entities.Item, id uuid.UUID) *entities.Item {
 		}
 	}
 	return nil
+}
+
+func IsInLimit(user *entities.User) bool {
+	max := 200
+	if HasUpgrade(user.Upgrades, 0, 1, 0, 0) {
+		max += 30
+	}
+	return user.TrainLimit >= max
 }

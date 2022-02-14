@@ -47,6 +47,13 @@ func GetEquippedItem(user *entities.User) int {
 	}
 	return -1
 }
+func GetItem(user *entities.User) *Item {
+	itemID := GetEquippedItem(user)
+	if itemID == -1 {
+		return nil
+	}
+	return Items[itemID]
+}
 
 func SellItem(item Item) int {
 	if item.Level == 0 {

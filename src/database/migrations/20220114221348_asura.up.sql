@@ -29,6 +29,7 @@ CREATE TABLE Users(
     vip BigInt,
     vipBackground varchar(200),
     trainLimit INT,
+    trainLimitReset BIGINT,
     asuraCoin INT,
     arenaActive BOOLEAN,
     arenaWin INT,
@@ -42,7 +43,8 @@ CREATE TABLE Users(
 );
 
 CREATE TABLE Mission(
-    userId BIGINT REFERENCES Users(ID) ON DELETE CASCADE PRIMARY KEY,
+    ID uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    userId BIGINT REFERENCES Users(ID) ON DELETE CASCADE,
     type INT, 
     level INT,
     progress INT,

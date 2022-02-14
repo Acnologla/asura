@@ -23,10 +23,26 @@ func isInRinha(user *disgord.User) string {
 	return result
 }
 
+func lockEvent(author disgord.Snowflake, evtUsername string) {
+	cache.Client.Set(context.Background(), "/rinha/"+author.String(), evtUsername, time.Minute*4)
+}
+
+func unlockEvent(author disgord.Snowflake) {
+	cache.Client.Del(context.Background(), "/rinha/"+author.String())
+}
+
 func lockBattle(author, adv disgord.Snowflake, authorUsername, advUsername string) {
 	cache.Client.TxPipelined(context.Background(), func(p redis.Pipeliner) error {
 		p.Set(context.Background(), "/rinha/"+author.String(), advUsername, time.Minute*4)
 		p.Set(context.Background(), "/rinha/"+adv.String(), authorUsername, time.Minute*4)
+		return nil
+	})
+}
+
+func unlockBattle(author, adv disgord.Snowflake) {
+	cache.Client.TxPipelined(context.Background(), func(p redis.Pipeliner) error {
+		p.Del(context.Background(), "/rinha/"+author.String())
+		p.Del(context.Background(), "/rinha/"+adv.String())
 		return nil
 	})
 }
@@ -52,13 +68,6 @@ func sendLevelUpEmbed(itc *disgord.InteractionCreate, galoWinner *entities.Roost
 	}
 }
 
-func unlockBattle(author, adv disgord.Snowflake) {
-	cache.Client.TxPipelined(context.Background(), func(p redis.Pipeliner) error {
-		p.Del(context.Background(), "/rinha/"+author.String())
-		p.Del(context.Background(), "/rinha/"+adv.String())
-		return nil
-	})
-}
 func rinhaMessage(username, text string) *disgord.InteractionResponse {
 	return &disgord.InteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -107,7 +116,7 @@ func runRinha(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		authorRinha := isInRinha(itc.Member.User)
 		if authorRinha != "" {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: rinhaMessage(author.Username, userRinha).Data.Content,
+				Content: rinhaMessage(author.Username, authorRinha).Data.Content,
 			})
 			return
 		}
