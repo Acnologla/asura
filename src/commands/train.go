@@ -26,6 +26,22 @@ func init() {
 	})
 }
 
+func getMissions(user *entities.User) []*entities.Mission {
+	missions := rinha.PopulateMissions(user)
+	for _, mission := range missions {
+		database.User.InsertMission(user.ID, mission)
+	}
+	if len(missions) > len(user.Missions) {
+		user.Missions = append(user.Missions, missions...)
+		user.LastMission = uint64(time.Now().Unix())
+		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+			u.LastMission = uint64(time.Now().Unix())
+			return u
+		})
+	}
+	return user.Missions
+}
+
 func completeMission(user *entities.User, galoAdv *entities.Rooster, winner bool, itc *disgord.InteractionCreate) {
 	tempUser := database.User.GetUser(user.ID, "Missions")
 	user.Missions = tempUser.Missions
@@ -36,17 +52,7 @@ func completeMission(user *entities.User, galoAdv *entities.Rooster, winner bool
 			return u
 		})
 	}
-	missions := rinha.PopulateMissions(user)
-	for _, mission := range missions {
-		database.User.InsertMission(user.ID, mission)
-	}
-	if len(missions) > len(user.Missions) {
-		user.Missions = append(user.Missions, missions...)
-		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
-			u.LastMission = uint64(time.Now().Unix())
-			return u
-		})
-	}
+	user.Missions = getMissions(user)
 	xp := 0
 	money := 0
 	toRemove := []int{}

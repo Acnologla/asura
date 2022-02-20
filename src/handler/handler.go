@@ -177,6 +177,7 @@ func Init(appID, token string, session *disgord.Client) {
 		if commandR == nil {
 			request("POST", command.Name)
 			for _, alias := range command.Aliases {
+				fmt.Println("criando")
 				request("POST", alias)
 			}
 		} else if HasChanged(commandR, command) {

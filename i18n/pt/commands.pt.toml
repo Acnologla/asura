@@ -377,3 +377,46 @@ other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e
 
 [TrainLimit]
 other="Voce excedeu seu limite de trains ganhos por dia. Faltam {{.hours}} horas e {{.minutes}} minutos para voce poder usar mais"
+
+
+[ChangeNameHelp]
+other="Troque o nome do seu galo equipado"
+
+[ChangeNameName]
+other="Nome para trocar"
+
+[InvalidName]
+other="O nome do seu galo precisa ter entre 3 e 25 caracteres"
+
+[ChangeName]
+other="Voce trocou o nome do seu galo para **{{.}}** com sucesso"
+
+[MissionHelp]
+other="Veja suas missoes diarias"
+
+[MissionTime]
+other="Faltam {{.hours}} horas e {{.minutes}} minutos para voce receber uma nova missão"
+
+[ChangeMission]
+other="Alterar missão {{.}}"
+
+[TradeMission]
+other="Você trocou sua missão com sucesso!"
+
+[UpgradesHelp]
+other="Veja e adquira upgrades"
+
+[UpgradesId]
+other="Numero do upgrade"
+
+[UpgradeDesc]
+other="\nVoce tem um ponto de upgrade disponivel.\nUse **/upgrade <id do upgrade>** para dar updgrade.\n\nUpgrades:\n\n{{.}}"
+
+[NoUpgrade]
+other="Você não tem pontos de upgrades, use /upgrades para ver seus pontos de upgrades"
+
+[InvalidUpgradeID]
+other="Id do upgrade inválido use /upgrade para ver os upgrades disponiveis"
+
+[NewUpgrade]
+other="Upgrade {{.}} adquirido com sucesso"
