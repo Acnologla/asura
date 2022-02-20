@@ -369,26 +369,28 @@ func SpliceWaiting(slice []*rinha.Fighter, s int) []*rinha.Fighter {
 	return newArr
 }
 func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, options RinhaOptions, newEngine bool) (int, *rinha.Battle) {
+	authorGal := rinha.GetEquippedGalo(options.GaloAuthor)
+	advGal := rinha.GetEquippedGalo(options.GaloAdv)
 	if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0) {
-		options.GaloAdv.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAdv.Xp)) - 1
+		advGal.Xp = rinha.CalcXP(rinha.CalcLevel(advGal.Xp)) - 1
 		if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0, 0) {
-			options.GaloAdv.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAdv.Xp)) - 1
+			advGal.Xp = rinha.CalcXP(rinha.CalcLevel(advGal.Xp)) - 1
 		}
 	}
 	if rinha.HasUpgrade(options.GaloAdv.Upgrades, 2, 1, 0) {
-		options.GaloAuthor.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAuthor.Xp)) - 1
+		authorGal.Xp = rinha.CalcXP(rinha.CalcLevel(authorGal.Xp)) - 1
 		if rinha.HasUpgrade(options.GaloAdv.Upgrades, 2, 1, 0, 0) {
-			options.GaloAuthor.Xp = rinha.CalcXP(rinha.CalcLevel(options.GaloAuthor.Xp)) - 1
+			authorGal.Xp = rinha.CalcXP(rinha.CalcLevel(authorGal.Xp)) - 1
 		}
 	}
-	if options.GaloAuthor.Xp < 0 {
-		options.GaloAuthor.Xp = 0
+	if authorGal.Xp < 0 {
+		authorGal.Xp = 0
 	}
-	if options.GaloAdv.Xp < 0 {
-		options.GaloAdv.Xp = 0
+	if advGal.Xp < 0 {
+		advGal.Xp = 0
 	}
-	options.AdvLevel = rinha.CalcLevel(options.GaloAdv.Xp)
-	options.AuthorLevel = rinha.CalcLevel(options.GaloAuthor.Xp)
+	options.AdvLevel = rinha.CalcLevel(advGal.Xp)
+	options.AuthorLevel = rinha.CalcLevel(authorGal.Xp)
 	u, _ := handler.Client.User(options.IDs[0]).Get()
 	avatar, _ := u.AvatarURL(128, true)
 	embed := &disgord.Embed{

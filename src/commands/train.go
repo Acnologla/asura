@@ -261,7 +261,7 @@ func runTrain(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 						money++
 					}
 				}
-				u.Xp++
+				u.UserXp++
 				u.TrainLimit++
 				clanUser := database.Clan.GetUserClan(discordUser.ID)
 				clan := clanUser.Clan
@@ -279,7 +279,7 @@ func runTrain(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 						money++
 					}
 					if level >= 8 {
-						u.Xp++
+						u.UserXp++
 					}
 					clanXpOb := 1
 					if item != nil {

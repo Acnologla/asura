@@ -35,7 +35,7 @@ func runUpgrades(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	user := itc.Member.User
 	galo := database.User.GetUser(user.ID)
 	if len(itc.Data.Options) == 0 {
-		desc := fmt.Sprintf("Upgrade Xp: **%d/%d**", galo.Xp, rinha.CalcUserXp(&galo))
+		desc := fmt.Sprintf("Upgrade Xp: **%d/%d**", galo.UserXp, rinha.CalcUserXp(&galo))
 		if len(galo.Upgrades) > 0 {
 			desc += "\n\nUpgrades:\n"
 			upgrades := rinha.Upgrade{

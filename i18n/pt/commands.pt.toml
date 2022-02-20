@@ -420,3 +420,15 @@ other="Id do upgrade inválido use /upgrade para ver os upgrades disponiveis"
 
 [NewUpgrade]
 other="Upgrade {{.}} adquirido com sucesso"
+
+[SkillsHelp]
+other="Troque as skills equipadas do seu galo"
+
+[SkillNumber]
+other="Numero da skill para trocar"
+
+[SkillSelect]
+other="Selecione a skill para equipar"
+
+[ChangingSkill]
+other="Skills:\n{{.skills}}\n\nTrocando a skill numero **{{.number}}**"

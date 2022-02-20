@@ -57,5 +57,5 @@ func UpgradesToString(galo *entities.User) (text string) {
 }
 
 func HavePoint(galo *entities.User) bool {
-	return galo.Xp >= CalcUserXp(galo)
+	return galo.UserXp >= CalcUserXp(galo)
 }

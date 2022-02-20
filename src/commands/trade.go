@@ -314,7 +314,7 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 						authorDone = !authorDone
 					}
 					if userDone && authorDone {
-						if minLevel > userGalo.Xp || minLevel > authorGalo.Xp {
+						if minLevel > userGalo.UserXp || minLevel > authorGalo.UserXp {
 							handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
 								Type: disgord.InteractionCallbackUpdateMessage,
 								Data: &disgord.InteractionApplicationCommandCallbackData{

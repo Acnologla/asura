@@ -220,7 +220,15 @@ func GetSkills(galo entities.Rooster) []int {
 	}
 	return skills
 }
-
+func SkillToStringFormated(skill *Skill, galo *entities.Rooster) (text string) {
+	min, max := CalcDamage(skill, galo)
+	text = fmt.Sprintf("`[Dano: %d - %d]`", min, max-1)
+	if skill.Effect[0] != 0 || skill.Effect[1] != 0 {
+		effect := Effects[int(skill.Effect[1])]
+		text += fmt.Sprintf("\n*Tem %d%% de Chance de causar %s*", int(skill.Effect[0]*100), effect.Name)
+	}
+	return
+}
 func calcDamage(min, max int, galo *entities.Rooster) (int, int) {
 	if galo.Resets > 0 {
 		min += int(float64(min) * 0.15 * float64(galo.Resets))

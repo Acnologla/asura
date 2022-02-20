@@ -62,7 +62,7 @@ type User struct {
 	bun.BaseModel `bun:"table:users,alias:u"`
 
 	ID              disgord.Snowflake `bun:"id,pk"`
-	Xp              int               `bun:"xp"`
+	UserXp          int               `bun:"xp"`
 	Galos           []*Rooster        `bun:"rel:has-many,join:id=userid"`
 	Items           []*Item           `bun:"rel:has-many,join:id=userid"`
 	Upgrades        []int             `bun:"upgrades,array"`
