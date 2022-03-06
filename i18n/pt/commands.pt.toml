@@ -462,3 +462,30 @@ other="Veja o perfil de um usuario"
 
 [GaloHelp]
 other="Veja as informaçoes do galo de um usuario"
+
+[DungeonHelp]
+other="Batalhe na dungeon"
+
+[DungeonInfoHelp]
+other="Veja informaçoes da dungeon"
+
+[DungeonBattleHelp]
+other="Batalhe na dungeon"
+
+[DungeonFloor]
+other="Você está no andar **{{.}}**\nUse /dungeon battle para batalhar contra o chefe"
+
+[DungeonFinish]
+other="Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!"
+
+[DungeonLose]
+other="Parabéns {{.}}, você perdeu. Use /dungeon battle para tentar novamente"
+
+[DungeonWin]
+other="Parabéns {{.username}} você consegiu derrotar o boss e avançar para o andar **{{.floor}}** {{.msg}}"
+
+[DungeonWinItem]
+other="Voce ganhou o item {{.name}} ({{.rarity}})"
+
+[DungeonWinLootbox]
+other="Voce ganhou uma lootbox {{.}}"
