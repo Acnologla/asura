@@ -28,12 +28,12 @@ func init() {
 	})
 }
 
-func runChangeName(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runChangeName(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	name := itc.Data.Options[0].Value.(string)
 	if len(name) > 25 || 3 > len(name) {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("InvalidName", translation.GetLocale(itc)),
 			},
 		}
@@ -56,9 +56,9 @@ func runChangeName(itc *disgord.InteractionCreate) *disgord.InteractionResponse 
 		u.Money -= price
 		return u
 	}, "Galos")
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content: translation.T(msg, translation.GetLocale(itc), name),
 		},
 	}

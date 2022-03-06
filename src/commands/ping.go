@@ -18,13 +18,13 @@ func init() {
 	})
 }
 
-func runPing(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runPing(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	ping, _ := handler.Client.HeartbeatLatencies()
 	botInfo, _ := handler.Client.Gateway().GetBot()
 	shard := disgord.ShardID(itc.GuildID, botInfo.Shards)
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content: fmt.Sprintf("%dms", ping[shard].Milliseconds()),
 		},
 	}

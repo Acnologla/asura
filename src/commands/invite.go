@@ -16,10 +16,10 @@ func init() {
 	})
 }
 
-func runInvite(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
-	return &disgord.InteractionResponse{
+func runInvite(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content: " https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%%20bot&permissions=8",
 		},
 	}

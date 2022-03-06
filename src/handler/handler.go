@@ -42,7 +42,7 @@ type Command struct {
 	Cooldown    int
 	Description string
 	Options     []*disgord.ApplicationCommandOption
-	Run         func(*disgord.InteractionCreate) *disgord.InteractionResponse
+	Run         func(*disgord.InteractionCreate) *disgord.CreateInteractionResponse
 	Category    CommandCategory
 	Dev         bool
 	Aliases     []string
@@ -54,7 +54,7 @@ func RegisterCommand(command Command) {
 	Commands[command.Name] = command
 }
 
-func ExecuteInteraction(interaction *disgord.InteractionCreate) *disgord.InteractionResponse {
+func ExecuteInteraction(interaction *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	if interaction.Type == disgord.InteractionApplicationCommand {
 		return Run(interaction)
 	}
@@ -76,14 +76,14 @@ func GetCommand(name string) Command {
 	return command
 }
 
-func Run(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func Run(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := GetCommand(itc.Data.Name)
 	locale := translation.GetLocale(itc)
 	if cooldown, ok := GetCooldown(itc.Member.User.ID, command); ok {
 		needTime := command.Cooldown - int(time.Since(cooldown).Seconds())
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("Cooldown", locale, needTime),
 			},
 		}
@@ -175,9 +175,10 @@ func Init(appID, token string, session *disgord.Client) {
 			}
 		}
 		if commandR == nil {
+			fmt.Println("criando")
+
 			request("POST", command.Name)
 			for _, alias := range command.Aliases {
-				fmt.Println("criando")
 				request("POST", alias)
 			}
 		} else if HasChanged(commandR, command) {

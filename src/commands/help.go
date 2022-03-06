@@ -26,14 +26,14 @@ func init() {
 	})
 }
 
-func runHelp(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runHelp(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	if len(itc.Data.Options) > 0 {
 		commandText := itc.Data.Options[0].Value.(string)
 		command, ok := handler.Commands[commandText]
 		if ok && !command.Dev {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Embeds: []*disgord.Embed{{
 						Description: fmt.Sprintf("**%s**\n\nCooldown:\n **%d Segundos**", command.Description, command.Cooldown),
 						Color:       65535,
@@ -42,9 +42,9 @@ func runHelp(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				},
 			}
 		} else {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T("HelpCommandNotFound", translation.GetLocale(itc)),
 				},
 			}
@@ -62,9 +62,9 @@ func runHelp(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				}
 			}
 		}
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{{
 					Description: commandText + "\n\n[**Support**](https://discord.gg/tdVWQGV)\n[**Vote**](https://top.gg/bot/470684281102925844)\n[**Website**](https://acnologla.github.io/asura-site/)",
 					Color:       65535,

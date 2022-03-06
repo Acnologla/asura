@@ -35,7 +35,7 @@ func init() {
 	})
 }
 
-func runInvert(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runInvert(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	url, _ := itc.Member.User.AvatarURL(1024, false)
 
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
@@ -80,9 +80,9 @@ func runInvert(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	var b bytes.Buffer
 	pw := io.Writer(&b)
 	png.Encode(pw, dc.Image())
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{},
+		Data: &disgord.CreateInteractionResponseData{},
 	}
 	/*	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
 		Files: []disgord.CreateMessageFileParams{{

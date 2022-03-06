@@ -76,13 +76,13 @@ func genSellOptions(user *entities.User, isRooster bool) (opts []*disgord.Select
 	return
 }
 
-func runSell(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runSell(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	galo := database.User.GetUser(itc.Member.UserID, "Galos", "Items")
 	optsGalos := genSellOptions(&galo, true)
 	optsItems := genSellOptions(&galo, false)
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
 				{
 					Title: translation.T("SellTitle", translation.GetLocale(itc)),
@@ -201,9 +201,9 @@ func runSell(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			return u
 		}, "Items", "Galos")
 		if msg != "" {
-			handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.InteractionResponse{
+			handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T(msg, translation.GetLocale(ic), price),
 				},
 			})

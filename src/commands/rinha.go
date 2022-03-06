@@ -68,10 +68,10 @@ func sendLevelUpEmbed(itc *disgord.InteractionCreate, galoWinner *entities.Roost
 	}
 }
 
-func rinhaMessage(username, text string) *disgord.InteractionResponse {
-	return &disgord.InteractionResponse{
+func rinhaMessage(username, text string) *disgord.CreateInteractionResponse {
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content: translation.T("RinhaMessage", "pt", map[string]interface{}{"username": username, "text": text}),
 		},
 	}
@@ -93,12 +93,12 @@ func init() {
 	})
 }
 
-func runRinha(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runRinha(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	if user.ID == itc.Member.User.ID || user.Bot {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: "Invalid user",
 			},
 		}

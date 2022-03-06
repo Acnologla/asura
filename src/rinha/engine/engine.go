@@ -34,9 +34,9 @@ func EditRinhaMessage(ic *disgord.InteractionCreate, newMessage *disgord.CreateM
 		EditRinhaComponents(message, newMessage)
 		return
 	}
-	handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackUpdateMessage,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Components: newMessage.Components,
 			Embeds:     []*disgord.Embed{newMessage.Embed},
 		},

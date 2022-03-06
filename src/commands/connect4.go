@@ -119,22 +119,22 @@ func generateConnect4() []*disgord.MessageComponent {
 	return arrs
 }
 
-func runConnect4(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runConnect4(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	ctx := context.Background()
 	board := utils.MakeBoard(8, 8)
 	user := utils.GetUser(itc, 0)
 	if user.Bot || user.ID == itc.Member.UserID {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: "Invalid user",
 			},
 		}
 	}
 
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content:    connect4Emojis[1] + "\n\n" + drawConnect4Board(board),
 			Components: generateConnect4(),
 		},
@@ -167,16 +167,16 @@ func runConnect4(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					if winned == 1 {
 						emoji = ":crown:" + connect4Emojis[num]
 					}
-					handler.Client.SendInteractionResponse(ctx, interaction, &disgord.InteractionResponse{
+					handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 						Type: disgord.InteractionCallbackUpdateMessage,
-						Data: &disgord.InteractionApplicationCommandCallbackData{
+						Data: &disgord.CreateInteractionResponseData{
 							Content: emoji + "\n\n" + drawConnect4Board(board),
 						},
 					})
 				} else {
-					handler.Client.SendInteractionResponse(ctx, interaction, &disgord.InteractionResponse{
+					handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 						Type: disgord.InteractionCallbackUpdateMessage,
-						Data: &disgord.InteractionApplicationCommandCallbackData{
+						Data: &disgord.CreateInteractionResponseData{
 							Content: connect4Emojis[turn+1] + "\n\n" + drawConnect4Board(board),
 						},
 					})

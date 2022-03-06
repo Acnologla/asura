@@ -55,16 +55,16 @@ func GenerateBuyOptions(arr []string) (opts []*disgord.SelectMenuOption) {
 	return
 }
 
-func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := itc.Data.Options[0].Name
 	user := database.User.GetUser(itc.Member.UserID, "Items")
 	switch command {
 	case "view":
 		text := translation.T("LootboxView", "pt", rinha.VipMessage(&user))
 		lootbox := rinha.GetLootboxes(&user)
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
 					{
 						Title:       "Lootbox",
@@ -75,9 +75,9 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			},
 		}
 	case "buy":
-		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
 					{
 						Title:       "Lootbox buy",
@@ -125,16 +125,16 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				return u
 			}, "Items")
 			if done {
-				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
-					Data: &disgord.InteractionApplicationCommandCallbackData{
+					Data: &disgord.CreateInteractionResponseData{
 						Content: translation.T("LootboxBuyDone", translation.GetLocale(interaction), lb),
 					},
 				})
 			} else {
-				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
-					Data: &disgord.InteractionApplicationCommandCallbackData{
+					Data: &disgord.CreateInteractionResponseData{
 						Content: translation.T("NoMoney", translation.GetLocale(interaction)),
 					},
 				})
@@ -145,16 +145,16 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		lootbox := rinha.GetLootboxes(&user)
 		loots := rinha.GetUserLootboxes(&user)
 		if len(loots) == 0 {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T("NoLootbox", translation.GetLocale(itc)),
 				},
 			}
 		}
-		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
 					{
 						Title:       "Lootbox open",
@@ -244,9 +244,9 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				rarity = galo.Rarity
 				winType = "galo"
 			}
-			handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+			handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Embeds: []*disgord.Embed{
 						{
 							Color: rarity.Color(),

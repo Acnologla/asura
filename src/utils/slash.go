@@ -45,9 +45,9 @@ func GetUserOrAuthor(itc *disgord.InteractionCreate, i int) *disgord.User {
 }
 
 func Confirm(title string, itc *disgord.InteractionCreate, id disgord.Snowflake, callback func()) {
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
 				{
 					Title: title,

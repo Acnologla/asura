@@ -8,7 +8,7 @@ require (
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	firebase.google.com/go v3.13.0+incompatible // indirect
 	github.com/BurntSushi/toml v1.0.0 // indirect
-	github.com/andersfylling/disgord v0.32.3
+	github.com/andersfylling/disgord v0.34.0
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.4 // indirect

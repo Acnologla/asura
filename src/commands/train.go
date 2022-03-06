@@ -142,7 +142,7 @@ func completeMission(user *entities.User, galoAdv *entities.Rooster, winner bool
 	}, "Galos")
 }
 
-func runTrain(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runTrain(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	discordUser := itc.Member.User
 	user := database.User.GetUser(itc.Member.UserID, "Galos", "Items")
 	galo := rinha.GetEquippedGalo(&user)

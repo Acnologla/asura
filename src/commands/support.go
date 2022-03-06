@@ -15,10 +15,10 @@ func init() {
 	})
 }
 
-func runSupport(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
-	return &disgord.InteractionResponse{
+func runSupport(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content: "https://discord.gg/tdVWQGV",
 		},
 	}

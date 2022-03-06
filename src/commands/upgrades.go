@@ -31,7 +31,7 @@ func init() {
 	})
 }
 
-func runUpgrades(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runUpgrades(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
 	galo := database.User.GetUser(user.ID)
 	if len(itc.Data.Options) == 0 {
@@ -50,9 +50,9 @@ func runUpgrades(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		if rinha.HavePoint(&galo) {
 			desc += translation.T("UpgradeDesc", translation.GetLocale(itc), rinha.UpgradesToString(&galo))
 		}
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{{
 					Title:       "Upgrades",
 					Color:       65535,
@@ -64,18 +64,18 @@ func runUpgrades(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	i := int(itc.Data.Options[0].Value.(float64))
 
 	if !rinha.HavePoint(&galo) {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("NoUpgrade", translation.GetLocale(itc)),
 			},
 		}
 	}
 	upgrades := rinha.GetCurrentUpgrade(&galo)
 	if 0 > i || i >= len(upgrades.Childs) {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("InvalidUpgradeID", translation.GetLocale(itc)),
 			},
 		}
@@ -84,9 +84,9 @@ func runUpgrades(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		u.Upgrades = append(u.Upgrades, i)
 		return u
 	})
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content: translation.T("NewUpgrade", translation.GetLocale(itc), upgrades.Childs[i].Name),
 		},
 	}

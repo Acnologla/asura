@@ -28,7 +28,7 @@ func init() {
 	})
 }
 
-func board(tiles [9]int) *disgord.InteractionApplicationCommandCallbackData {
+func board(tiles [9]int) *disgord.CreateInteractionResponseData {
 	arrs := []*disgord.MessageComponent{
 		{
 			Type: disgord.MessageComponentActionRow,
@@ -40,7 +40,7 @@ func board(tiles [9]int) *disgord.InteractionApplicationCommandCallbackData {
 			Type: disgord.MessageComponentActionRow,
 		},
 	}
-	params := &disgord.InteractionApplicationCommandCallbackData{
+	params := &disgord.CreateInteractionResponseData{
 		Content: "Clique nos botoes para jogar",
 	}
 	for i, tile := range tiles {
@@ -89,19 +89,19 @@ func playTTT(tile int, tiles *[9]int, turn int) bool {
 	tiles[tile] = turn
 	return true
 }
-func runTTT(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runTTT(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	if user.ID == itc.Member.User.ID || user.Bot {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: "Invalid user",
 			},
 		}
 	}
 	tiles := [9]int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 	turn := 1
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: board(tiles),
 	})
@@ -135,9 +135,9 @@ func runTTT(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					}
 					handler.DeleteHandler(itc.ID)
 				}
-				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackUpdateMessage,
-					Data: &disgord.InteractionApplicationCommandCallbackData{
+					Data: &disgord.CreateInteractionResponseData{
 						Content:    fmt.Sprintf("%s%s", playType, letter),
 						Components: board(tiles).Components,
 					},

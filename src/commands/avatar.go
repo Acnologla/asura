@@ -23,12 +23,12 @@ func init() {
 	})
 }
 
-func runAvatar(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runAvatar(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	avatar, _ := user.AvatarURL(1024, true)
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
 				{
 					Title: user.Username,

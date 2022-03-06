@@ -36,21 +36,21 @@ func init() {
 	})
 }
 
-func runGiveMoney(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runGiveMoney(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	if user.Bot || user.ID == itc.Member.UserID {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: "invalid user",
 			},
 		}
 	}
 	money := int(itc.Data.Options[1].Value.(float64))
 	if money < 1 {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("GiveMoneyInvalid", translation.GetLocale(itc)),
 			},
 		}
@@ -69,9 +69,9 @@ func runGiveMoney(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		})
 		return u
 	})
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content: translation.T(msg, translation.GetLocale(itc), money),
 		},
 	}

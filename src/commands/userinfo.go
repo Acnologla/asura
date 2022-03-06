@@ -35,7 +35,7 @@ func init() {
 	})
 }
 
-func runUserinfo(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runUserinfo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
 	if len(itc.Data.Options) > 0 {
 		user = utils.GetUser(itc, 0)
@@ -78,9 +78,9 @@ func runUserinfo(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	} else {
 		oldAvatars = translation.T("NoAvatars", translation.GetLocale(itc))
 	}
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
 				{
 					Color: 65535,

@@ -125,7 +125,7 @@ func generate2048Buttons() (buttons []*disgord.MessageComponent) {
 	return
 }
 
-func run2048(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func run2048(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	size := 4
 	if len(itc.Data.Options) > 0 {
 		size = int(itc.Data.Options[0].Value.(float64))
@@ -136,9 +136,9 @@ func run2048(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	}
 	lastPlay := time.Now()
 	points := 0
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content:    ":zero:\n\n" + draw2048Board(board),
 			Components: generate2048Buttons(),
 		},
@@ -193,9 +193,9 @@ func run2048(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					n := empty[utils.RandInt(len(empty))]
 					board[n/len(board)][n%len(board)] = 2
 				}
-				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackUpdateMessage,
-					Data: &disgord.InteractionApplicationCommandCallbackData{
+					Data: &disgord.CreateInteractionResponseData{
 						Content: fmt.Sprintf("%s\n\n%s", drawPoints(points), draw2048Board(board)),
 					},
 				})

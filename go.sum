@@ -70,6 +70,10 @@ github.com/andersfylling/disgord v0.32.2 h1:tlf++cU41VXbka8ezc0iSIMkhycGHAK1bZIp
 github.com/andersfylling/disgord v0.32.2/go.mod h1:NGm4vBIi1oiLOscwQvwkrlz2tRpjIIhEwc9FuHJgTP8=
 github.com/andersfylling/disgord v0.32.3 h1:VKPdwI6IhUgEvn/KqQureyexvv7JezwvZsHLYH0c1Lo=
 github.com/andersfylling/disgord v0.32.3/go.mod h1:NGm4vBIi1oiLOscwQvwkrlz2tRpjIIhEwc9FuHJgTP8=
+github.com/andersfylling/disgord v0.33.1-0.20220303173023-df2b44efe0f3 h1:FbDbg/YtwPt7H2/UV/J6JQ8Gj7Bfw6zRj+z9E7qwCZQ=
+github.com/andersfylling/disgord v0.33.1-0.20220303173023-df2b44efe0f3/go.mod h1:NGm4vBIi1oiLOscwQvwkrlz2tRpjIIhEwc9FuHJgTP8=
+github.com/andersfylling/disgord v0.34.0 h1:S2/6j8W+GXhPWOIR/ayJ9WOgVvcM81KlMya1G6UPd/k=
+github.com/andersfylling/disgord v0.34.0/go.mod h1:NGm4vBIi1oiLOscwQvwkrlz2tRpjIIhEwc9FuHJgTP8=
 github.com/andersfylling/snowflake/v5 v5.0.1 h1:unXbYSij6tRCGJzoLz9zl3nJsqd9hu7bbYSgB8K8/i0=
 github.com/andersfylling/snowflake/v5 v5.0.1/go.mod h1:AdhrB+kewjnQInv8cR7ABe2SGoVXh79njnipUnz1HFc=
 github.com/andybalholm/brotli v1.0.2/go.mod h1:loMXtMfwqflxFJPmdbJO0a3KNoPuLBgiu3qAvBg8x/Y=

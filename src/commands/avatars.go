@@ -27,7 +27,7 @@ func init() {
 	})
 }
 
-func runAvatars(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runAvatars(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	ctx := context.Background()
 	var userinfo firebase.User
@@ -36,25 +36,25 @@ func runAvatars(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	firebase.Database.NewRef("users/"+id).Get(ctx, &userinfo)
 	firebase.Database.NewRef("private/"+id).Get(ctx, &private)
 	if private {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("Private", translation.GetLocale(itc)),
 			},
 		}
 	}
 	if len(userinfo.Avatars) == 0 {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("NotFoundAvatars", translation.GetLocale(itc)),
 			},
 		}
 	}
 	count := 0
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
 				{
 					Color: 65535,
@@ -107,9 +107,9 @@ func runAvatars(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				}
 			}
 
-			handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+			handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackUpdateMessage,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Embeds: []*disgord.Embed{
 						{
 

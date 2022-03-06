@@ -83,7 +83,7 @@ var rankNameToType = map[string]string{
 	"derrotas": "Derrotas",
 }
 
-func runRank(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runRank(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	rankType := itc.Data.Options[0].Name
 	rankName := itc.Data.Options[0].Options[0].Name
 	var text string
@@ -144,9 +144,9 @@ func runRank(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			text += fmt.Sprintf("[**%d**] - %s\n%s: %d\n", i+1, clan.Name, rankNameToType[rankName], data(clan))
 		}
 	}
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
 				{
 					Title:       rankName + " Rank",

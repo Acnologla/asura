@@ -134,7 +134,7 @@ func generateUpgradesOptions() (opts []*disgord.SelectMenuOption) {
 	}
 	return
 }
-func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runClan(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := itc.Data.Options[0].Name
 	user := database.User.GetUser(itc.Member.UserID)
 	userClan := database.Clan.GetUserClan(user.ID, "Members")
@@ -144,17 +144,17 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
 	var msg string
 	if command != "create" && clan.Name == "" {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("NoClan", translation.GetLocale(itc)),
 			},
 		}
 	}
 	if (command == "invite" || command == "remove" || command == "admin" || command == "background" || command == "upgrade") && member.Role == entities.Member {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("MissingPermissions", translation.GetLocale(itc)),
 			},
 		}
@@ -168,18 +168,18 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			return nil
 		}
 		if len(name) >= 25 || len(name) <= 4 {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T("ClanNameLength", translation.GetLocale(itc)),
 				},
 			}
 		}
 		clan := database.Clan.GetClan(name)
 		if clan.Name != "" {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T("ClanArleadyExists", translation.GetLocale(itc)),
 				},
 			}
@@ -201,16 +201,16 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			return u
 		})
 		if msg != "" {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T(msg, translation.GetLocale(itc)),
 				},
 			}
 		}
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("ClanCreated", translation.GetLocale(itc), name),
 			},
 		}
@@ -249,9 +249,9 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				URL: bg,
 			}
 		}
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{embed},
 			},
 		}
@@ -262,9 +262,9 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			clanUpdate.MissionProgress = clan.MissionProgress
 			return clanUpdate
 		})
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{{
 					Title:       "Clan mission",
 					Description: rinha.MissionToString(clan),
@@ -275,9 +275,9 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 	case "invite":
 		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
 		if user == nil {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: "Invalid user",
 				},
 			}
@@ -311,9 +311,9 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		})
 	case "remove":
 		if len(itc.Data.Options[0].Options) == 0 {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: "Invalid user",
 				},
 			}
@@ -334,17 +334,17 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			return c
 		})
 
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T(msg, translation.GetLocale(itc), user.Username),
 			},
 		}
 	case "admin":
 		if len(itc.Data.Options[0].Options) == 0 {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: "Invalid user",
 				},
 			}
@@ -365,16 +365,16 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			}
 			return c
 		})
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T(msg, translation.GetLocale(itc), user.Username),
 			},
 		}
 	case "banco":
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
 					{
 						Title: "Banco",
@@ -403,16 +403,16 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			}
 			return u
 		})
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T(msg, translation.GetLocale(itc), money),
 			},
 		}
 	case "upgrade":
-		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
 					{
 						Title: "Upgrades",
@@ -468,9 +468,9 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					}
 					return c
 				})
-				handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.InteractionResponse{
+				handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
-					Data: &disgord.InteractionApplicationCommandCallbackData{
+					Data: &disgord.CreateInteractionResponseData{
 						Content: translation.T(msg, translation.GetLocale(itc), upgrade),
 					},
 				})
@@ -485,18 +485,18 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			}
 			return c
 		}, "Members")
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T(msg, translation.GetLocale(itc), clan.Name),
 			},
 		}
 	case "background":
 		img := itc.Data.Options[0].Options[0].Value.(string)
 		if !utils.CheckImage(img) {
-			return &disgord.InteractionResponse{
+			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T("InvalidImage", translation.GetLocale(itc)),
 				},
 			}
@@ -511,9 +511,9 @@ func runClan(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			}
 			return c
 		})
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T(msg, translation.GetLocale(itc)),
 			},
 		}

@@ -25,7 +25,7 @@ func init() {
 	})
 }
 
-func runEscrever(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runEscrever(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	str := itc.Data.Options[0].Value.(string)
 	text := ""
 	for i := 0; i < len(str); i++ {
@@ -35,9 +35,9 @@ func runEscrever(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			text += strings.ToLower(string(str[i]))
 		}
 	}
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content: text,
 		},
 	}

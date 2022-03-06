@@ -432,3 +432,24 @@ other="Selecione a skill para equipar"
 
 [ChangingSkill]
 other="Skills:\n{{.skills}}\n\nTrocando a skill numero **{{.number}}**"
+
+[RunEquip]
+other="Equipe galos"
+
+[EquipGaloPlaceholder]
+other="Selecione o galo para equipar"
+
+[EquipGalo]
+other="Voce equipou o galo com sucesso"
+
+[RunEquipItem]
+other="Equipe items"
+
+[EquipItem]
+other="Selecione o item para equipar"
+
+[EquipBackground]
+other="Selecione o background para equipar"
+
+[EquipItemSuccess]
+other="Voce equipou o item com sucesso"

@@ -137,13 +137,13 @@ func totalCells(board []([]*MinifieldTile)) (total int) {
 	return
 }
 
-func runMinifield(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runMinifield(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	board := makeMinifieldBoard(5, 5)
 	total := totalCells(board)
 	data := generateMinifieldBoard(board)
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Content:    translation.T("MinifieldPlay", "pt"),
 			Components: data,
 		},
@@ -178,9 +178,9 @@ func runMinifield(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			handler.DeleteHandler(itc.ID)
 		}
 		newMsg := generateMinifieldBoard(board)
-		handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+		handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackUpdateMessage,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content:    content,
 				Components: newMsg,
 			},

@@ -20,7 +20,7 @@ func init() {
 	})
 }
 
-func runPrivate(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runPrivate(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	var acc bool
 	id := strconv.FormatUint(uint64(itc.Member.UserID), 10)
 	ctx := context.Background()
@@ -32,16 +32,16 @@ func runPrivate(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		return nil
 	}
 	if acc {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("PrivateDisabled", translation.GetLocale(itc)),
 			},
 		}
 	} else {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T("PrivateEnabled", translation.GetLocale(itc)),
 			},
 		}

@@ -174,12 +174,12 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 	return
 }
 
-func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runTrade(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	if user.Bot || user.ID == itc.Member.UserID {
-		return &disgord.InteractionResponse{
+		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+			Data: &disgord.CreateInteractionResponseData{
 				Content: "invalid user",
 			},
 		}
@@ -315,9 +315,9 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 					}
 					if userDone && authorDone {
 						if minLevel > userGalo.UserXp || minLevel > authorGalo.UserXp {
-							handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+							handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 								Type: disgord.InteractionCallbackUpdateMessage,
-								Data: &disgord.InteractionApplicationCommandCallbackData{
+								Data: &disgord.CreateInteractionResponseData{
 									Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, translation.T("UserMinLevelTrade", translation.GetLocale(itc), minLevel))},
 								},
 							})
@@ -368,9 +368,9 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 							return a
 						}, "Galos", "Items")
 						handler.DeleteHandler(msg.ID)
-						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackChannelMessageWithSource,
-							Data: &disgord.InteractionApplicationCommandCallbackData{
+							Data: &disgord.CreateInteractionResponseData{
 								Content: translation.T("TradeDone", translation.GetLocale(itc)),
 							},
 						})
@@ -381,9 +381,9 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 						if userDone {
 							acceptUsername = user.Username
 						}
-						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackUpdateMessage,
-							Data: &disgord.InteractionApplicationCommandCallbackData{
+							Data: &disgord.CreateInteractionResponseData{
 								Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, translation.T("UserAcceptTrade", translation.GetLocale(itc), acceptUsername))},
 							},
 						})
@@ -446,9 +446,9 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 							}
 
 						}
-						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
+						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackUpdateMessage,
-							Data: &disgord.InteractionApplicationCommandCallbackData{
+							Data: &disgord.CreateInteractionResponseData{
 								Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, "")},
 							},
 						})

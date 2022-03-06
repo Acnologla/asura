@@ -65,7 +65,7 @@ func generateNumberOptions(i int) (opts []*disgord.SelectMenuOption) {
 	return
 }
 
-func runSkills(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runSkills(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := database.User.GetUser(itc.Member.User.ID, "Galos")
 	galo := rinha.GetEquippedGalo(&user)
 	equipedSkills := rinha.GetEquipedSkills(galo)
@@ -81,9 +81,9 @@ func runSkills(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			}),
 		}}
 	}
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.InteractionResponse{
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.InteractionApplicationCommandCallbackData{
+		Data: &disgord.CreateInteractionResponseData{
 			Embeds: genEmbed(),
 			Components: []*disgord.MessageComponent{
 				{
@@ -125,9 +125,9 @@ func runSkills(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		data, _ := strconv.Atoi(number)
 		if name == "number" {
 			skillNumber = data
-			handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.InteractionResponse{
+			handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackUpdateMessage,
-				Data: &disgord.InteractionApplicationCommandCallbackData{
+				Data: &disgord.CreateInteractionResponseData{
 					Embeds: genEmbed(),
 				},
 			})
@@ -153,9 +153,9 @@ func runSkills(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 				return u
 			}, "Galos")
 			if sucess {
-				handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.InteractionResponse{
+				handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackUpdateMessage,
-					Data: &disgord.InteractionApplicationCommandCallbackData{
+					Data: &disgord.CreateInteractionResponseData{
 						Embeds: genEmbed(),
 					},
 				})

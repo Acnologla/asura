@@ -21,7 +21,7 @@ func init() {
 	})
 }
 
-func runBotInfo(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
+func runBotInfo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	guildSize := len(handler.Client.GetConnectedGuilds())
 	var memory runtime.MemStats
 	runtime.ReadMemStats(&memory)
@@ -82,7 +82,7 @@ func runBotInfo(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 		"hours":       readyAt / 60 % 24,
 		"minutes":     readyAt % 60,
 	})
-	res := &disgord.InteractionApplicationCommandCallbackData{
+	res := &disgord.CreateInteractionResponseData{
 		Embeds: []*disgord.Embed{{
 			Title: fmt.Sprintf("Asura (Shard %d)", disgord.ShardID(itc.GuildID, botInfo.Shards)),
 			Color: 65535,
@@ -126,7 +126,7 @@ func runBotInfo(itc *disgord.InteractionCreate) *disgord.InteractionResponse {
 			},
 		},
 	}
-	return &disgord.InteractionResponse{
+	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: res,
 	}

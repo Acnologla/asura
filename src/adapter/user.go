@@ -16,9 +16,11 @@ type UserAdapter interface {
 	UpdateMissions(id disgord.Snowflake, mission *entities.Mission, done bool)
 	InsertMission(id disgord.Snowflake, mission *entities.Mission)
 	InsertItem(id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType) error
+	UpdateItem(user *entities.User, id uuid.UUID, callback func(entities.Item) entities.Item) error
 	RemoveItem(items []*entities.Item, itemUUID uuid.UUID) error
 	InsertRooster(rooster *entities.Rooster) error
 	RemoveRooster(id uuid.UUID) error
+	UpdateRooster(user *entities.User, id uuid.UUID, callback func(entities.Rooster) entities.Rooster) error
 	UpdateEquippedRooster(user entities.User, callback func(entities.Rooster) entities.Rooster) error
 	SortUsers(limit int, propertys ...string) []*entities.User
 	SortUsersByRooster(limit int, propertys ...string) []*entities.User

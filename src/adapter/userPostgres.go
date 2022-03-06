@@ -157,3 +157,37 @@ func (adapter UserAdapterPsql) UpdateMissions(id disgord.Snowflake, mission *ent
 		adapter.Db.NewUpdate().Model(mission).WherePK().Exec(context.Background())
 	}
 }
+
+func (adapter UserAdapterPsql) UpdateRooster(user *entities.User, id uuid.UUID, callback func(entities.Rooster) entities.Rooster) error {
+	var galo *entities.Rooster
+	for _, gal := range user.Galos {
+		if gal.ID == id {
+			galo = gal
+			continue
+		}
+	}
+	if galo == nil {
+		return errors.New("galo not found")
+	}
+	cb := callback(*galo)
+	galo = &cb
+	_, err := adapter.Db.NewUpdate().Model(galo).Where("id = ?", galo.ID).Exec(context.Background())
+	return err
+}
+
+func (adapter UserAdapterPsql) UpdateItem(user *entities.User, id uuid.UUID, callback func(entities.Item) entities.Item) error {
+	var item *entities.Item
+	for _, it := range user.Items {
+		if it.ID == id {
+			item = it
+			continue
+		}
+	}
+	if item == nil {
+		return errors.New("item not found")
+	}
+	cb := callback(*item)
+	item = &cb
+	_, err := adapter.Db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(context.Background())
+	return err
+}
