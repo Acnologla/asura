@@ -97,6 +97,10 @@ func (adapter ClanAdapterPsql) SortClan(property string, limit int) (clans []*en
 	adapter.Db.NewSelect().Model(&clans).Order(fmt.Sprintf("%s DESC", property)).Limit(limit).Scan(context.Background())
 	return
 }
+func (adapter ClanAdapterPsql) GetClanPos(clan *entities.Clan) int {
+	count, _ := adapter.Db.NewSelect().Model((*entities.Clan)(nil)).Where(fmt.Sprintf("xp > %d", clan.Xp)).Order("xp DESC").Count(context.Background())
+	return count
+}
 
 //TODO move this function to another file
 func (adapter ClanAdapterPsql) CompleteClanMission(clan *entities.Clan, id disgord.Snowflake, xp int) {

@@ -1,6 +1,7 @@
 package rinha
 
 import (
+	"asura/src/entities"
 	"asura/src/utils"
 	"fmt"
 )
@@ -12,6 +13,28 @@ const (
 	Badge
 	Skin
 )
+
+func GetBackground(galo *entities.User) string {
+	var equipBG *Cosmetic
+	if IsVip(galo) {
+		if galo.VipBackground != "" {
+			return galo.VipBackground
+		}
+	}
+	for _, item := range galo.Items {
+		if item.Equip && item.Type == entities.CosmeticType {
+			c := Cosmetics[item.ItemID]
+			if c.Type == Background {
+				equipBG = c
+				break
+			}
+		}
+	}
+	if equipBG != nil {
+		return equipBG.Value
+	}
+	return "https://i.imgur.com/F64ybgg.jpg"
+}
 
 type Cosmetic struct {
 	Type   CosmeticType `json:"type"`
@@ -60,4 +83,16 @@ func SellCosmetic(cosmetic Cosmetic) int {
 		return 500
 	}
 	return 0
+}
+func GetBadges(galo *entities.User) []*Cosmetic {
+	badges := []*Cosmetic{}
+	for _, item := range galo.Items {
+		if item.Type == entities.CosmeticType {
+			cosmetic := Cosmetics[item.ItemID]
+			if cosmetic.Type == Badge {
+				badges = append(badges, cosmetic)
+			}
+		}
+	}
+	return badges
 }

@@ -315,3 +315,12 @@ func IsInLimit(user *entities.User) bool {
 	}
 	return user.TrainLimit >= max
 }
+
+func SkillToString(skill *Skill) (text string, effectText string) {
+	text = skill.Name
+	if skill.Effect[0] != 0 || skill.Effect[1] != 0 {
+		effect := Effects[int(skill.Effect[1])]
+		effectText = fmt.Sprintf("\n %d%% de causar %s", int(skill.Effect[0]*100), effect.Name)
+	}
+	return
+}

@@ -29,10 +29,10 @@ other="Imagem invalida"
 other="Inverta uma imagem"
 
 [InvertOpt1]
-other="Inverta o avatar de um usuario"
+other="Avatar de um usuario"
 
 [InvertOpt2]
-other="Url da imagem para inverter"
+other="Url da imagem"
 
 [EscreverHelp]
 other="Escreva mensagens engraçadas"
@@ -453,3 +453,12 @@ other="Selecione o background para equipar"
 
 [EquipItemSuccess]
 other="Voce equipou o item com sucesso"
+
+[LixeiraHelp]
+other="Transforme a imagem dos outros em um lixo"
+
+[ProfileHelp]
+other="Veja o perfil de um usuario"
+
+[GaloHelp]
+other="Veja as informaçoes do galo de um usuario"

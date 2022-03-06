@@ -1,11 +1,21 @@
 package utils
 
 import (
+	"asura/src/handler"
 	"image"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/andersfylling/disgord"
 )
+
+func DownloadAvatar(id disgord.Snowflake, size int, gif bool) (image.Image, error) {
+	user, _ := handler.Client.User(id).WithFlags(disgord.IgnoreCache).Get()
+	avatar, _ := user.AvatarURL(size, gif)
+	avatar = strings.Replace(avatar, ".webp", ".png", 1)
+	return DownloadImage(avatar)
+}
 
 func CheckImage(url string) bool {
 	req, err := http.NewRequest("HEAD", url, nil)
@@ -40,4 +50,24 @@ func DownloadImage(url string) (image.Image, error) {
 		return nil, err
 	}
 	return img, nil
+}
+
+func GetUrl(itc *disgord.InteractionCreate) string {
+	url, _ := itc.Member.User.AvatarURL(1024, false)
+
+	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
+
+	if len(itc.Data.Options) > 0 {
+		if itc.Data.Options[0].Name == "user" {
+			user := GetUser(itc, 0)
+			url, _ = user.AvatarURL(1024, false)
+		} else {
+			_url := itc.Data.Options[0].Value.(string)
+
+			if CheckImage(replacer.Replace(url)) {
+				url = _url
+			}
+		}
+	}
+	return url
 }

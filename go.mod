@@ -10,7 +10,7 @@ require (
 	github.com/BurntSushi/toml v1.0.0 // indirect
 	github.com/andersfylling/disgord v0.34.0
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/fogleman/gg v1.3.0 // indirect
+	github.com/fogleman/gg v1.3.1-0.20210928143535-8febc0f526ad
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -26,7 +26,7 @@ require (
 	github.com/uptrace/bun/extra/bundebug v1.0.21 // indirect
 	github.com/valyala/fasthttp v1.31.0
 	golang.org/x/crypto v0.0.0-20220126234351-aa10faf2a1f8 // indirect
-	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
+	golang.org/x/image v0.0.0-20220302094943-723b81ca9867 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7 // indirect
