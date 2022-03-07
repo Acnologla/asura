@@ -150,6 +150,9 @@ func runEquip(session disgord.Session, msg *disgord.Message, args []string) {
 							galo.Galos = galo.Galos[0 : len(galo.Galos)-1]
 							return galo, nil
 						})
+						if gal.Type == 0 {
+							return
+						}
 						newGalo := rinha.Classes[gal.Type]
 						tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
 						telemetry.Debug(fmt.Sprintf("%s Sell %s", tag, newGalo.Name), map[string]string{
