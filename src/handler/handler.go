@@ -78,6 +78,9 @@ func GetCommand(name string) Command {
 
 func Run(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := GetCommand(itc.Data.Name)
+	if command.Run == nil {
+		return nil
+	}
 	locale := translation.GetLocale(itc)
 	if cooldown, ok := GetCooldown(itc.Member.User.ID, command); ok {
 		needTime := command.Cooldown - int(time.Since(cooldown).Seconds())
