@@ -69,7 +69,7 @@ func runTrashCan(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespo
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
-			Files: []disgord.CreateMessageFileParams{{
+			Files: []disgord.CreateMessageFile{{
 				Reader:     bytes.NewReader(b.Bytes()),
 				FileName:   "lixeira.jpg",
 				SpoilerTag: false},

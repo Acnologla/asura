@@ -173,7 +173,7 @@ func runGalo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
-			Files: []disgord.CreateMessageFileParams{{
+			Files: []disgord.CreateMessageFile{{
 				Reader:     bytes.NewReader(b.Bytes()),
 				FileName:   "galo.jpg",
 				SpoilerTag: false},

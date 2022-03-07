@@ -222,7 +222,7 @@ func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
-			Files: []disgord.CreateMessageFileParams{{
+			Files: []disgord.CreateMessageFile{{
 				Reader:     bytes.NewReader(b.Bytes()),
 				FileName:   "profile.jpg",
 				SpoilerTag: false},

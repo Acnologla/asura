@@ -13,12 +13,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/andersfylling/disgord"
 	"github.com/google/uuid"
 )
 
 type Rarity int
 
 var client = &http.Client{}
+var TopToken string
 
 const (
 	Common Rarity = iota
@@ -79,6 +81,9 @@ var Sprites [][]string
 var Cosmetics []*Cosmetic
 var Upgrades []Upgrade
 
+func SetTopToken(token string) {
+	TopToken = token
+}
 func init() {
 	str, _ := os.Getwd()
 	if strings.HasSuffix(str, "test") {
@@ -323,4 +328,20 @@ func SkillToString(skill *Skill) (text string, effectText string) {
 		effectText = fmt.Sprintf("\n %d%% de causar %s", int(skill.Effect[0]*100), effect.Name)
 	}
 	return
+}
+
+func HasVoted(id disgord.Snowflake) bool {
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://top.gg/api/bots/%d/check?userId=%d", 470684281102925844, id), nil)
+	if err != nil {
+		return false
+	}
+	req.Header.Add("Authorization", TopToken)
+	resp, err := client.Do(req)
+	if err == nil {
+		defer resp.Body.Close()
+		var vote Vote
+		json.NewDecoder(resp.Body).Decode(&vote)
+		return vote.Voted == 1
+	}
+	return false
 }

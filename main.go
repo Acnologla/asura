@@ -6,6 +6,7 @@ import (
 	"asura/src/database"
 	"asura/src/firebase"
 	"asura/src/handler"
+	"asura/src/rinha"
 	"asura/src/telemetry"
 	"fmt"
 	"log"
@@ -42,6 +43,7 @@ func main() {
 			panic("Cannot read the motherfucking envfile")
 		}
 	}
+	rinha.SetTopToken(os.Getenv("TOP_TOKEN"))
 	telemetry.Init()
 	cache.Init()
 	_, err := database.Connect(database.GetEnvConfig())

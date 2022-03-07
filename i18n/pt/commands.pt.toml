@@ -489,3 +489,24 @@ other="Voce ganhou o item {{.name}} ({{.rarity}})"
 
 [DungeonWinLootbox]
 other="Voce ganhou uma lootbox {{.}}"
+
+[DailyHelp]
+other="Pegue seu bonus diario"
+
+[DailyMessage]
+other="Voce ganhou **{{.money}}** de dinheiro, **{{.xp}}** de xp\n\nStrike: **{{.strikes}}**"
+
+[VoteMessage]
+other="Para pegar o bonus diario voce precisa votar em mim.\n Voce pode pegar o bonus diario a cada 12 horas\nLink para votar:\nhttps://top.gg/bot/470684281102925844"
+
+[TimeMessage]
+other="Faltam **{{.hours}}** horas e **{{.minutes}}** minutos para voce poder usar o daily novamente"
+
+[PragaHelp]
+other="Transforme o usuario em uma praga"
+
+[NuncaHelp]
+other="Transforme o usuario em nunca"
+
+[MonkeyHelp]
+other="Transforme o usuario em um macaco"
