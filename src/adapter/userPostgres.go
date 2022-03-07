@@ -25,6 +25,8 @@ func (adapter UserAdapterPsql) GetUser(id disgord.Snowflake, relations ...string
 	query.Where("id = ?", id).Scan(context.Background())
 	if user.ID == 0 {
 		user.ID = id
+		user.Money = 100000
+		user.AsuraCoin = 10000
 		adapter.SetUser(user)
 		adapter.InsertRooster(&entities.Rooster{
 			Type:   rinha.GetCommonOrRare(),
