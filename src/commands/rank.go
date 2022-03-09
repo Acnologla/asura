@@ -107,7 +107,7 @@ func runRank(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 				return (35 * u.Galos[0].Resets) + rinha.CalcLevel(u.Galos[0].Xp)
 			}
 		case "vitorias":
-			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "wins")
+			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "win")
 			data = func(u *entities.User) int {
 				return u.Win
 			}

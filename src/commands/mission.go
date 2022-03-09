@@ -21,7 +21,7 @@ func init() {
 		Description: translation.T("MissionHelp", "pt"),
 		Run:         runMission,
 		Cooldown:    10,
-		Category:    handler.Profile,
+		Category:    handler.Rinha,
 	})
 }
 

@@ -196,8 +196,19 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 				if !ok {
 					return u
 				}
+				if lb != "cosmetica" && lb != "items" {
+					if len(u.Galos) >= 10 {
+						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+							Type: disgord.InteractionCallbackChannelMessageWithSource,
+							Data: &disgord.CreateInteractionResponseData{
+								Content: "Voce ja chegou no limite de galos (10)",
+							},
+						})
+					}
+					return u
+				}
 				database.User.RemoveItem(u.Items, lbID)
-				newVal, pity = rinha.Open(i, &user)
+				newVal, pity = rinha.Open(i, &u)
 				u.Pity = pity
 				if lb == "cosmetica" {
 					database.User.InsertItem(itc.Member.UserID, u.Items, newVal, entities.CosmeticType)

@@ -82,16 +82,16 @@ func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 	}
 	clan := database.Clan.GetUserClan(user.ID).Clan
 	img = resize.Resize(600, 250, img, resize.Lanczos3)
-	dc := gg.NewContext(600, 430)
+	dc := gg.NewContext(600, 445)
 
-	dc.DrawRoundedRectangle(0, 0, 600, 430, 10)
+	dc.DrawRoundedRectangle(0, 0, 600, 445, 10)
 	dc.Fill()
 
 	dc.DrawRoundedRectangle(0, 0, 600, 200, 10)
 	dc.Clip()
 	dc.DrawImage(img, 0, 0)
 	dc.ResetClip()
-	dc.DrawRoundedRectangle(0, 0, 600, 430, 10)
+	dc.DrawRoundedRectangle(0, 0, 600, 445, 10)
 	dc.Clip()
 
 	dc.SetRGB(0.8, 0.31, 0.31)
@@ -99,7 +99,7 @@ func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 	dc.Fill()
 
 	dc.SetRGB(0.9, 0.9, 0.9)
-	dc.DrawRectangle(0, 220, 200, 220)
+	dc.DrawRectangle(0, 220, 200, 285)
 	dc.Fill()
 
 	dc.DrawCircle(100, 190, radius+8)
@@ -116,29 +116,28 @@ func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 	dc.SetRGB(0.3, 0.3, 0.3)
 
 	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 13)
-	dc.DrawString("GALOS", 220, 245)
-	dc.DrawLine(220, 250, 580, 250)
 	dc.Stroke()
 
-	dc.DrawString("INFO", 220, 345)
-	dc.DrawLine(220, 350, 580, 350)
+	dc.DrawString("INFO", 220, 375)
+	dc.DrawLine(220, 380, 580, 380)
 	dc.Stroke()
 	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 16)
-	dc.DrawStringAnchored("WINS", 260, 380, 0.5, 0.5)
-	dc.DrawStringAnchored("LOSES", 350, 380, 0.5, 0.5)
-	dc.DrawStringAnchored("CLAN", 440, 380, 0.5, 0.5)
-	dc.DrawStringAnchored("GALOS", 530, 380, 0.5, 0.5)
+	dc.DrawStringAnchored("WINS", 260, 400, 0.5, 0.5)
+	dc.DrawStringAnchored("LOSES", 350, 400, 0.5, 0.5)
+	dc.DrawStringAnchored("CLAN", 440, 400, 0.5, 0.5)
+	dc.DrawStringAnchored("GALOS", 530, 400, 0.5, 0.5)
 
 	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
-	dc.DrawStringAnchored(strconv.Itoa(galo.Win), 260, 400, 0.5, 0.5)
-	dc.DrawStringAnchored(strconv.Itoa(galo.Lose), 350, 400, 0.5, 0.5)
-	dc.DrawStringAnchored("#"+strconv.Itoa(GetClanPos(clan)), 440, 400, 0.5, 0.5)
-	dc.DrawStringAnchored(strconv.Itoa(len(galo.Galos)), 530, 400, 0.5, 0.5)
+	dc.DrawStringAnchored(strconv.Itoa(galo.Win), 260, 420, 0.5, 0.5)
+	dc.DrawStringAnchored(strconv.Itoa(galo.Lose), 350, 420, 0.5, 0.5)
+	dc.DrawStringAnchored("#"+strconv.Itoa(GetClanPos(clan)), 440, 420, 0.5, 0.5)
+	dc.DrawStringAnchored(strconv.Itoa(len(galo.Galos)), 530, 420, 0.5, 0.5)
 
-	dc.LoadFontFace("./resources/Raleway-Light.ttf", 13)
+	dc.LoadFontFace("./resources/Raleway-Light.ttf", 14)
 
-	dc.DrawString("Clan", 10, 280)
-	dc.DrawString("Money", 10, 310)
+	dc.DrawString("Clan", 10, 285)
+	dc.DrawString("Money", 10, 315)
+
 	clanName := "Nenhum"
 	if clan != nil {
 		if clan.Name != "" {
@@ -146,21 +145,21 @@ func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 
 		}
 	}
-	dc.DrawStringAnchored(clanName, 190, 280, 1, 0)
-	dc.DrawStringAnchored(strconv.Itoa(galo.Money), 190, 310, 1, 0)
+	dc.DrawStringAnchored(clanName, 190, 285, 1, 0)
+	dc.DrawStringAnchored(strconv.Itoa(galo.Money), 190, 315, 1, 0)
 
 	dc.SetRGB(1, 1, 1)
 	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
 	dc.DrawString(user.Username, 185, 204)
 
 	dc.SetRGB(0.3, 0.3, 0.3)
-	dc.DrawLine(10, 320, 190, 320)
+	dc.DrawLine(10, 328, 190, 328)
 	dc.Stroke()
 
 	dc.SetRGB(0.7, 0.7, 0.7)
 	for i := 0; i < 4; i++ {
 		for j := 0; j < 2; j++ {
-			dc.DrawRectangle(float64(10+i*47), float64(332+j*47), 40, 40)
+			dc.DrawRectangle(float64(10+i*47), float64(345+j*47), 40, 40)
 			dc.Fill()
 		}
 	}
@@ -182,21 +181,31 @@ func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 			badgeImg = resize.Resize(40, 40, badgeImg, resize.Lanczos3)
 
 			badgeN++
-			dc.DrawImage(badgeImg, 10+i*47, 332+j*47)
+			dc.DrawImage(badgeImg, 10+i*47, 345+j*47)
 		}
 	}
 	dc.SetRGB(0.9, 0.9, 0.9)
 	for i := 0; i < 5; i++ {
-		dc.DrawRectangle(float64(220+i*75), 265, 55, 55)
+		dc.DrawRectangle(float64(220+i*75), 235, 55, 55)
 		dc.Fill()
 	}
-
+	for i := 0; i < 5; i++ {
+		dc.DrawRectangle(float64(220+i*75), 300, 55, 55)
+		dc.Fill()
+	}
 	for i := range galo.Galos {
-		if i == 4 {
+		if i == 10 {
 			break
 		}
+		val := 0.0
+
+		x := i * 75
+		if i >= 5 {
+			val = 65
+			x -= 5 * 75
+		}
 		if rinha.Classes[galo.Galos[i].Type].Rarity == rinha.Mythic {
-			grad := gg.NewLinearGradient(float64(218+i*75), 263, float64(218+i*75)+59, 263+59)
+			grad := gg.NewLinearGradient(float64(218+x), 233+val, float64(218+x)+59, 233+val+59)
 			grad.AddColorStop(0, color.RGBA{255, 0, 0, 255})
 			grad.AddColorStop(0.2, color.RGBA{0, 255, 0, 255})
 			grad.AddColorStop(0.4, color.RGBA{0, 0, 255, 255})
@@ -211,9 +220,9 @@ func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 
 		userGaloImg := downloadedSprites[galo.Galos[i].Type-1]
 
-		dc.DrawRectangle(float64(218+i*75), 263, 59, 59)
+		dc.DrawRectangle(float64(218+x), 233+val, 59, 59)
 		dc.Fill()
-		dc.DrawImage(userGaloImg, 220+i*75, 265)
+		dc.DrawImage(userGaloImg, 220+x, 235+int(val))
 	}
 	// And here we encode it to send
 	var b bytes.Buffer
