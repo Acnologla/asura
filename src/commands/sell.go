@@ -56,7 +56,7 @@ func genSellOptions(user *entities.User, isRooster bool) (opts []*disgord.Select
 				itemName = cosmetic.Name
 				price = rinha.SellCosmetic(*cosmetic)
 			}
-			if label != "" {
+			if itemName != "" {
 				label = fmt.Sprintf("[%d money] - %s", price, itemName)
 				opts = append(opts, &disgord.SelectMenuOption{
 					Label:       label,

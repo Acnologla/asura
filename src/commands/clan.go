@@ -449,10 +449,10 @@ func runClan(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 				database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
 					var money int
 					if upgrade == "membros" {
-						money = rinha.CalcClanUpgrade(clan.MembersUpgrade, 1)
+						money = rinha.CalcClanUpgrade(c.MembersUpgrade, 1)
 					}
 					if upgrade == "missão" {
-						money = rinha.CalcClanUpgrade(clan.MissionsUpgrade, 1)
+						money = rinha.CalcClanUpgrade(c.MissionsUpgrade, 1)
 					}
 					if money > c.Money {
 						msg = "ClanNoMoney"

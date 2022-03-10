@@ -102,6 +102,9 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 			},
 		})
 		handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+			if interaction.Member.UserID != itc.Member.UserID {
+				return
+			}
 			if len(interaction.Data.Values) == 0 {
 				return
 			}
@@ -179,6 +182,9 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 			},
 		})
 		handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+			if interaction.Member.UserID != itc.Member.UserID {
+				return
+			}
 			if len(interaction.Data.Values) == 0 {
 				return
 			}
@@ -204,8 +210,9 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 								Content: "Voce ja chegou no limite de galos (10)",
 							},
 						})
+						return u
+
 					}
-					return u
 				}
 				database.User.RemoveItem(u.Items, lbID)
 				newVal, pity = rinha.Open(i, &u)
