@@ -78,28 +78,28 @@ func SellItem(item Item) int {
 
 func ItemToString(item *Item) string {
 	if item.Effect == 1 {
-		return fmt.Sprintf("Aumenta o dano dos seus ataques em **%d%%** ", int(math.Round((item.Payload-1)*100)))
+		return fmt.Sprintf("Aumenta o dano dos seus ataques em %d%% ", int(math.Round((item.Payload-1)*100)))
 	}
 	if item.Effect == 2 {
-		return fmt.Sprintf("Tem chance de causar **%s**", Effects[int(item.Payload)].Name)
+		return fmt.Sprintf("Tem chance de causar %s", Effects[int(item.Payload)].Name)
 	}
 	if item.Effect == 3 {
-		return fmt.Sprintf("Aumenta a probabilidade dos seus efeitos em **%d%%**", int(math.Round((item.Payload)*100)))
+		return fmt.Sprintf("Aumenta a probabilidade dos seus efeitos em %d%%", int(math.Round((item.Payload)*100)))
 	}
 	if item.Effect == 4 {
-		return fmt.Sprintf("Aumenta sua vida maxima em **%d%%**", int(math.Round((item.Payload-1)*100)))
+		return fmt.Sprintf("Aumenta sua vida maxima em %d%%", int(math.Round((item.Payload-1)*100)))
 	}
 	if item.Effect == 5 {
-		return fmt.Sprintf("Bloqueia **%d%%** de dano", int(math.Round((1-item.Payload)*100)))
+		return fmt.Sprintf("Bloqueia %d%% de dano", int(math.Round((1-item.Payload)*100)))
 	}
 	if item.Effect == 6 {
-		return fmt.Sprintf("Aumenta o dano dos seus efeitos em **%d%%** ", int(math.Round((item.Payload-1)*100)))
+		return fmt.Sprintf("Aumenta o dano dos seus efeitos em %d%% ", int(math.Round((item.Payload-1)*100)))
 	}
 	if item.Effect == 7 {
-		return fmt.Sprintf("Voce reflete todo o dano levado de ataques em **%d%%** ", int(item.Payload*100))
+		return fmt.Sprintf("Voce reflete todo o dano levado de ataques em %d%% ", int(item.Payload*100))
 	}
 	if item.Effect == 8 {
-		return fmt.Sprintf("Voce ganha **%d**%% de xp adicional por train", int(item.Payload*100))
+		return fmt.Sprintf("Voce ganha %d%% de xp adicional por train", int(item.Payload*100))
 	}
 	if item.Effect == 9 {
 		return "Voce ganha 1 de ouro extra e 3 de xp adicional por train"

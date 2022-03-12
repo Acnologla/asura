@@ -543,3 +543,6 @@ other="Voce vendeu o galo com sucesso por **{{.}}** de dinheiro"
 
 [SellGaloAc]
 other="Voce vendeu o galo com sucesso por **{{.}}** asura coins"
+
+[GaloUpgrade]
+other="Voce deu upgrade no seu galo com sucesso"

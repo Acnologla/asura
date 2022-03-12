@@ -2,10 +2,12 @@ package commands
 
 import (
 	"asura/src/database"
+	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
 	"asura/src/utils"
 	"bytes"
+	"context"
 	"fmt"
 	"image/color"
 	"image/png"
@@ -171,14 +173,62 @@ func runGalo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 	var b bytes.Buffer
 	pw := io.Writer(&b)
 	png.Encode(pw, dc.Image())
-	return &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Files: []disgord.CreateMessageFile{{
-				Reader:     bytes.NewReader(b.Bytes()),
-				FileName:   "galo.jpg",
-				SpoilerTag: false},
-			},
+	data := &disgord.CreateInteractionResponseData{
+		Files: []disgord.CreateMessageFile{{
+			Reader:     bytes.NewReader(b.Bytes()),
+			FileName:   "galo.jpg",
+			SpoilerTag: false},
 		},
 	}
+	if level >= 35 {
+		data.Components = []*disgord.MessageComponent{
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:     disgord.MessageComponentButton,
+						Label:    "Upgrade",
+						CustomID: "upgrade",
+						Style:    disgord.Primary,
+					},
+				},
+			},
+		}
+		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: data,
+		})
+		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+			done := false
+			if ic.Member.UserID == user.ID {
+				database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+					database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+						level := rinha.CalcLevel(r.Xp)
+						if level >= 35 {
+							done = true
+							r.Equipped = []int{}
+							r.Xp = 0
+							r.Resets++
+						}
+						return r
+					})
+					return u
+				}, "Galos")
+				if done {
+					ic.Reply(context.Background(), handler.Client, &disgord.CreateInteractionResponse{
+						Type: disgord.InteractionCallbackChannelMessageWithSource,
+						Data: &disgord.CreateInteractionResponseData{
+							Content: translation.T("GaloUpgrade", translation.GetLocale(itc)),
+						},
+					})
+				}
+			}
+		}, 100)
+	} else {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: data,
+		}
+	}
+	return nil
 }

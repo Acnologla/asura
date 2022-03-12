@@ -6,6 +6,7 @@ import (
 	"asura/src/handler"
 	"asura/src/rinha"
 	"context"
+	"fmt"
 
 	"asura/src/translation"
 
@@ -30,7 +31,7 @@ func genEquipOptions(user *entities.User) (opts []*disgord.SelectMenuOption) {
 			opts = append(opts, &disgord.SelectMenuOption{
 				Label:       class.Name,
 				Value:       galo.ID.String(),
-				Description: "Equipar galo galo " + class.Name,
+				Description: fmt.Sprintf("Equipar galo %s (level %d)", class.Name, rinha.CalcLevel(galo.Xp)),
 			})
 		}
 	}
