@@ -266,7 +266,7 @@ func runTrain(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 				clanUser := database.Clan.GetUserClan(discordUser.ID)
 				clan := clanUser.Clan
 
-				if clan != nil {
+				if clan.Name != "" {
 					xpOb++
 					level := rinha.ClanXpToLevel(clan.Xp)
 					if level >= 2 {

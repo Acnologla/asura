@@ -182,7 +182,7 @@ func runSell(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 				if galo != nil && !galo.Equip {
 					class := rinha.Classes[galo.Type]
 					database.User.RemoveRooster(itemID)
-					msg = "SellItem"
+					msg = "SellGalo"
 					money, asuraCoins := rinha.Sell(class.Rarity, galo.Xp, galo.Resets)
 					price = money
 					if price == 0 {
@@ -193,7 +193,7 @@ func runSell(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 
 			}
 			if isAsuraCoins {
-				msg = "SellItemAsuraCoin"
+				msg = "SellGaloAc"
 				u.AsuraCoin += price
 			} else {
 				u.Money += price

@@ -57,7 +57,7 @@ func genEquipItemsOptions(user *entities.User, itemType entities.ItemType) (opts
 					opts = append(opts, &disgord.SelectMenuOption{
 						Label:       _item.Name,
 						Value:       item.ID.String(),
-						Description: "Equipar item " + _item.Name,
+						Description: rinha.ItemToString(_item),
 					})
 				}
 			}

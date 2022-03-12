@@ -510,3 +510,36 @@ other="Transforme o usuario em nunca"
 
 [MonkeyHelp]
 other="Transforme o usuario em um macaco"
+
+[UnoHelp]
+other="Jogue uno"
+
+[UnoCreateHelp]
+other="Inicia o uno no seu servidor"
+
+[UnoJoinHelp]
+other="Entre no uno do seu servidor"
+
+[UnoPlayHelp]
+other="Jogue uma carta"
+
+[UnoPlayIDHelp]
+other="Id da carta"
+
+[UnoBuyHelp]
+other="Compre uma carta"
+
+[UnoUnoHelp]
+other="Diga que esta no uno"
+
+[UnoLeaveHelp]
+other="Saia do uno"
+
+[UnoCardsHelp]
+other="Veja suas cartas"
+
+[SellGalo]
+other="Voce vendeu o galo com sucesso por **{{.}}** de dinheiro"
+
+[SellGaloAc]
+other="Voce vendeu o galo com sucesso por **{{.}}** asura coins"
