@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -172,10 +173,12 @@ func Init(appID, token string, session *disgord.Client) {
 			req, _ := http.NewRequest(method, _endpoint, reader)
 			req.Header.Add("Authorization", "Bot "+token)
 			req.Header.Add("Content-Type", "application/json")
-			_, err := client.Do(req)
+			res, err := client.Do(req)
 			if err != nil {
 				log.Fatal(err)
 			}
+			x, _ := ioutil.ReadAll(res.Body)
+			fmt.Println(string(x))
 		}
 		if commandR == nil {
 			fmt.Println("criando")
