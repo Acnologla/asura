@@ -8,6 +8,7 @@ import (
 	"asura/src/rinha/engine"
 	"asura/src/telemetry"
 	"asura/src/utils"
+	"context"
 	"fmt"
 	"strconv"
 
@@ -96,6 +97,12 @@ func runDungeon(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 			Type:  galoAdv.Type,
 			Equip: true,
 		}
+		itc.Reply(context.Background(), handler.Client, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "A batalha esta iniciando",
+			},
+		})
 		winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
 			GaloAuthor: &user,
 			GaloAdv: &entities.User{

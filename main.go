@@ -8,6 +8,7 @@ import (
 	"asura/src/handler"
 	"asura/src/rinha"
 	"asura/src/telemetry"
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -29,6 +30,21 @@ func initBot() {
 		client.UpdateStatusString("Use /help para ver meus comandos | https://acnologla.github.io/asura-site/")
 		go telemetry.MetricUpdate(client)
 		fmt.Println("Logged in")
+	})
+	client.Gateway().MessageCreate(func(s disgord.Session, h *disgord.MessageCreate) {
+		go func() {
+			msg := h.Message
+			if !msg.Author.Bot {
+				if msg.GuildID != 0 {
+					for _, user := range msg.Mentions {
+						if user.ID.String() == appID {
+							msg.Reply(context.Background(), s, "Use /help para ver meus comandos\nCaso meus comandos não aparecam me readicione no servidor com este link:\nhttps://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%%20bot&permissions=8")
+							break
+						}
+					}
+				}
+			}
+		}()
 	})
 	client.Gateway().InteractionCreate(func(s disgord.Session, h *disgord.InteractionCreate) {
 		handler.InteractionChannel <- h
