@@ -2,32 +2,31 @@ package commands
 
 import (
 	"asura/src/handler"
-	"context"
 	"fmt"
 	"runtime"
 	"time"
 	"unsafe"
 
+	"asura/src/translation"
+
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"botinfo", "infobot", "bi"},
-		Run:       runBotinfo,
-		Available: true,
-		Cooldown:  15,
-		Usage:     "j!botinfo",
-		Help:      "Veja as informaçoes do bot",
+	handler.RegisterCommand(handler.Command{
+		Name:        "botinfo",
+		Description: translation.T("BotInfoHelp", "pt"),
+		Run:         runBotInfo,
+		Cooldown:    15,
 	})
 }
 
-func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
-	guildSize := len(session.GetConnectedGuilds())
+func runBotInfo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	guildSize := len(handler.Client.GetConnectedGuilds())
 	var memory runtime.MemStats
 	runtime.ReadMemStats(&memory)
 	ramUsage := memory.Alloc / 1000 / 1000
-	guild, err := session.Guild(msg.GuildID).Get()
+	guild, err := handler.Client.Guild(itc.GuildID).Get()
 	guildUsage := 0
 	if err == nil {
 		guildUsage = int(unsafe.Sizeof(*guild))
@@ -57,22 +56,35 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 		guildUsageText = fmt.Sprintf("Este servidor está usando %.2fMB de memória ram", float32(guildUsage)/1000/1000)
 	}
 	ping, _ := handler.Client.HeartbeatLatencies()
-	shard := disgord.ShardID(msg.GuildID, 1)
-	myself, err := handler.Client.Cache().GetCurrentUser()
 	if err != nil {
-		return
+		return nil
 	}
 	botInfo, err := handler.Client.Gateway().GetBot()
 	if err != nil {
-		return
+		return nil
 	}
+	shard := disgord.ShardID(itc.GuildID, botInfo.Shards)
+	myself, _ := handler.Client.Cache().GetCurrentUser()
+
 	avatar, _ := myself.AvatarURL(512, true)
 	date := ((uint64(myself.ID) >> 22) + 1420070400000) / 1000
 	readyAt := int(time.Since(handler.ReadyAt).Minutes())
 	freeWorkers := handler.GetFreeWorkers()
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Embed: &disgord.Embed{
-			Title: fmt.Sprintf("Asura (Shard %d)", disgord.ShardID(msg.GuildID, botInfo.Shards)),
+	description := translation.T("BotInfoDescription", translation.GetLocale(itc), map[string]interface{}{
+		"workers":     handler.Workers,
+		"freeWorkers": freeWorkers,
+		"createdTime": int((uint64(time.Now().Unix()) - date) / 60 / 60 / 24),
+		"guilds":      guildSize,
+		"ram":         ramUsage,
+		"ping":        ping[shard].Milliseconds(),
+		"shards":      botInfo.Shards,
+		"days":        readyAt / 60 / 24,
+		"hours":       readyAt / 60 % 24,
+		"minutes":     readyAt % 60,
+	})
+	res := &disgord.CreateInteractionResponseData{
+		Embeds: []*disgord.Embed{{
+			Title: fmt.Sprintf("Asura (Shard %d)", disgord.ShardID(itc.GuildID, botInfo.Shards)),
 			Color: 65535,
 			Thumbnail: &disgord.EmbedThumbnail{
 				URL: avatar,
@@ -80,23 +92,15 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			Footer: &disgord.EmbedFooter{
 				Text: guildUsageText,
 			},
-			Description: fmt.Sprintf(`
-			Workers: **%d** (**%d** Livres)
-			Bot criado a **%d** dias
-			Servidores: **%d**
-			Ram usada: **%d**MB
-			Ping: **%dms**
-			Shards: **%d**
-			Bot online a %d dias %d horas %d minutos
-			`, handler.Workers, freeWorkers, int((uint64(time.Now().Unix())-date)/60/60/24), guildSize, ramUsage, ping[shard].Milliseconds(), botInfo.Shards, readyAt/60/24, readyAt/60%24, readyAt%60),
-		},
+			Description: description,
+		}},
 		Components: []*disgord.MessageComponent{
 			{
 				Type: disgord.MessageComponentActionRow,
 				Components: []*disgord.MessageComponent{
 					{
 						Type:  disgord.MessageComponentButton,
-						Label: "Convite",
+						Label: "Invite",
 						Style: disgord.Link,
 						Url:   "https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%20bot&permissions=8",
 					},
@@ -108,18 +112,22 @@ func runBotinfo(session disgord.Session, msg *disgord.Message, args []string) {
 					},
 					{
 						Type:  disgord.MessageComponentButton,
-						Label: "Suporte",
+						Label: "Support",
 						Style: disgord.Link,
 						Url:   "https://discord.gg/tdVWQGV",
 					},
 					{
 						Type:  disgord.MessageComponentButton,
-						Label: "Vote em mim",
+						Label: "Vote",
 						Style: disgord.Link,
 						Url:   "https://top.gg/bot/470684281102925844",
 					},
 				},
 			},
 		},
-	})
+	}
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: res,
+	}
 }

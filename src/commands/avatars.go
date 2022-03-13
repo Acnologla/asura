@@ -1,8 +1,9 @@
 package commands
 
 import (
-	"asura/src/database"
+	"asura/src/firebase"
 	"asura/src/handler"
+	"asura/src/translation"
 	"asura/src/utils"
 	"context"
 	"fmt"
@@ -12,79 +13,116 @@ import (
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"oldavatars", "avatars"},
-		Run:       runAvatars,
-		Available: true,
-		Cooldown:  5,
-		Usage:     "j!oldavatars <usuario>",
-		Help:      "Veja os avatares antigos de alguem",
+	handler.RegisterCommand(handler.Command{
+		Name:        "avatars",
+		Description: translation.T("AvatarsHelp", "pt"),
+		Run:         runAvatars,
+		Cooldown:    10,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Name:        "user",
+			Type:        disgord.OptionTypeUser,
+			Description: "user avatar",
+			Required:    true,
+		}),
 	})
 }
 
-func runAvatars(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg, args, session)
+func runAvatars(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	user := utils.GetUser(itc, 0)
 	ctx := context.Background()
-	var userinfo database.User
+	var userinfo firebase.User
 	var private bool
 	id := strconv.FormatUint(uint64(user.ID), 10)
-	database.Database.NewRef("users/"+id).Get(ctx, &userinfo)
-	database.Database.NewRef("private/"+id).Get(ctx, &private)
+	firebase.Database.NewRef("users/"+id).Get(ctx, &userinfo)
+	firebase.Database.NewRef("private/"+id).Get(ctx, &private)
 	if private {
-		msg.Reply(ctx, session, msg.Author.Mention()+", O historico de avatar desse usuario é privado")
-		return
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T("Private", translation.GetLocale(itc)),
+			},
+		}
 	}
 	if len(userinfo.Avatars) == 0 {
-		msg.Reply(ctx, session, msg.Author.Mention()+", Não tenho o historico de avatares desse usuario")
-		return
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T("NotFoundAvatars", translation.GetLocale(itc)),
+			},
+		}
 	}
 	count := 0
-	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Embed: &disgord.Embed{
-			Color: 65535,
-			Title: fmt.Sprintf("Avatar numero %d", count+1),
-			Image: &disgord.EmbedImage{
-				URL: userinfo.Avatars[0],
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Embeds: []*disgord.Embed{
+				{
+					Color: 65535,
+					Title: fmt.Sprintf("Avatar %d", count+1),
+					Image: &disgord.EmbedImage{
+						URL: userinfo.Avatars[0],
+					},
+				},
+			},
+			Components: []*disgord.MessageComponent{
+				{
+					Type: disgord.MessageComponentActionRow,
+					Components: []*disgord.MessageComponent{
+						{
+							Type:  disgord.MessageComponentButton,
+							Style: disgord.Primary,
+							Emoji: &disgord.Emoji{
+								Name: "⬅️",
+							},
+							Label:    "\u200f",
+							CustomID: "back",
+						},
+						{
+							Type:  disgord.MessageComponentButton,
+							Style: disgord.Primary,
+							Emoji: &disgord.Emoji{
+								Name: "➡️",
+							},
+							Label:    "\u200f",
+							CustomID: "next",
+						},
+					},
+				},
 			},
 		},
 	})
-	if err != nil {
-		return
-	}
-	utils.Try(func() error {
-		return message.React(context.Background(), session, "⬅️")
-	}, 3)
-	utils.Try(func() error {
-		return message.React(context.Background(), session, "➡️")
-	}, 3)
-	handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
-		if !removed && msg.Author.ID == u {
-			msgUpdater := session.Channel(msg.ChannelID).Message(message.ID).UpdateBuilder()
-			if emoji.Name == "⬅️" {
+	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+		if itc.Member.User.ID == interaction.Member.User.ID {
+			if interaction.Data.CustomID == "back" {
 				if count == 0 {
 					count = len(userinfo.Avatars) - 1
 				} else {
 					count--
 				}
-			}
-			if emoji.Name == "➡️" {
+			} else {
 				if count == len(userinfo.Avatars)-1 {
 					count = 0
 				} else {
 					count++
 				}
 			}
-			if emoji.Name == "➡️" || emoji.Name == "⬅️" {
-				msgUpdater.SetEmbed(&disgord.Embed{
-					Color: 65535,
-					Title: fmt.Sprintf("Avatar numero %d", count+1),
-					Image: &disgord.EmbedImage{
-						URL: userinfo.Avatars[count],
+
+			handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackUpdateMessage,
+				Data: &disgord.CreateInteractionResponseData{
+					Embeds: []*disgord.Embed{
+						{
+
+							Color: 65535,
+							Title: fmt.Sprintf("Avatar %d", count+1),
+							Image: &disgord.EmbedImage{
+								URL: userinfo.Avatars[count],
+							},
+						},
 					},
-				})
-				msgUpdater.Execute()
-				session.Channel(msg.ChannelID).Message(message.ID).Reaction(emoji.Name).DeleteUser(u)
-			}
+				},
+			})
 		}
-	}, 60*10)
+	}, 60*5)
+	return nil
 }

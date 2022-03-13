@@ -2,21 +2,24 @@ package commands
 
 import (
 	"asura/src/handler"
-	"context"
+
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"suporte", "servidor"},
-		Run:       runSupport,
-		Available: true,
-		Cooldown:  1,
-		Usage:     "j!suporte",
-		Help:      "Veja meu servidor de suporte",
+	handler.RegisterCommand(handler.Command{
+		Name:        "suporte",
+		Description: "suport server",
+		Run:         runSupport,
+		Cooldown:    3,
 	})
 }
 
-func runSupport(session disgord.Session, msg *disgord.Message, args []string) {
-	msg.Reply(context.Background(), session, "https://discord.gg/tdVWQGV")
+func runSupport(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: "https://discord.gg/tdVWQGV",
+		},
+	}
 }

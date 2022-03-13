@@ -8,8 +8,27 @@ import (
 	"strconv"
 	"time"
 
+	"asura/src/translation"
+
 	"github.com/andersfylling/disgord"
 )
+
+func init() {
+	handler.RegisterCommand(handler.Command{
+		Name:        "2048",
+		Description: translation.T("2048Help", "pt"),
+		Run:         run2048,
+		Cooldown:    30,
+		Category:    handler.Games,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Name:        "size",
+			Type:        disgord.OptionTypeNumber,
+			MinValue:    3,
+			MaxValue:    6,
+			Description: translation.T("2048Size", "pt"),
+		}),
+	})
+}
 
 var arrows = []string{"➡", "⬇", "⬆", "⬅"}
 var numberEmojis = [10]string{":zero:", ":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:"}
@@ -68,18 +87,6 @@ func rotateBoard(board []([]int), c bool) []([]int) {
 	return rotatedBoard
 }
 
-func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"2048", "jogar2048"},
-		Run:       run2048,
-		Available: true,
-		Cooldown:  30,
-		Category:  3,
-		Usage:     "j!2048",
-		Help:      "Jogue 2048",
-	})
-}
-
 func draw2048Board(board []([]int)) (text string) {
 	for _, row := range board {
 		for _, tile := range row {
@@ -98,17 +105,30 @@ func drawPoints(points int) (text string) {
 	return
 }
 
-func run2048(session disgord.Session, msg *disgord.Message, args []string) {
+func generate2048Buttons() (buttons []*disgord.MessageComponent) {
+	buttons = []*disgord.MessageComponent{
+		{
+			Type: disgord.MessageComponentActionRow,
+		},
+	}
+	for _, arrow := range arrows {
+		buttons[0].Components = append(buttons[0].Components, &disgord.MessageComponent{
+			Type:  disgord.MessageComponentButton,
+			Style: disgord.Primary,
+			Label: "\u200f",
+			Emoji: &disgord.Emoji{
+				Name: arrow,
+			},
+			CustomID: arrow,
+		})
+	}
+	return
+}
+
+func run2048(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	size := 4
-	if len(args) > 0 {
-		n, err := strconv.Atoi(args[0])
-		if err == nil {
-			if 3 > n || n > 6 {
-				msg.Reply(context.Background(), session, "O Tamanho do tabuleiro deve ser entre 3 e 6")
-				return
-			}
-			size = n
-		}
+	if len(itc.Data.Options) > 0 {
+		size = int(itc.Data.Options[0].Value.(float64))
 	}
 	board := utils.MakeBoard(size, size)
 	for i := 0; i < 2; i++ {
@@ -116,81 +136,73 @@ func run2048(session disgord.Session, msg *disgord.Message, args []string) {
 	}
 	lastPlay := time.Now()
 	points := 0
-	message, err := msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Content: ":zero:\n\n" + draw2048Board(board),
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content:    ":zero:\n\n" + draw2048Board(board),
+			Components: generate2048Buttons(),
+		},
 	})
-	if err == nil {
-		mes := session.Channel(message.ChannelID).Message(message.ID)
-		for i := 0; i < 4; i++ {
-			utils.Try(func() error {
-				return message.React(context.Background(), session, arrows[i])
-			}, 5)
+	go func() {
+		for {
+			time.Sleep(time.Second)
+			if time.Since(lastPlay).Seconds()/60 >= 2 {
+				handler.DeleteHandler(itc.ID)
+
+				handler.Client.EditInteractionResponse(context.Background(), itc, &disgord.Message{
+					Content:    fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), draw2048Board(board)),
+					Components: []*disgord.MessageComponent{},
+				})
+				return
+			}
 		}
-		go func() {
-			for {
-				time.Sleep(time.Second)
-				if time.Since(lastPlay).Seconds()/60 >= 2 {
-					handler.DeleteHandler(message)
-					mes.DeleteAllReactions()
-					msgUpdater := mes.UpdateBuilder()
-					msgUpdater.SetContent(fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), draw2048Board(board)))
-					utils.Try(func() error {
-						_, err := msgUpdater.Execute()
-						return err
-					}, 10)
-					return
-				}
+	}()
+
+	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+		u := interaction.Member.UserID
+		if u == itc.Member.UserID {
+			oldBoard := utils.DeepClone(board)
+			if interaction.Data.CustomID == arrows[0] {
+				board = rotateBoard(board, true)
+				board = rotateBoard(board, true)
+				slideLeft(board, &points)
+				board = rotateBoard(board, false)
+				board = rotateBoard(board, false)
+			} else if interaction.Data.CustomID == arrows[1] {
+				board = rotateBoard(board, false)
+				slideLeft(board, &points)
+				board = rotateBoard(board, true)
+			} else if interaction.Data.CustomID == arrows[2] {
+				board = rotateBoard(board, true)
+				slideLeft(board, &points)
+				board = rotateBoard(board, false)
+			} else if interaction.Data.CustomID == arrows[3] {
+				slideLeft(board, &points)
 			}
-		}()
-		handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
-			if !removed {
-				if u == msg.Author.ID {
-					if utils.Includes(arrows, emoji.Name) {
-						oldBoard := utils.DeepClone(board)
-						if emoji.Name == arrows[0] {
-							board = rotateBoard(board, true)
-							board = rotateBoard(board, true)
-							slideLeft(board, &points)
-							board = rotateBoard(board, false)
-							board = rotateBoard(board, false)
-						} else if emoji.Name == arrows[1] {
-							board = rotateBoard(board, false)
-							slideLeft(board, &points)
-							board = rotateBoard(board, true)
-						} else if emoji.Name == arrows[2] {
-							board = rotateBoard(board, true)
-							slideLeft(board, &points)
-							board = rotateBoard(board, false)
-						} else if emoji.Name == arrows[3] {
-							slideLeft(board, &points)
+			if !utils.IsEqual(oldBoard, board) {
+				lastPlay = time.Now()
+				empty := []int{}
+				for i, row := range board {
+					for j, tile := range row {
+						if tile == 0 {
+							empty = append(empty, j+(i*len(board)))
 						}
-						if !utils.IsEqual(oldBoard, board) {
-							lastPlay = time.Now()
-							empty := []int{}
-							for i, row := range board {
-								for j, tile := range row {
-									if tile == 0 {
-										empty = append(empty, j+(i*len(board)))
-									}
-								}
-							}
-							if len(empty) > 0 {
-								n := empty[utils.RandInt(len(empty))]
-								board[n/len(board)][n%len(board)] = 2
-							}
-							msgUpdater := mes.UpdateBuilder()
-							msgUpdater.SetContent(fmt.Sprintf("%s\n\n%s", drawPoints(points), draw2048Board(board)))
-							utils.Try(func() error {
-								_, err := msgUpdater.Execute()
-								return err
-							}, 10)
-						}
-						mes.Reaction(emoji.Name).DeleteUser(u)
 					}
-				} else if u != message.Author.ID {
-					mes.Reaction(emoji.Name).DeleteUser(u)
 				}
+				if len(empty) > 0 {
+					n := empty[utils.RandInt(len(empty))]
+					board[n/len(board)][n%len(board)] = 2
+				}
+				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackUpdateMessage,
+					Data: &disgord.CreateInteractionResponseData{
+						Content: fmt.Sprintf("%s\n\n%s", drawPoints(points), draw2048Board(board)),
+					},
+				})
 			}
-		}, 0)
-	}
+
+		}
+
+	}, 0)
+	return nil
 }

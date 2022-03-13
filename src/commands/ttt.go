@@ -2,26 +2,33 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/utils"
 	"context"
 	"fmt"
 	"strconv"
+
+	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"jogodavelha", "ttt", "tictactoe"},
-		Run:       runTTT,
-		Available: true,
-		Cooldown:  15,
-		Usage:     "j!jogodavelha @usuario",
-		Help:      "Jogue jogo da velha",
-		Category:  3,
+	handler.RegisterCommand(handler.Command{
+		Name:        "ttt",
+		Description: translation.T("TTTHelp", "pt"),
+		Run:         runTTT,
+		Cooldown:    10,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Type:        disgord.OptionTypeUser,
+			Required:    true,
+			Name:        "user",
+			Description: translation.T("TTTDesc", "pt"),
+		}),
+		Category: handler.Games,
 	})
 }
 
-func board(tiles [9]int) *disgord.CreateMessageParams {
+func board(tiles [9]int) *disgord.CreateInteractionResponseData {
 	arrs := []*disgord.MessageComponent{
 		{
 			Type: disgord.MessageComponentActionRow,
@@ -33,7 +40,7 @@ func board(tiles [9]int) *disgord.CreateMessageParams {
 			Type: disgord.MessageComponentActionRow,
 		},
 	}
-	params := &disgord.CreateMessageParams{
+	params := &disgord.CreateInteractionResponseData{
 		Content: "Clique nos botoes para jogar",
 	}
 	for i, tile := range tiles {
@@ -82,29 +89,27 @@ func playTTT(tile int, tiles *[9]int, turn int) bool {
 	tiles[tile] = turn
 	return true
 }
-
-func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
-	if len(msg.Mentions) == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Mencione alguem para jogar jogo da velha")
-		return
+func runTTT(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	user := utils.GetUser(itc, 0)
+	if user.ID == itc.Member.User.ID || user.Bot {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Invalid user",
+			},
+		}
 	}
-	user := msg.Mentions[0]
-	if user.ID == msg.Author.ID || user.Bot {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
-		return
-	}
-	ctx := context.Background()
 	tiles := [9]int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 	turn := 1
-	message, err := msg.Reply(ctx, session, board(tiles))
-	if err != nil {
-		return
-	}
-	handler.RegisterBHandler(message, func(interaction *disgord.InteractionCreate) {
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: board(tiles),
+	})
+	defer handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 		turnUser := user
 		letter := ":x:"
 		if turn == 1 {
-			turnUser = msg.Author
+			turnUser = itc.Member.User
 			letter = ":o:"
 		}
 		if turnUser.ID == interaction.Member.User.ID {
@@ -128,11 +133,11 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 					if winner == 0 {
 						letter = ":no_good:"
 					}
-					handler.DeleteBHandler(message)
+					handler.DeleteHandler(itc.ID)
 				}
-				session.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
-					Type: disgord.UpdateMessage,
-					Data: &disgord.InteractionApplicationCommandCallbackData{
+				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackUpdateMessage,
+					Data: &disgord.CreateInteractionResponseData{
 						Content:    fmt.Sprintf("%s%s", playType, letter),
 						Components: board(tiles).Components,
 					},
@@ -140,4 +145,5 @@ func runTTT(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 		}
 	}, 60*5)
+	return nil
 }

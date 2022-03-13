@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"asura/src/database"
+	"asura/src/firebase"
 	"asura/src/handler"
 	"asura/src/utils"
 	"context"
@@ -10,44 +10,57 @@ import (
 	"strings"
 	"time"
 
+	"asura/src/translation"
+
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
-
-	handler.Register(handler.Command{
-		Aliases:   []string{"userinfo", "usuario", "uinfo"},
-		Run:       runUserinfo,
-		Available: true,
-		Cooldown:  4,
-		Usage:     "j!userinfo <usuario.",
-		Help:      "Veja as informaçoes de um usuario",
+	handler.RegisterCommand(handler.Command{
+		Name:        "userinfo",
+		Description: translation.T("UserinfoHelp", "pt"),
+		Run:         runUserinfo,
+		Cooldown:    3,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Name:        "user",
+			Type:        disgord.OptionTypeUser,
+			Description: "user info",
+			Required:    false,
+		}, &disgord.ApplicationCommandOption{
+			Name:        "id",
+			Type:        disgord.OptionTypeString,
+			Description: "user id",
+			Required:    false,
+		}),
 	})
 }
 
-func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg, args, session)
+func runUserinfo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	user := itc.Member.User
+	if len(itc.Data.Options) > 0 {
+		user = utils.GetUser(itc, 0)
+	}
 	ctx := context.Background()
-	var userinfo database.User
+	var userinfo firebase.User
 	var private bool
 	avatar, _ := user.AvatarURL(512, true)
-	authorAvatar, _ := msg.Author.AvatarURL(512, true)
+	authorAvatar, _ := itc.Member.User.AvatarURL(512, true)
 	id := strconv.FormatUint(uint64(user.ID), 10)
-	database.Database.NewRef("users/"+id).Get(ctx, &userinfo)
-	database.Database.NewRef("private/"+id).Get(ctx, &private)
+	firebase.Database.NewRef("users/"+id).Get(ctx, &userinfo)
+	firebase.Database.NewRef("private/"+id).Get(ctx, &private)
 	oldAvatars := ""
 	oldUsernames := ""
 	date := ((uint64(user.ID) >> 22) + 1420070400000) / 1000
 	if len(userinfo.Usernames) > 0 && !private {
-		if len(userinfo.Usernames) > 10 {
-			oldUsernames = strings.Join(userinfo.Usernames[:10], "** | **")
+		if len(userinfo.Usernames) > 20 {
+			oldUsernames = strings.Join(userinfo.Usernames[:20], "** | **")
 		} else {
 			oldUsernames = strings.Join(userinfo.Usernames, "** | **")
 		}
 	} else if private {
-		oldUsernames = "O histórico desse usuario é privado, use j!private para deixar publico"
+		oldUsernames = translation.T("Private", translation.GetLocale(itc))
 	} else {
-		oldUsernames = "Nenhum nome antigo registrado"
+		oldUsernames = translation.T("NoUsernames", translation.GetLocale(itc))
 	}
 	if len(userinfo.Avatars) > 0 && !private {
 		avats := userinfo.Avatars
@@ -61,31 +74,37 @@ func runUserinfo(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 		}
 	} else if private {
-		oldAvatars = "O histórico desse usuario é privado, use j!private para deixar público!"
+		oldAvatars = translation.T("Private", translation.GetLocale(itc))
 	} else {
-		oldAvatars = "Nenhum avatar antigo registrado"
+		oldAvatars = translation.T("NoAvatars", translation.GetLocale(itc))
 	}
-	msg.Reply(ctx, session, &disgord.CreateMessageParams{
-		Embed: &disgord.Embed{
-			Color: 65535,
-			Title: fmt.Sprintf("%s(%s)", user.Username, user.ID),
-			Thumbnail: &disgord.EmbedThumbnail{
-				URL: avatar,
-			},
-			Description: fmt.Sprintf("Conta criada a **%d** Dias", int((uint64(time.Now().Unix())-date)/60/60/24)),
-			Footer: &disgord.EmbedFooter{
-				Text:    msg.Author.Username,
-				IconURL: authorAvatar,
-			},
-			Fields: []*disgord.EmbedField{
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Embeds: []*disgord.Embed{
 				{
-					Name:  "Nomes Antigos",
-					Value: oldUsernames,
-				},
-				{
-					Name:  "Avatares Antigos",
-					Value: oldAvatars,
+					Color: 65535,
+					Title: fmt.Sprintf("%s(%s)", user.Username, user.ID),
+					Thumbnail: &disgord.EmbedThumbnail{
+						URL: avatar,
+					},
+					Description: translation.T("AccountCreated", translation.GetLocale(itc), int((uint64(time.Now().Unix())-date)/60/60/24)),
+					Footer: &disgord.EmbedFooter{
+						Text:    itc.Member.User.Username,
+						IconURL: authorAvatar,
+					},
+					Fields: []*disgord.EmbedField{
+						{
+							Name:  translation.T("OldUsernames", translation.GetLocale(itc)),
+							Value: oldUsernames,
+						},
+						{
+							Name:  translation.T("OldAvatars", translation.GetLocale(itc)),
+							Value: oldAvatars,
+						},
+					},
 				},
 			},
-		}})
+		},
+	}
 }

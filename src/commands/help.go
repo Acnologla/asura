@@ -2,44 +2,52 @@ package commands
 
 import (
 	"asura/src/handler"
-	"context"
+	"asura/src/utils"
 	"fmt"
+
+	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
 )
 
+var categorys = [...]string{translation.T("GeneralCommands", "pt"), translation.T("RinhaCommands", "pt"), translation.T("ProfileCommands", "pt"), translation.T("GameCommands", "pt")}
+
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"help", "ajuda", "comandos", "cmds"},
-		Run:       runHelp,
-		Available: true,
-		Cooldown:  1,
-		Usage:     "j!help <comando>",
-		Help:      "Veja meus comandos ou informações sobre um comando",
+	handler.RegisterCommand(handler.Command{
+		Name:        "help",
+		Description: translation.T("HelpHelp", "pt"),
+		Run:         runHelp,
+		Cooldown:    3,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Name:        "command",
+			Type:        disgord.OptionTypeString,
+			Description: translation.T("HelpOptionCommand", "pt"),
+		}),
 	})
 }
 
-var categorys = [...]string{"Comandos gerais", "Comandos de rinha", "Comandos de perfil", "Comandos de jogos"}
-
-func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
-	if len(args) > 0 {
-		command := handler.FindCommand(args[0])
-		aliasesText := ""
-		if len(command.Aliases) > 1 {
-			for _, aliase := range command.Aliases[1:] {
-				aliasesText += fmt.Sprintf("`%s` ", aliase)
-			}
-		}
-		if len(command.Aliases) > 0 && command.Available {
-			msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-				Embed: &disgord.Embed{
-					Description: fmt.Sprintf("**%s**\n\nCooldown:\n **%d Segundos**\n\nUso:\n **%s**\n\nOutras alternativas:\n %s", command.Help, command.Cooldown, command.Usage, aliasesText),
-					Color:       65535,
-					Title:       command.Aliases[0],
+func runHelp(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	if len(itc.Data.Options) > 0 {
+		commandText := itc.Data.Options[0].Value.(string)
+		command, ok := handler.Commands[commandText]
+		if ok && !command.Dev {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Embeds: []*disgord.Embed{{
+						Description: fmt.Sprintf("**%s**\n\nCooldown:\n **%d Segundos**", command.Description, command.Cooldown),
+						Color:       65535,
+						Title:       command.Name,
+					}},
 				},
-			})
+			}
 		} else {
-			msg.Reply(context.Background(), session, "Não achei esse comando, use j!comandos para ver meus comandos")
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: translation.T("HelpCommandNotFound", translation.GetLocale(itc)),
+				},
+			}
 		}
 	} else {
 		commandText := ""
@@ -49,20 +57,20 @@ func runHelp(session disgord.Session, msg *disgord.Message, args []string) {
 			}
 			commandText += fmt.Sprintf("**%s**\n", category)
 			for _, command := range handler.Commands {
-				if command.Category == i && command.Available {
-					commandText += fmt.Sprintf("`%s` ", command.Aliases[0])
+				if command.Category == handler.CommandCategory(i) && !command.Dev {
+					commandText += fmt.Sprintf("`%s` ", command.Name)
 				}
 			}
 		}
-		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-			Embed: &disgord.Embed{
-				Description: commandText + "\n\n[**Servidor de Suporte**](https://discord.gg/tdVWQGV)\n[**Vote em mim**](https://top.gg/bot/470684281102925844)\n[**Website**](https://acnologla.github.io/asura-site/)",
-				Footer: &disgord.EmbedFooter{
-					Text: "Use j!help <comando> para ver informações sobre um comando!",
-				},
-				Color: 65535,
-				Title: "Comandos",
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: []*disgord.Embed{{
+					Description: commandText + "\n\n[**Support**](https://discord.gg/tdVWQGV)\n[**Vote**](https://top.gg/bot/470684281102925844)\n[**Website**](https://acnologla.github.io/asura-site/)",
+					Color:       65535,
+					Title:       "Commands",
+				}},
 			},
-		})
+		}
 	}
 }

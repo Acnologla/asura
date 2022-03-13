@@ -19,14 +19,13 @@ type Command struct {
 func main() {
 	commands := []Command{}
 	for _, command := range handler.Commands {
-		if command.Available {
+		if !command.Dev {
 			commands = append(commands, Command{
 				Aliases:   command.Aliases,
-				Help:      command.Help,
-				Usage:     command.Usage,
+				Help:      command.Description,
 				Cooldown:  command.Cooldown,
-				Available: command.Available,
-				Category:  command.Category,
+				Available: !command.Dev,
+				Category:  int(command.Category),
 			})
 		}
 	}

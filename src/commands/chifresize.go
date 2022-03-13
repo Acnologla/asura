@@ -3,33 +3,47 @@ package commands
 import (
 	"asura/src/handler"
 	"asura/src/utils"
-	"context"
-	"fmt"
-	"github.com/andersfylling/disgord"
 	"strconv"
+
+	"asura/src/translation"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"chifresize", "cs", "cornosize"},
-		Run:       runChifresize,
-		Available: true,
-		Cooldown:  1,
-		Usage:     "j!chifresize <usuario>",
-		Help:      "Veja o tamanho do seu chifre",
+	handler.RegisterCommand(handler.Command{
+		Name:        "chifresize",
+		Description: translation.T("ChifreSizeHelp", "pt"),
+		Run:         runChifreSize,
+		Cooldown:    3,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Type:        disgord.OptionTypeUser,
+			Name:        "user",
+			Description: translation.T("ChifreSizeUser", "pt"),
+		}),
 	})
 }
 
-func runChifresize(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg, args, session)
+func runChifreSize(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	user := utils.GetUserOrAuthor(itc, 0)
 	idString := strconv.FormatUint(uint64(user.ID), 10)
 	result, _ := strconv.Atoi(string(idString[3:4]))
 	random, _ := strconv.Atoi(string(idString[5]))
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Content: msg.Author.Mention(),
-		Embed: &disgord.Embed{
-			Description: fmt.Sprintf("%s Seu chifre tem **%d** cms de altura e **%d** cms de circunferencia", user.Mention(), result*3, result+random),
-			Color:       65535,
-			Title:       ":ox: Tamanho do chifre do " + user.Username,
-		}})
+
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Embeds: []*disgord.Embed{
+				{
+					Description: translation.T("ChifreSizeDescription", "pt", map[string]interface{}{
+						"username":      user.Username,
+						"height":        result * 3,
+						"circumference": result + random,
+					}),
+					Color: 65535,
+					Title: ":ox: " + user.Username,
+				},
+			},
+		},
+	}
 }

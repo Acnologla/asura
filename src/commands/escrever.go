@@ -2,29 +2,32 @@ package commands
 
 import (
 	"asura/src/handler"
-	"context"
-	"github.com/andersfylling/disgord"
+	"asura/src/utils"
 	"strings"
+
+	"asura/src/translation"
+
+	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"escrever", "escrita", "mock"},
-		Run:       runEscrever,
-		Available: true,
-		Cooldown:  1,
-		Usage:     "j!escrever <texto>",
-		Help:      "Escreva igual autista",
+	handler.RegisterCommand(handler.Command{
+		Name:        "escrever",
+		Description: translation.T("EscreverHelp", "pt"),
+		Run:         runEscrever,
+		Cooldown:    3,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Name:        "text",
+			Type:        disgord.OptionTypeString,
+			Description: "message text",
+			Required:    true,
+		}),
 	})
 }
 
-func runEscrever(session disgord.Session, msg *disgord.Message, args []string) {
-	if len(args) == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+" diga algo para eu escrever!")
-		return
-	}
+func runEscrever(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	str := itc.Data.Options[0].Value.(string)
 	text := ""
-	str := strings.Join(args, " ")
 	for i := 0; i < len(str); i++ {
 		if i%2 == 0 {
 			text += strings.ToUpper(string(str[i]))
@@ -32,5 +35,10 @@ func runEscrever(session disgord.Session, msg *disgord.Message, args []string) {
 			text += strings.ToLower(string(str[i]))
 		}
 	}
-	msg.Reply(context.Background(), session, msg.Author.Mention()+", "+text)
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: text,
+		},
+	}
 }

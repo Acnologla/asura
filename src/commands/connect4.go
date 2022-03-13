@@ -2,8 +2,10 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/translation"
 	"asura/src/utils"
 	"context"
+	"strconv"
 	"strings"
 
 	"github.com/andersfylling/disgord"
@@ -18,14 +20,18 @@ var connect4Emojis = map[int]string{
 }
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"connect4", "c4"},
-		Run:       runConnect4,
-		Available: true,
-		Cooldown:  20,
-		Usage:     "j!connect4 @user",
-		Help:      "Jogue connect4",
-		Category:  3,
+	handler.RegisterCommand(handler.Command{
+		Name:        "connect4",
+		Description: translation.T("Connect4Help", "pt"),
+		Run:         runConnect4,
+		Cooldown:    20,
+		Category:    handler.Games,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Type:        disgord.OptionTypeUser,
+			Required:    true,
+			Name:        "user",
+			Description: translation.T("Connect4Desc", "pt"),
+		}),
 	})
 }
 
@@ -90,72 +96,100 @@ func checkConnect4Win(board []([]int)) int {
 	}
 	return 2
 }
-func runConnect4(session disgord.Session, msg *disgord.Message, args []string) {
+
+func generateConnect4() []*disgord.MessageComponent {
+	arrs := []*disgord.MessageComponent{
+		{
+			Type: disgord.MessageComponentActionRow,
+		},
+		{
+			Type: disgord.MessageComponentActionRow,
+		},
+	}
+	for i := 0; i < 8; i++ {
+		var arrField int = i / 4
+		button := &disgord.MessageComponent{
+			Type:     disgord.MessageComponentButton,
+			Style:    disgord.Primary,
+			CustomID: strconv.Itoa(i + 1),
+			Label:    strconv.Itoa(i + 1),
+		}
+		arrs[arrField].Components = append(arrs[arrField].Components, button)
+	}
+	return arrs
+}
+
+func runConnect4(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	ctx := context.Background()
 	board := utils.MakeBoard(8, 8)
-	if len(msg.Mentions) == 0 {
-		msg.Reply(ctx, session, msg.Author.Mention()+", Voce precisa mencionar alguem para jogar connect4")
-		return
-	}
-	user := msg.Mentions[0]
-	if user.Bot || user.ID == msg.Author.ID {
-		msg.Reply(ctx, session, msg.Author.Mention()+", Usuario invalido")
-		return
-	}
-	message, err := msg.Reply(ctx, session, connect4Emojis[1]+"\n\n"+drawConnect4Board(board))
-	if err == nil {
-		for _, emoji := range emojis[:len(board)] {
-			utils.Try(func() error {
-				return message.React(ctx, session, emoji)
-			}, 5)
+	user := utils.GetUser(itc, 0)
+	if user.Bot || user.ID == itc.Member.UserID {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Invalid user",
+			},
 		}
-		turn := 1
-		mes := session.Channel(message.ChannelID).Message(message.ID)
-		handler.RegisterHandler(message, func(removed bool, emoji disgord.Emoji, u disgord.Snowflake) {
-			turnUser := user
-			num := 2
-			if turn == 1 {
-				turnUser = msg.Author
-				num = 1
-			}
-			if !removed && u == turnUser.ID {
-				if utils.Includes(emojis[:len(board)], emoji.Name) {
-					tile := utils.IndexOf(emojis, emoji.Name)
-					played := false
-					for j := len(board) - 1; 0 <= j; j-- {
-						if board[j][tile] == 0 {
-							board[j][tile] = num
-							played = true
-							break
-						}
-					}
-					if played {
-						msgUpdater := mes.UpdateBuilder()
-						winned := checkConnect4Win(board)
-						if winned != 0 {
-							emoji := "❌"
-							if winned == 1 {
-								emoji = ":crown:" + connect4Emojis[num]
-							}
-							msgUpdater.SetContent(emoji + "\n\n" + drawConnect4Board(board))
-							msgUpdater.Execute()
-							handler.DeleteHandler(message)
-							mes.DeleteAllReactions()
-						} else {
-							msgUpdater.SetContent(connect4Emojis[turn+1] + "\n\n" + drawConnect4Board(board))
-							if turn == 1 {
-								turn = 0
-							} else {
-								turn = 1
-							}
-							msgUpdater.Execute()
-							mes.Reaction(emoji.Name).DeleteUser(u)
-						}
-					}
-				}
-			} else if u != message.Author.ID {
-				mes.Reaction(emoji.Name).DeleteUser(u)
-			}
-		}, 60*20)
 	}
+
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content:    connect4Emojis[1] + "\n\n" + drawConnect4Board(board),
+			Components: generateConnect4(),
+		},
+	})
+	turn := 1
+	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+		turnUser := user
+		num := 2
+		u := interaction.Member.UserID
+		emoji := interaction.Data.CustomID
+		if turn == 1 {
+			turnUser = itc.Member.User
+			num = 1
+		}
+		if u == turnUser.ID {
+			tile, _ := strconv.Atoi(emoji)
+			tile--
+			played := false
+			for j := len(board) - 1; 0 <= j; j-- {
+				if board[j][tile] == 0 {
+					board[j][tile] = num
+					played = true
+					break
+				}
+			}
+			if played {
+				winned := checkConnect4Win(board)
+				if winned != 0 {
+					emoji := "❌"
+					if winned == 1 {
+						emoji = ":crown:" + connect4Emojis[num]
+					}
+					handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
+						Type: disgord.InteractionCallbackUpdateMessage,
+						Data: &disgord.CreateInteractionResponseData{
+							Content: emoji + "\n\n" + drawConnect4Board(board),
+						},
+					})
+				} else {
+					handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
+						Type: disgord.InteractionCallbackUpdateMessage,
+						Data: &disgord.CreateInteractionResponseData{
+							Content: connect4Emojis[turn+1] + "\n\n" + drawConnect4Board(board),
+						},
+					})
+					if turn == 1 {
+						turn = 0
+					} else {
+						turn = 1
+					}
+
+				}
+			}
+
+		}
+	}, 60*20)
+	return nil
 }

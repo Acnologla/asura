@@ -1,70 +1,86 @@
 package commands
 
 import (
+	"asura/src/database"
+	"asura/src/entities"
 	"asura/src/handler"
-	"asura/src/utils/rinha"
-	"context"
-	"fmt"
+	"asura/src/rinha"
 	"time"
+
+	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"daily", "bonusdiario", "diario"},
-		Run:       runDaily,
-		Available: true,
-		Cooldown:  5,
-		Usage:     "j!daily",
-		Category:  1,
-		Help:      "Receba seu bonus diario",
+	handler.RegisterCommand(handler.Command{
+		Name:        "daily",
+		Description: translation.T("DailyHelp", "pt"),
+		Run:         runDaily,
+		Cooldown:    9,
+		Category:    handler.Rinha,
 	})
 }
 
-func runDaily(session disgord.Session, msg *disgord.Message, args []string) {
-	galo, _ := rinha.GetGaloDB(msg.Author.ID)
-	if galo.Type == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem um galo, use j!galo para criar um")
-		return
-	}
-	topGGCalc := (uint64(time.Now().Unix()) - galo.Daily.Voted) / 60 / 60 / 12
-	voted := rinha.HasVoted(msg.Author.ID)
+func runDaily(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	galo := database.User.GetUser(itc.Member.UserID)
+	topGGCalc := (uint64(time.Now().Unix()) - galo.Daily) / 60 / 60 / 12
+	voted := rinha.HasVoted(itc.Member.UserID)
 	if voted && topGGCalc >= 1 {
 		strike := 0
 		money := 0
 		xp := 0
-		rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
-			galo.Daily.Last = uint64(time.Now().Unix())
+		database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+			u.Daily = uint64(time.Now().Unix())
 			if topGGCalc >= 2 {
-				galo.Daily.Strike = 0
+				u.DailyStrikes = 0
 			}
-			if topGGCalc >= 1 && voted {
-				galo.Daily.Voted = uint64(time.Now().Unix())
-			}
-			if rinha.IsVip(galo) {
-				money += 15
-				xp += 35
-			}
-			money = 40 + galo.Daily.Strike/4
-			xp = 60 + galo.Daily.Strike
-			galo.Daily.Strike++
-			galo.Money += money
-			galo.Xp += xp
-			strike = galo.Daily.Strike
-			return galo, nil
-		})
-		msg.Reply(context.Background(), session, &disgord.Embed{
-			Color:       65535,
-			Title:       "Daily",
-			Description: fmt.Sprintf("Voce ganhou **%d** de dinheiro, **%d** de xp\n\nStrike: **%d**", money, xp, strike),
-		})
+			money = 40 + u.DailyStrikes/4
+			xp = 60 + u.DailyStrikes
+			u.DailyStrikes++
+			u.Money += money
+			database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+				r.Xp += xp
+				return r
+			})
+			strike = u.DailyStrikes
+			return u
+		}, "Galos")
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: []*disgord.Embed{
+					{
+						Color: 65535,
+						Title: "Daily",
+						Description: translation.T("DailyMessage", translation.GetLocale(itc), map[string]interface{}{
+							"money":   money,
+							"xp":      xp,
+							"strikes": strike,
+						}),
+					},
+				},
+			},
+		}
 	} else {
-		need := uint64(time.Now().Unix()) - galo.Daily.Voted
+		need := uint64(time.Now().Unix()) - galo.Daily
 		if topGGCalc >= 1 && !voted {
-			msg.Reply(context.Background(), session, fmt.Sprintf("%s, para pegar o bonus diario voce precisa votar em mim.\n Voce pode pegar o bonus diario a cada 12 horas\nLink para votar:\nhttps://top.gg/bot/470684281102925844", msg.Author.Mention()))
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: translation.T("VoteMessage", translation.GetLocale(itc)),
+				},
+			}
 		} else {
-			msg.Reply(context.Background(), session, fmt.Sprintf("%s, faltam **%d** horas e **%d** minutos para voce poder usar o daily novamente", msg.Author.Mention(), 11-(need/60/60), 59-(need/60%60)))
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: translation.T("TimeMessage", translation.GetLocale(itc), map[string]interface{}{
+						"minutes": 59 - (need / 60 % 60),
+						"hours":   11 - (need / 60 / 60),
+					}),
+				},
+			}
 		}
 	}
 }

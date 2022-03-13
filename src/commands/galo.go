@@ -1,78 +1,59 @@
 package commands
 
 import (
+	"asura/src/database"
+	"asura/src/entities"
 	"asura/src/handler"
+	"asura/src/rinha"
 	"asura/src/utils"
-	"asura/src/utils/rinha"
 	"bytes"
 	"context"
 	"fmt"
 	"image/color"
 	"image/png"
+
+	"github.com/fogleman/gg"
+
 	"io"
 	"strconv"
 
+	"asura/src/translation"
+
 	"github.com/andersfylling/disgord"
-	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"galo", "galolevel", "meugalo"},
-		Run:       runGalo,
-		Available: true,
-		Cooldown:  8,
-		Usage:     "j!galo",
-		Help:      "Informação sobre seu galo",
-		Category:  2,
+	handler.RegisterCommand(handler.Command{
+		Name:        "galo",
+		Description: translation.T("GaloHelp", "pt"),
+		Run:         runGalo,
+		Cooldown:    15,
+		Category:    handler.Profile,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Name:        "user",
+			Type:        disgord.OptionTypeUser,
+			Description: "user galo",
+			Required:    true,
+		}),
 	})
 }
 
-func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg, args, session)
+func runGalo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	user := itc.Member.User
+	if len(itc.Data.Options) > 0 {
+		user = utils.GetUser(itc, 0)
+	}
 	if user.Bot {
-		return
+		return nil
 	}
-	galo, _ := rinha.GetGaloDB(user.ID)
-	if galo.Type == 0 {
-		galoType := rinha.GetCommonOrRare()
-		galo.Type = galoType
-		rinha.SaveGaloDB(user.ID, galo)
-	}
-	if len(args) > 0 {
-		if args[0] == "update" {
-			rinha.UpdateGaloDB(msg.Author.ID, func(galo rinha.Galo) (rinha.Galo, error) {
-				level := rinha.CalcLevel(galo.Xp)
-				if level >= 35 {
-					galo.GaloReset++
-					galo.Xp = 0
-					galo.Equipped = []int{}
-					msg.Reply(context.Background(), session, "Voce evoluiu seu galo com sucesso")
-				} else {
-					msg.Reply(context.Background(), session, "Seu galo precisa ser pelomenos nivel 35 para evoluir ele")
-				}
-				return galo, nil
-			})
-			return
-		}
-		num, err := strconv.Atoi(args[len(args)-1])
-		if err == nil {
-			if num >= 0 && len(galo.Galos)-1 >= num {
-				galo.Type = galo.Galos[num].Type
-				galo.Xp = galo.Galos[num].Xp
-				galo.Name = galo.Galos[num].Name
-				galo.GaloReset = galo.Galos[num].GaloReset
-				galo.Equipped = []int{}
-			}
-		}
-	}
-	skills := rinha.GetEquipedSkills(&galo)
+	u := database.User.GetUser(user.ID, "Items", "Galos")
+	galo := rinha.GetEquippedGalo(&u)
+	skills := rinha.GetEquipedSkills(galo)
 	avatar, err := utils.DownloadImage(rinha.Sprites[0][galo.Type-1])
 
 	if err != nil {
-		msg.Reply(context.Background(), session, "Invalid image")
-		return
+		return nil
 	}
 
 	name := "Galo do " + user.Username
@@ -84,9 +65,9 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	// Resize the images
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
 
-	img, err := utils.DownloadImage(rinha.GetBackground(galo))
+	img, err := utils.DownloadImage(rinha.GetBackground(&u))
 	if err != nil {
-		return
+		return nil
 	}
 	img = resize.Resize(320, 200, img, resize.Lanczos3)
 	dc := gg.NewContext(320, 450)
@@ -159,15 +140,17 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	dc.DrawString("Level", 10, 255)
 	dc.DrawString("Item", 10, 270)
 	levelText := strconv.Itoa(rinha.CalcLevel(galo.Xp))
-	if galo.GaloReset > 0 {
+	if galo.Resets > 0 {
 		levelText += "["
-		levelText += strconv.Itoa(galo.GaloReset)
+		levelText += strconv.Itoa(galo.Resets)
 		levelText += "]"
 	}
 	dc.DrawStringAnchored(rinha.Classes[galo.Type].Name, 310, 240, 1, 0)
 	dc.DrawStringAnchored(levelText, 310, 255, 1, 0)
-	if len(galo.Items) > 0 {
-		dc.DrawStringAnchored(rinha.Items[galo.Items[0]].Name, 310, 270, 1, 0)
+	item := rinha.GetEquippedItem(&u)
+	if item != -1 {
+		i := rinha.Items[item]
+		dc.DrawStringAnchored(i.Name, 310, 270, 1, 0)
 	} else {
 		dc.DrawStringAnchored("Nenhum", 310, 270, 1, 0)
 
@@ -190,16 +173,62 @@ func runGalo(session disgord.Session, msg *disgord.Message, args []string) {
 	var b bytes.Buffer
 	pw := io.Writer(&b)
 	png.Encode(pw, dc.Image())
-	content := ""
-	if level >= 35 {
-		content = "Você pode fortalecer o tipo do seu galo mas o deixando nivel 1 usando **j!galo update**."
-	}
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Content: content,
-		Files: []disgord.CreateMessageFileParams{{
+	data := &disgord.CreateInteractionResponseData{
+		Files: []disgord.CreateMessageFile{{
 			Reader:     bytes.NewReader(b.Bytes()),
 			FileName:   "galo.jpg",
 			SpoilerTag: false},
 		},
-	})
+	}
+	if level >= 35 {
+		data.Components = []*disgord.MessageComponent{
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:     disgord.MessageComponentButton,
+						Label:    "Upgrade",
+						CustomID: "upgrade",
+						Style:    disgord.Primary,
+					},
+				},
+			},
+		}
+		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: data,
+		})
+		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+			done := false
+			if ic.Member.UserID == user.ID {
+				database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+					database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+						level := rinha.CalcLevel(r.Xp)
+						if level >= 35 {
+							done = true
+							r.Equipped = []int{}
+							r.Xp = 0
+							r.Resets++
+						}
+						return r
+					})
+					return u
+				}, "Galos")
+				if done {
+					ic.Reply(context.Background(), handler.Client, &disgord.CreateInteractionResponse{
+						Type: disgord.InteractionCallbackChannelMessageWithSource,
+						Data: &disgord.CreateInteractionResponseData{
+							Content: translation.T("GaloUpgrade", translation.GetLocale(itc)),
+						},
+					})
+				}
+			}
+		}, 100)
+	} else {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: data,
+		}
+	}
+	return nil
 }

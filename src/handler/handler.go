@@ -1,214 +1,231 @@
 package handler
 
 import (
-	"asura/src/database"
 	"asura/src/telemetry"
+	"asura/src/translation"
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
-	"os"
-	"regexp"
-	"runtime/debug"
+	"log"
+	"net/http"
 	"strconv"
-	"strings"
-	"sync"
 	"time"
 
-	"github.com/agnivade/levenshtein"
 	"github.com/andersfylling/disgord"
 )
 
-const BaseWorkers = 128
-
-var Workers = BaseWorkers
-
-var DevMod = false
-var DevIds = []disgord.Snowflake{365948625676795904, 395542409959964672, 364614407721844737, 205042310851854336}
-
-func isDev(id disgord.Snowflake) bool {
-	for _, devID := range DevIds {
-		if id == devID {
-			return true
-		}
-	}
-	return false
-}
+const Workers = 128
 
 var WorkersArray = make([]bool, Workers)
 
-// A struct that stores the information of a single "command" of the bot
-type Command struct {
-	Aliases   []string
-	Run       func(disgord.Session, *disgord.Message, []string)
-	Help      string
-	Usage     string
-	Cooldown  int
-	Available bool
-	Category  int
-}
+var InteractionChannel = make(chan *disgord.InteractionCreate)
 
-// The place that will be stored all the commands
-var Commands []Command = make([]Command, 0)
-var CommandChannel = make(chan *disgord.Message)
-var Client *disgord.Client
 var ReadyAt = time.Now()
-var Cooldowns = map[string]map[disgord.Snowflake]time.Time{}
-var CooldownMutexes = map[string]*sync.RWMutex{}
 
-//Register a new command into the big array of commands
-func Register(command Command) {
-	Cooldowns[command.Aliases[0]] = map[disgord.Snowflake]time.Time{}
-	CooldownMutexes[command.Aliases[0]] = &sync.RWMutex{}
-	Commands = append(Commands, command)
+type CommandCategory int
+
+const (
+	General CommandCategory = iota
+	Rinha
+	Profile
+	Games
+)
+
+const apiURL = "https://discord.com/api/v8"
+
+var Client *disgord.Client
+var client = &http.Client{}
+
+type Command struct {
+	Name        string
+	Cooldown    int
+	Description string
+	Options     []*disgord.ApplicationCommandOption
+	Run         func(*disgord.InteractionCreate) *disgord.CreateInteractionResponse
+	Category    CommandCategory
+	Dev         bool
+	Aliases     []string
 }
 
-// This function simply calculates the levenshtein distance between two strings
-func CompareStrings(first string, second string) int {
-	return levenshtein.ComputeDistance(first, second)
+var Commands = map[string]Command{}
+
+func RegisterCommand(command Command) {
+	Commands[command.Name] = command
 }
 
-func FindCommand(command string) (realCommand Command) {
-	for _, cmd := range Commands {
-		for _, alias := range cmd.Aliases {
-			if alias == command {
-				realCommand = cmd
-				return
+func ExecuteInteraction(interaction *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	if interaction.Type == disgord.InteractionApplicationCommand {
+		return Run(interaction)
+	}
+	return nil
+}
+
+func GetCommand(name string) Command {
+	command := Commands[name]
+	if command.Name == "" {
+		for _, cmd := range Commands {
+			for _, alias := range cmd.Aliases {
+				if alias == name {
+					command = cmd
+					break
+				}
 			}
 		}
 	}
-	for _, cmd := range Commands {
-		if 1 >= CompareStrings(cmd.Aliases[0], command) {
-			realCommand = cmd
-			continue
-		}
-	}
-	return
+	return command
 }
 
-// This hell of Mutexes are a simple way to sincronize all the goroutines around the Cooldown array.
-func checkCooldown(session disgord.Session, msg *disgord.Message, command string, id disgord.Snowflake, cooldown int) bool {
-	CooldownMutexes[command].RLock()
-	if val, ok := Cooldowns[command][id]; ok {
-		time_until := float64(cooldown) - time.Since(val).Seconds()
-		msg.Reply(context.Background(), session, fmt.Sprintf("Voce tem que esperar %.1f segundos para usar esse comando denovo!", time_until))
-		CooldownMutexes[command].RUnlock()
+func Run(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	command := GetCommand(itc.Data.Name)
+	if command.Run == nil {
+		return nil
+	}
+	locale := translation.GetLocale(itc)
+	if cooldown, ok := GetCooldown(itc.Member.User.ID, command); ok {
+		needTime := command.Cooldown - int(time.Since(cooldown).Seconds())
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T("Cooldown", locale, needTime),
+			},
+		}
+	}
+	SetCooldown(itc.Member.User.ID, command)
+	return command.Run(itc)
+}
+
+func findCommand(command string, commands []*disgord.ApplicationCommand) *disgord.ApplicationCommand {
+	for _, c := range commands {
+		if c.Name == command {
+			return c
+		}
+	}
+	return nil
+}
+
+func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
+	if command.Description != realCommand.Description {
 		return true
 	}
-	CooldownMutexes[command].RUnlock()
-	CooldownMutexes[command].Lock()
-	Cooldowns[command][id] = time.Now()
-	CooldownMutexes[command].Unlock()
-	go func() {
-		time.Sleep(time.Duration(cooldown) * time.Second)
-		CooldownMutexes[command].Lock()
-		delete(Cooldowns[command], id)
-		CooldownMutexes[command].Unlock()
-	}()
+	if len(command.Options) != len(realCommand.Options) {
+		return true
+	}
+	for i, option := range command.Options {
+		if option.Name != realCommand.Options[i].Name {
+			return true
+		}
+		if option.Type != realCommand.Options[i].Type {
+			return true
+		}
+		if option.Description != realCommand.Options[i].Description {
+			return true
+		}
+		if option.Required != realCommand.Options[i].Required {
+			return true
+		}
+
+		if option.MaxValue != realCommand.Options[i].MaxValue {
+			return true
+		}
+		if option.MinValue != realCommand.Options[i].MinValue {
+
+			return true
+		}
+		/*
+			if option.AutoComplete != realCommand.Options[i].AutoComplete {
+				return true
+			}
+		*/
+	}
 	return false
 }
 
-func HandleCommand(session disgord.Session, msg *disgord.Message) {
-	if msg.Author == nil {
-		return
-	}
-	if msg.Author.Bot || uint64(msg.GuildID) == 0 {
-		return
-	}
-
-	myself, err := Client.Cache().GetCurrentUser()
+func Init(appID, token string, session *disgord.Client) {
+	var commands []*disgord.ApplicationCommand
+	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
+	request, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
-		fmt.Printf("Unable to get current user info")
+		log.Fatal(err)
+	}
+	request.Header.Set("authorization", "Bot "+token)
+	resp, err := client.Do(request)
+	json.NewDecoder(resp.Body).Decode(&commands)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for name, command := range Commands {
+		commandR := findCommand(name, commands)
+		request := func(method string, name string) {
+			var newCommand disgord.ApplicationCommand
+			newCommand.Name = name
+			newCommand.DefaultPermission = true
+			newCommand.Type = disgord.ApplicationCommandChatInput
+			newCommand.Options = command.Options
+			newCommand.Description = command.Description
+			val, _ := json.Marshal(newCommand)
+			reader := bytes.NewBuffer(val)
+			_endpoint := endpoint
+			if method == "PATCH" {
+				_endpoint += fmt.Sprintf("/%d", commandR.ID)
+			}
+			req, _ := http.NewRequest(method, _endpoint, reader)
+			req.Header.Add("Authorization", "Bot "+token)
+			req.Header.Add("Content-Type", "application/json")
+			_, err := client.Do(req)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		if commandR == nil {
+			fmt.Println("criando")
+
+			request("POST", command.Name)
+			for _, alias := range command.Aliases {
+				request("POST", alias)
+			}
+		} else if HasChanged(commandR, command) {
+			fmt.Println("atualizando")
+			request("PATCH", command.Name)
+		}
+	}
+	Client = session
+}
+
+func HandleInteraction(itc *disgord.InteractionCreate) {
+	if itc.Member == nil {
 		return
 	}
-	onlyBotMention := regexp.MustCompile(fmt.Sprintf(`<@(\!?)%d>`, uint64(myself.ID)))
-	botMention := onlyBotMention.FindString(msg.Content)
-	if strings.HasPrefix(strings.ToLower(msg.Content), "j!") || strings.HasPrefix(strings.ToLower(msg.Content), "asura ") || (botMention != "" && strings.HasPrefix(msg.Content, botMention)) {
-		// I dont know if it's efficient but this is the easiest way to remove one of the three prefixes from the command.
-		var raw string
-		switch {
-		case strings.HasPrefix(strings.ToLower(msg.Content), "j!"):
-			raw = msg.Content[2:]
-		case strings.HasPrefix(strings.ToLower(msg.Content), "asura "):
-			raw = msg.Content[6:]
-		case strings.HasPrefix(msg.Content, botMention):
-			raw = strings.TrimPrefix(msg.Content, botMention)
-			msg.Mentions = msg.Mentions[1:]
+	if itc.Type == disgord.InteractionApplicationCommand {
+		response := ExecuteInteraction(itc)
+		if response != nil {
+			Client.SendInteractionResponse(context.Background(), itc, response)
 		}
-		splited := strings.Fields(raw)
-		if len(splited) == 0 {
-			if strings.HasPrefix(msg.Content, botMention) {
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", Meu prefix é **j!** use j!comandos para ver meus comandos")
-			}
-			return
-		}
-		command := strings.ToLower(splited[0])
-		args := splited[1:]
-		realCommand := FindCommand(command)
-
-		if len(realCommand.Aliases) > 0 {
-			if DevMod {
-				if !isDev(msg.Author.ID) {
-					return
-				}
-			}
-			if database.IsBanned(msg.Author.ID) {
-				return
-			}
-			if checkCooldown(session, msg, realCommand.Aliases[0], msg.Author.ID, realCommand.Cooldown) {
-				return
-			}
-			tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
-			telemetry.Info(fmt.Sprintf("Command %s used by %s", realCommand.Aliases[0], tag), map[string]string{
-				"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
-				"user":    strconv.FormatUint(uint64(msg.Author.ID), 10),
-				"command": realCommand.Aliases[0],
-				"content": msg.Content,
-				"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
-			})
-			if !DevMod {
-				defer func() {
-					err := recover()
-					if err != nil {
-						stringError := string(debug.Stack())
-						telemetry.Error(stringError, map[string]string{
-							"guild":   strconv.FormatUint(uint64(msg.GuildID), 10),
-							"user":    strconv.FormatUint(uint64(msg.Author.ID), 10),
-							"content": msg.Content,
-							"command": realCommand.Aliases[0],
-							"channel": strconv.FormatUint(uint64(msg.ChannelID), 10),
-						})
-					}
-				}()
-			}
-			if !realCommand.Available {
-				Client.Channel(msg.ChannelID).TriggerTypingIndicator()
-			}
-			realCommand.Run(session, msg, args)
-		}
-	}
-}
-
-//Handles messages and call the functions that they have to execute.
-func OnMessage(session disgord.Session, evt *disgord.MessageCreate) {
-	go SendMsg(evt.Message)
-	CommandChannel <- evt.Message
-}
-
-//If you want to edit a message to make the command work again
-func OnMessageUpdate(old *disgord.Message, new *disgord.Message) {
-	if len(new.Embeds) == 0 && old.Pinned == new.Pinned {
-		CommandChannel <- new
+		author := itc.Member.User
+		tag := author.Username + "#" + author.Discriminator.String()
+		name := GetCommand(itc.Data.Name).Name
+		telemetry.Info(fmt.Sprintf("Command %s used by %s", name, tag), map[string]string{
+			"guild":   strconv.FormatUint(uint64(itc.GuildID), 10),
+			"user":    strconv.FormatUint(uint64(author.ID), 10),
+			"command": name,
+			"channel": strconv.FormatUint(uint64(itc.ChannelID), 10),
+		})
+	} else if itc.Type == disgord.InteractionMessageComponent {
+		ComponentInteraction(Client, itc)
 	}
 }
 
 func Worker(id int) {
-	for msg := range CommandChannel {
-		if id >= len(WorkersArray) {
-			HandleCommand(Client, msg)
-			return
-		}
+	for interaction := range InteractionChannel {
 		WorkersArray[id] = true
-		HandleCommand(Client, msg)
+		HandleInteraction(interaction)
 		WorkersArray[id] = false
+	}
+}
+
+func init() {
+	for i := 0; i < Workers; i++ {
+		go Worker(i)
 	}
 }
 
@@ -220,33 +237,4 @@ func GetFreeWorkers() int {
 		}
 	}
 	return freeWorkers
-}
-
-func init() {
-	if os.Getenv("PRODUCTION") == "" {
-		DevMod = true
-	}
-	for i := 0; i < Workers; i++ {
-		go Worker(i)
-	}
-	go func() {
-		for {
-			time.Sleep(time.Minute * 10)
-			freeWorkers := GetFreeWorkers()
-			if int(Workers/5) >= freeWorkers {
-				telemetry.Debug("Added workers...", map[string]string{})
-				num := int(Workers / 2)
-				WorkersArray = append(WorkersArray, make([]bool, num)...)
-				for i := 0; i < num; i++ {
-					go Worker(Workers + i)
-				}
-				Workers += num
-			} else if Workers != BaseWorkers && (freeWorkers*100)/Workers >= 80 {
-				num := int(Workers / 3)
-				WorkersArray = WorkersArray[:Workers-num]
-				Workers -= num
-				telemetry.Debug("Removed extra workers...", map[string]string{})
-			}
-		}
-	}()
 }

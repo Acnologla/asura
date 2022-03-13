@@ -14,6 +14,8 @@ import (
 	"sync"
 	"time"
 
+	"asura/src/translation"
+
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
 	"github.com/nfnt/resize"
@@ -21,6 +23,10 @@ import (
 
 var cards []string = []string{}
 
+func shuffle(arr []string) []string {
+	rand.Shuffle(len(arr), func(i, j int) { arr[i], arr[j] = arr[j], arr[i] })
+	return arr
+}
 func findCard(cards []string, card string) string {
 	for _, playerCard := range cards {
 		if len(playerCard) > 5 {
@@ -217,14 +223,57 @@ var (
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"uno", "unoplay", "u", "playuno"},
-		Run:       runUno,
-		Available: true,
-		Cooldown:  2,
-		Usage:     "j!uno <ação>",
-		Help:      "Jogue uno",
-		Category:  3,
+	handler.RegisterCommand(handler.Command{
+		Name:        "uno",
+		Description: translation.T("UnoHelp", "pt"),
+		Run:         runUno,
+		Cooldown:    3,
+		Category:    handler.Games,
+		Options: utils.GenerateOptions(
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "create",
+				Description: translation.T("UnoCreateHelp", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "join",
+				Description: translation.T("UnoJoinHelp", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type: disgord.OptionTypeSubCommand,
+				Name: "play",
+				Options: utils.GenerateOptions(
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeString,
+						Name:        "id",
+						Required:    true,
+						Description: translation.T("UnoPlayIDHelp", "pt"),
+					},
+				),
+				Description: translation.T("UnoPlayHelp", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "buy",
+				Description: translation.T("UnoBuyHelp", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "uno",
+				Description: translation.T("UnoUnoHelp", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "leave",
+				Description: translation.T("UnoLeaveHelp", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "cards",
+				Description: translation.T("UnoCardsHelp", "pt"),
+			},
+		),
 	})
 	colors := []string{"B", "R", "Y", "G"}
 	for i := 0; i <= 9; i++ {
@@ -240,125 +289,170 @@ func init() {
 		}
 	}
 }
-func shuffle(arr []string) []string {
-	rand.Shuffle(len(arr), func(i, j int) { arr[i], arr[j] = arr[j], arr[i] })
-	return arr
-}
 
-func getCards(msg *disgord.Message, session disgord.Session) {
+func getCards(itc *disgord.InteractionCreate, session disgord.Session) {
 	gameMutex.RLock()
-	game := currentGames[msg.GuildID]
+	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Não tem nenhum jogo nessa guilda, use j!uno create para criar um")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo nessa guilda, use /uno create para criar um",
+			},
+		})
 		return
 	}
 	if game.status == "n" {
-		var isInGame = isInGame(msg, game)
+		var isInGame = isInGame(itc, game)
 		if isInGame {
 			var p *player
 			for _, player2 := range game.players {
-				if player2.id == msg.Author.ID {
+				if player2.id == itc.Member.UserID {
 					p = player2
 					break
 				}
 			}
 			gameMutex.RUnlock()
 			b := bytes.NewReader(game.drawCards(p).Bytes())
-			chanID, err := handler.Client.User(msg.Author.ID).CreateDM()
+			chanID, err := handler.Client.User(itc.Member.UserID).CreateDM()
 			if err == nil {
-				go handler.Client.Channel(chanID.ID).CreateMessage(&disgord.CreateMessageParams{
-					Content: "Para jogar uma carta usa j!uno play <id da carta> ( o id é o coiso que ta encima da carta)",
-					Files: []disgord.CreateMessageFileParams{
+				go handler.Client.Channel(chanID.ID).CreateMessage(&disgord.CreateMessage{
+					Content: "Para jogar uma carta usa /uno play <id da carta> ( o id é o coiso que ta encima da carta)",
+					Files: []disgord.CreateMessageFile{
 						{b, "uno.png", false},
 					},
 				})
 			}
 		} else {
 			gameMutex.RUnlock()
-			go msg.Reply(context.Background(), session, msg.Author.Mention()+", Você não está no jogo")
+			go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Você não está no jogo",
+				},
+			})
 		}
 	} else {
 		gameMutex.RUnlock()
 	}
 }
 
-func sendEmbed(msg *disgord.Message, session disgord.Session) {
+func sendEmbed(itc *disgord.InteractionCreate, session disgord.Session, isItc bool) {
 	gameMutex.RLock()
 	defer gameMutex.RUnlock()
-	game := currentGames[msg.GuildID]
-	go msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Files: []disgord.CreateMessageFileParams{
-			{bytes.NewReader(game.getBoard().Bytes()), "uno.png", false},
-		},
-		Embed: &disgord.Embed{
-			Title: "Uno",
-			Footer: &disgord.EmbedFooter{
-				Text: fmt.Sprintf("Turno do: %s", game.players[0].username),
+	game := currentGames[itc.GuildID]
+	ch := session.Channel(itc.ChannelID)
+	if !isItc {
+		go ch.CreateMessage(&disgord.CreateMessage{
+			Files: []disgord.CreateMessageFileParams{
+				{bytes.NewReader(game.getBoard().Bytes()), "uno.png", false},
 			},
-			Description: "Use j!uno play <carta> para jogar!\nj!uno leave (para sair)\nVeja suas cartas no privado (usando j!cartas)\nj!uno buy (para comprar uma carta e passar o turno\n caso não jogue ou não compre durante 3 minutos\n ira passar o turno e comprar automatico)\nCaso estiver no uno (uma carta) use j!uno uno",
-			Image: &disgord.EmbedImage{
-				URL: "attachment://uno.png",
+			Embeds: []*disgord.Embed{
+				{
+					Title: "Uno",
+					Footer: &disgord.EmbedFooter{
+						Text: fmt.Sprintf("Turno do: %s", game.players[0].username),
+					},
+					Description: "Use /uno play <carta> para jogar!\n/uno leave (para sair)\nVeja suas cartas no privado (usando /cartas)\n/uno buy (para comprar uma carta e passar o turno\n caso não jogue ou não compre durante 3 minutos\n ira passar o turno e comprar automatico)\nCaso estiver no uno (uma carta) use /uno uno",
+					Image: &disgord.EmbedImage{
+						URL: "attachment://uno.png",
+					},
+				},
 			},
-		},
-	})
+		})
+	} else {
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Files: []disgord.CreateMessageFileParams{
+					{bytes.NewReader(game.getBoard().Bytes()), "uno.png", false},
+				},
+				Embeds: []*disgord.Embed{
+					{
+						Title: "Uno",
+						Footer: &disgord.EmbedFooter{
+							Text: fmt.Sprintf("Turno do: %s", game.players[0].username),
+						},
+						Description: "Use /uno play <carta> para jogar!\n/uno leave (para sair)\nVeja suas cartas no privado (usando /cartas)\n/uno buy (para comprar uma carta e passar o turno\n caso não jogue ou não compre durante 3 minutos\n ira passar o turno e comprar automatico)\nCaso estiver no uno (uma carta) use /uno uno",
+						Image: &disgord.EmbedImage{
+							URL: "attachment://uno.png",
+						},
+					},
+				},
+			},
+		})
+	}
+
 }
 
-func create(msg *disgord.Message, session disgord.Session) {
+func create(itc *disgord.InteractionCreate, session disgord.Session) {
 	gameMutex.RLock()
-	game := currentGames[msg.GuildID]
+	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
 		gameMutex.Lock()
 		gameCards := append([]string{}, shuffle(cards)...)
-		currentGames[msg.GuildID] = &unoGame{
+		currentGames[itc.GuildID] = &unoGame{
 			cards:    gameCards,
 			board:    []string{},
 			status:   "p",
 			lastPlay: time.Now(),
 		}
-		currentGames[msg.GuildID].newPlayer(msg.Author)
+		currentGames[itc.GuildID].newPlayer(itc.Member.User)
 		gameMutex.Unlock()
-		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-			Embed: &disgord.Embed{
-				Title: "Uno",
-				Thumbnail: &disgord.EmbedThumbnail{
-					URL: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/UNO_Logo.svg/1024px-UNO_Logo.svg.png",
+		itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: []*disgord.Embed{
+					{
+						Title: "Uno",
+						Thumbnail: &disgord.EmbedThumbnail{
+							URL: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/UNO_Logo.svg/1024px-UNO_Logo.svg.png",
+						},
+						Description: fmt.Sprintf("Use **/uno join** para entrar ( O jogo começara em **1** minuto)\nParticipantes:\n%s", itc.Member.User.Username),
+						Color:       16711680,
+					},
 				},
-				Description: fmt.Sprintf("Use **j!uno join** para entrar ( O jogo começara em **1** minuto)\nParticipantes:\n%s", msg.Author.Username),
-				Color:       16711680,
 			},
 		})
+		channel := session.Channel(itc.ChannelID)
 		go func() {
 			time.Sleep(60 * time.Second)
 			gameMutex.RLock()
-			game = currentGames[msg.GuildID]
+			game = currentGames[itc.GuildID]
 			if 1 >= len(game.players) {
 				gameMutex.RUnlock()
-				go msg.Reply(context.Background(), session, "Como só teve um jogador, o uno foi cancelado, uno j!uno create para jogar novamente")
+				go channel.CreateMessage(&disgord.CreateMessageParams{
+					Content: "Como só teve um jogador, o uno foi cancelado, uno /uno create para jogar novamente",
+				})
 				gameMutex.Lock()
-				delete(currentGames, msg.GuildID)
+				delete(currentGames, itc.GuildID)
 				gameMutex.Unlock()
 			} else {
 				go func() {
 					for {
 						time.Sleep(60 * time.Second)
 						gameMutex.RLock()
-						game := currentGames[msg.GuildID]
+						game := currentGames[itc.GuildID]
 						if game != nil {
 							if time.Since(game.lastPlay).Seconds()/60 >= 2 {
 								if game.refuse == 4 {
 									gameMutex.RUnlock()
 									gameMutex.Lock()
-									delete(currentGames, msg.GuildID)
+									delete(currentGames, itc.GuildID)
 									gameMutex.Unlock()
-									msg.Reply(context.Background(), session, "4 rodadas sem jogar consecutivas, jogo acabado")
+									channel.CreateMessage(&disgord.CreateMessage{
+										Content: "4 rodadas sem jogar consecutivas, jogo acabado",
+									})
 									return
 								} else {
-									go msg.Reply(context.Background(), session, fmt.Sprintf("O %s pulou seu turno e comprou uma carta agora é o turno de %s", game.players[0].username, game.players[1].username))
+									go channel.CreateMessage(&disgord.CreateMessage{
+										Content: fmt.Sprintf("O %s pulou seu turno e comprou uma carta agora é o turno de %s", game.players[0].username, game.players[1].username),
+									})
 									gameMutex.RUnlock()
 									gameMutex.Lock()
-									game = currentGames[msg.GuildID]
+									game = currentGames[itc.GuildID]
 									game.buy(game.players[0], 1)
 									game.addToLast()
 									game.lastPlay = time.Now()
@@ -378,10 +472,13 @@ func create(msg *disgord.Message, session disgord.Session) {
 					go func(p *player) {
 						chanID, err := handler.Client.User(p.id).CreateDM()
 						if err == nil {
-							handler.Client.Channel(chanID.ID).CreateMessage(&disgord.CreateMessageParams{
-								Content: "Para jogar uma carta usa j!uno play <id da carta> ( o id é o coiso que ta encima da carta)",
-								Files: []disgord.CreateMessageFileParams{
-									{bytes.NewReader(game.drawCards(p).Bytes()), "uno.png", false},
+							handler.Client.Channel(chanID.ID).CreateMessage(&disgord.CreateMessage{
+								Content: "Para jogar uma carta usa /uno play <id da carta> ( o id é o coiso que ta encima da carta)",
+								Files: []disgord.CreateMessageFile{
+									{
+										Reader:   bytes.NewReader(game.drawCards(p).Bytes()),
+										FileName: "uno.png",
+									},
 								},
 							})
 						}
@@ -391,240 +488,377 @@ func create(msg *disgord.Message, session disgord.Session) {
 				gameMutex.Lock()
 				game.start()
 				gameMutex.Unlock()
-				sendEmbed(msg, session)
+				sendEmbed(itc, session, false)
 			}
 		}()
 	} else if game.status == "p" {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, "O jogo em sua guilda esta em preparação, caso queira entrar use j!uno join")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "O jogo em sua guilda esta em preparação, caso queira entrar use /uno join",
+			},
+		})
 	} else {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, "O jogo da sua guilda ja começou, espere ele terminar")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "O jogo da sua guilda ja começou, espere ele terminar",
+			},
+		})
 	}
 }
-func isInGame(msg *disgord.Message, game *unoGame) bool {
+func isInGame(itc *disgord.InteractionCreate, game *unoGame) bool {
 	var isInGame bool
 	for _, player := range game.players {
-		if player.id == msg.Author.ID {
+		if player.id == itc.Member.UserID {
 			isInGame = true
 			break
 		}
 	}
 	return isInGame
 }
-func leave(msg *disgord.Message, session disgord.Session) {
+func leave(itc *disgord.InteractionCreate, session disgord.Session) {
 	gameMutex.RLock()
-	game := currentGames[msg.GuildID]
+	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo na sua guilda",
+			},
+		})
 		return
 	}
 	if game.status != "n" {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo na sua guilda",
+			},
+		})
 		return
 	}
-	var isInGame = isInGame(msg, game)
+	var isInGame = isInGame(itc, game)
 	if !isInGame {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce não ta no jogo")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: " Voce não ta no jogo",
+			},
+		})
 		return
 	}
 	gameMutex.RUnlock()
 	gameMutex.Lock()
-	game.removePlayer(msg.Author)
-	game = currentGames[msg.GuildID]
+	game.removePlayer(itc.Member.User)
+	game = currentGames[itc.GuildID]
 	gameMutex.Unlock()
 	if 1 >= len(game.players) {
-		go msg.Reply(context.Background(), session, "Como todos os jogadores sairam ou só sobrou 1 o jogo foi encerrado")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Como todos os jogadores sairam ou só sobrou 1 o jogo foi encerrado",
+			},
+		})
 		gameMutex.Lock()
-		delete(currentGames, msg.GuildID)
+		delete(currentGames, itc.GuildID)
 		gameMutex.Unlock()
 		return
 	}
-	msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce saiu do jogo agora é o turno do "+game.players[0].username)
+	itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: "Voce saiu do jogo agora é o turno do " + game.players[0].username,
+		},
+	})
 }
 
-func buy(msg *disgord.Message, session disgord.Session) {
+func buy(itc *disgord.InteractionCreate, session disgord.Session) {
 	gameMutex.RLock()
-	game := currentGames[msg.GuildID]
+	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo na sua guilda",
+			},
+		})
 		return
 	}
 	if game.status != "n" {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo na sua guilda",
+			},
+		})
 		return
 	}
-	var isInGame = isInGame(msg, game)
+	var isInGame = isInGame(itc, game)
 	if !isInGame {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao ta no jogo")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Voce nao ta no jogo",
+			},
+		})
 		return
 	}
 	gameMutex.RUnlock()
 	gameMutex.Lock()
 	var p *player
 	for _, player2 := range game.players {
-		if player2.id == msg.Author.ID {
+		if player2.id == itc.Member.UserID {
 			p = player2
 			break
 		}
 	}
 	if p.id != game.players[0].id {
 		gameMutex.Unlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Não é seu turno")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não é seu turno",
+			},
+		})
 		return
 	}
 	game.buy(p, 1)
 	game.addToLast()
 	game.lastPlay = time.Now()
 	gameMutex.Unlock()
-	getCards(msg, session)
-	sendEmbed(msg, session)
+	getCards(itc, session)
+	sendEmbed(itc, session, true)
 }
 
-func play(msg *disgord.Message, session disgord.Session, args []string) {
+func play(itc *disgord.InteractionCreate, session disgord.Session, args []string) {
 	gameMutex.RLock()
-	game := currentGames[msg.GuildID]
+	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo na sua guilda",
+			},
+		})
 		return
 	}
 	if game.status != "n" {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo na sua guilda",
+			},
+		})
 		return
 	}
 	if len(args) == 0 {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Diga uma carta para jogar")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Diga uma carta para jogar",
+			},
+		})
 		return
 	}
-	var isInGame = isInGame(msg, game)
+	var isInGame = isInGame(itc, game)
 	if !isInGame {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao ta no jogo")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Voce nao ta no jogo",
+			},
+		})
 		return
 	}
 	if strings.HasPrefix(args[0], "WILD") && 2 > len(args) {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Essa é uma carta preta usa  então voce tem que definir a cor apos a carta exemplo:\nj!uno play wild <Y (Amarelo) | G (Verde) | B (Azul) | R (Vermelho) >")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Essa é uma carta preta usa  então voce tem que definir a cor apos a carta exemplo:\n/uno play wild <Y (Amarelo) | G (Verde) | B (Azul) | R (Vermelho) >",
+			},
+		})
 		return
 	}
 	gameMutex.RUnlock()
 	gameMutex.Lock()
-	game = currentGames[msg.GuildID]
+	game = currentGames[itc.GuildID]
 	var p *player
 	for _, player2 := range game.players {
-		if player2.id == msg.Author.ID {
+		if player2.id == itc.Member.UserID {
 			p = player2
 			break
 		}
 	}
 	if p.id != game.players[0].id {
 		gameMutex.Unlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Não é seu turno")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não é seu turno",
+			},
+		})
 		return
 	}
 	play := game.play(p, args)
 	if play != "" {
 		gameMutex.Unlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", "+play)
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: play,
+			},
+		})
 		return
 	}
-	game = currentGames[msg.GuildID]
+	game = currentGames[itc.GuildID]
 	game.refuse = 0
 	game.lastPlay = time.Now()
 	gameMutex.Unlock()
-	sendEmbed(msg, session)
+	sendEmbed(itc, session, true)
+	ch := session.Channel(itc.ChannelID)
 	if len(p.cards) == 0 {
 		gameMutex.Lock()
 		if !p.uno {
 			game.buy(p, 2)
 			gameMutex.Unlock()
-			go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce comprou 2 cartas por não ter falado uno")
-			getCards(msg, session)
+			go ch.CreateMessage(&disgord.CreateMessage{
+				Content: "Voce comprou 2 cartas por não ter falado uno",
+			})
+			getCards(itc, session)
 			return
 		}
-		go msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-			Embed: &disgord.Embed{
+		go ch.CreateMessage(&disgord.CreateMessage{
+			Embeds: []*disgord.Embed{{
 				Title:       "Uno ganhou",
 				Description: fmt.Sprintf("O %s venceu o uno", p.username),
 				Color:       16711680,
 				Thumbnail: &disgord.EmbedThumbnail{
 					URL: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/UNO_Logo.svg/1024px-UNO_Logo.svg.png",
 				},
-			},
-		})
-		delete(currentGames, msg.GuildID)
+			}}})
+		delete(currentGames, itc.GuildID)
 		gameMutex.Unlock()
 	}
 
 }
-func uno(msg *disgord.Message, session disgord.Session) {
+func uno(itc *disgord.InteractionCreate, session disgord.Session) {
 	gameMutex.RLock()
 	defer gameMutex.RUnlock()
-	game := currentGames[msg.GuildID]
+	game := currentGames[itc.GuildID]
 	if game == nil {
-		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo na sua guilda",
+			},
+		})
 		return
 	}
 	if game.status != "n" {
-		go msg.Reply(context.Background(), session, "Não tem nenhum jogo na sua guilda")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo na sua guilda",
+			},
+		})
 		return
 	}
-	var isInGame = isInGame(msg, game)
+	var isInGame = isInGame(itc, game)
 	if !isInGame {
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao ta no jogo")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Voce nao ta no jogo",
+			},
+		})
 		return
 	}
 	var p *player
 	for _, player2 := range game.players {
-		if player2.id == msg.Author.ID {
+		if player2.id == itc.Member.UserID {
 			p = player2
 			break
 		}
 	}
 	if len(p.cards) == 1 {
-		go msg.Reply(context.Background(), session, fmt.Sprintf("O %s ta no uno", msg.Author.Username))
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: fmt.Sprintf("O %s ta no uno", itc.Member.User.Username),
+			},
+		})
 		p.uno = true
 	} else {
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao ta no uno nao")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Voce nao ta no uno nao",
+			},
+		})
 	}
 }
-func join(msg *disgord.Message, session disgord.Session) {
+func join(itc *disgord.InteractionCreate, session disgord.Session) {
 	gameMutex.RLock()
-	game := currentGames[msg.GuildID]
+	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Não tem nenhum jogo em preparação nesse servidor, use j!uno create para iniciar um")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Não tem nenhum jogo em preparação nesse servidor, use /uno create para iniciar um",
+			},
+		})
 		return
 	}
 	if game.status == "n" {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", O jogo ja começou")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "O jogo ja começou",
+			},
+		})
 		return
 	}
 	if len(game.players) >= 8 {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Este jogo ja encheu! maximo 8 pessoas")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Este jogo ja encheu! maximo 8 pessoas",
+			},
+		})
 		return
 	}
-	var isInGame = isInGame(msg, game)
+	var isInGame = isInGame(itc, game)
 	if isInGame {
 		gameMutex.RUnlock()
-		go msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce ja ta no jogo")
+		go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Voce ja ta no jogo",
+			},
+		})
 		return
 	}
 	gameMutex.RUnlock()
 	gameMutex.Lock()
-	game = currentGames[msg.GuildID]
-	game.newPlayer(msg.Author)
+	game = currentGames[itc.GuildID]
+	game.newPlayer(itc.Member.User)
 	gameMutex.Unlock()
 	gameMutex.RLock()
 	var text string
@@ -632,65 +866,43 @@ func join(msg *disgord.Message, session disgord.Session) {
 		text += player.username + "\n"
 	}
 	gameMutex.RUnlock()
-	go msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Embed: &disgord.Embed{
-			Color: 16711680,
-			Title: "Uno",
-			Thumbnail: &disgord.EmbedThumbnail{
-				URL: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/UNO_Logo.svg/1024px-UNO_Logo.svg.png",
+	go itc.Reply(context.Background(), session, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Embeds: []*disgord.Embed{
+				{
+					Color: 16711680,
+					Title: "Uno",
+					Thumbnail: &disgord.EmbedThumbnail{
+						URL: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/UNO_Logo.svg/1024px-UNO_Logo.svg.png",
+					},
+					Description: fmt.Sprintf("Use **/uno join** para entrar\nParticipantes:\n%s", text),
+				},
 			},
-			Description: fmt.Sprintf("Use **j!uno join** para entrar\nParticipantes:\n%s", text),
 		},
 	})
 }
 
-func runUno(session disgord.Session, msg *disgord.Message, args []string) {
-	if len(args) == 0 {
-		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-			Content: msg.Author.Mention(),
-			Embed: &disgord.Embed{
-				Color:       16711680,
-				Title:       "Uno",
-				Description: "Uso certo:\nj!uno play carta (Joga uma carta na mesa caso for seu turno)\nj!uno buy ( compre uma carta e pule seu turno caso não tiver como jogar, pulara automatico apos 3 minutos sem jogar no seu turno)\nj!uno cartas (veja suas cartas)\nj!uno uno (Fale que esta no uno)\nj!uno create (cria um jogo no seu servidor)\nj!uno leave (caso queira sair)\nj!uno join (entra no jogo do seu servidor caso ainda não tiver começado)",
-			},
-		})
-	} else {
-		function := strings.ToLower(args[0])
-		args = args[1:]
-		if len(args) >= 1 {
-			args[0] = strings.ToUpper(args[0])
-		}
-		if len(args) >= 2 {
-			args[1] = strings.ToUpper(args[1])
-		}
-		if function == "create" {
-			create(msg, session)
-		} else if function == "join" {
-			join(msg, session)
-		} else if function == "leave" || function == "sair" {
-			leave(msg, session)
-		} else if function == "cartas" || function == "cards" {
-			getCards(msg, session)
-		} else if function == "uno" {
-			uno(msg, session)
-		} else if function == "play" || function == "jogar" {
-			if len(args) == 0 {
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", Diga uma carta para jogar, j!uno play <id da carta>")
-				return
-			}
-			play(msg, session, args)
-		} else if function == "buy" || function == "comprar" {
-			buy(msg, session)
-		} else {
-			msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-				Content: msg.Author.Mention(),
-				Embed: &disgord.Embed{
-					Color:       16711680,
-					Title:       "Uno",
-					Description: "Uso certo:\nj!uno play carta (Joga uma carta na mesa caso for seu turno)\nj!uno buy ( compre uma carta e pule seu turno caso não tiver como jogar, pulara automatico apos 3 minutos sem jogar no seu turno)\nj!uno cartas (veja suas cartas)\nj!uno uno (Fale que esta no uno)\nj!uno create (cria um jogo no seu servidor)\nj!uno leave (caso queira sair)\nj!uno join (entra no jogo do seu servidor caso ainda não tiver começado)",
-				},
-			})
-			return
-		}
+func runUno(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	command := itc.Data.Options[0].Name
+	sess := handler.Client
+	switch command {
+	case "create":
+		create(itc, sess)
+	case "join":
+		join(itc, sess)
+	case "buy":
+		buy(itc, sess)
+	case "play":
+		text := itc.Data.Options[0].Options[0].Value.(string)
+		args := strings.Split(text, " ")
+		play(itc, sess, args)
+	case "uno":
+		uno(itc, sess)
+	case "cards":
+		getCards(itc, sess)
+	case "leave":
+		leave(itc, sess)
 	}
+	return nil
 }

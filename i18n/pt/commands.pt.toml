@@ -1,0 +1,548 @@
+[Ping]
+other="{{.}} em pt"
+
+[PingHelp]
+other="Veja meu ping"
+
+[InviteHelp]
+other="Convide o bot para seu servidor"
+
+[AvatarHelp]
+other="Veja o avatar de um usuario"
+
+[AvatarsHelp]
+other="Veja os avatares antigos de um usuario"
+
+[Private]
+other="O historico esse usuario é privado use /private para desprivar"
+
+
+[NotFoundAvatars]
+other="Não tenho o historico de avatares desse usuario"
+
+
+[InvalidImage]
+other="Imagem invalida"
+
+
+[InvertHelp]
+other="Inverta uma imagem"
+
+[InvertOpt1]
+other="Avatar de um usuario"
+
+[InvertOpt2]
+other="Url da imagem"
+
+[EscreverHelp]
+other="Escreva mensagens engraçadas"
+
+[ChifreSizeHelp]
+other="Veja o tamanho do chifre de alguem"
+
+[ChifreSizeUser]
+other="Usuario para ver o tamanho do chifre"
+
+[ChifreSizeDescription]
+other="{{.username}} Seu chifre tem **{{.height}}** cms de altura e **{{.circumference}}** cms de circunferencia"
+
+[TTTHelp]
+other="Jogue jogo da velha"
+
+[TTTDesc]
+other="Usuario para jogar jogo da velha"
+
+[HelpHelp]
+other="Veja meus comandos"
+
+[HelpOptionCommand]
+other="Ver ajuda sobre comando especifico"
+
+[GeneralCommands]
+other="Comandos gerais"
+
+[RinhaCommands]
+other="Comandos de rinha"
+
+[ProfileCommands]
+other="Comandos de perfil"
+
+[GameCommands]
+other="Comando de jogos"
+
+[HelpCommandNotFound]
+other="Não achei este comando"
+
+[2048Help]
+other="Jogue o jogo 2048"
+
+[2048Size]
+other="Tamanho do tabuleiro de 2048"
+
+[BotInfoHelp]
+other="Veja informaçoes sobre o bot"
+
+[BotInfoDescription]
+other="Workers: **{{.workers}}** (**{{.freeWorkers}}** Livres)\nBot criado a **{{.createdTime}}** dias\nServidores: **{{.guilds}}**\nRam usada: **{{.ram}}**MB\nPing: **{{.ping}}ms**\nShards: **{{.shards}}**\nBot online a {{.days}} dias {{.hours}} horas {{.minutes}} minutos"
+
+
+[PrivateHelp]
+other="Prive seus avatares antigos e nomes antigos"
+
+[PrivateEnabled]
+other="Privou seu perfil com sucesso"
+
+[PrivateDisabled]
+other="Desprivou seu perfil com sucesso"
+
+[Connect4Help]
+other="Jogue o jogo connect4"
+
+[Connect4Desc]
+other="Usuario para jogar connect4"
+
+[MinifieldHelp]
+other="Jogue campo minado"
+
+[MinifieldPlay]
+other="Clique nos botoes para jogar"
+
+[UserinfoHelp]
+other="Veja informaçoes sobre um usuario"
+
+[NoUsernames]
+other="Nenhum nome antigo registrado"
+
+[NoAvatars]
+other="Nenhum avatar antigo registrado"
+
+
+[OldUsernames]
+other="Nomes Antigos"
+
+[OldAvatars]
+other="Avatares antigos"
+
+[AccountCreated]
+other="Conta criada a **{{.}}** dias"
+
+[LootboxHelp]
+other="Compre lootboxes e veja seu dinheiro"
+
+[LootboxViewHelp]
+other="Veja suas lootboxes e dinheiro"
+
+[LootboxOpenHelp]
+other="Abra uma lootbox"
+
+[LootboxBuyHelp]
+other="Compre uma lootbox"
+
+[LootboxView]
+other="Use `/lootbox buy` para comprar lootbox\nUse `/lootbox open` para abrir lootbox\nUse `/changename` para trocar o nome do galo (precisa de 100 money)\n{{.}}\n\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**"
+
+[LootboxBuyDone]
+other="Comprou a lootbox {{.}} com sucesso"
+
+[NoMoney]
+other="Dinheiro insuficiente use **/lootbox** para ver seu dinheiro"
+
+[LootboxOpen]
+other="Voce abriu uma lootbox {{.lootbox}} e ganhou um {{.type}} {{.name}}\n{{.extraMsg}}"
+
+[SellRepeated]
+other="Como voce ja tinha esse galo, ele foi automaticamente vendido por **{{.}}** de dinheiro"
+
+[RinhaHelp]
+other="Batalhe contra um jogador"
+
+[RinhaMessage]
+other="O usuario {{.username}} ja esta lutando com o {{.text}}"
+
+[RinhaDuel]
+other="**{{.adv}}** voce foi convidado para um duelo com {{.author}}"
+
+[WinDuel]
+other="**{{.}}** venceu a batalha"
+
+[ClanHelp]
+other="Crie um clan e edite o seu clan"
+
+[ClanView]
+other="Veja as informaçoes do seu clan"
+
+[ClanInvite]
+other="Convide um usuario para seu clan"
+
+[ClanAdmin]
+other="Promova um usuario do seu clan para administrator"
+
+[ClanMoney]
+other="Deposite dinheiro no banco do seu clan"
+
+
+[ClanUpgrade]
+other="Upgrades para o seu clan"
+
+[ClanBank]
+other="Veja o banco do seu clan"
+
+[ClanBackground]
+other="Altere o background do seu clan"
+
+[ClanCreate]
+other="Crie um clan"
+
+[ClanAlreadyIn]
+other="Voce ja esta em um clan"
+
+[ClanNotEnoughMoney]
+other="Precisa de **1000** de dinheiro para criar um clan"
+
+[ClanNameLength]
+other="O nome do clan precisa ter entre 4 a 25 caracteres"
+
+[ClanArleadyExists]
+other="Ja existe um clan com esse nome"
+
+[ClanCreated]
+other="Voce criou o clan **{{.}}** com sucesso"
+
+[ClanViewHelp]
+other="Veja informaçoes sobre seu clan"
+
+[NoClan]
+other="Voce não esta em um clan"
+
+[ClanFooter]
+other="Use /clan invite <user> para convidar | /clan remove <user> para remover | /clan admin <user> para promover membros"
+
+[ClanRemove]
+other="Retirar um usuario do seu clan"
+
+[ClanDescription]
+other="Level: **{{.level}}** ({{.xp}}/{{.needXp}})\nVantagens do clan:\n {{.benefits}}\nMembros ({{.members}}/{{.maxMembers}}):\n {{.membersText}}\nUse **/clan missao** para ver a missão mensal do clan\nUse **/clan banco** para ver o banco do clan"
+
+
+[UserArleadyInClan]
+other="Este usuario ja esta em um clan"
+
+[InviteToClan]
+other="{{.username}} Voce foi convidado para o clan {{.clan}}"
+
+[MissingPermissions]
+other="Apenas adminitradores e donos do clan podem realizar esta ação"
+
+[ClanMaxMembers]
+other="Seu clan ja esta cheio"
+
+[SucessInvite]
+other= "O usuario {{.}} aceitou o convite para o clan"
+
+[SucessRemove]
+other="O usuario {{.}} foi removido com sucesso"
+
+
+[NoPermission]
+other="Voce não tem permissão para realizar esta ação"
+
+[UserNotInClan]
+other="O usuario nao esta no clan"
+
+[SucessAdmin]
+other="O usuario {{.}} agora é um administrador"
+
+[ClanBankDesc]
+other="Dinheiro: **{{.money}}**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan ({{.membersUpgrade}})\n[**Missao**] - Bonus para missao do clan ({{.missionUpgrade}})\n\nUse /clan depositar <dinheiro> para depositar dinheiro\nUse /clan upgrade <upgrade> para dar upgrade em algo\nUse /clan background <background> para setar um background para seu clan (custa 10000)"
+
+[ClanMoneyAdd]
+other="Voce depositou **{{.}}** de dinheiro no seu clan com sucesso"
+
+
+[ClanNoMoney]
+other="Seu clan nao tem esse dinheiro disponivel"
+
+[ClanBankMinified]
+other="Dinheiro: **{{.money}}**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan ({{.membersUpgrade}})\n[**Missao**] - Bonus para missao do clan ({{.missionUpgrade}})"
+
+[ClanUpgradePuchased]
+other="Comprou o upgrade **{{.}}** com sucesso"
+
+[ChangedClanBackground]
+other="Background do clan foi alterado com sucesso"
+
+[GiveMoneyHelp]
+other="De dinheiro a alguem"
+
+[GiveMoneyInvalid]
+other = "Quantia invalida"
+
+[GiveMoney]
+other="Voce deu **{{.}}** de dinheiro com sucesso"
+
+[TradeHelp]
+other="Trocar itens e galos"
+
+
+[TradeMsg]
+other="{{.mentionedUsername}} aceita a troca de {{.username}}"
+
+[TradeDone]
+other="Troca concluida"
+
+[UserAcceptTrade]
+other="**{{.}}** aceitou a troca"
+
+[UserMinLevelTrade]
+other="É necessario os 2 usuarios terem no minimo **{{.}}** de userxp para aceitarem essa troca use /upgrades para ver seu userxp"
+
+[TradeDesc]
+other="Ambos os usuarios precisam ter no minimo **{{.minLvl}}** de user xp para realizar essa troca\n{{.extraMsg}}"
+
+[RunSell]
+other="Venda seus itens e galos"
+
+
+[SellTitle]
+other="Selecione um item abaixo para vender"
+
+[SellGaloPlaceholder]
+other="Selecione o galo para vender"
+
+[SellItemPlaceholder]
+other="Selecione o item para vender"
+
+[IsInRinha]
+other="Voce esta em uma rinha, espere sua rinha acabar antes de fazer esta ação"
+
+[SellItem]
+other="Voce vendeu o item com sucesso por **{{.}}** de dinheiro"
+
+[SellItemAsuraCoin]
+other="Voce vendeu o item com sucesso por **{{.}}** de asura coins"
+
+
+[ClanLeave]
+other="Sair do clan"
+
+[sucessLeaveClan]
+other="Voce saiu do clan com sucesso"
+
+[NoLootbox]
+other="Voce não tem lootboxes para abrir"
+
+[RankHelp]
+other="Veja os ranks"
+
+[RankUserHelp]
+other="Veja os ranks dos usuarios"
+
+[RankClanHelp]
+other="Veja os ranks dos clans"
+
+[RankUserPlayersHelp]
+other="Veja os jogadores com maior andar na dungeon"
+
+[RankUserMoneyHelp]
+other="Veja os jogadores mais ricos"
+
+
+[RankUserLevelHelp]
+other="Veja os jogadores com o galo mais upado"
+
+[RankUserWinsHelp]
+other="Veja os jogadores que mais ganharam rinhas"
+
+
+[RankUserDefeatsHelp]
+other="Veja os jogadores que mais perderam rinhas"
+
+[RankClanPlayersHelp]
+other="Veja os clans com maior xp"
+
+[RankClanMoneyHelp]
+other="Veja os clans com o maior dinheiro"
+
+[TrainHelp]
+other="Treine seu galo ganhando dinheiro e xp"
+
+[TrainMessage]
+other="**{{.}}** gostaria de treinar seu galo?"
+
+[TrainLose]
+other="Parabens {{.}}, você perdeu. Use /train para treinar novamente"
+
+[TrainWin]
+other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}"
+
+[TrainLimit]
+other="Voce excedeu seu limite de trains ganhos por dia. Faltam {{.hours}} horas e {{.minutes}} minutos para voce poder usar mais"
+
+
+[ChangeNameHelp]
+other="Troque o nome do seu galo equipado"
+
+[ChangeNameName]
+other="Nome para trocar"
+
+[InvalidName]
+other="O nome do seu galo precisa ter entre 3 e 25 caracteres"
+
+[ChangeName]
+other="Voce trocou o nome do seu galo para **{{.}}** com sucesso"
+
+[MissionHelp]
+other="Veja suas missoes diarias"
+
+[MissionTime]
+other="Faltam {{.hours}} horas e {{.minutes}} minutos para voce receber uma nova missão"
+
+[ChangeMission]
+other="Alterar missão {{.}}"
+
+[TradeMission]
+other="Você trocou sua missão com sucesso!"
+
+[UpgradesHelp]
+other="Veja e adquira upgrades"
+
+[UpgradesId]
+other="Numero do upgrade"
+
+[UpgradeDesc]
+other="\nVoce tem um ponto de upgrade disponivel.\nUse **/upgrade <id do upgrade>** para dar updgrade.\n\nUpgrades:\n\n{{.}}"
+
+[NoUpgrade]
+other="Você não tem pontos de upgrades, use /upgrades para ver seus pontos de upgrades"
+
+[InvalidUpgradeID]
+other="Id do upgrade inválido use /upgrade para ver os upgrades disponiveis"
+
+[NewUpgrade]
+other="Upgrade {{.}} adquirido com sucesso"
+
+[SkillsHelp]
+other="Troque as skills equipadas do seu galo"
+
+[SkillNumber]
+other="Numero da skill para trocar"
+
+[SkillSelect]
+other="Selecione a skill para equipar"
+
+[ChangingSkill]
+other="Skills:\n{{.skills}}\n\nTrocando a skill numero **{{.number}}**"
+
+[RunEquip]
+other="Equipe galos"
+
+[EquipGaloPlaceholder]
+other="Selecione o galo para equipar"
+
+[EquipGalo]
+other="Voce equipou o galo com sucesso"
+
+[RunEquipItem]
+other="Equipe items"
+
+[EquipItem]
+other="Selecione o item para equipar"
+
+[EquipBackground]
+other="Selecione o background para equipar"
+
+[EquipItemSuccess]
+other="Voce equipou o item com sucesso"
+
+[LixeiraHelp]
+other="Transforme a imagem dos outros em um lixo"
+
+[ProfileHelp]
+other="Veja o perfil de um usuario"
+
+[GaloHelp]
+other="Veja as informaçoes do galo de um usuario"
+
+[DungeonHelp]
+other="Batalhe na dungeon"
+
+[DungeonInfoHelp]
+other="Veja informaçoes da dungeon"
+
+[DungeonBattleHelp]
+other="Batalhe na dungeon"
+
+[DungeonFloor]
+other="Você está no andar **{{.}}**\nUse /dungeon battle para batalhar contra o chefe"
+
+[DungeonFinish]
+other="Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!"
+
+[DungeonLose]
+other="Parabéns {{.}}, você perdeu. Use /dungeon battle para tentar novamente"
+
+[DungeonWin]
+other="Parabéns {{.username}} você consegiu derrotar o boss e avançar para o andar **{{.floor}}** {{.msg}}"
+
+[DungeonWinItem]
+other="Voce ganhou o item {{.name}} ({{.rarity}})"
+
+[DungeonWinLootbox]
+other="Voce ganhou uma lootbox {{.}}"
+
+[DailyHelp]
+other="Pegue seu bonus diario"
+
+[DailyMessage]
+other="Voce ganhou **{{.money}}** de dinheiro, **{{.xp}}** de xp\n\nStrike: **{{.strikes}}**"
+
+[VoteMessage]
+other="Para pegar o bonus diario voce precisa votar em mim.\n Voce pode pegar o bonus diario a cada 12 horas\nLink para votar:\nhttps://top.gg/bot/470684281102925844"
+
+[TimeMessage]
+other="Faltam **{{.hours}}** horas e **{{.minutes}}** minutos para voce poder usar o daily novamente"
+
+[PragaHelp]
+other="Transforme o usuario em uma praga"
+
+[NuncaHelp]
+other="Transforme o usuario em nunca"
+
+[MonkeyHelp]
+other="Transforme o usuario em um macaco"
+
+[UnoHelp]
+other="Jogue uno"
+
+[UnoCreateHelp]
+other="Inicia o uno no seu servidor"
+
+[UnoJoinHelp]
+other="Entre no uno do seu servidor"
+
+[UnoPlayHelp]
+other="Jogue uma carta"
+
+[UnoPlayIDHelp]
+other="Id da carta"
+
+[UnoBuyHelp]
+other="Compre uma carta"
+
+[UnoUnoHelp]
+other="Diga que esta no uno"
+
+[UnoLeaveHelp]
+other="Saia do uno"
+
+[UnoCardsHelp]
+other="Veja suas cartas"
+
+[SellGalo]
+other="Voce vendeu o galo com sucesso por **{{.}}** de dinheiro"
+
+[SellGaloAc]
+other="Voce vendeu o galo com sucesso por **{{.}}** asura coins"
+
+[GaloUpgrade]
+other="Voce deu upgrade no seu galo com sucesso"

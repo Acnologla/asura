@@ -2,136 +2,158 @@ package commands
 
 import (
 	"asura/src/database"
+	"asura/src/entities"
 	"asura/src/handler"
+	"asura/src/rinha"
 	"asura/src/utils"
-	"asura/src/utils/rinha"
-	"context"
 	"fmt"
+
+	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
 )
 
+const DEFAULT_RANK_LIMIT = 15
+
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"rank", "top", "tops"},
-		Run:       runRank,
-		Available: true,
-		Cooldown:  20,
-		Usage:     "j!rank <rank>",
-		Help:      "Veja os ranks",
-		Category:  2,
+	handler.RegisterCommand(handler.Command{
+		Name:        "rank",
+		Description: translation.T("RankHelp", "pt"),
+		Run:         runRank,
+		Cooldown:    20,
+		Category:    handler.Profile,
+		Options: utils.GenerateOptions(
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommandGroup,
+				Name:        "usuario",
+				Description: translation.T("RankUserHelp", "pt"),
+				Options: utils.GenerateOptions(
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeSubCommand,
+						Name:        "players",
+						Description: translation.T("RankUserPlayersHelp", "pt"),
+					},
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeSubCommand,
+						Name:        "money",
+						Description: translation.T("RankUserMoneyHelp", "pt"),
+					},
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeSubCommand,
+						Name:        "level",
+						Description: translation.T("RankUserLevelHelp", "pt"),
+					},
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeSubCommand,
+						Name:        "vitorias",
+						Description: translation.T("RankUserWinsHelp", "pt"),
+					},
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeSubCommand,
+						Name:        "derrotas",
+						Description: translation.T("RankUserDefeatsHelp", "pt"),
+					},
+				),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommandGroup,
+				Name:        "clan",
+				Description: translation.T("RankClanHelp", "pt"),
+				Options: utils.GenerateOptions(
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeSubCommand,
+						Name:        "level",
+						Description: translation.T("RankClanPlayersHelp", "pt"),
+					},
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeSubCommand,
+						Name:        "money",
+						Description: translation.T("RankClanMoneyHelp", "pt"),
+					}),
+			},
+		),
 	})
 }
 
-func childToQuery(str string) string {
-	return map[string]string{
-		"players":      "dungeonreset",
-		"money":        "money",
-		"level":        "xp",
-		"clan":         "xp",
-		"clandinheiro": "money",
-		"vitorias":     "win",
-		"derrotas":     "lose",
-	}[str]
+var rankNameToType = map[string]string{
+	"players":  "Andar da dungeon",
+	"money":    "Dinheiro",
+	"level":    "Nível",
+	"vitorias": "Vitórias",
+	"derrotas": "Derrotas",
 }
 
-func top(topType string, session disgord.Session) (text string) {
-	query := "galo"
-	if topType == "clan" || topType == "clandinheiro" {
-		query = "clan"
-	}
-	child := childToQuery(topType)
-
-	q := database.Database.NewRef(query).OrderByChild(child)
-	if topType == "players" {
-		q = q.StartAt(1)
-	}
-	q = q.LimitToLast(15)
-	result, err := q.GetOrdered(context.Background())
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	for i := len(result) - 1; 0 <= i; i-- {
-		if query == "clan" {
-			var clan rinha.Clan
-			if err := result[i].Unmarshal(&clan); err != nil {
-				continue
+func runRank(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	rankType := itc.Data.Options[0].Name
+	rankName := itc.Data.Options[0].Options[0].Name
+	var text string
+	if rankType == "usuario" {
+		var users []*entities.User
+		var data func(u *entities.User) int
+		switch rankName {
+		case "players":
+			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "dungeonreset", "dungeon")
+			data = func(u *entities.User) int {
+				return (u.DungeonReset * len(rinha.Dungeon)) + u.Dungeon
 			}
-			name := result[i].Key()
-			maxMembers := rinha.GetMaxMembers(clan)
-			if topType == "clandinheiro" {
-				money := clan.Money
-				text += fmt.Sprintf("[%d] - %s (%d/%d)\nDinheiro: %d\n", len(result)-i, name, len(clan.Members), maxMembers, money)
-			} else {
-				level := rinha.ClanXpToLevel(clan.Xp)
-				text += fmt.Sprintf("[%d] - %s (%d/%d)\nLevel: %d (%d XP)\n", len(result)-i, name, len(clan.Members), maxMembers, level, clan.Xp)
+		case "money":
+			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "money")
+			data = func(u *entities.User) int {
+				return u.Money
 			}
-
-		} else {
-			var gal rinha.Galo
-			if err := result[i].Unmarshal(&gal); err != nil {
-				continue
+		case "level":
+			users = database.User.SortUsersByRooster(DEFAULT_RANK_LIMIT, "resets", "xp")
+			data = func(u *entities.User) int {
+				return (35 * u.Galos[0].Resets) + rinha.CalcLevel(u.Galos[0].Xp)
 			}
-			converted := utils.StringToID(result[i].Key())
-			user, err := session.User(converted).Get()
-			var username string
-			name := child
-			if err != nil {
-				username = "Anonimo"
-			} else {
-				username = user.Username + "#" + user.Discriminator.String()
+		case "vitorias":
+			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "win")
+			data = func(u *entities.User) int {
+				return u.Win
 			}
-			value := 0
-			if child == "money" {
-				value = gal.Money
-			}
-			if child == "xp" {
-				name = "Level"
-				value = rinha.CalcLevel(gal.Xp)
-			}
-			if child == "win" {
-				name = "Vitorias"
-				value = gal.Win
-			}
-			if child == "lose" {
-				name = "Derrotas"
-				value = gal.Lose
-			}
-			if child == "dungeonreset" {
-				text += fmt.Sprintf("[%d] - %s\nReset da dungeon: %d (Andar: %d)\n", len(result)-i, username, gal.DungeonReset, gal.Dungeon)
-			} else {
-				text += fmt.Sprintf("[%d] - %s\n%s: %d\n", len(result)-i, username, name, value)
+		case "derrotas":
+			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "lose")
+			data = func(u *entities.User) int {
+				return u.Lose
 			}
 		}
-	}
-	return
-}
+		for i, user := range users {
+			u, err := handler.Client.User(user.ID).Get()
+			if err == nil {
+				tag := u.Username + "#" + u.Discriminator.String()
+				text += fmt.Sprintf("[**%d**] - %s\n%s: %d\n", i+1, tag, rankNameToType[rankName], data(user))
+			}
+		}
 
-func runRank(session disgord.Session, msg *disgord.Message, args []string) {
-	if len(args) == 0 {
-		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-			Content: msg.Author.Mention(),
-			Embed: &disgord.Embed{
-				Description: "Use `j!rank players` para ver os melhores jogadores\nUse `j!rank money` para ver os jogadores com mais dinheiro\nUse `j!rank clan` para ver os melhores clan\nUse `j!rank level` para ver os galos com o maior nivel\nUse `j!rank vitorias` para ver os jogadores com mais vitorias\nUse `j!rank derrotas` para ver os jogadores com mais derrotas\nUse `j!rank clandinheiro` para ver os clans com o maior dinheiro",
-				Title:       "Ranks",
-				Color:       65535,
-			},
-		})
 	} else {
-		text := args[0]
-		if childToQuery(args[0]) == "" {
-			msg.Reply(context.Background(), session, msg.Author.Mention()+", rank invalido\nuse `j!ranks` para ver os ranks disponiveis")
-			return
+		var clans []*entities.Clan
+		var data func(u *entities.Clan) int
+		switch rankName {
+		case "level":
+			clans = database.Clan.SortClan("xp", DEFAULT_RANK_LIMIT)
+			data = func(u *entities.Clan) int {
+				return rinha.ClanXpToLevel(u.Xp)
+			}
+		case "money":
+			clans = database.Clan.SortClan("money", DEFAULT_RANK_LIMIT)
+			data = func(u *entities.Clan) int {
+				return u.Money
+			}
 		}
-		msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-			Content: msg.Author.Mention(),
-			Embed: &disgord.Embed{
-				Description: top(text, session),
-				Color:       65535,
-				Title:       "Rank " + text,
-			},
-		})
+		for i, clan := range clans {
+			text += fmt.Sprintf("[**%d**] - %s\n%s: %d\n", i+1, clan.Name, rankNameToType[rankName], data(clan))
+		}
 	}
-
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Embeds: []*disgord.Embed{
+				{
+					Title:       rankName + " Rank",
+					Color:       65535,
+					Description: text,
+				},
+			},
+		},
+	}
 }

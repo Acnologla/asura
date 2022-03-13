@@ -4,12 +4,13 @@ import (
 	"asura/src/handler"
 	"asura/src/utils"
 	"bytes"
-	"context"
 	"image/color"
 	"image/draw"
 	"image/png"
 	"io"
 	"strings"
+
+	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
@@ -17,34 +18,37 @@ import (
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"invert", "inverter", "reverse"},
-		Run:       runInvert,
-		Available: true,
-		Cooldown:  5,
-		Usage:     "j!invert @user",
-		Help:      "Inverta o avatar de alguem",
+	handler.RegisterCommand(handler.Command{
+		Name:        "invert",
+		Description: translation.T("InvertHelp", "pt"),
+		Run:         runInvert,
+		Cooldown:    10,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Name:        "user",
+			Description: translation.T("InvertOpt1", "pt"),
+			Type:        disgord.OptionTypeUser,
+		}, &disgord.ApplicationCommandOption{
+			Name:        "url",
+			Description: translation.T("InvertOpt2", "pt"),
+			Type:        disgord.OptionTypeString,
+		}),
 	})
 }
 
-func runInvert(session disgord.Session, msg *disgord.Message, args []string) {
+func runInvert(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	url := utils.GetUrl(itc)
 
-	// Download user image
-	url := utils.GetImageURL(msg, args, 256, session)
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
+
 	avatar, err := utils.DownloadImage(replacer.Replace(url))
-
 	if err != nil {
-		msg.Reply(context.Background(), session, "Invalid image")
-		return
+		return nil
 	}
-	// Resize the images
-	// Here we draw the image to the "editor"
-	avatar = resize.Resize(256, 256, avatar, resize.Lanczos3)
 
+	avatar = resize.Resize(256, 256, avatar, resize.Lanczos3)
 	cimg, ok := avatar.(draw.Image)
 	if !ok {
-		return
+		return nil
 	}
 	for i := 0; i < 256; i++ {
 		for j := 0; j < 256; j++ {
@@ -64,12 +68,15 @@ func runInvert(session disgord.Session, msg *disgord.Message, args []string) {
 	var b bytes.Buffer
 	pw := io.Writer(&b)
 	png.Encode(pw, dc.Image())
-
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Files: []disgord.CreateMessageFileParams{{
-			Reader:     bytes.NewReader(b.Bytes()),
-			FileName:   "inverted.png",
-			SpoilerTag: false},
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Files: []disgord.CreateMessageFile{{
+				Reader:     bytes.NewReader(b.Bytes()),
+				FileName:   "inverted.png",
+				SpoilerTag: false},
+			},
 		},
-	})
+	}
+
 }

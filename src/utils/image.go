@@ -1,9 +1,8 @@
 package utils
 
 import (
+	"asura/src/handler"
 	"image"
-	_ "image/jpeg"
-	_ "image/png"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,9 +10,13 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-// This function checks if the url has a valid image by checking the head of the url
-// The head contains the Content-Length (that we limit the size to avoid downloading absurd res images)
-// And the Content-type that will tell us if the url has an image
+func DownloadAvatar(id disgord.Snowflake, size int, gif bool) (image.Image, error) {
+	user, _ := handler.Client.User(id).WithFlags(disgord.IgnoreCache).Get()
+	avatar, _ := user.AvatarURL(size, gif)
+	avatar = strings.Replace(avatar, ".webp", ".png", 1)
+	return DownloadImage(avatar)
+}
+
 func CheckImage(url string) bool {
 	req, err := http.NewRequest("HEAD", url, nil)
 	if err != nil {
@@ -26,7 +29,7 @@ func CheckImage(url string) bool {
 	}
 	defer resp.Body.Close()
 	mb, _ := strconv.Atoi(resp.Header["Content-Length"][0])
-	if mb > 5*1024*1024 {
+	if mb > 3*1024*1024 {
 		return false
 	}
 	if !strings.HasPrefix(resp.Header["Content-Type"][0], "image") {
@@ -49,26 +52,22 @@ func DownloadImage(url string) (image.Image, error) {
 	return img, nil
 }
 
-// TODO: Remove this absurd quantity of ifs and make the function get
-// Persons without avatar
-// This function is used to get a url for an iamge that will be used
-// To a lot of functions.
-func GetImageURL(msg *disgord.Message, args []string, size int, session disgord.Session) string {
-	if len(msg.Mentions) > 0 {
-		avatar, _ := msg.Mentions[0].AvatarURL(size, false)
-		return avatar
-	}
-	if len(args) > 0 {
-		converted := StringToID(args[0])
-		user, err := session.User(converted).Get()
-		if err == nil {
-			avatar, _ := user.AvatarURL(size, false)
-			return avatar
+func GetUrl(itc *disgord.InteractionCreate) string {
+	url, _ := itc.Member.User.AvatarURL(1024, false)
+
+	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
+
+	if len(itc.Data.Options) > 0 {
+		if itc.Data.Options[0].Name == "user" {
+			user := GetUser(itc, 0)
+			url, _ = user.AvatarURL(1024, false)
+		} else {
+			_url := itc.Data.Options[0].Value.(string)
+
+			if CheckImage(replacer.Replace(url)) {
+				url = _url
+			}
 		}
 	}
-	if CheckImage(strings.Join(args, "")) {
-		return strings.Join(args, "")
-	}
-	avatar, _ := msg.Author.AvatarURL(size, false)
-	return avatar
+	return url
 }

@@ -4,11 +4,12 @@ import (
 	"asura/src/handler"
 	"asura/src/utils"
 	"bytes"
-	"context"
 	"image/png"
 	"io"
 	"os"
 	"strings"
+
+	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
 	"github.com/fogleman/gg"
@@ -16,37 +17,43 @@ import (
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"macaco", "monkey"},
-		Run:       runMonkey,
-		Available: true,
-		Cooldown:  5,
-		Usage:     "j!monkey @user",
-		Help:      "Transforme alguem em um macaco",
+	handler.RegisterCommand(handler.Command{
+		Name:        "monkey",
+		Description: translation.T("MonkeyHelp", "pt"),
+		Run:         runMonkey,
+		Cooldown:    10,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Name:        "user",
+			Description: translation.T("InvertOpt1", "pt"),
+			Type:        disgord.OptionTypeUser,
+		}, &disgord.ApplicationCommandOption{
+			Name:        "url",
+			Description: translation.T("InvertOpt2", "pt"),
+			Type:        disgord.OptionTypeString,
+		}),
 	})
 }
 
-func runMonkey(session disgord.Session, msg *disgord.Message, args []string) {
-	// Loads the template of nunca.png in memory
+func runMonkey(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	url := utils.GetUrl(itc)
+	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
+	avatar, err := utils.DownloadImage(replacer.Replace(url))
+	if err != nil {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Invalid image",
+			},
+		}
+	}
 	file, _ := os.Open("resources/monkey.png")
 	defer file.Close()
 
 	// Decodes it into a image.Image
 	img, err := png.Decode(file)
 	if err != nil {
-		return
+		return nil
 	}
-
-	// Download user image
-	url := utils.GetImageURL(msg, args, 512, session)
-	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
-	avatar, err := utils.DownloadImage(replacer.Replace(url))
-
-	if err != nil {
-		msg.Reply(context.Background(), session, "Invalid image")
-		return
-	}
-	// Here we draw the image to the "editor"
 	avatar = resize.Resize(491, 406, avatar, resize.Lanczos3)
 	dc := gg.NewContext(491, 406)
 	dc.DrawImage(avatar, 0, 0)
@@ -56,11 +63,15 @@ func runMonkey(session disgord.Session, msg *disgord.Message, args []string) {
 	pw := io.Writer(&b)
 	png.Encode(pw, dc.Image())
 
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Files: []disgord.CreateMessageFileParams{{
-			Reader:     bytes.NewReader(b.Bytes()),
-			FileName:   "monkey.png",
-			SpoilerTag: false},
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Files: []disgord.CreateMessageFile{{
+				Reader:     bytes.NewReader(b.Bytes()),
+				FileName:   "lixeira.jpg",
+				SpoilerTag: false},
+			},
 		},
-	})
+	}
+
 }

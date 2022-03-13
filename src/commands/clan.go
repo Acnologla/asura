@@ -1,309 +1,220 @@
 package commands
 
 import (
+	"asura/src/database"
+	"asura/src/entities"
 	"asura/src/handler"
+	"asura/src/rinha"
+	"asura/src/translation"
 	"asura/src/utils"
-	"asura/src/utils/rinha"
 	"context"
 	"fmt"
-	"strconv"
-	"strings"
 
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"clan", "guilda"},
-		Run:       runClan,
-		Available: true,
-		Cooldown:  10,
-		Usage:     "j!clan",
-		Help:      "Informação sobre o cla",
-		Category:  2,
+	handler.RegisterCommand(handler.Command{
+		Name:        "clan",
+		Description: translation.T("ClanHelp", "pt"),
+		Run:         runClan,
+		Category:    handler.Rinha,
+		Cooldown:    8,
+		Options: utils.GenerateOptions(
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "view",
+				Description: translation.T("ClanViewHelp", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "create",
+				Description: translation.T("ClanCreate", "pt"),
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeString,
+					Required:    true,
+					Name:        "name",
+					Description: "clan name",
+				}),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "mission",
+				Description: "Clan mission",
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "invite",
+				Description: translation.T("ClanInvite", "pt"),
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeUser,
+					Required:    true,
+					Name:        "user",
+					Description: "User to invite",
+				}),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "banco",
+				Description: translation.T("ClanBank", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "remove",
+				Description: translation.T("ClanRemove", "pt"),
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeUser,
+					Required:    false,
+					Name:        "user",
+					Description: "User to remove",
+				}, &disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeString,
+					Required:    false,
+					Name:        "user_id",
+					Description: "User id to remove",
+				}),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "depositar",
+				Description: translation.T("ClanMoney", "pt"),
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeNumber,
+					Required:    true,
+					Name:        "money",
+					MinValue:    0,
+					MaxValue:    50000,
+					Description: "money to deposit",
+				}),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "background",
+				Description: translation.T("ClanBackground", "pt"),
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeString,
+					Required:    true,
+					Name:        "background",
+					Description: "background url",
+				}),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "upgrade",
+				Description: translation.T("ClanUpgrade", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "leave",
+				Description: translation.T("ClanLeave", "pt"),
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "admin",
+				Description: translation.T("ClanAdmin", "pt"),
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeUser,
+					Required:    true,
+					Name:        "user",
+					Description: "User admin",
+				}),
+			},
+		),
 	})
+
 }
 
-func runClan(session disgord.Session, msg *disgord.Message, args []string) {
-	galo, _ := rinha.GetGaloDB(msg.Author.ID)
-	if galo.Clan == "" {
-		if len(args) > 1 {
-			if args[0] == "create" {
-				text := rinha.Format(strings.Join(args[1:], " "))
-				if text == "_test" {
-					return
-				}
-				if len(text) >= 25 {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", O nome do clan pode ter no máximo 24 caracteres.")
-					return
-				}
-				if len(text) <= 4 {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", O nome do clan pode ter no mínimo 5 caracteres.")
-					return
-				}
-				clan := rinha.GetClan(text)
-				if clan.CreatedAt != 0 {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Infelizmente já possui um clan com esse nome!")
-					return
-				}
-				err := rinha.ChangeMoney(msg.Author.ID, -1000, 1000)
-				if err != nil {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Você precisa ter 1000 de dinheiro para criar um clan!")
-					return
-				}
-				rinha.CreateClan(text, msg.Author.ID)
-				rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
-					gal.Clan = text
-					return gal, nil
-				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", Clan **"+text+"** criado com sucesso!\nUse **j!clan invite <usuario>** para convidar membros")
-				return
-			}
-		}
-		msg.Reply(context.Background(), session, &disgord.Embed{
-			Title:       "Clan",
-			Color:       65535,
-			Description: "Você não esta em nenhum clan\nUse j!clan create <nome> para criar um (**1000** de dinheiro)",
+func generateUpgradesOptions() (opts []*disgord.SelectMenuOption) {
+	for _, name := range [...]string{"membros", "missão"} {
+		opts = append(opts, &disgord.SelectMenuOption{
+			Label:       name,
+			Description: fmt.Sprintf("%s upgrade", name),
+			Value:       name,
 		})
-	} else {
-		clan := rinha.GetClan(galo.Clan)
-		if len(args) > 0 {
-			if strings.ToLower(args[0]) == "leave" {
-				role := rinha.GetMember(clan, msg.Author.ID)
-				members := rinha.RemoveMember(clan, msg.Author.ID)
-				if len(members) == 0 {
-					rinha.DeleteClan(galo.Clan)
-					rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
-						gal.Clan = ""
-						return gal, nil
-					})
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", O clan **"+galo.Clan+"** foi deletado com sucesso")
-					return
-				}
-				if role.Role == rinha.Owner {
-					members[0].Role = rinha.Owner
-				}
-				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
-					clan.Members = members
-					return clan, nil
-				})
-				rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
-					gal.Clan = ""
-					return gal, nil
-				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce saiu do clan **"+galo.Clan+"** com sucesso")
-				return
-			}
-			if strings.ToLower(args[0]) == "banco" {
-				msg.Reply(context.Background(), session, &disgord.Embed{
-					Title:       "Banco do clan",
-					Color:       65535,
-					Description: fmt.Sprintf("Dinheiro: **%d**\n\nUpgrades:\n[**Membros**] - Membro adicional para clan (%d)\n[**Artilharia**] - Artilharia (%d)\n[**Missao**] - Bonus para missao do clan (%d)\n\nUse j!clan depositar <dinheiro> para depositar dinheiro\nUse j!clan upgrade <upgrade> para dar upgrade em algo\nUse j!clan background <background> para setar um background para seu clan (custa 10000)", clan.Money, rinha.CalcClanUpgrade(clan.Upgrades.Members, 1), rinha.CalcClanUpgrade(clan.Upgrades.Artillery, 2), rinha.CalcClanUpgrade(clan.Upgrades.Mission, 1)),
-				})
-				return
-			}
-			if strings.ToLower(args[0]) == "missao" || strings.ToLower(args[0]) == "missão" {
-				clan = rinha.PopulateClanMissions(clan, galo.Clan, true)
-				msg.Reply(context.Background(), session, &disgord.Embed{
-					Title:       "Clan missão",
-					Color:       65535,
-					Description: rinha.MissionToString(clan),
-				})
-				return
-			}
+	}
+	return
+}
+func runClan(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	command := itc.Data.Options[0].Name
+	user := database.User.GetUser(itc.Member.UserID)
+	userClan := database.Clan.GetUserClan(user.ID, "Members")
+	clan := userClan.Clan
+	maxMembers := rinha.GetMaxMembers(clan)
+	member := userClan.Member
+	ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
+	var msg string
+	if command != "create" && clan.Name == "" {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T("NoClan", translation.GetLocale(itc)),
+			},
 		}
-		if len(args) > 1 {
-			role := rinha.GetMember(clan, msg.Author.ID)
-			if strings.ToLower(args[0]) == "background" {
-				if role.Role < rinha.Admin {
-					return
-				}
-				if !utils.CheckImage(args[1]) {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Imagem invalida!")
-					return
-				}
-				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
-					if clan.Money < 10000 {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", O clan precisa ter 10.000 de dinheiro para trocar o background")
-						return clan, nil
-					}
-					clan.Money -= 10000
-					clan.Background = args[1]
-					msg.Reply(context.Background(), session, "O background do clan foi alterado com sucesso")
-					return clan, nil
-				})
-				return
-			}
-			if strings.ToLower(args[0]) == "upgrade" {
-				if role.Role >= rinha.Admin {
-					txt := strings.ToLower(args[1])
-					if txt != "membros" && txt != "artilharia" && txt != "missao" {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Upgrade invalido")
-						return
-					}
-					done := false
-					if txt == "missao" {
-						price := rinha.CalcClanUpgrade(clan.Upgrades.Mission, 1)
-						rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
-							if clan.Money >= price {
-								clan.Upgrades.Mission++
-								clan.Money -= price
-								done = true
-							}
-							return clan, nil
-						})
-					}
-					if txt == "membros" {
-						price := rinha.CalcClanUpgrade(clan.Upgrades.Members, 1)
-						rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
-							if clan.Money >= price {
-								clan.Upgrades.Members++
-								clan.Money -= price
-								done = true
-							}
-							return clan, nil
-						})
-					} else if txt == "artilharia" {
-						price := rinha.CalcClanUpgrade(clan.Upgrades.Artillery, 2)
-						rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
-							if clan.Money >= price {
-								clan.Upgrades.Artillery++
-								clan.Money -= price
-								done = true
-							}
-							return clan, nil
-						})
-					}
-					if done {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Upgrade comprado com sucesso")
-					} else {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Seu clan nao tem dinheiro para isso")
-					}
-				}
-				return
-			}
-			if strings.ToLower(args[0]) == "depositar" {
-				if clan.Money >= rinha.MaxMoney {
-					return
-				}
-				money, err := strconv.Atoi(args[1])
-				if err != nil {
-					return
-				}
-				err = rinha.ChangeMoney(msg.Author.ID, -money, money)
-				if err != nil {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem esse dinheiro")
-					return
-				}
-				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
-					clan.Money += money
-					return clan, nil
-				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce depositou dinheiro no clan com sucesso")
-				return
-			}
-			if strings.ToLower(args[0]) == "invite" {
-				if len(msg.Mentions) == 0 {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Use j!clan invite @user")
-					return
-				}
-				user := msg.Mentions[0]
-				if user.ID == msg.Author.ID || user.Bot {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
-					return
-				}
-				if role.Role == rinha.Member {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Apenas donos e administradores podem convidar pessoas ao clan")
-					return
-				}
-				text := fmt.Sprintf("%s Voce foi convidado para o clan %s", msg.Mentions[0].Username, galo.Clan)
-				utils.Confirm(text, msg.ChannelID, msg.Mentions[0].ID, func() {
-					clan = rinha.GetClan(galo.Clan)
-					maxMembers := rinha.GetMaxMembers(clan)
-					if rinha.IsInClan(clan, user.ID) {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario ja esta no clan")
-						return
-					}
-					if len(clan.Members) >= maxMembers {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este clan ja esta cheio\nRemova algum usuario usando j!clan remove @user")
-						return
-					}
-					invited, _ := rinha.GetGaloDB(user.ID)
-					if invited.Clan != "" {
-						msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario esta em outro clan ("+invited.Clan+")")
-						return
-					}
-					clan.Members = append(clan.Members, rinha.ClanMember{
-						ID:   uint64(user.ID),
-						Role: rinha.Member,
-					})
-					rinha.UpdateClan(galo.Clan, func(clanUpdate rinha.Clan) (rinha.Clan, error) {
-						clanUpdate.Members = clan.Members
-						return clanUpdate, nil
-					})
-					rinha.UpdateGaloDB(user.ID, func(gal rinha.Galo) (rinha.Galo, error) {
-						gal.Clan = galo.Clan
-						return gal, nil
-					})
-					msg.Reply(context.Background(), session, user.Mention()+", Voce entrou para o clan **"+galo.Clan+"** com sucesso")
-				})
+	}
+	if (command == "invite" || command == "remove" || command == "admin" || command == "background" || command == "upgrade") && member.Role == entities.Member {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T("MissingPermissions", translation.GetLocale(itc)),
+			},
+		}
 
-				return
-			}
-			if strings.ToLower(args[0]) == "admin" {
-				user := utils.GetUser(msg, args[1:], session)
-				if user.ID == msg.Author.ID || user.Bot {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
-					return
-				}
-				if role.Role != rinha.Owner {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Apenas donos podem promover as pessoas a administrador")
-					return
-				}
-				if !rinha.IsInClan(clan, user.ID) {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario nao esta no clan")
-					return
-				}
-				members := rinha.PromoteMember(clan, user.ID)
-				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
-					clan.Members = members
-					return clan, nil
-				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", O usuario **"+user.Username+"** foi promovido com sucesso")
-				return
-			}
-			if strings.ToLower(args[0]) == "remove" {
-				user := utils.GetUser(msg, args[1:], session)
-				if user.ID == msg.Author.ID || user.Bot {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
-					return
-				}
-				if role.Role == rinha.Member {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Apenas donos e administradores podem remover pessoas do clan")
-					return
-				}
-				if !rinha.IsInClan(clan, user.ID) {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Este usuario nao esta no clan")
-					return
-				}
-				member := rinha.GetMember(clan, user.ID)
-				if member.Role >= role.Role {
-					msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce não tem permissoes para remover esse usuario")
-					return
-				}
-				members := rinha.RemoveMember(clan, user.ID)
-				rinha.UpdateClan(galo.Clan, func(clan rinha.Clan) (rinha.Clan, error) {
-					clan.Members = members
-					return clan, nil
-				})
-				rinha.UpdateGaloDB(user.ID, func(gal rinha.Galo) (rinha.Galo, error) {
-					gal.Clan = ""
-					return gal, nil
-				})
-				msg.Reply(context.Background(), session, msg.Author.Mention()+", O usuario **"+user.Username+"** foi removido com sucesso")
-				return
+	}
+	switch command {
+	case "create":
+		name := itc.Data.Options[0].Options[0].Value.(string)
+		name = rinha.Format(name)
+		if name == "_test" {
+			return nil
+		}
+		if len(name) >= 25 || len(name) <= 4 {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: translation.T("ClanNameLength", translation.GetLocale(itc)),
+				},
 			}
 		}
+		clan := database.Clan.GetClan(name)
+		if clan.Name != "" {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: translation.T("ClanArleadyExists", translation.GetLocale(itc)),
+				},
+			}
+		}
+		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+			clan := database.Clan.GetClan(name)
+			if clan.Name != "" {
+				msg = "ClanAlreadyIn"
+				return u
+			}
+			if 1000 > u.Money {
+				msg = "ClanNotEnoughMoney"
+				return u
+			}
+			u.Money -= 1000
+			database.Clan.CreateClan(entities.Clan{
+				Name: name,
+			}, user.ID)
+			return u
+		})
+		if msg != "" {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: translation.T(msg, translation.GetLocale(itc)),
+				},
+			}
+		}
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T("ClanCreated", translation.GetLocale(itc), name),
+			},
+		}
+	case "view":
 		level := rinha.ClanXpToLevel(clan.Xp)
 		memberMsg := ""
 		for _, member := range clan.Members {
@@ -316,21 +227,296 @@ func runClan(session disgord.Session, msg *disgord.Message, args []string) {
 			memberMsg = memberMsg[:1500]
 		}
 		benefits := rinha.GetBenefits(clan.Xp)
-		maxMembers := rinha.GetMaxMembers(clan)
 		bg := clan.Background
 		embed := &disgord.Embed{
-			Title: galo.Clan,
+			Title: clan.Name,
 			Color: 65535,
 			Footer: &disgord.EmbedFooter{
-				Text: "Use j!clan invite <user> para convidar | j!clan remove <user> para remover | j!clan admin <user> para promover membros",
+				Text: translation.T("ClanFooter", translation.GetLocale(itc)),
 			},
-			Description: fmt.Sprintf("Level: **%d** (%d/%d)\nVantagens do clan:\n %s\nMembros (%d/%d):\n %s\nUse **j!clan missao** para ver a missão mensal do clan\nUse **j!clan banco** para ver o banco do clan", level, clan.Xp, rinha.ClanLevelToXp(level), benefits, len(clan.Members), maxMembers, memberMsg),
+			Description: translation.T("ClanDescription", translation.GetLocale(itc), map[string]interface{}{
+				"level":       level,
+				"xp":          clan.Xp,
+				"needXp":      rinha.ClanLevelToXp(level),
+				"benefits":    benefits,
+				"members":     len(clan.Members),
+				"maxMembers":  maxMembers,
+				"membersText": memberMsg,
+			}),
 		}
 		if bg != "" {
 			embed.Image = &disgord.EmbedImage{
 				URL: bg,
 			}
 		}
-		msg.Reply(context.Background(), session, embed)
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: []*disgord.Embed{embed},
+			},
+		}
+	case "mission":
+		clan = rinha.PopulateClanMissions(clan)
+		database.Clan.UpdateClan(clan, func(clanUpdate entities.Clan) entities.Clan {
+			clanUpdate.Mission = clan.Mission
+			clanUpdate.MissionProgress = clan.MissionProgress
+			return clanUpdate
+		})
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: []*disgord.Embed{{
+					Title:       "Clan mission",
+					Description: rinha.MissionToString(clan),
+					Color:       65535,
+				}},
+			},
+		}
+	case "invite":
+		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
+		if user == nil {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Invalid user",
+				},
+			}
+		}
+		text := translation.T("InviteToClan", translation.GetLocale(itc), map[string]interface{}{
+			"clan":     clan.Name,
+			"username": user.Username,
+		})
+		utils.Confirm(text, itc, user.ID, func() {
+			database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+				uClan := database.Clan.GetUserClan(user.ID)
+				if uClan.Clan.Name != "" {
+					msg = "UserArleadyInClan"
+				} else {
+					if len(c.Members) >= maxMembers {
+						msg = "ClanMaxMembers"
+					} else {
+						database.User.GetUser(user.ID)
+						database.Clan.InsertMember(&c, &entities.ClanMember{
+							ID: user.ID,
+						})
+						msg = "SucessInvite"
+					}
+				}
+				return c
+			})
+		})
+
+		ch.CreateMessage(&disgord.CreateMessage{
+			Content: translation.T(msg, translation.GetLocale(itc), user.Username),
+		})
+	case "remove":
+		if len(itc.Data.Options[0].Options) == 0 {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Invalid user",
+				},
+			}
+		}
+		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
+		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+			uClan := database.Clan.GetUserClan(user.ID)
+			if uClan.Clan.Name != clan.Name {
+				msg = "UserNotInClan"
+			} else {
+				if member.Role <= uClan.Member.Role {
+					msg = "NoPermission"
+				} else {
+					msg = "SucessRemove"
+					database.Clan.RemoveMember(&c, user.ID, false)
+				}
+			}
+			return c
+		})
+
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T(msg, translation.GetLocale(itc), user.Username),
+			},
+		}
+	case "admin":
+		if len(itc.Data.Options[0].Options) == 0 {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Invalid user",
+				},
+			}
+		}
+		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
+		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+			uClan := database.Clan.GetUserClan(user.ID)
+			if uClan.Clan.Name != clan.Name {
+				msg = "UserNotInClan"
+			} else {
+				if member.Role != entities.Owner || uClan.Member.Role == entities.Owner {
+					msg = "NoPermission"
+				} else {
+					uClan.Member.Role = entities.Administrator
+					database.Clan.UpdateMember(&c, uClan.Member)
+					msg = "SucessAdmin"
+				}
+			}
+			return c
+		})
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T(msg, translation.GetLocale(itc), user.Username),
+			},
+		}
+	case "banco":
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: []*disgord.Embed{
+					{
+						Title: "Banco",
+						Color: 65535,
+						Description: translation.T("ClanBankDesc", translation.GetLocale(itc), map[string]interface{}{
+							"money":          clan.Money,
+							"membersUpgrade": rinha.CalcClanUpgrade(clan.MembersUpgrade, 1),
+							"missionUpgrade": rinha.CalcClanUpgrade(clan.MissionsUpgrade, 1),
+						}),
+					},
+				},
+			},
+		}
+	case "depositar":
+		money := int(itc.Data.Options[0].Options[0].Value.(float64))
+		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+			if u.Money < money {
+				msg = "NoMoney"
+			} else {
+				u.Money -= money
+				database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+					c.Money += money
+					return c
+				})
+				msg = "ClanMoneyAdd"
+			}
+			return u
+		})
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T(msg, translation.GetLocale(itc), money),
+			},
+		}
+	case "upgrade":
+		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: []*disgord.Embed{
+					{
+						Title: "Upgrades",
+						Color: 65535,
+						Description: translation.T("ClanBankMinified", translation.GetLocale(itc), map[string]interface{}{
+							"money":          clan.Money,
+							"membersUpgrade": rinha.CalcClanUpgrade(clan.MembersUpgrade, 1),
+							"missionUpgrade": rinha.CalcClanUpgrade(clan.MissionsUpgrade, 1),
+						}),
+					},
+				},
+				Components: []*disgord.MessageComponent{
+					{
+						Type: disgord.MessageComponentActionRow,
+						Components: []*disgord.MessageComponent{
+							{
+								Type:        disgord.MessageComponentButton + 1,
+								Options:     generateUpgradesOptions(),
+								CustomID:    "upgrade",
+								MaxValues:   1,
+								Placeholder: "Select upgrade",
+							},
+						},
+					},
+				},
+			},
+		})
+		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+			if len(ic.Data.Values) == 0 {
+				return
+			}
+			upgrade := ic.Data.Values[0]
+			if ic.Member.UserID == itc.Member.UserID {
+				database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+					var money int
+					if upgrade == "membros" {
+						money = rinha.CalcClanUpgrade(c.MembersUpgrade, 1)
+					}
+					if upgrade == "missão" {
+						money = rinha.CalcClanUpgrade(c.MissionsUpgrade, 1)
+					}
+					if money > c.Money {
+						msg = "ClanNoMoney"
+					} else {
+						msg = "ClanUpgradePuchased"
+						c.Money -= money
+						if upgrade == "membros" {
+							c.MembersUpgrade++
+						}
+						if upgrade == "missão" {
+							c.MissionsUpgrade++
+						}
+					}
+					return c
+				})
+				handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.CreateInteractionResponseData{
+						Content: translation.T(msg, translation.GetLocale(itc), upgrade),
+					},
+				})
+			}
+		}, 100)
+	case "leave":
+		var msg string
+		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+			err := database.Clan.RemoveMember(&c, user.ID, true)
+			if err == nil {
+				msg = "sucessLeaveClan"
+			}
+			return c
+		}, "Members")
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T(msg, translation.GetLocale(itc), clan.Name),
+			},
+		}
+	case "background":
+		img := itc.Data.Options[0].Options[0].Value.(string)
+		if !utils.CheckImage(img) {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: translation.T("InvalidImage", translation.GetLocale(itc)),
+				},
+			}
+		}
+		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+			if c.Money < 10000 {
+				msg = "ClanNoMoney"
+			} else {
+				c.Money -= 10000
+				c.Background = img
+				msg = "ChangedClanBackground"
+			}
+			return c
+		})
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T(msg, translation.GetLocale(itc)),
+			},
+		}
 	}
+	return nil
 }

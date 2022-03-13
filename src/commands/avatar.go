@@ -2,33 +2,41 @@ package commands
 
 import (
 	"asura/src/handler"
+	"asura/src/translation"
 	"asura/src/utils"
-	"context"
-	"fmt"
+
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"avatar", "ava"},
-		Run:       runAvatar,
-		Available: true,
-		Cooldown:  2,
-		Usage:     "j!avatar <usuario>",
-		Help:      "Veja o avatar de alguem",
+	handler.RegisterCommand(handler.Command{
+		Name:        "avatar",
+		Description: translation.T("AvatarHelp", "pt"),
+		Run:         runAvatar,
+		Cooldown:    5,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Name:        "user",
+			Type:        disgord.OptionTypeUser,
+			Description: "user avatar",
+			Required:    true,
+		}),
 	})
 }
 
-func runAvatar(session disgord.Session, msg *disgord.Message, args []string) {
-	user := utils.GetUser(msg, args, session)
-	avatar, _ := user.AvatarURL(512, true)
-	msg.Reply(context.Background(), session, &disgord.CreateMessageParams{
-		Embed: &disgord.Embed{
-			Color:       65535,
-			Description: fmt.Sprintf("**%s**\n[**Download**](%s)", user.Username, avatar),
-			Image: &disgord.EmbedImage{
-				URL: avatar,
+func runAvatar(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	user := utils.GetUser(itc, 0)
+	avatar, _ := user.AvatarURL(1024, true)
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Embeds: []*disgord.Embed{
+				{
+					Title: user.Username,
+					Image: &disgord.EmbedImage{
+						URL: avatar,
+					},
+				},
 			},
 		},
-	})
+	}
 }

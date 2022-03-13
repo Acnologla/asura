@@ -1,63 +1,66 @@
 package database
 
 import (
-	"asura/src/cache"
-	"context"
-	"errors"
+	"asura/src/adapter"
+	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 
-	firebase "firebase.google.com/go"
-	"firebase.google.com/go/db"
-	"github.com/andersfylling/disgord"
-	"google.golang.org/api/option"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
+	"github.com/uptrace/bun/extra/bundebug"
 )
 
-var Database *db.Client
-var Cache = cache.New()
+var Database *bun.DB
 
-type User struct {
-	Avatars   []string `json:"avatar"`
-	Usernames []string `json:"username"`
+type DBConfig struct {
+	User     string `json:"DB_USER"`
+	Host     string `json:"DB_HOST"`
+	Port     string `json:"DB_PORT"`
+	Password string `json:"DB_PASS"`
+	DbName   string `json:"DB_NAME"`
 }
 
-func Init() error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	config := &firebase.Config{
-		DatabaseURL: fmt.Sprintf("https://%s.firebaseio.com/", os.Getenv("FIREBASE_PROJECT_ID")),
-	}
-	opt := option.WithCredentialsJSON([]byte(os.Getenv("FIREBASE_CONFIG")))
-	app, err := firebase.NewApp(ctx, config, opt)
+var User adapter.UserAdapter
+var Clan adapter.ClanAdapter
+
+func GetEnvConfig() (config *DBConfig) {
+	dbconfig := os.Getenv("DB_CONFIG")
+	err := json.Unmarshal([]byte(dbconfig), &config)
 	if err != nil {
 		log.Fatal(err)
-		return err
 	}
-	Database, err = app.Database(ctx)
-	if err != nil {
-		log.Fatal(err)
-		return err
-	}
-	return nil
+	return
 }
 
-func IsBanned(id disgord.Snowflake) bool {
-	cacheBan, exists := cache.Get(Cache, id)
-	if exists {
-		return cacheBan
-	}
-	var isBan bool
-	Database.NewRef(fmt.Sprintf("bans/%d", id)).Get(context.Background(), &isBan)
-	cache.Set(Cache, id, isBan)
-	return isBan
-}
+func Connect(config *DBConfig) (*bun.DB, error) {
+	dbConfig := pgdriver.NewConnector(
+		pgdriver.WithAddr(fmt.Sprintf("%s:%s", config.Host, config.Port)),
+		pgdriver.WithUser(config.User),
+		pgdriver.WithPassword(config.Password),
+		pgdriver.WithDatabase(config.DbName),
+		pgdriver.WithInsecure(true),
+	)
 
-func GetUserDB(id disgord.Snowflake) (User, error) {
-	var acc User
-	err := Database.NewRef(fmt.Sprintf("users/%d", id)).Get(context.Background(), &acc)
+	sqldb := sql.OpenDB(dbConfig)
+	err := sqldb.Ping()
 	if err != nil {
-		return acc, errors.New("ERR")
+		return nil, err
 	}
-	return acc, nil
+	Database = bun.NewDB(sqldb, pgdialect.New(), bun.WithDiscardUnknownColumns())
+	maxOpenConns := 4 * runtime.GOMAXPROCS(0)
+	Database.SetMaxOpenConns(maxOpenConns)
+	Database.SetMaxIdleConns(maxOpenConns)
+	Database.AddQueryHook(bundebug.NewQueryHook())
+	User = adapter.UserAdapterPsql{
+		Db: Database,
+	}
+	Clan = adapter.ClanAdapterPsql{
+		Db: Database,
+	}
+	return Database, nil
 }

@@ -1,59 +1,78 @@
 package commands
 
 import (
+	"asura/src/database"
+	"asura/src/entities"
 	"asura/src/handler"
-	"asura/src/telemetry"
-	"asura/src/utils/rinha"
-	"context"
-	"fmt"
+	"asura/src/utils"
+
+	"asura/src/translation"
+
 	"github.com/andersfylling/disgord"
-	"strconv"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"dardinheiro", "givemoney"},
-		Run:       runGiveMoney,
-		Available: true,
-		Cooldown:  5,
-		Usage:     "j!givemoney <user>",
-		Help:      "De dinheiro para alguem",
-		Category:  1,
+	handler.RegisterCommand(handler.Command{
+		Name:        "givemoney",
+		Description: translation.T("GiveMoneyHelp", "pt"),
+		Run:         runGiveMoney,
+		Cooldown:    15,
+		Category:    handler.Profile,
+		Options: utils.GenerateOptions(
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeUser,
+				Required:    true,
+				Name:        "user",
+				Description: "user to give money",
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeNumber,
+				Required:    true,
+				MinValue:    0,
+				MaxValue:    12000,
+				Name:        "money",
+				Description: "money to give",
+			}),
 	})
 }
 
-func runGiveMoney(session disgord.Session, msg *disgord.Message, args []string) {
-	if 1 >= len(args) || len(msg.Mentions) == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Use j!givemoney <user> <quantia>")
-		return
+func runGiveMoney(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	user := utils.GetUser(itc, 0)
+	if user.Bot || user.ID == itc.Member.UserID {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "invalid user",
+			},
+		}
 	}
-	value, err := strconv.Atoi(args[1])
-	if err != nil {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Quantia invalida")
-		return
+	money := int(itc.Data.Options[1].Value.(float64))
+	if money < 1 {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T("GiveMoneyInvalid", translation.GetLocale(itc)),
+			},
+		}
 	}
-	if 0 >= value {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Quantia invalida")
-		return
-	}
-	if msg.Mentions[0].ID == msg.Author.ID || msg.Mentions[0].Bot {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Usuario invalido")
-		return
-	}
-	err = rinha.ChangeMoney(msg.Author.ID, -value, value)
-	if err == nil {
-		user := msg.Mentions[0]
-		tag := msg.Author.Username + "#" + msg.Author.Discriminator.String()
-		userTag := user.Username + "#" + user.Discriminator.String()
-		telemetry.Debug(fmt.Sprintf("%s Gived %d money to %s", tag, value, userTag), map[string]string{
-			"value":    strconv.Itoa(value),
-			"user":     strconv.FormatUint(uint64(msg.Author.ID), 10),
-			"reciever": strconv.FormatUint(uint64(user.ID), 10),
+	var msg string
+	database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+		if money > u.Money {
+			msg = "NoMoney"
+			return u
+		}
+		msg = "GiveMoney"
+		u.Money -= money
+		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+			u.Money += money
+			return u
 		})
-		rinha.ChangeMoney(msg.Mentions[0].ID, value, 0)
-		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Voce deu **%d** de dinheiro a %s com sucesso", msg.Author.Mention(), value, msg.Mentions[0].Username))
-	} else {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Voce nao tem essa quantia use j!lootbox para ver seu dinheiro")
-		return
+		return u
+	})
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: translation.T(msg, translation.GetLocale(itc), money),
+		},
 	}
 }

@@ -2,27 +2,30 @@ package commands
 
 import (
 	"asura/src/handler"
-	"context"
 	"fmt"
+
+	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"ping"},
-		Run:       runPing,
-		Available: true,
-		Cooldown:  1,
-		Usage:     "j!ping",
-		Help:      "Veja meu ping",
+	handler.RegisterCommand(handler.Command{
+		Name:        "ping",
+		Description: translation.T("PingHelp", "pt"),
+		Run:         runPing,
+		Cooldown:    3,
 	})
 }
 
-func runPing(session disgord.Session, msg *disgord.Message, args []string) {
+func runPing(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	ping, _ := handler.Client.HeartbeatLatencies()
 	botInfo, _ := handler.Client.Gateway().GetBot()
-	shard := disgord.ShardID(msg.GuildID, botInfo.Shards)
-	msg.Reply(context.Background(), session, fmt.Sprintf("%dms", ping[shard].Milliseconds()))
-
+	shard := disgord.ShardID(itc.GuildID, botInfo.Shards)
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: fmt.Sprintf("%dms", ping[shard].Milliseconds()),
+		},
+	}
 }

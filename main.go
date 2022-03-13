@@ -1,34 +1,40 @@
 package main
 
 import (
-	_ "asura/src/commands" // Initialize all commands and put them into an array
+	"asura/src/cache"
+	_ "asura/src/commands"
 	"asura/src/database"
+	"asura/src/firebase"
 	"asura/src/handler"
+	"asura/src/rinha"
 	"asura/src/telemetry"
-	"asura/src/utils/rinha"
 	"fmt"
-	"math/rand"
+	"log"
 	"os"
-	"time"
 
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
 )
 
-func onReady() {
-	myself, err := handler.Client.Cache().GetCurrentUser()
-	handler.Client.UpdateStatusString("Use j!comandos para ver meus comandos")
-	if err == nil {
-		telemetry.Info(fmt.Sprintf("%s Started", myself.Username), map[string]string{
-			"eventType": "ready",
-		})
-	}
-	go telemetry.MetricUpdate(handler.Client)
-
+func initBot() {
+	client := disgord.New(disgord.Config{
+		BotToken:     os.Getenv("TOKEN"),
+		RejectEvents: []string{disgord.EvtPresenceUpdate, disgord.EvtTypingStart},
+	})
+	appID := os.Getenv("APP_ID")
+	token := os.Getenv("TOKEN")
+	handler.Init(appID, token, client)
+	defer client.Gateway().StayConnectedUntilInterrupted()
+	client.Gateway().BotReady(func() {
+		go telemetry.MetricUpdate(client)
+		fmt.Println("Logged in")
+	})
+	client.Gateway().InteractionCreate(func(s disgord.Session, h *disgord.InteractionCreate) {
+		handler.InteractionChannel <- h
+	})
 }
+
 func main() {
-	rand.Seed(time.Now().UnixNano())
-	//If it's not in production so it's good to read a ".env" file
 	if os.Getenv("PRODUCTION") == "" {
 		err := godotenv.Load()
 		if err != nil {
@@ -36,25 +42,12 @@ func main() {
 		}
 	}
 	rinha.SetTopToken(os.Getenv("TOP_TOKEN"))
-	//Initialize datalog services for telemetry of the application
 	telemetry.Init()
-	database.Init()
-	fmt.Println("Starting bot...")
-	cache := disgord.NewBasicCache()
-	client := disgord.New(disgord.Config{
-		RejectEvents: []string{disgord.EvtPresenceUpdate, disgord.EvtTypingStart},
-		BotToken:     os.Getenv("TOKEN"),
-		Cache: &handler.Cache{
-			BasicCache: cache,
-			Messages:   map[disgord.Snowflake]*handler.Message{},
-		},
-	})
-	defer client.Gateway().StayConnectedUntilInterrupted()
-	handler.Client = client
-	client.Gateway().MessageCreate(handler.OnMessage)
-	client.Gateway().MessageReactionAdd(handler.OnReactionAdd)
-	client.Gateway().MessageReactionRemove(handler.OnReactionRemove)
-	client.Gateway().InteractionCreate(handler.Interaction)
-	client.Gateway().BotReady(onReady)
-
+	cache.Init()
+	firebase.Init()
+	_, err := database.Connect(database.GetEnvConfig())
+	if err != nil {
+		log.Fatal(err)
+	}
+	initBot()
 }

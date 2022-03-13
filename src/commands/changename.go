@@ -1,51 +1,65 @@
 package commands
 
 import (
+	"asura/src/database"
+	"asura/src/entities"
 	"asura/src/handler"
-	"asura/src/utils/rinha"
-	"context"
-	"fmt"
-	"strings"
+	"asura/src/rinha"
+	"asura/src/utils"
+
+	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
 )
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"changename", "galoname", "setname"},
-		Run:       runChangeName,
-		Available: true,
-		Cooldown:  3,
-		Usage:     "j!changename",
-		Help:      "Troque o nome do seu galo",
-		Category:  2,
+	handler.RegisterCommand(handler.Command{
+		Name:        "changename",
+		Description: translation.T("ChangeNameHelp", "pt"),
+		Run:         runChangeName,
+		Cooldown:    10,
+		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+			Type:        disgord.OptionTypeString,
+			Name:        "name",
+			Required:    true,
+			Description: translation.T("ChangeNameName", "pt"),
+		}),
+		Category: handler.Profile,
 	})
 }
 
-func runChangeName(session disgord.Session, msg *disgord.Message, args []string) {
-	if len(args) == 0 {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Use j!changename <novo nome>")
-		return
-	}
-	text := strings.Join(args, " ")
-	if len(text) > 25 || 3 > len(text) {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", O nome do seu galo deve ter entre 3 e 25 caracteres")
-		return
+func runChangeName(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	name := itc.Data.Options[0].Value.(string)
+	if len(name) > 25 || 3 > len(name) {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T("InvalidName", translation.GetLocale(itc)),
+			},
+		}
 	}
 	price := 100
-	galo, _ := rinha.GetGaloDB(msg.Author.ID)
-	if rinha.IsVip(galo) {
-		price = 0
-	}
-	err := rinha.ChangeMoney(msg.Author.ID, -price, price)
-	if err == nil {
-		rinha.UpdateGaloDB(msg.Author.ID, func(gal rinha.Galo) (rinha.Galo, error) {
-			gal.Name = text
-			return gal, nil
+	var msg string
+	database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+		if rinha.IsVip(&u) {
+			price = 0
+		}
+		if price > u.Money {
+			msg = "NoMoney"
+			return u
+		}
+		database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+			r.Name = name
+			return r
 		})
-		msg.Reply(context.Background(), session, fmt.Sprintf("%s, Você trocou o nome do seu galo para `%s` com sucesso\nCustou %d de dinheiro", msg.Author.Mention(), text, price))
-	} else {
-		msg.Reply(context.Background(), session, msg.Author.Mention()+", Você precisa ter 100 de dinheiro para trocar o nome do seu galo\nUse j!lootbox para ver seu dinheiro")
-		return
+		msg = "ChangeName"
+		u.Money -= price
+		return u
+	}, "Galos")
+	return &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: translation.T(msg, translation.GetLocale(itc), name),
+		},
 	}
 }

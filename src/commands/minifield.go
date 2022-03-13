@@ -6,20 +6,20 @@ import (
 	"context"
 	"strconv"
 
+	"asura/src/translation"
+
 	"github.com/andersfylling/disgord"
 )
 
 var miniFieldEmojis = []string{"0️⃣", "1⃣", "2⃣", "3⃣", "4⃣", "5⃣", "6⃣", "7⃣", "8⃣", "9⃣"}
 
 func init() {
-	handler.Register(handler.Command{
-		Aliases:   []string{"campominado", "minifield"},
-		Run:       runMinifield,
-		Available: true,
-		Cooldown:  10,
-		Usage:     "j!minifield",
-		Help:      "Jogue campo minado",
-		Category:  3,
+	handler.RegisterCommand(handler.Command{
+		Name:        "minifield",
+		Description: translation.T("MinifieldHelp", "pt"),
+		Run:         runMinifield,
+		Cooldown:    15,
+		Category:    handler.Games,
 	})
 }
 
@@ -34,7 +34,7 @@ func makeMinifieldBoard(x, y int) []([]*MinifieldTile) {
 		row := []*MinifieldTile{}
 		for j := 0; j < y; j++ {
 			ty := 0
-			if 2 >= utils.RandInt(9) {
+			if 2 >= utils.RandInt(10) {
 				ty = 1
 			}
 			row = append(row, &MinifieldTile{
@@ -73,7 +73,7 @@ func calcBombs(board []([]*MinifieldTile), i, j int) (numBombs int) {
 	return
 }
 
-func generateMinifieldBoard(board []([]*MinifieldTile)) *disgord.CreateMessageParams {
+func generateMinifieldBoard(board []([]*MinifieldTile)) []*disgord.MessageComponent {
 	arrs := []*disgord.MessageComponent{
 		{
 			Type: disgord.MessageComponentActionRow,
@@ -91,7 +91,6 @@ func generateMinifieldBoard(board []([]*MinifieldTile)) *disgord.CreateMessagePa
 			Type: disgord.MessageComponentActionRow,
 		},
 	}
-	params := &disgord.CreateMessageParams{}
 	for i, row := range board {
 		for j, tile := range row {
 			button := &disgord.MessageComponent{
@@ -117,8 +116,7 @@ func generateMinifieldBoard(board []([]*MinifieldTile)) *disgord.CreateMessagePa
 
 		}
 	}
-	params.Components = arrs
-	return params
+	return arrs
 }
 func endMinifield(board []([]*MinifieldTile)) {
 	for _, row := range board {
@@ -139,17 +137,19 @@ func totalCells(board []([]*MinifieldTile)) (total int) {
 	return
 }
 
-func runMinifield(session disgord.Session, msg *disgord.Message, args []string) {
+func runMinifield(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	board := makeMinifieldBoard(5, 5)
 	total := totalCells(board)
-	text := generateMinifieldBoard(board)
-	text.Content = "Clique nos botoes para jogar"
-	message, err := msg.Reply(context.Background(), session, text)
-	if err != nil {
-		return
-	}
-	handler.RegisterBHandler(message, func(interaction *disgord.InteractionCreate) {
-		if interaction.Member.User.ID != msg.Author.ID {
+	data := generateMinifieldBoard(board)
+	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content:    translation.T("MinifieldPlay", "pt"),
+			Components: data,
+		},
+	})
+	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+		if interaction.Member.User.ID != itc.Member.UserID {
 			return
 		}
 		i, _ := strconv.Atoi(string(interaction.Data.CustomID[0]))
@@ -171,19 +171,20 @@ func runMinifield(session disgord.Session, msg *disgord.Message, args []string) 
 		if totalUsed == total {
 			endMinifield(board)
 			content = "Você ganhou"
-			handler.DeleteBHandler(message)
+			handler.DeleteHandler(itc.ID)
 		} else if cell.Type == 1 {
 			endMinifield(board)
 			content = "Você perdeu"
-			handler.DeleteBHandler(message)
+			handler.DeleteHandler(itc.ID)
 		}
 		newMsg := generateMinifieldBoard(board)
-		session.SendInteractionResponse(context.Background(), interaction, &disgord.InteractionResponse{
-			Type: disgord.UpdateMessage,
-			Data: &disgord.InteractionApplicationCommandCallbackData{
+		handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackUpdateMessage,
+			Data: &disgord.CreateInteractionResponseData{
 				Content:    content,
-				Components: newMsg.Components,
+				Components: newMsg,
 			},
 		})
 	}, 60*2)
+	return nil
 }
