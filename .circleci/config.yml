@@ -20,7 +20,7 @@ jobs:
           name: Docker build and deploy
           command: |
             echo "$GITLABPASSWORD" | docker login registry.gitlab.com --username acnologla --password-stdin
-            docker docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag registry.gitlab.com/acnologla/asura --build-arg TOKEN="$TOKEN" --build-arg FIREBASE_CONFIG="$FIREBASE_CONFIG" --build-arg FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" --build-arg DATADOG_API_KEY="$DATADOG_API_KEY" --build-arg DB_CONFIG="$DB_CONFIG" --build-arg REDIS_CONFIG="$REDIS_CONFIG" --build-arg APP_ID="$APP_ID" --build-arg PUBLIC_KEY="$PUBLIC_KEY" --push .
+            docker buildx build --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag registry.gitlab.com/acnologla/asura --build-arg TOKEN="$TOKEN" --build-arg FIREBASE_CONFIG="$FIREBASE_CONFIG" --build-arg FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" --build-arg DATADOG_API_KEY="$DATADOG_API_KEY" --build-arg DB_CONFIG="$DB_CONFIG" --build-arg REDIS_CONFIG="$REDIS_CONFIG" --build-arg APP_ID="$APP_ID" --build-arg PUBLIC_KEY="$PUBLIC_KEY" --push .
 
 workflows:
   version: 2
