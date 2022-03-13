@@ -26,6 +26,7 @@ func initBot() {
 	handler.Init(appID, token, client)
 	defer client.Gateway().StayConnectedUntilInterrupted()
 	client.Gateway().BotReady(func() {
+		client.UpdateStatusString("Use /help para ver meus comandos")
 		go telemetry.MetricUpdate(client)
 		fmt.Println("Logged in")
 	})
