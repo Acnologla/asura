@@ -203,6 +203,10 @@ func runTrain(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 				if rinha.Classes[galo.Type].Rarity == rinha.Legendary {
 					calc -= 2
 				}
+				if item.Effect == 9 {
+					xpOb += 3
+					money++
+				}
 			}
 			xpOb += calc
 			money := 5

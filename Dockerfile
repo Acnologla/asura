@@ -8,7 +8,7 @@ COPY go.mod .
 RUN go mod tidy
 
 COPY . .
-RUN go build -mod=mod -o main .
+RUN env GOOS=linux GOARCH=arm64 go build -mod=mod -o main .
 
 FROM alpine
 
@@ -36,7 +36,8 @@ ENV DATADOG_API_KEY=$DATADOG_API_KEY
 ENV DB_CONFIG=$DB_CONFIG
 ENV REDIS_CONFIG=$REDIS_CONFIG
 
-
 COPY --from=builder /build/main /dist
+COPY --from=builder /build/resources /dist/resources
+COPY --from=builder /build/i18n /dist/i18n
 
 ENTRYPOINT ./main 
