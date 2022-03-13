@@ -27,7 +27,7 @@ func initBot() {
 	handler.Init(appID, token, client)
 	defer client.Gateway().StayConnectedUntilInterrupted()
 	client.Gateway().BotReady(func() {
-		client.UpdateStatusString("Use /help para ver meus comandos | https://acnologla.github.io/asura-site/")
+		client.UpdateStatusString("/help | Caso não apareça os comandos readicione o bot no servidor")
 		go telemetry.MetricUpdate(client)
 		fmt.Println("Logged in")
 	})
