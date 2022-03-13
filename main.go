@@ -16,15 +16,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var Port string
-
 func initBot() {
 	client := disgord.New(disgord.Config{
-		BotToken: os.Getenv("TOKEN"),
+		BotToken:     os.Getenv("TOKEN"),
+		RejectEvents: []string{disgord.EvtPresenceUpdate, disgord.EvtTypingStart},
 	})
 	appID := os.Getenv("APP_ID")
 	token := os.Getenv("TOKEN")
-	firebase.Init()
 	handler.Init(appID, token, client)
 	defer client.Gateway().StayConnectedUntilInterrupted()
 	client.Gateway().BotReady(func() {
@@ -46,6 +44,7 @@ func main() {
 	rinha.SetTopToken(os.Getenv("TOP_TOKEN"))
 	telemetry.Init()
 	cache.Init()
+	firebase.Init()
 	_, err := database.Connect(database.GetEnvConfig())
 	if err != nil {
 		log.Fatal(err)

@@ -3,3 +3,4 @@
 data.json
 .idea
 *.key
+docker-compose.yml
