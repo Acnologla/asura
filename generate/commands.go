@@ -8,12 +8,12 @@ import (
 )
 
 type Command struct {
-	Aliases   []string `json:"aliases"`
-	Help      string   `json:"help"`
-	Usage     string   `json:"usage"`
-	Cooldown  int      `json:"cooldown"`
-	Available bool     `json:"available"`
-	Category  int      `json:"category"`
+	Name      string `json:"name"`
+	Help      string `json:"help"`
+	Usage     string `json:"usage"`
+	Cooldown  int    `json:"cooldown"`
+	Available bool   `json:"available"`
+	Category  int    `json:"category"`
 }
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	for _, command := range handler.Commands {
 		if !command.Dev {
 			commands = append(commands, Command{
-				Aliases:   command.Aliases,
+				Name:      command.Name,
 				Help:      command.Description,
 				Cooldown:  command.Cooldown,
 				Available: !command.Dev,
