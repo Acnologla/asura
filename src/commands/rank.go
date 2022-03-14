@@ -104,7 +104,7 @@ func runRank(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 		case "level":
 			users = database.User.SortUsersByRooster(DEFAULT_RANK_LIMIT, "resets", "xp")
 			data = func(u *entities.User) int {
-				return (35 * u.Galos[0].Resets) + rinha.CalcLevel(u.Galos[0].Xp)
+				return rinha.CalcLevel(u.Galos[0].Xp)
 			}
 		case "vitorias":
 			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "win")
@@ -121,7 +121,11 @@ func runRank(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 			u, err := handler.Client.User(user.ID).Get()
 			if err == nil {
 				tag := u.Username + "#" + u.Discriminator.String()
-				text += fmt.Sprintf("[**%d**] - %s\n%s: %d\n", i+1, tag, rankNameToType[rankName], data(user))
+				extraMsg := ""
+				if rankName == "level" {
+					extraMsg = fmt.Sprintf(" (%d Reset)", user.Galos[0].Resets)
+				}
+				text += fmt.Sprintf("[**%d**] - %s\n%s: %d%s\n", i+1, tag, rankNameToType[rankName], data(user), extraMsg)
 			}
 		}
 

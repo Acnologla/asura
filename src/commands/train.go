@@ -216,7 +216,7 @@ func runTrain(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 				money++
 			}
 			clanMsg := ""
-			if user.TrainLimit == 0 || 1 <= (uint64(time.Now().Unix())-user.TrainLimitReset/60/60/24) {
+			if user.TrainLimit == 0 || 1 <= ((uint64(time.Now().Unix())-user.TrainLimitReset)/60/60/24) {
 				user.TrainLimit = 0
 				user.TrainLimitReset = uint64(time.Now().Unix())
 				database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
