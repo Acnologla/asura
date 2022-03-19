@@ -171,6 +171,9 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 			Value:       "nil",
 		})
 	}
+	if len(opts) >= 25 {
+		opts = opts[:25]
+	}
 	return
 }
 

@@ -29,9 +29,9 @@ func HasUpgrade(upgrades []int, upgradeList ...int) bool {
 func CalcUserXp(galo *entities.User) int {
 	n := len(galo.Upgrades)
 	if n == 0 {
-		return 300
+		return 150
 	}
-	return 300 * (6 * int(math.Pow(float64(n), 2)))
+	return 250 * (6 * int(math.Pow(float64(n), 2)))
 }
 
 func GetCurrentUpgrade(galo *entities.User) Upgrade {

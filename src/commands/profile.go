@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"asura/src/cache"
 	"asura/src/database"
 	"asura/src/entities"
 	"asura/src/handler"
@@ -193,7 +194,7 @@ func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 		dc.DrawRectangle(float64(220+i*75), 300, 55, 55)
 		dc.Fill()
 	}
-	for i := range galo.Galos {
+	for i, g := range galo.Galos {
 		if i == 10 {
 			break
 		}
@@ -217,12 +218,23 @@ func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 			colorE := rinha.Classes[galo.Galos[i].Type].Rarity.Color()
 			dc.SetHexColor(fmt.Sprintf("%06x", colorE))
 		}
-
-		userGaloImg := downloadedSprites[galo.Galos[i].Type-1]
+		userGaloImg := rinha.GetGaloImage(g, galo.Items)
+		var img *image.Image
+		if strings.Contains(userGaloImg, "imgur") {
+			img = &downloadedSprites[g.Type-1]
+		} else {
+			img = cache.GetImageFromCache("profile", userGaloImg)
+			if img == nil {
+				imgD, _ := utils.DownloadImage(userGaloImg)
+				imgD = resize.Resize(55, 55, imgD, resize.Lanczos3)
+				img = &imgD
+				cache.CacheProfileImage(img, userGaloImg)
+			}
+		}
 
 		dc.DrawRectangle(float64(218+x), 233+val, 59, 59)
 		dc.Fill()
-		dc.DrawImage(userGaloImg, 220+x, 235+int(val))
+		dc.DrawImage(*img, 220+x, 235+int(val))
 	}
 	// And here we encode it to send
 	var b bytes.Buffer

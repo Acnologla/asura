@@ -546,3 +546,9 @@ other="Voce vendeu o galo com sucesso por **{{.}}** asura coins"
 
 [GaloUpgrade]
 other="Voce deu upgrade no seu galo com sucesso"
+
+[SkinsHelp]
+other="Equipe e desequipe skins"
+
+[SkinsNoSkins]
+other="Voce não tem nenhuma skin para equipar, ganhe skins abrindo lootboxs cosmesticas, use **/lootbox**"

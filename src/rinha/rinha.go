@@ -115,6 +115,16 @@ func init() {
 	json.Unmarshal([]byte(byteValueItems), &Items)
 	byteValueCosmetics, _ := ioutil.ReadFile("./resources/galo/cosmetics.json")
 	json.Unmarshal([]byte(byteValueCosmetics), &Cosmetics)
+	var Skins []*Cosmetic
+	var NewCosmetics []*Cosmetic
+	byteValueSkins, _ := ioutil.ReadFile("./resources/galo/skins.json")
+	json.Unmarshal([]byte(byteValueSkins), &Skins)
+	Cosmetics = append(Cosmetics, Skins...)
+
+	byteValueNewCosmetics, _ := ioutil.ReadFile("./resources/galo/newCosmetics.json")
+	json.Unmarshal([]byte(byteValueNewCosmetics), &NewCosmetics)
+	Cosmetics = append(Cosmetics, NewCosmetics...)
+
 	byteValueUpgrades, _ := ioutil.ReadFile("./resources/galo/upgrades.json")
 	json.Unmarshal([]byte(byteValueUpgrades), &Upgrades)
 }
@@ -314,7 +324,7 @@ func GetItemByID(items []*entities.Item, id uuid.UUID) *entities.Item {
 }
 
 func IsInLimit(user *entities.User) bool {
-	max := 200
+	max := 175
 	if HasUpgrade(user.Upgrades, 0, 1, 0, 0) {
 		max += 30
 	}

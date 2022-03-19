@@ -50,7 +50,7 @@ func runGalo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 	u := database.User.GetUser(user.ID, "Items", "Galos")
 	galo := rinha.GetEquippedGalo(&u)
 	skills := rinha.GetEquipedSkills(galo)
-	avatar, err := utils.DownloadImage(rinha.Sprites[0][galo.Type-1])
+	avatar, err := utils.DownloadImage(rinha.GetGaloImage(galo, u.Items))
 
 	if err != nil {
 		return nil

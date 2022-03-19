@@ -1,0 +1,1026 @@
+[
+  {
+    "name": "Skin Fênix da 'liberdade'",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFênix_da__liberdade__0_9TJO7GizxX.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Fênix_da__liberdade__0_0Y3xOPwm3.png",
+    "type": 2,
+    "extra": 33
+  },
+  {
+    "name": "Skin Fênix fogo Branco",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFênix_fogo_Branco_2_fZBEJsq7f.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Fênix_fogo_Branco_2_RyzO3wt0A.png",
+    "type": 2,
+    "extra": 33
+  },
+  {
+    "name": "Skin Retornando às cinzas",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseRetornando_às_cinzas_3_XU4QpJm-D.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Retornando_às_cinzas_3_ZGGHcyAQ5.png",
+    "type": 2,
+    "extra": 33
+  },
+  {
+    "name": "Skin Acelerador de Partículas",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseAcelerador_de_Partículas_3_dRpLAKj_F.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Acelerador_de_Partículas_3_ze6Eemnxl.png",
+    "type": 2,
+    "extra": 32
+  },
+  {
+    "name": "Skin Máquina do tempo Soviética",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseMáquina_do_tempo_Soviética_1_jBjG3rn6Q.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Máquina_do_tempo_Soviética_1_0E4rr1WqJw.png",
+    "type": 2,
+    "extra": 32
+  },
+  {
+    "name": "Skin Tv de tubo",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseTv_de_tubo_0_Lb3Mf1MKs.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Tv_de_tubo_0_t1OM9NOuqD.png",
+    "type": 2,
+    "extra": 32
+  },
+  {
+    "name": "Skin Anjo Feminino",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseAnjo_Feminino_2_hoIDvxZ-A.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Anjo_Feminino_2_y_hTyhCvy.png",
+    "type": 2,
+    "extra": 19
+  },
+  {
+    "name": "Skin Armas Divinas",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseArmas_Divinas_1_tM5AkjSjs.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Armas_Divinas_1_ShBM2H_8D.png",
+    "type": 2,
+    "extra": 19
+  },
+  {
+    "name": "Skin Templário",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseTemplário_3_g1p336uyO.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Templário_3_vAsQxy7W1.png",
+    "type": 2,
+    "extra": 19
+  },
+  {
+    "name": "Skin Armas Amaldiçoadas",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseArmas_Amaldiçoadas_0_ggMUrFfQg.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Armas_Amaldiçoadas_0_VNe8_cNSQ.png",
+    "type": 2,
+    "extra": 23
+  },
+  {
+    "name": "Skin Cabra",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseCabra_3_QPfWfGQYr.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Cabra_3_-L8j1Kb1t.png",
+    "type": 2,
+    "extra": 23
+  },
+  {
+    "name": "Skin Exorcizado",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseExorcizado_2_fMvERpW31.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Exorcizado_2_-FR1d3Vrh.png",
+    "type": 2,
+    "extra": 23
+  },
+  {
+    "name": "Skin Eclípse de Sangue",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseEclípse_de_Sangue_2_RICLgW_lS.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Eclípse_de_Sangue_2_GrtdlAPxk.png",
+    "type": 2,
+    "extra": 31
+  },
+  {
+    "name": "Skin Eclípse Parcial",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseEclípse_Parcial_1_Bw4ikjZms.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Eclípse_Parcial_1_iBCuGs3Mm.png",
+    "type": 2,
+    "extra": 31
+  },
+  {
+    "name": "Skin Eclípse Total",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseEclípse_Total_0_c1RVLsduN.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Eclípse_Total_0_HiDuzdvYx.png",
+    "type": 2,
+    "extra": 31
+  },
+  {
+    "name": "Skin Bruxa",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseBruxa_0_AQR4fRR-x.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Bruxa_0_TFfHP3WmI.png",
+    "type": 2,
+    "extra": 40
+  },
+  {
+    "name": "Skin Corrompido por poder",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseCorrompido_por_poder_1_sVmJhH1j_.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Corrompido_por_poder_1_oYr2PBwub.png",
+    "type": 2,
+    "extra": 40
+  },
+  {
+    "name": "Skin Rasputin",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseRasputin_1_iNhgN7E3i.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Rasputin_1_HDFxSJYxC.png",
+    "type": 2,
+    "extra": 40
+  },
+  {
+    "name": "Skin Degeneração",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDegeneração_3_nyqZFuv6E.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Degeneração_3_N0uffH65Le.png",
+    "type": 2,
+    "extra": 36
+  },
+  {
+    "name": "Skin Super Zumbi",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseSuper_Zumbi_0_lE6fp89h-f.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Super_Zumbi_0_Ut-0CqTkI.png",
+    "type": 2,
+    "extra": 36
+  },
+  {
+    "name": "Skin Zumbi Aquático",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/Zumbi_Aquático_12_6o-aTbUOl.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Zumbi_Aquático_1_0YgWdPMpy.png",
+    "type": 2,
+    "extra": 36
+  },
+  {
+    "name": "Skin Natureza",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseNatureza_1_V10Pxibro.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Natureza_1_UFXBRbTAc.png",
+    "type": 2,
+    "extra": 15
+  },
+  {
+    "name": "Skin Pedra Luminosa",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reversePedra_Luminosa_0_tMbv3ztEE.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Pedra_Luminosa_0_vBrNWSkFd.png",
+    "type": 2,
+    "extra": 15
+  },
+  {
+    "name": "Skin Vidro Azul",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseVidro_Azul_2_cZi8vPOBT.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Vidro_Azul_2_8Sb_t-jwFi.png",
+    "type": 2,
+    "extra": 15
+  },
+  {
+    "name": "Skin Dragão Chinês",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDragão_Chinês_0_yFVY0r1g2E.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Dragão_Chinês_0_IXiqOsriL.png",
+    "type": 2,
+    "extra": 29
+  },
+  {
+    "name": "Skin Dragão de fogo",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDragão_de_fogo_1_HtbFkG4I9.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Dragão_de_fogo_1_5gq-YTij-.png",
+    "type": 2,
+    "extra": 29
+  },
+  {
+    "name": "Skin Dragão de gelo",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDragão_de_gelo_0_2LExhVDcI.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Dragão_de_gelo_0_KRV1T_lpP.png",
+    "type": 2,
+    "extra": 29
+  },
+  {
+    "name": "Skin Raios Negros",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseRaios_Negros_1_43HkGsxb8.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Raios_Negros_1_YdWnt2j9i.png",
+    "type": 2,
+    "extra": 13
+  },
+  {
+    "name": "Skin Ruídos Exóticos",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseRuídos_Exóticos_0_0TDDaaeae.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Ruídos_Exóticos_0_M6sa_DUCV.png",
+    "type": 2,
+    "extra": 13
+  },
+  {
+    "name": "Skin White Shadow",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseWhite_Shadow_0__qLVmyWmY.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/White_Shadow_0_AcDNQqAmT.png",
+    "type": 2,
+    "extra": 13
+  },
+  {
+    "name": "Skin Aladin",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseAladin_2_A8UFzWHZd.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Aladin_2_ohP-M9PBo.png",
+    "type": 2,
+    "extra": 39
+  },
+  {
+    "name": "Skin Com Capa",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseCom_Capa_0_Cm7dNL18t.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Com_Capa_0_JalGXcC8Q.png",
+    "type": 2,
+    "extra": 39
+  },
+  {
+    "name": "Skin Inverted",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseInverted_0_Y_MjR9kdI.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Inverted_0_aHSwIRgWM.png",
+    "type": 2,
+    "extra": 39
+  },
+  {
+    "name": "Skin Morte",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseMorte_3_2f5bH-fGv.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Morte_3_4FEfEkiDg.png",
+    "type": 2,
+    "extra": 39
+  },
+  {
+    "name": "Skin Buraco Negro",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseBuraco_Negro_3_KDChV1Z3_.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Buraco_Negro_3_Z2eH4gBhO.png",
+    "type": 2,
+    "extra": 18
+  },
+  {
+    "name": "Skin Isaac Newton",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseIsaac_Newton_3_Xpq_qakjW.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Isaac_Newton_3_UGv72Kmtm.png",
+    "type": 2,
+    "extra": 18
+  },
+  {
+    "name": "Skin Sistema Planetário",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseSistema_Planetário_1_rz_fJtkOY.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Sistema_Planetário_1_KaYSUohWg.png",
+    "type": 2,
+    "extra": 18
+  },
+  {
+    "name": "Skin Apolo 9",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseApolo_9_0_3xAcC7pDS.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Apolo_9_0_HMRNm_rYc.png",
+    "type": 2,
+    "extra": 27
+  },
+  {
+    "name": "Skin Bloodmoon",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseBloodmoon_0_kxY_ZznZe.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Bloodmoon_0_edk6VCGJJ.png",
+    "type": 2,
+    "extra": 27
+  },
+  {
+    "name": "Skin Lado Escuro",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseLado_Escuro_1_syZ07t4R2.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Lado_Escuro_1_t6-EMwuAY.png",
+    "type": 2,
+    "extra": 27
+  },
+  {
+    "name": "Skin Super Lua",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseSuper_Lua_0_GNzgMbQai.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Super_Lua_0_9n-QUBNF1.png",
+    "type": 2,
+    "extra": 27
+  },
+  {
+    "name": "Skin Arco-íris",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseArco-íris_2_XI3EmCvZZ.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Arco-íris_2_jXHVHFr-_.png",
+    "type": 2,
+    "extra": 10
+  },
+  {
+    "name": "Skin Luz UV",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseLuz_UV_1_KIZSqsDFT.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Luz_UV_1_sTC9xRKqY.png",
+    "type": 2,
+    "extra": 10
+  },
+  {
+    "name": "Skin Xênon",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseXênon_0_tDudNFMSc.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Xênon_0_o3oieOpoP.png",
+    "type": 2,
+    "extra": 10
+  },
+  {
+    "name": "Skin Agente da CIA",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseAgente_da_CIA_2_Jr6jjwjiQ.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Agente_da_CIA_2_7ixyW9Fqy.png",
+    "type": 2,
+    "extra": 30
+  },
+  {
+    "name": "Skin Agente da KGB",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseAgente_da_KGB_1_31uK7ZKOk.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Agente_da_KGB_1_7e9Uyjibt.png",
+    "type": 2,
+    "extra": 30
+  },
+  {
+    "name": "Skin Ninja Japonês",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseNinja_Japonês_0_5n1Qh1BbC.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Ninja_Japonês_0_WzCHCAKK1.png",
+    "type": 2,
+    "extra": 30
+  },
+  {
+    "name": "Skin Rigel",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseRigel_0_85MR0Vv5K.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Rigel_0_QfCyUr0jz.png",
+    "type": 2,
+    "extra": 22
+  },
+  {
+    "name": "Skin Sírius A",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseSírius_A_0_2XsBASnlr.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Sírius_A_0_O4Vn6QZXj.png",
+    "type": 2,
+    "extra": 22
+  },
+  {
+    "name": "Skin UY Scuti",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseUY_Scuti_1_Uc1hQACOW.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/UY_Scuti_1_fqD5T-NIk.png",
+    "type": 2,
+    "extra": 22
+  },
+  {
+    "name": "Skin Drácula",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDrácula_0_zqFzZqbgs.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Drácula_0_r3icJzKY8.png",
+    "type": 2,
+    "extra": 24
+  },
+  {
+    "name": "Skin Temerácula",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseTemerácula_2_KWYSi1io2.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Temerácula_2_4FSkhLQAz.png",
+    "type": 2,
+    "extra": 24
+  },
+  {
+    "name": "Skin Vampiro em chamas",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseVampiro_em_chamas_1_MPorYcnax.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Vampiro_em_chamas_1_vjRJImhF2.png",
+    "type": 2,
+    "extra": 24
+  },
+  {
+    "name": "Skin Filho do Poseidon",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFilho_do_Poseidon_1_QRdocJG0O.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Filho_do_Poseidon_1_DnIx1Hp51.png",
+    "type": 2,
+    "extra": 8
+  },
+  {
+    "name": "Skin Metal Líquido",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseMetal_Líquido_0_LVbIjXvh4.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Metal_Líquido_0_O3JDkhPT8.png",
+    "type": 2,
+    "extra": 8
+  },
+  {
+    "name": "Skin Águas rasas",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseÁguas_rasas_0_LBNitNLbp.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Águas_rasas_0_sZI5PXDLH.png",
+    "type": 2,
+    "extra": 8
+  },
+  {
+    "name": "Skin Deserto Gelado",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDeserto_Gelado_0_abS2UiPaR.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Deserto_Gelado_0_12uGEpqi0.png",
+    "type": 2,
+    "extra": 25
+  },
+  {
+    "name": "Skin Semi-Árido",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseSemi-Árido_0_BtTVoQdMN.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Semi-Árido_0_1BlIDD-7l.png",
+    "type": 2,
+    "extra": 25
+  },
+  {
+    "name": "Skin Vidro",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseVidro_1_A7O_L4Ogo.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Vidro_1_sxLgnn56N.png",
+    "type": 2,
+    "extra": 25
+  },
+  {
+    "name": "Skin Nikola Tesla",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseNikola_Tesla_1_-UBIgM4qH.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Nikola_Tesla_1__CQYW3MTQ.png",
+    "type": 2,
+    "extra": 17
+  },
+  {
+    "name": "Skin Plasma Ball",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reversePlasma_Ball_2_ToT_9clo1.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Plasma_Ball_2_hetJHw5Pr.png",
+    "type": 2,
+    "extra": 17
+  },
+  {
+    "name": "Skin Tesla Coils",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseTesla_Coils_2_ysUH7dJCo.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Tesla_Coils_2_5uKBtvR2Z.png",
+    "type": 2,
+    "extra": 17
+  },
+  {
+    "name": "Skin Dinamite",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDinamite_3_O-rqYh2m2.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Dinamite_3_TaMAIMmCu.png",
+    "type": 2,
+    "extra": 21
+  },
+  {
+    "name": "Skin Explosivo Industrial",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseExplosivo_Industrial_1_3nBfoUj8V.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Explosivo_Industrial_1_BdEi6yCNr.png",
+    "type": 2,
+    "extra": 21
+  },
+  {
+    "name": "Skin Nukes",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseNukes_2_3IQ7Q6vs9.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Nukes_2_ao1S4Z1Te.png",
+    "type": 2,
+    "extra": 21
+  },
+  {
+    "name": "Skin Metal Derretido",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseMetal_Derretido_1_NxZU43Oaw.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Metal_Derretido_1_9cShVEKIZ.png",
+    "type": 2,
+    "extra": 7
+  },
+  {
+    "name": "Skin Veias de magma",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseVeias_de_magma_0_DS1lMJp2f.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Veias_de_magma_0_K-GaNK8yc.png",
+    "type": 2,
+    "extra": 7
+  },
+  {
+    "name": "Skin Vulcão",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseVulcão_2_ZJqGeHvjZ.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Vulcão_2_lRTSp1X76.png",
+    "type": 2,
+    "extra": 7
+  },
+  {
+    "name": "Skin Amazônia",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseAmazônia_2_83cZXFAr6.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Amazônia_2_nkEdkENP1.png",
+    "type": 2,
+    "extra": 9
+  },
+  {
+    "name": "Skin Fazendeiro",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFazendeiro_1_HJiUfUkR6.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Fazendeiro_1_15zOfDIkl.png",
+    "type": 2,
+    "extra": 9
+  },
+  {
+    "name": "Skin Mãe Natureza",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseMãe_Natureza_0_W7rtW3xxR.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Mãe_Natureza_0_1aqJR1zHg.png",
+    "type": 2,
+    "extra": 9
+  },
+  {
+    "name": "Skin Plasma Ativo",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reversePlasma_Ativo_0_Y9QxGj9F_.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Plasma_Ativo_0_N3RzD4kvV.png",
+    "type": 2,
+    "extra": 12
+  },
+  {
+    "name": "Skin Plasma Azul",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reversePlasma_Azul_0_SNkO-wBoM.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Plasma_Azul_0_3tipnqWHG.png",
+    "type": 2,
+    "extra": 12
+  },
+  {
+    "name": "Skin Plasma Negro",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reversePlasma_Negro_0_EbuyYvM80.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Plasma_Negro_0_uQJ0PJ48V.png",
+    "type": 2,
+    "extra": 12
+  },
+  {
+    "name": "Skin Núcleo de urânio",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseNúcleo_de_urânio_1_WcOAw2Pw3.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Núcleo_de_urânio_1_gR1CdsK2s.png",
+    "type": 2,
+    "extra": 28
+  },
+  {
+    "name": "Skin Russian Kamaz",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseRussian_Kamaz_0_q8LrZX2hJ.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Russian_Kamaz_0_eFCK_BsRf.png",
+    "type": 2,
+    "extra": 28
+  },
+  {
+    "name": "Skin Traje Chernobyl",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseTraje_Chernobyl_0_WAsonEyxLu.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Traje_Chernobyl_0_idIaoqHHJ.png",
+    "type": 2,
+    "extra": 28
+  },
+  {
+    "name": "Skin Android",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseAndroid_0_-ZpmNBg-3.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Android_0_pk1L9OKM1.png",
+    "type": 2,
+    "extra": 14
+  },
+  {
+    "name": "Skin Cyborg",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseCyborg_1_-46OmF-VU.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Cyborg_1_hhVro_FAC.png",
+    "type": 2,
+    "extra": 14
+  },
+  {
+    "name": "Skin Maquinário Russo",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseMaquinário_Russo_1_bFEPI7SAl.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Maquinário_Russo_1_EC2m-sXi5.png",
+    "type": 2,
+    "extra": 14
+  },
+  {
+    "name": "Skin Robocop",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseRobocop_2_RoazkWqB6.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Robocop_2_2r8j0uCbS.png",
+    "type": 2,
+    "extra": 14
+  },
+  {
+    "name": "Skin Techno",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseTechno_0_Cqii5V5hH.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Techno_0_sAxDMfiIU.png",
+    "type": 2,
+    "extra": 14
+  },
+  {
+    "name": "Skin Cavaleiro de placa",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseCavaleiro_de_placa_2_MIbYwSNz6.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Cavaleiro_de_placa_2_S9jo5zZfr.png",
+    "type": 2,
+    "extra": 34
+  },
+  {
+    "name": "Skin Combatente Mongol",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseCombatente_Mongol_1_-kZmCmuKv.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Combatente_Mongol_1_73BQbnOZF.png",
+    "type": 2,
+    "extra": 34
+  },
+  {
+    "name": "Skin Guerreiro Turco",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseGuerreiro_Turco_1_SEI3BnXhy.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Guerreiro_Turco_1_C81Bkmh-L.png",
+    "type": 2,
+    "extra": 34
+  },
+  {
+    "name": "Skin Pirata",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reversePirata_0_6hh5WuzEP.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Pirata_0_Ojs-QK2iw.png",
+    "type": 2,
+    "extra": 34
+  },
+  {
+    "name": "Skin Avatar do Vento",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseAvatar_do_Vento_1__mo9wY14Q.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Avatar_do_Vento_1_kb_zYAcwb.png",
+    "type": 2,
+    "extra": 38
+  },
+  {
+    "name": "Skin Ventos Gélidos",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseVentos_Gélidos_0_KToqzal1g.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Ventos_Gélidos_0_pGoFXMViR.png",
+    "type": 2,
+    "extra": 38
+  },
+  {
+    "name": "Skin Ventos Tóxicos",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseVentos_Tóxicos_0_pPTqpNHD5.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Ventos_Tóxicos_0_d1Oiu4-v7.png",
+    "type": 2,
+    "extra": 38
+  },
+  {
+    "name": "Skin Coágulos",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseCoágulos_1_-23XK-2I0U.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Coágulos_1_6_ZYNhec3.png",
+    "type": 2,
+    "extra": 16
+  },
+  {
+    "name": "Skin Gas Mask",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseGas_Mask_0_fn1FFo0u6.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Gas_Mask_0_QydSXkXyPz.png",
+    "type": 2,
+    "extra": 16
+  },
+  {
+    "name": "Skin Ácido Sulfúrico",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseÁcido_Sulfúrico_2_IA9a2cvMl.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Ácido_Sulfúrico_2_87gWDr7oT.png",
+    "type": 2,
+    "extra": 16
+  },
+  {
+    "name": "Skin Borracha Escolar",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseBorracha_Escolar_2_LvjAycmSA.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Borracha_Escolar_2_3tH9N5vKA.png",
+    "type": 2,
+    "extra": 26
+  },
+  {
+    "name": "Skin Doctor",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDoctor_1_OEy9CA-la.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Doctor_1_cfeunkZKb.png",
+    "type": 2,
+    "extra": 26
+  },
+  {
+    "name": "Skin Roupa da Peste",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseRoupa_da_Peste_0_Qjr8IPbOC.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Roupa_da_Peste_0_QOgFfJA6y.png",
+    "type": 2,
+    "extra": 26
+  },
+  {
+    "name": "Skin Facas",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFacas_3_K70Aycuqr.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Facas_3_cNMZ8pOJ_.png",
+    "type": 2,
+    "extra": 4
+  },
+  {
+    "name": "Skin Lâminas de ouro",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseLâminas_de_ouro_0_izJTu57t2.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Lâminas_de_ouro_0_Ut5lLqbbA.png",
+    "type": 2,
+    "extra": 4
+  },
+  {
+    "name": "Skin Serrilhado",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseSerrilhado_1_jeQ4KK0xh.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Serrilhado_1_EEc6W3kr7.png",
+    "type": 2,
+    "extra": 4
+  },
+  {
+    "name": "Skin Dino Azul",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDino_Azul_0_y17t3IxnS.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Dino_Azul_0_mb_gqKfg-.png",
+    "type": 2,
+    "extra": 37
+  },
+  {
+    "name": "Skin Estegossauro",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseEstegossauro_0_8zCT17xDw.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Estegossauro_0_h9z0TKCtK.png",
+    "type": 2,
+    "extra": 37
+  },
+  {
+    "name": "Skin Velociraptor",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseVelociraptor_0_7cpbzBCgo.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Velociraptor_0_KcDREsYU2.png",
+    "type": 2,
+    "extra": 37
+  },
+  {
+    "name": "Skin Dreads deprê",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseDreads_deprê_0_Y6uG8vPnW.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Dreads_deprê_0_wc-OQQngx.png",
+    "type": 2,
+    "extra": 35
+  },
+  {
+    "name": "Skin Seita",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseSeita_3_6Mxraxtzl.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Seita_3_wGZEHdxVc.png",
+    "type": 2,
+    "extra": 35
+  },
+  {
+    "name": "Skin Web-Corno",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseWeb-Corno_0_AzUZaH1zW.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Web-Corno_0_HkkUPNtpZ.png",
+    "type": 2,
+    "extra": 35
+  },
+  {
+    "name": "Skin Fogo Azul",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFogo_Azul_1_kYfR4MJ26.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Fogo_Azul_1_gT94-CiRa.png",
+    "type": 2,
+    "extra": 5
+  },
+  {
+    "name": "Skin Fogo Verde",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFogo_Verde_1_XcNuUtpQ6.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Fogo_Verde_1_QXX2qCqLv.png",
+    "type": 2,
+    "extra": 5
+  },
+  {
+    "name": "Skin Fogo Vermelho",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFogo_Vermelho_1_drweid8xk.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Fogo_Vermelho_1_fvvj2Ws_B.png",
+    "type": 2,
+    "extra": 5
+  },
+  {
+    "name": "Skin Ice Power",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseIce_Power_2_IcNWyoj7H.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Ice_Power_2_baCDxxxOP.png",
+    "type": 2,
+    "extra": 6
+  },
+  {
+    "name": "Skin Nevasca",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseNevasca_1_s7suw_sfe.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Nevasca_1_5Noo37VCl.png",
+    "type": 2,
+    "extra": 6
+  },
+  {
+    "name": "Skin Siberiano",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseSiberiano_0_Hpa7oS0oE.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Siberiano_0_t7252-L9B.png",
+    "type": 2,
+    "extra": 6
+  },
+  {
+    "name": "Skin Madeira branca",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseMadeira_branca_0_SEXxw8c7P.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Madeira_branca_0_hiUnMnZ4x.png",
+    "type": 2,
+    "extra": 20
+  },
+  {
+    "name": "Skin Madeira Negra",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseMadeira_Negra_0_Q9gqKSR5VC.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Madeira_Negra_0_r5bP6Jpqg.png",
+    "type": 2,
+    "extra": 20
+  },
+  {
+    "name": "Skin Madeira Queimando",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseMadeira_Queimando_1_0SJt4KZtf.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Madeira_Queimando_1_FjkIQycmE.png",
+    "type": 2,
+    "extra": 20
+  },
+  {
+    "name": "Skin Tábuas de madeira",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseTábuas_de_madeira_1_cs3FSOxZr.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Tábuas_de_madeira_1_xxD4uqVDv.png",
+    "type": 2,
+    "extra": 20
+  },
+  {
+    "name": "Skin Ferrugem",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFerrugem_0_gCCrmu-t0.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Ferrugem_0_x917Ex3KB.png",
+    "type": 2,
+    "extra": 11
+  },
+  {
+    "name": "Skin Grafeno",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseGrafeno_1_AUwQaWx0-.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Grafeno_1_74K_fmikM.png",
+    "type": 2,
+    "extra": 11
+  },
+  {
+    "name": "Skin Titânio",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseTitânio_0_fOIzRuEyY.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Titânio_0_2W5iVQz2s.png",
+    "type": 2,
+    "extra": 11
+  },
+  {
+    "name": "Skin Coringa",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseCoringa_3_DPNCwik9W.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Coringa_3_LhzowB4yo.png",
+    "type": 2,
+    "extra": 1
+  },
+  {
+    "name": "Skin Executivo",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseExecutivo_2_Fa_gJRdKb.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Executivo_2_7PoOptGJ8.png",
+    "type": 2,
+    "extra": 1
+  },
+  {
+    "name": "Skin Flamingo",
+    "rarity": 3,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFlamingo_3_vjAtOefnw.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Flamingo_3_1PqPnn5Dp.png",
+    "type": 2,
+    "extra": 1
+  },
+  {
+    "name": "Skin Funkeiro",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseFunkeiro_1_7Miju7dEP.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Funkeiro_1_YfXdjlZbq.png",
+    "type": 2,
+    "extra": 1
+  },
+  {
+    "name": "Skin Russo",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseRusso_1_t6dyqABvl.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Russo_1_GtFtPsJu0.png",
+    "type": 2,
+    "extra": 1
+  },
+  {
+    "name": "Skin Impresso",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseImpresso_0_DlMBi2LkH.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Impresso_0_9eXQEy4CE.png",
+    "type": 2,
+    "extra": 2
+  },
+  {
+    "name": "Skin Papel Negro",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reversePapel_Negro_0_5iQSKchpn.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Papel_Negro_0_ggG-9BYh7.png",
+    "type": 2,
+    "extra": 2
+  },
+  {
+    "name": "Skin Papiro",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reversePapiro_0_buL0hQ-j7.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Papiro_0_Ijd6fMmSa.png",
+    "type": 2,
+    "extra": 2
+  },
+  {
+    "name": "Skin Homem Pedra",
+    "rarity": 2,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseHomem_Pedra_2_9JEqJ4dng.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Homem_Pedra_2_V92qDfOmB.png",
+    "type": 2,
+    "extra": 3
+  },
+  {
+    "name": "Skin Obsidiana",
+    "rarity": 0,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reverseObsidiana_0_F8NGCtaLZ.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Obsidiana_0_g19PKB_VZ.png",
+    "type": 2,
+    "extra": 3
+  },
+  {
+    "name": "Skin Pedra Well10",
+    "rarity": 1,
+    "reverseValue": "https://ik.imagekit.io/ar6qa6zityxe/reversePedra_Well10_1_P-PzEwtox.png",
+    "value": "https://ik.imagekit.io/ar6qa6zityxe/Pedra_Well10_1_ptbJBYXJP.png",
+    "type": 2,
+    "extra": 3
+  }
+]

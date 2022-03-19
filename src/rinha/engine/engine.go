@@ -25,6 +25,7 @@ type RinhaOptions struct {
 	IDs         [2]disgord.Snowflake
 	Waiting     []*entities.User
 	Usernames   []string
+	Images      [2]string
 }
 
 var RinhaColors = [2]int{65280, 16711680}
@@ -72,11 +73,11 @@ func EditRinhaEmbed(msg *disgord.Message, embed *disgord.Embed, msgs [2]*disgord
 	}
 
 }
-func GetImageTile(first *entities.Rooster, sec *entities.Rooster, turn int) string {
+func GetImageTile(options *RinhaOptions, turn int) string {
 	if turn == 0 {
-		return rinha.Sprites[turn^1][sec.Type-1]
+		return options.Images[1]
 	}
-	return rinha.Sprites[turn^1][first.Type-1]
+	return options.Images[0]
 }
 
 var RinhaEmojis = [2]string{"<:sverde:744682222644363296>", "<:svermelha:744682249408217118>"}
@@ -252,15 +253,13 @@ func RinhaEngineNew(battle *rinha.Battle, options *RinhaOptions, message *disgor
 			Text:    u.Username,
 			IconURL: avatar,
 		}
-		galAuthor := rinha.GetEquippedGalo(options.GaloAuthor)
-		galAdv := rinha.GetEquippedGalo(options.GaloAdv)
 		embed.Image = &disgord.EmbedImage{
-			URL: GetImageTile(galAuthor, galAdv, battle.GetReverseTurn()),
+			URL: GetImageTile(options, battle.GetReverseTurn()),
 		}
 		if CheckDead(*battle) {
 			winnerTurn := battle.GetReverseTurn()
 			embed.Image = &disgord.EmbedImage{
-				URL: GetImageTile(galAuthor, galAdv, battle.GetTurn()),
+				URL: GetImageTile(options, battle.GetTurn()),
 			}
 			if winnerTurn == 1 {
 				embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AdvName)
@@ -335,7 +334,7 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, msg *disgord.Messa
 		}
 
 		embed.Image = &disgord.EmbedImage{
-			URL: GetImageTile(battle.Fighters[0].Galo, battle.Fighters[1].Galo, turn),
+			URL: GetImageTile(options, turn),
 		}
 		if 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life {
 			if len(battle.Waiting) > 1 && 0 >= battle.Fighters[0].Life {
@@ -371,6 +370,9 @@ func SpliceWaiting(slice []*rinha.Fighter, s int) []*rinha.Fighter {
 func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, options RinhaOptions, newEngine bool) (int, *rinha.Battle) {
 	authorGal := rinha.GetEquippedGalo(options.GaloAuthor)
 	advGal := rinha.GetEquippedGalo(options.GaloAdv)
+	authorURL := rinha.GetGaloImage(authorGal, options.GaloAuthor.Items)
+	advURL := rinha.GetGaloImage(advGal, options.GaloAdv.Items, "reverse")
+	options.Images = [2]string{authorURL, advURL}
 	if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0) {
 		advGal.Xp = rinha.CalcXP(rinha.CalcLevel(advGal.Xp)) - 1
 		if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0, 0) {
@@ -401,7 +403,7 @@ func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, optio
 			IconURL: avatar,
 		},
 		Image: &disgord.EmbedImage{
-			URL: GetImageTile(rinha.GetEquippedGalo(options.GaloAuthor), rinha.GetEquippedGalo(options.GaloAdv), 1),
+			URL: GetImageTile(&options, 1),
 		},
 	}
 	if newEngine {

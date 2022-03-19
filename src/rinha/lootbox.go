@@ -150,11 +150,11 @@ func GetPrice(lootType int) (int, int) {
 func OpenCosmetic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
 	pitVal := int(CalcPity(pity) * 15)
-	if 15+pitVal >= value {
+	if 8+pitVal >= value {
 		return GetCosmeticRandByType(Legendary), true
-	} else if 120 >= value {
+	} else if 70 >= value {
 		return GetCosmeticRandByType(Epic), false
-	} else if 460 >= value {
+	} else if 330 >= value {
 		return GetCosmeticRandByType(Rare), false
 	}
 	return GetCosmeticRandByType(Common), false

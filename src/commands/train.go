@@ -185,7 +185,7 @@ func runTrain(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 		completeMission(&user, &galoAdv, winner == 0, itc)
 
 		if winner == 0 {
-			xpOb := utils.RandInt(10) + 11
+			xpOb := utils.RandInt(11) + 11
 			if rinha.HasUpgrade(user.Upgrades, 0) {
 				xpOb++
 				if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
@@ -205,7 +205,7 @@ func runTrain(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 				}
 			}
 			xpOb += calc
-			money := 5
+			money := 6
 
 			if galo.Resets > 0 {
 				for i := 0; i < galo.Resets; i++ {

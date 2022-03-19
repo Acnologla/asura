@@ -41,28 +41,28 @@ func getEquipItem(items []*entities.Item, itemType entities.ItemType) *entities.
 
 func genEquipItemsOptions(user *entities.User, itemType entities.ItemType) (opts []*disgord.SelectMenuOption) {
 	for _, item := range user.Items {
-		if !item.Equip {
-			if item.Type == itemType {
-				if itemType == entities.CosmeticType {
-					cosmetic := rinha.Cosmetics[item.ItemID]
-					if cosmetic.Type == rinha.Background {
-						opts = append(opts, &disgord.SelectMenuOption{
-							Label:       cosmetic.Name,
-							Value:       item.ID.String(),
-							Description: "Equipar background " + cosmetic.Name,
-						})
-					}
-				} else if itemType == entities.NormalType {
-					_item := rinha.Items[item.ItemID]
+		if item.Type == itemType {
+			if itemType == entities.CosmeticType {
+				cosmetic := rinha.Cosmetics[item.ItemID]
+				if cosmetic.Type == rinha.Background {
 					opts = append(opts, &disgord.SelectMenuOption{
-						Label:       _item.Name,
+						Label:       cosmetic.Name,
 						Value:       item.ID.String(),
-						Description: rinha.ItemToString(_item),
+						Description: "Equipar background " + cosmetic.Name,
+						Default:     item.Equip,
 					})
 				}
+			} else if itemType == entities.NormalType {
+				_item := rinha.Items[item.ItemID]
+				opts = append(opts, &disgord.SelectMenuOption{
+					Label:       _item.Name,
+					Value:       item.ID.String(),
+					Description: rinha.ItemToString(_item),
+					Default:     item.Equip,
+				})
 			}
-
 		}
+
 	}
 	if len(opts) == 0 {
 		opts = append(opts, &disgord.SelectMenuOption{
@@ -70,6 +70,9 @@ func genEquipItemsOptions(user *entities.User, itemType entities.ItemType) (opts
 			Value:       "nil",
 			Description: "Nenhum item para equipar",
 		})
+	}
+	if len(opts) >= 25 {
+		opts = opts[:25]
 	}
 	return
 }

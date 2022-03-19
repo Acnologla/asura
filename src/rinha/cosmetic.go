@@ -37,10 +37,12 @@ func GetBackground(galo *entities.User) string {
 }
 
 type Cosmetic struct {
-	Type   CosmeticType `json:"type"`
-	Name   string       `json:"name"`
-	Value  string       `json:"value"`
-	Rarity Rarity       `json:"rarity"`
+	Type         CosmeticType `json:"type"`
+	Name         string       `json:"name"`
+	Value        string       `json:"value"`
+	ReverseValue string       `json:"reverseValue"`
+	Rarity       Rarity       `json:"rarity"`
+	Extra        int          `json:"extra"`
 }
 
 func (cosmetic Cosmetic) TypeToString() string {
@@ -52,10 +54,19 @@ func (cosmetic Cosmetic) String() string {
 	return fmt.Sprintf("(%s) - %s %s", cosmetic.Rarity.String(), cosmeticType, cosmetic.Name)
 }
 
+func GetRandCosmeticType() CosmeticType {
+	val := utils.RandInt(101)
+	if val > 70 {
+		return Background
+	}
+	return Skin
+}
+
 func GetCosmeticRandByType(rarity Rarity) int {
+	t := GetRandCosmeticType()
 	cosmeticArr := []*Cosmetic{}
 	for _, cosmetic := range Cosmetics {
-		if cosmetic.Rarity == rarity {
+		if cosmetic.Rarity == rarity && (cosmetic.Type == t) {
 			cosmeticArr = append(cosmeticArr, cosmetic)
 		}
 	}
@@ -67,6 +78,24 @@ func GetCosmeticRandByType(rarity Rarity) int {
 	}
 	return -1
 
+}
+
+func GetGaloImage(galo *entities.Rooster, items []*entities.Item, def ...string) string {
+	for _, item := range items {
+		if item.Type == entities.CosmeticType && item.Equip {
+			cosmetic := Cosmetics[item.ItemID]
+			if cosmetic.Type == Skin && cosmetic.Extra == galo.Type {
+				if len(def) > 0 {
+					return cosmetic.ReverseValue
+				}
+				return cosmetic.Value
+			}
+		}
+	}
+	if len(def) > 0 {
+		return Sprites[1][galo.Type-1]
+	}
+	return Sprites[0][galo.Type-1]
 }
 
 func SellCosmetic(cosmetic Cosmetic) int {
@@ -84,6 +113,22 @@ func SellCosmetic(cosmetic Cosmetic) int {
 	}
 	return 0
 }
+
+func GetCosmeticsByTypes(Items []*entities.Item, cType CosmeticType) ([]*Cosmetic, []*entities.Item) {
+	cosmetics := []*Cosmetic{}
+	items := []*entities.Item{}
+	for _, item := range Items {
+		if item.Type == entities.CosmeticType {
+			cosmetic := Cosmetics[item.ItemID]
+			if cosmetic.Type == cType {
+				cosmetics = append(cosmetics, cosmetic)
+				items = append(items, item)
+			}
+		}
+	}
+	return cosmetics, items
+}
+
 func GetBadges(galo *entities.User) []*Cosmetic {
 	badges := []*Cosmetic{}
 	for _, item := range galo.Items {

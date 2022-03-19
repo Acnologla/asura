@@ -73,6 +73,9 @@ func genSellOptions(user *entities.User, isRooster bool) (opts []*disgord.Select
 			Description: "Nenhum item para vender",
 		})
 	}
+	if len(opts) >= 25 {
+		opts = opts[:25]
+	}
 	return
 }
 
