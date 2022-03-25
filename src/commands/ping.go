@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"asura/src/entities"
 	"asura/src/handler"
 	"fmt"
 
@@ -22,10 +23,7 @@ func runPing(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 	ping, _ := handler.Client.HeartbeatLatencies()
 	botInfo, _ := handler.Client.Gateway().GetBot()
 	shard := disgord.ShardID(itc.GuildID, botInfo.Shards)
-	return &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Content: fmt.Sprintf("%dms", ping[shard].Milliseconds()),
-		},
-	}
+	return entities.CreateMsg().
+		Content(fmt.Sprintf("%dms", ping[shard].Milliseconds())).
+		Res()
 }

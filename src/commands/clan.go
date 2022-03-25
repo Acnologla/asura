@@ -319,6 +319,14 @@ func runClan(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 			}
 		}
 		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
+		if user == nil {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Invalid user",
+				},
+			}
+		}
 		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
 			uClan := database.Clan.GetUserClan(user.ID)
 			if uClan.Clan.Name != clan.Name {
