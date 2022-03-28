@@ -4,5 +4,65 @@
     "type": 1,
     "name": "Exsleonar",
     "value": "https://cdn.discordapp.com/attachments/736504238565359637/954817334252535898/Badge.png"
+  },
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Anime City background",
+    "value": "https://i.imgur.com/BFe14RP.jpg"
+  },
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Mountain background",
+    "value": "https://i.imgur.com/ulcGgTb.jpg"
+  },
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Water background",
+    "value": "https://i.imgur.com/X5a6Jum.jpg"
+  },
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Sun Water background",
+    "value": "https://i.imgur.com/IL5iys0.jpg"
+  },
+  {
+    "rarity": 1,
+    "type": 0,
+    "name": "Red Moon background",
+    "value": "https://i.imgur.com/8s4dFwe.png"
+  },
+  {
+    "rarity": 1,
+    "type": 0,
+    "name": "Moon city background",
+    "value": "https://i.imgur.com/WGP4NL0.png"
+  },
+  {
+    "rarity": 1,
+    "type": 0,
+    "name": "Galaxy background",
+    "value": "https://i.imgur.com/DOOFPhf.jpg"
+  },
+  {
+    "rarity": 2,
+    "type": 0,
+    "name": "Giant star background",
+    "value": "https://i.imgur.com/NmTHAEU.jpg"
+  },
+  {
+    "rarity": 2,
+    "type": 0,
+    "name": "Dark Planet background",
+    "value": "https://i.imgur.com/nykBPLK.png"
+  },
+  {
+    "rarity": 2,
+    "type": 0,
+    "name": "Sun Forest background",
+    "value": "https://i.imgur.com/T8XSCVv.jpg"
   }
 ]

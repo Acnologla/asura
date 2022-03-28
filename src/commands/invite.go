@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/translation"
 	"context"
@@ -18,10 +19,7 @@ func init() {
 }
 
 func runInvite(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	return &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Content: " https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%%20bot&permissions=8",
-		},
-	}
+	return entities.CreateMsg().
+		Content("https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%%20bot&permissions=8").
+		Res()
 }
