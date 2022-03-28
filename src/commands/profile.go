@@ -8,6 +8,7 @@ import (
 	"asura/src/rinha"
 	"asura/src/utils"
 	"bytes"
+	"context"
 	"fmt"
 	"image"
 	"image/color"
@@ -52,7 +53,7 @@ func GetClanPos(clan *entities.Clan) int {
 	return database.Clan.GetClanPos(clan) + 1
 }
 
-func runProfile(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
 	if len(itc.Data.Options) > 0 {
 		user = utils.GetUser(itc, 0)

@@ -43,7 +43,7 @@ type Command struct {
 	Cooldown    int
 	Description string
 	Options     []*disgord.ApplicationCommandOption
-	Run         func(*disgord.InteractionCreate) *disgord.CreateInteractionResponse
+	Run         func(context.Context, *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 	Category    CommandCategory
 	Dev         bool
 	Aliases     []string
@@ -93,7 +93,8 @@ func Run(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 		}
 	}
 	SetCooldown(itc.Member.User.ID, command)
-	return command.Run(itc)
+	ctx := context.Background()
+	return command.Run(ctx, itc)
 }
 
 func findCommand(command string, commands []*disgord.ApplicationCommand) *disgord.ApplicationCommand {

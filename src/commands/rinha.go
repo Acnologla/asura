@@ -17,37 +17,37 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-func isInRinha(user *disgord.User) string {
-	val := cache.Client.Get(context.Background(), "/rinha/"+user.ID.String())
+func isInRinha(ctx context.Context, user *disgord.User) string {
+	val := cache.Client.Get(ctx, "/rinha/"+user.ID.String())
 	result, _ := val.Result()
 	return result
 }
 
-func lockEvent(author disgord.Snowflake, evtUsername string) {
-	cache.Client.Set(context.Background(), "/rinha/"+author.String(), evtUsername, time.Minute*4)
+func lockEvent(ctx context.Context, author disgord.Snowflake, evtUsername string) {
+	cache.Client.Set(ctx, "/rinha/"+author.String(), evtUsername, time.Minute*4)
 }
 
-func unlockEvent(author disgord.Snowflake) {
-	cache.Client.Del(context.Background(), "/rinha/"+author.String())
+func unlockEvent(ctx context.Context, author disgord.Snowflake) {
+	cache.Client.Del(ctx, "/rinha/"+author.String())
 }
 
-func lockBattle(author, adv disgord.Snowflake, authorUsername, advUsername string) {
-	cache.Client.TxPipelined(context.Background(), func(p redis.Pipeliner) error {
-		p.Set(context.Background(), "/rinha/"+author.String(), advUsername, time.Minute*4)
-		p.Set(context.Background(), "/rinha/"+adv.String(), authorUsername, time.Minute*4)
+func lockBattle(ctx context.Context, author, adv disgord.Snowflake, authorUsername, advUsername string) {
+	cache.Client.TxPipelined(ctx, func(p redis.Pipeliner) error {
+		p.Set(ctx, "/rinha/"+author.String(), advUsername, time.Minute*4)
+		p.Set(ctx, "/rinha/"+adv.String(), authorUsername, time.Minute*4)
 		return nil
 	})
 }
 
-func unlockBattle(author, adv disgord.Snowflake) {
-	cache.Client.TxPipelined(context.Background(), func(p redis.Pipeliner) error {
-		p.Del(context.Background(), "/rinha/"+author.String())
-		p.Del(context.Background(), "/rinha/"+adv.String())
+func unlockBattle(ctx context.Context, author, adv disgord.Snowflake) {
+	cache.Client.TxPipelined(ctx, func(p redis.Pipeliner) error {
+		p.Del(ctx, "/rinha/"+author.String())
+		p.Del(ctx, "/rinha/"+adv.String())
 		return nil
 	})
 }
 
-func sendLevelUpEmbed(itc *disgord.InteractionCreate, galoWinner *entities.Rooster, user *disgord.User, xpOb int) {
+func sendLevelUpEmbed(ctx context.Context, itc *disgord.InteractionCreate, galoWinner *entities.Rooster, user *disgord.User, xpOb int) {
 	if rinha.CalcLevel(galoWinner.Xp) > rinha.CalcLevel(galoWinner.Xp-xpOb) {
 		nextLevel := rinha.CalcLevel(galoWinner.Xp)
 		nextSkill := rinha.GetNextSkill(*galoWinner)
@@ -57,7 +57,7 @@ func sendLevelUpEmbed(itc *disgord.InteractionCreate, galoWinner *entities.Roost
 		}
 		ch, _ := handler.Client.Channel(itc.ChannelID).Get()
 		if ch != nil {
-			ch.SendMsg(context.Background(), handler.Client, &disgord.Message{
+			ch.SendMsg(ctx, handler.Client, &disgord.Message{
 				Embeds: []*disgord.Embed{{
 					Title:       "Galo upou de nivel",
 					Color:       65535,
@@ -93,7 +93,7 @@ func init() {
 	})
 }
 
-func runRinha(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runRinha(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	if user.ID == itc.Member.User.ID || user.Bot {
 		return &disgord.CreateInteractionResponse{
@@ -106,30 +106,30 @@ func runRinha(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 	author := itc.Member.User
 	text := translation.T("RinhaDuel", translation.GetLocale(itc), map[string]interface{}{"author": author.Username, "adv": user.Username})
 	utils.Confirm(text, itc, user.ID, func() {
-		userRinha := isInRinha(user)
+		userRinha := isInRinha(ctx, user)
 		if userRinha != "" {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
 				Content: rinhaMessage(user.Username, userRinha).Data.Content,
 			})
 			return
 		}
-		authorRinha := isInRinha(itc.Member.User)
+		authorRinha := isInRinha(ctx, itc.Member.User)
 		if authorRinha != "" {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
 				Content: rinhaMessage(author.Username, authorRinha).Data.Content,
 			})
 			return
 		}
-		executePVP(itc)
+		executePVP(ctx, itc)
 	})
 	return nil
 }
 
-func executePVP(itc *disgord.InteractionCreate) {
+func executePVP(ctx context.Context, itc *disgord.InteractionCreate) {
 	author := itc.Member.User
 	user := utils.GetUser(itc, 0)
-	lockBattle(author.ID, user.ID, author.Username, user.Username)
-	defer unlockBattle(author.ID, user.ID)
+	lockBattle(ctx, author.ID, user.ID, author.Username, user.Username)
+	defer unlockBattle(ctx, author.ID, user.ID)
 	authorDb := database.User.GetUser(author.ID, "Galos", "Items")
 	advDb := database.User.GetUser(user.ID, "Galos", "Items")
 
@@ -187,7 +187,7 @@ func executePVP(itc *disgord.InteractionCreate) {
 		}
 		ch, _ := handler.Client.Channel(itc.ChannelID).Get()
 		if ch != nil {
-			ch.SendMsg(context.Background(), handler.Client, &disgord.Message{
+			ch.SendMsg(ctx, handler.Client, &disgord.Message{
 				Embeds: []*disgord.Embed{embed},
 			})
 		}

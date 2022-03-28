@@ -3,6 +3,7 @@ package commands
 import (
 	"asura/src/handler"
 	"asura/src/translation"
+	"context"
 
 	"github.com/andersfylling/disgord"
 )
@@ -16,7 +17,7 @@ func init() {
 	})
 }
 
-func runInvite(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runInvite(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{

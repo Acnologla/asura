@@ -1,7 +1,9 @@
 package commands
 
 import (
+	"asura/src/entities"
 	"asura/src/handler"
+	"context"
 	"fmt"
 	"runtime"
 	"time"
@@ -21,7 +23,7 @@ func init() {
 	})
 }
 
-func runBotInfo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runBotInfo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	guildSize := len(handler.Client.GetConnectedGuilds())
 	var memory runtime.MemStats
 	runtime.ReadMemStats(&memory)
@@ -82,8 +84,8 @@ func runBotInfo(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 		"hours":       readyAt / 60 % 24,
 		"minutes":     readyAt % 60,
 	})
-	res := &disgord.CreateInteractionResponseData{
-		Embeds: []*disgord.Embed{{
+	return entities.CreateMsg().
+		Embed(&disgord.Embed{
 			Title: fmt.Sprintf("Asura (Shard %d)", disgord.ShardID(itc.GuildID, botInfo.Shards)),
 			Color: 65535,
 			Thumbnail: &disgord.EmbedThumbnail{
@@ -93,41 +95,20 @@ func runBotInfo(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 				Text: guildUsageText,
 			},
 			Description: description,
-		}},
-		Components: []*disgord.MessageComponent{
-			{
-				Type: disgord.MessageComponentActionRow,
-				Components: []*disgord.MessageComponent{
-					{
-						Type:  disgord.MessageComponentButton,
-						Label: "Invite",
-						Style: disgord.Link,
-						Url:   "https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%20bot&permissions=8",
-					},
-					{
-						Type:  disgord.MessageComponentButton,
-						Label: "Website",
-						Style: disgord.Link,
-						Url:   "https://acnologla.github.io/asura-site/",
-					},
-					{
-						Type:  disgord.MessageComponentButton,
-						Label: "Support",
-						Style: disgord.Link,
-						Url:   "https://discord.gg/tdVWQGV",
-					},
-					{
-						Type:  disgord.MessageComponentButton,
-						Label: "Vote",
-						Style: disgord.Link,
-						Url:   "https://top.gg/bot/470684281102925844",
-					},
-				},
-			},
-		},
-	}
-	return &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: res,
-	}
+		}).
+		Component(
+			entities.CreateComponent().
+				Button(disgord.Link, "Invite", "", &disgord.MessageComponent{
+					Url: "https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%20bot&permissions=8",
+				}).
+				Button(disgord.Link, "Website", "", &disgord.MessageComponent{
+					Url: "https://acnologla.github.io/asura-site/",
+				}).
+				Button(disgord.Link, "Support", "", &disgord.MessageComponent{
+					Url: "https://discord.gg/tdVWQGV",
+				}).
+				Button(disgord.Link, "Vote", "", &disgord.MessageComponent{
+					Url: "https://top.gg/bot/470684281102925844",
+				})).
+		Res()
 }

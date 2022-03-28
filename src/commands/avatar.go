@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"asura/src/translation"
 	"asura/src/utils"
+	"context"
 
 	"github.com/andersfylling/disgord"
 )
@@ -23,7 +24,7 @@ func init() {
 	})
 }
 
-func runAvatar(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runAvatar(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	avatar, _ := user.AvatarURL(1024, true)
 	return &disgord.CreateInteractionResponse{

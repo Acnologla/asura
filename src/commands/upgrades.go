@@ -6,6 +6,7 @@ import (
 	"asura/src/handler"
 	"asura/src/rinha"
 	"asura/src/utils"
+	"context"
 	"fmt"
 	"strings"
 
@@ -31,7 +32,7 @@ func init() {
 	})
 }
 
-func runUpgrades(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runUpgrades(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
 	galo := database.User.GetUser(user.ID)
 	if len(itc.Data.Options) == 0 {

@@ -8,6 +8,7 @@ import (
 	"asura/src/rinha/engine"
 	"asura/src/telemetry"
 	"asura/src/utils"
+	"context"
 	"fmt"
 	"time"
 
@@ -142,13 +143,13 @@ func completeMission(user *entities.User, galoAdv *entities.Rooster, winner bool
 	}, "Galos")
 }
 
-func runTrain(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	discordUser := itc.Member.User
 	user := database.User.GetUser(itc.Member.UserID, "Galos", "Items")
 	galo := rinha.GetEquippedGalo(&user)
 	text := translation.T("TrainMessage", translation.GetLocale(itc), discordUser.Username)
 	utils.Confirm(text, itc, discordUser.ID, func() {
-		authorRinha := isInRinha(discordUser)
+		authorRinha := isInRinha(ctx, discordUser)
 		if authorRinha != "" {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
 				Content: rinhaMessage(discordUser.Username, authorRinha).Data.Content,
@@ -163,8 +164,8 @@ func runTrain(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 		if rinha.CalcLevel(galo.Xp) > 1 {
 			galoAdv.Xp = rinha.CalcXP(rinha.CalcLevel(galo.Xp) - 1)
 		}
-		lockEvent(discordUser.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
-		defer unlockEvent(discordUser.ID)
+		lockEvent(ctx, discordUser.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
+		defer unlockEvent(ctx, discordUser.ID)
 		userAdv := entities.User{
 			Galos: []*entities.Rooster{&galoAdv},
 		}
@@ -315,7 +316,7 @@ func runTrain(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 				},
 			})
 			galo.Xp += xpOb
-			sendLevelUpEmbed(itc, galo, discordUser, xpOb)
+			sendLevelUpEmbed(ctx, itc, galo, discordUser, xpOb)
 		} else {
 
 			database.User.UpdateUser(discordUser.ID, func(u entities.User) entities.User {

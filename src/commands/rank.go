@@ -6,6 +6,7 @@ import (
 	"asura/src/handler"
 	"asura/src/rinha"
 	"asura/src/utils"
+	"context"
 	"fmt"
 
 	"asura/src/translation"
@@ -83,7 +84,7 @@ var rankNameToType = map[string]string{
 	"derrotas": "Derrotas",
 }
 
-func runRank(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	rankType := itc.Data.Options[0].Name
 	rankName := itc.Data.Options[0].Options[0].Name
 	var text string

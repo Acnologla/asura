@@ -3,6 +3,7 @@ package commands
 import (
 	"asura/src/handler"
 	"asura/src/utils"
+	"context"
 	"fmt"
 
 	"asura/src/translation"
@@ -26,7 +27,7 @@ func init() {
 	})
 }
 
-func runHelp(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runHelp(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	if len(itc.Data.Options) > 0 {
 		commandText := itc.Data.Options[0].Value.(string)
 		command, ok := handler.Commands[commandText]

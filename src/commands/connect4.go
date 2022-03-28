@@ -119,8 +119,7 @@ func generateConnect4() []*disgord.MessageComponent {
 	return arrs
 }
 
-func runConnect4(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	ctx := context.Background()
+func runConnect4(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	board := utils.MakeBoard(8, 8)
 	user := utils.GetUser(itc, 0)
 	if user.Bot || user.ID == itc.Member.UserID {

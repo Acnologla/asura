@@ -3,6 +3,7 @@ package commands
 import (
 	"asura/src/handler"
 	"asura/src/utils"
+	"context"
 	"strconv"
 
 	"asura/src/translation"
@@ -24,7 +25,7 @@ func init() {
 	})
 }
 
-func runChifreSize(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runChifreSize(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUserOrAuthor(itc, 0)
 	idString := strconv.FormatUint(uint64(user.ID), 10)
 	result, _ := strconv.Atoi(string(idString[3:4]))

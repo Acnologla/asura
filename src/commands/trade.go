@@ -177,7 +177,7 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 	return
 }
 
-func runTrade(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	if user.Bot || user.ID == itc.Member.UserID {
 		return &disgord.CreateInteractionResponse{
@@ -194,22 +194,22 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 		"username":          authorUser.Username,
 	}), itc, user.ID, func() {
 		ch := handler.Client.Channel(itc.ChannelID)
-		userRinha := isInRinha(user)
+		userRinha := isInRinha(ctx, user)
 		if userRinha != "" {
 			ch.CreateMessage(&disgord.CreateMessage{
 				Content: rinhaMessage(user.Username, userRinha).Data.Content,
 			})
 			return
 		}
-		authorRinha := isInRinha(authorUser)
+		authorRinha := isInRinha(ctx, authorUser)
 		if authorRinha != "" {
 			ch.CreateMessage(&disgord.CreateMessage{
 				Content: rinhaMessage(authorUser.Username, userRinha).Data.Content,
 			})
 			return
 		}
-		lockBattle(itc.Member.UserID, user.ID, authorUser.Username, user.Username)
-		defer unlockBattle(itc.Member.UserID, user.ID)
+		lockBattle(ctx, itc.Member.UserID, user.ID, authorUser.Username, user.Username)
+		defer unlockBattle(ctx, itc.Member.UserID, user.ID)
 		authorGalo := database.User.GetUser(itc.Member.UserID, "Galos", "Items")
 		userGalo := database.User.GetUser(user.ID, "Galos", "Items")
 		minLevel := 0
@@ -318,7 +318,7 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 					}
 					if userDone && authorDone {
 						if minLevel > userGalo.UserXp || minLevel > authorGalo.UserXp {
-							handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+							handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 								Type: disgord.InteractionCallbackUpdateMessage,
 								Data: &disgord.CreateInteractionResponseData{
 									Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, translation.T("UserMinLevelTrade", translation.GetLocale(itc), minLevel))},
@@ -371,7 +371,7 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 							return a
 						}, "Galos", "Items")
 						handler.DeleteHandler(msg.ID)
-						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+						handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackChannelMessageWithSource,
 							Data: &disgord.CreateInteractionResponseData{
 								Content: translation.T("TradeDone", translation.GetLocale(itc)),
@@ -384,7 +384,7 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 						if userDone {
 							acceptUsername = user.Username
 						}
-						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+						handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackUpdateMessage,
 							Data: &disgord.CreateInteractionResponseData{
 								Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, translation.T("UserAcceptTrade", translation.GetLocale(itc), acceptUsername))},
@@ -449,7 +449,7 @@ func runTrade(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 							}
 
 						}
-						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+						handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackUpdateMessage,
 							Data: &disgord.CreateInteractionResponseData{
 								Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, "")},

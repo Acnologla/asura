@@ -5,6 +5,7 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/utils"
+	"context"
 
 	"asura/src/translation"
 
@@ -36,7 +37,7 @@ func init() {
 	})
 }
 
-func runGiveMoney(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runGiveMoney(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	if user.Bot || user.ID == itc.Member.UserID {
 		return &disgord.CreateInteractionResponse{

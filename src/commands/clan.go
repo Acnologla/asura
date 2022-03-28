@@ -134,7 +134,7 @@ func generateUpgradesOptions() (opts []*disgord.SelectMenuOption) {
 	}
 	return
 }
-func runClan(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := itc.Data.Options[0].Name
 	user := database.User.GetUser(itc.Member.UserID)
 	userClan := database.Clan.GetUserClan(user.ID, "Members")
@@ -418,7 +418,7 @@ func runClan(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 			},
 		}
 	case "upgrade":
-		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
@@ -476,7 +476,7 @@ func runClan(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 					}
 					return c
 				})
-				handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
+				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
 						Content: translation.T(msg, translation.GetLocale(itc), upgrade),

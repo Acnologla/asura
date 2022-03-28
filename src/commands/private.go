@@ -20,10 +20,9 @@ func init() {
 	})
 }
 
-func runPrivate(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runPrivate(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	var acc bool
 	id := strconv.FormatUint(uint64(itc.Member.UserID), 10)
-	ctx := context.Background()
 	if err := firebase.Database.NewRef("private/"+id).Get(ctx, &acc); err != nil {
 		return nil
 	}

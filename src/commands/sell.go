@@ -79,11 +79,11 @@ func genSellOptions(user *entities.User, isRooster bool) (opts []*disgord.Select
 	return
 }
 
-func runSell(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	galo := database.User.GetUser(itc.Member.UserID, "Galos", "Items")
 	optsGalos := genSellOptions(&galo, true)
 	optsItems := genSellOptions(&galo, false)
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
@@ -164,7 +164,7 @@ func runSell(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 		price := 0
 		isAsuraCoins := false
 		database.User.UpdateUser(userIC.ID, func(u entities.User) entities.User {
-			if isInRinha(userIC) != "" {
+			if isInRinha(ctx, userIC) != "" {
 				msg = "IsInRinha"
 				return u
 			}
@@ -204,7 +204,7 @@ func runSell(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 			return u
 		}, "Items", "Galos")
 		if msg != "" {
-			handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
+			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T(msg, translation.GetLocale(ic), price),

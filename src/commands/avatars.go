@@ -27,9 +27,8 @@ func init() {
 	})
 }
 
-func runAvatars(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runAvatars(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
-	ctx := context.Background()
 	var userinfo firebase.User
 	var private bool
 	id := strconv.FormatUint(uint64(user.ID), 10)
@@ -52,7 +51,7 @@ func runAvatars(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 		}
 	}
 	count := 0
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
@@ -107,7 +106,7 @@ func runAvatars(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 				}
 			}
 
-			handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+			handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackUpdateMessage,
 				Data: &disgord.CreateInteractionResponseData{
 					Embeds: []*disgord.Embed{

@@ -1,8 +1,10 @@
 package commands
 
 import (
+	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/utils"
+	"context"
 	"strings"
 
 	"asura/src/translation"
@@ -25,7 +27,7 @@ func init() {
 	})
 }
 
-func runEscrever(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runEscrever(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	str := itc.Data.Options[0].Value.(string)
 	text := ""
 	for i := 0; i < len(str); i++ {
@@ -35,10 +37,5 @@ func runEscrever(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespo
 			text += strings.ToLower(string(str[i]))
 		}
 	}
-	return &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Content: text,
-		},
-	}
+	return entities.CreateMsg().Content(text).Res()
 }

@@ -35,12 +35,11 @@ func init() {
 	})
 }
 
-func runUserinfo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runUserinfo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
 	if len(itc.Data.Options) > 0 {
 		user = utils.GetUser(itc, 0)
 	}
-	ctx := context.Background()
 	var userinfo firebase.User
 	var private bool
 	avatar, _ := user.AvatarURL(512, true)

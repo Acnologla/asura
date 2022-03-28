@@ -65,7 +65,7 @@ func generateNumberOptions(i int) (opts []*disgord.SelectMenuOption) {
 	return
 }
 
-func runSkills(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runSkills(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := database.User.GetUser(itc.Member.User.ID, "Galos")
 	galo := rinha.GetEquippedGalo(&user)
 	equipedSkills := rinha.GetEquipedSkills(galo)
@@ -81,7 +81,7 @@ func runSkills(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespons
 			}),
 		}}
 	}
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: genEmbed(),
@@ -125,7 +125,7 @@ func runSkills(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespons
 		data, _ := strconv.Atoi(number)
 		if name == "number" {
 			skillNumber = data
-			handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
+			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackUpdateMessage,
 				Data: &disgord.CreateInteractionResponseData{
 					Embeds: genEmbed(),
@@ -153,7 +153,7 @@ func runSkills(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespons
 				return u
 			}, "Galos")
 			if sucess {
-				handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
+				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackUpdateMessage,
 					Data: &disgord.CreateInteractionResponseData{
 						Embeds: genEmbed(),

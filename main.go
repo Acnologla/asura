@@ -4,6 +4,7 @@ import (
 	"asura/src/cache"
 	_ "asura/src/commands"
 	"asura/src/database"
+	"asura/src/entities"
 	"asura/src/firebase"
 	"asura/src/handler"
 	"asura/src/rinha"
@@ -65,6 +66,19 @@ func main() {
 	_, err := database.Connect(database.GetEnvConfig())
 	if err != nil {
 		log.Fatal(err)
+	}
+	users := []*entities.User{}
+	database.Database.NewSelect().Model(&users).Relation("Galos").Scan(context.Background())
+	for _, user := range users {
+		equip := false
+		for _, galo := range user.Galos {
+			if galo.Equip {
+				equip = true
+			}
+		}
+		if !equip {
+			fmt.Printf("User with id %d has no equiped galo\n", user.ID)
+		}
 	}
 	initBot()
 }

@@ -25,7 +25,7 @@ func init() {
 	})
 }
 
-func runMission(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
 	galo := database.User.GetUser(user.ID, "Missions")
 	galo.Missions = getMissions(&galo)
@@ -64,7 +64,7 @@ func runMission(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 	if len(components) > 0 {
 		params.Components = component
 	}
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: params,
 	})
@@ -84,7 +84,7 @@ func runMission(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 					return u
 				}, "Missions")
 				handler.DeleteHandler(itc.ID)
-				handler.Client.SendInteractionResponse(context.Background(), event, &disgord.CreateInteractionResponse{
+				handler.Client.SendInteractionResponse(ctx, event, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
 						Content: translation.T("TradeMission", translation.GetLocale(event)),

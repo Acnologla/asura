@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"asura/src/utils"
 	"bytes"
+	"context"
 	"image/jpeg"
 	"io"
 	"os"
@@ -34,7 +35,7 @@ func init() {
 	})
 }
 
-func runPraga(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runPraga(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	url := utils.GetUrl(itc)
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")
 	avatar, err := utils.DownloadImage(replacer.Replace(url))

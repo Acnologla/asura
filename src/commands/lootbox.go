@@ -55,7 +55,7 @@ func GenerateBuyOptions(arr []string) (opts []*disgord.SelectMenuOption) {
 	return
 }
 
-func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := itc.Data.Options[0].Name
 	user := database.User.GetUser(itc.Member.UserID, "Items")
 	switch command {
@@ -75,7 +75,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 			},
 		}
 	case "buy":
-		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
@@ -128,14 +128,14 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 				return u
 			}, "Items")
 			if done {
-				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+				handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
 						Content: translation.T("LootboxBuyDone", translation.GetLocale(interaction), lb),
 					},
 				})
 			} else {
-				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+				handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
 						Content: translation.T("NoMoney", translation.GetLocale(interaction)),
@@ -155,7 +155,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 				},
 			}
 		}
-		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
@@ -204,7 +204,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 				}
 				if lb != "cosmetica" && lb != "items" {
 					if len(u.Galos) >= 10 {
-						handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+						handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackChannelMessageWithSource,
 							Data: &disgord.CreateInteractionResponseData{
 								Content: "Voce ja chegou no limite de galos (10)",
@@ -262,7 +262,7 @@ func runLootbox(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 				rarity = galo.Rarity
 				winType = "galo"
 			}
-			handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+			handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
 					Embeds: []*disgord.Embed{

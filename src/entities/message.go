@@ -12,6 +12,7 @@ func (cb *ComponentBuilder) Select(placeholder, customID string, options []*disg
 		Placeholder: placeholder,
 		CustomID:    customID,
 		Options:     options,
+		MaxValues:   1,
 	}
 	cb.Components = append(cb.Components, selectMenu)
 	return cb

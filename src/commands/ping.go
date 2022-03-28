@@ -3,6 +3,7 @@ package commands
 import (
 	"asura/src/entities"
 	"asura/src/handler"
+	"context"
 	"fmt"
 
 	"asura/src/translation"
@@ -19,7 +20,7 @@ func init() {
 	})
 }
 
-func runPing(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runPing(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	ping, _ := handler.Client.HeartbeatLatencies()
 	botInfo, _ := handler.Client.Gateway().GetBot()
 	shard := disgord.ShardID(itc.GuildID, botInfo.Shards)

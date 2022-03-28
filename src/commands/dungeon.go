@@ -39,7 +39,7 @@ func init() {
 	})
 }
 
-func runDungeon(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	discordUser := itc.Member.User
 	user := database.User.GetUser(itc.Member.UserID, "Galos")
 	galo := rinha.GetEquippedGalo(&user)
@@ -64,7 +64,7 @@ func runDungeon(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 			},
 		}
 	case "battle":
-		authorRinha := isInRinha(discordUser)
+		authorRinha := isInRinha(ctx, discordUser)
 		if authorRinha != "" {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
 				Content: rinhaMessage(discordUser.Username, authorRinha).Data.Content,
@@ -86,8 +86,8 @@ func runDungeon(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 		}
 		dungeon := rinha.Dungeon[user.Dungeon]
 		galoAdv := dungeon.Boss
-		lockEvent(discordUser.ID, "Boss "+rinha.Classes[galoAdv.Type].Name)
-		defer unlockEvent(discordUser.ID)
+		lockEvent(ctx, discordUser.ID, "Boss "+rinha.Classes[galoAdv.Type].Name)
+		defer unlockEvent(ctx, discordUser.ID)
 		multiplier := 1 + user.DungeonReset
 
 		AdvLVL := rinha.CalcLevel(galoAdv.Xp) * multiplier
@@ -97,7 +97,7 @@ func runDungeon(itc *disgord.InteractionCreate) *disgord.CreateInteractionRespon
 			Type:  galoAdv.Type,
 			Equip: true,
 		}
-		itc.Reply(context.Background(), handler.Client, &disgord.CreateInteractionResponse{
+		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "A batalha esta iniciando",

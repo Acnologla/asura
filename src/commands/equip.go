@@ -46,35 +46,20 @@ func genEquipOptions(user *entities.User) (opts []*disgord.SelectMenuOption) {
 	return
 }
 
-func runEquip(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runEquip(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	galo := database.User.GetUser(itc.Member.UserID, "Galos")
 	optsGalos := genEquipOptions(&galo)
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Embeds: []*disgord.Embed{
-				{
-					Title: "Equip",
-					Color: 65535,
-				},
-			},
-			Components: []*disgord.MessageComponent{
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:        disgord.MessageComponentButton + 1,
-							Style:       disgord.Primary,
-							Placeholder: translation.T("EquipGaloPlaceholder", translation.GetLocale(itc)),
-							CustomID:    "galoEquip",
-							Options:     optsGalos,
-							MaxValues:   1,
-						},
-					},
-				},
-			},
-		},
-	})
+	r := entities.CreateMsg().
+		Embed(&disgord.Embed{
+			Title: "Equip",
+			Color: 65535,
+		}).
+		Component(entities.CreateComponent().
+			Select(
+				translation.T("EquipGaloPlaceholder", translation.GetLocale(itc)),
+				"galoEquip",
+				optsGalos))
+	handler.Client.SendInteractionResponse(ctx, itc, r.Res())
 	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
 		userIC := ic.Member.User
 		name := ic.Data.CustomID
@@ -91,15 +76,17 @@ func runEquip(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 		itemID := uuid.MustParse(val)
 		msg := ""
 		database.User.UpdateUser(userIC.ID, func(u entities.User) entities.User {
-			if isInRinha(userIC) != "" {
+			if isInRinha(ctx, userIC) != "" {
 				msg = "IsInRinha"
 				return u
 			}
 			if name == "galoEquip" {
 				database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
-					r.Equip = false
 					database.User.UpdateRooster(&u, itemID, func(r2 entities.Rooster) entities.Rooster {
-						r2.Equip = true
+						if r2.Type != 0 {
+							r.Equip = false
+							r2.Equip = true
+						}
 						return r2
 					})
 					return r
@@ -109,7 +96,7 @@ func runEquip(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 			return u
 		}, "Galos")
 		if msg != "" {
-			handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
+			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T(msg, translation.GetLocale(ic)),

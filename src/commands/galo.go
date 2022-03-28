@@ -39,7 +39,7 @@ func init() {
 	})
 }
 
-func runGalo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
 	if len(itc.Data.Options) > 0 {
 		user = utils.GetUser(itc, 0)
@@ -194,7 +194,7 @@ func runGalo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 				},
 			},
 		}
-		handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: data,
 		})
@@ -215,7 +215,7 @@ func runGalo(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse 
 					return u
 				}, "Galos")
 				if done {
-					ic.Reply(context.Background(), handler.Client, &disgord.CreateInteractionResponse{
+					ic.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 						Type: disgord.InteractionCallbackChannelMessageWithSource,
 						Data: &disgord.CreateInteractionResponseData{
 							Content: translation.T("GaloUpgrade", translation.GetLocale(itc)),

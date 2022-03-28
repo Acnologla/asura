@@ -4,6 +4,7 @@ import (
 	"asura/src/handler"
 	"asura/src/utils"
 	"bytes"
+	"context"
 	"image/color"
 	"image/draw"
 	"image/png"
@@ -35,7 +36,7 @@ func init() {
 	})
 }
 
-func runInvert(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runInvert(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	url := utils.GetUrl(itc)
 
 	replacer := strings.NewReplacer(".gif", ".png", ".webp", ".png")

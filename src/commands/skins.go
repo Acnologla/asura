@@ -51,7 +51,7 @@ func skinsToText(skins []*rinha.Cosmetic, items []*entities.Item) string {
 	return text
 }
 
-func runSkins(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runSkins(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	galo := database.User.GetUser(itc.Member.UserID, "Items")
 	skins, items := rinha.GetCosmeticsByTypes(galo.Items, rinha.Skin)
 	if len(skins) == 0 {
@@ -63,7 +63,7 @@ func runSkins(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 		}
 	}
 
-	itc.Reply(context.Background(), handler.Client, &disgord.CreateInteractionResponse{
+	itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{{
@@ -106,7 +106,7 @@ func runSkins(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse
 		galo := database.User.GetUser(itc.Member.UserID, "Items")
 		skins, items := rinha.GetCosmeticsByTypes(galo.Items, rinha.Skin)
 
-		ic.Reply(context.Background(), handler.Client, &disgord.CreateInteractionResponse{
+		ic.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackUpdateMessage,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{{

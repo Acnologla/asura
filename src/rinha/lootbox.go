@@ -20,7 +20,7 @@ type Lootboxes struct {
 	Normal    int
 }
 
-var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2200, 0}, {0, 2}, {0, 3}, {320, 0}}
+var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2200, 0}, {0, 2}, {0, 2}, {320, 0}}
 var LootNames = [...]string{"comum", "normal", "rara", "epica", "lendaria", "items", "cosmetica"}
 
 func GenerateLootPrices() (text string) {
@@ -186,7 +186,7 @@ func Open(lootType int, user *entities.User) (int, int) {
 	price, asuraCoins := GetPrice(lootType)
 	money := price
 	if asuraCoins > 0 {
-		money = asuraCoins * 1800
+		money = asuraCoins * 1900
 	}
 	newPity := money / 100
 	return gal, newPity + user.Pity

@@ -5,6 +5,7 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
+	"context"
 	"time"
 
 	"asura/src/translation"
@@ -22,7 +23,7 @@ func init() {
 	})
 }
 
-func runDaily(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	galo := database.User.GetUser(itc.Member.UserID)
 	topGGCalc := (uint64(time.Now().Unix()) - galo.Daily) / 60 / 60 / 12
 	voted := rinha.HasVoted(itc.Member.UserID)

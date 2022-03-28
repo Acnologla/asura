@@ -77,12 +77,12 @@ func genEquipItemsOptions(user *entities.User, itemType entities.ItemType) (opts
 	return
 }
 
-func runEquipItem(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runEquipItem(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	galo := database.User.GetUser(itc.Member.UserID, "Items")
 	optsItems := genEquipItemsOptions(&galo, entities.NormalType)
 	optsBackground := genEquipItemsOptions(&galo, entities.CosmeticType)
 
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
@@ -137,7 +137,7 @@ func runEquipItem(itc *disgord.InteractionCreate) *disgord.CreateInteractionResp
 		itemID := uuid.MustParse(val)
 		msg := ""
 		database.User.UpdateUser(userIC.ID, func(u entities.User) entities.User {
-			if isInRinha(userIC) != "" {
+			if isInRinha(ctx, userIC) != "" {
 				msg = "IsInRinha"
 				return u
 			}
@@ -160,7 +160,7 @@ func runEquipItem(itc *disgord.InteractionCreate) *disgord.CreateInteractionResp
 			return u
 		}, "Items")
 		if msg != "" {
-			handler.Client.SendInteractionResponse(context.Background(), ic, &disgord.CreateInteractionResponse{
+			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
 					Content: translation.T(msg, translation.GetLocale(ic)),

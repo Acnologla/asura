@@ -185,7 +185,7 @@ func Sell(rarity Rarity, xp int, reset int) (int, int) {
 	if reset == 0 {
 		return int(price * (level/5 + 1)), 0
 	}
-	asuraCoins := reset
+	asuraCoins := reset + 1
 	if rarity > Rare {
 		asuraCoins++
 	}

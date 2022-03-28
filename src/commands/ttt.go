@@ -89,7 +89,7 @@ func playTTT(tile int, tiles *[9]int, turn int) bool {
 	tiles[tile] = turn
 	return true
 }
-func runTTT(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runTTT(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := utils.GetUser(itc, 0)
 	if user.ID == itc.Member.User.ID || user.Bot {
 		return &disgord.CreateInteractionResponse{
@@ -101,7 +101,7 @@ func runTTT(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	}
 	tiles := [9]int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 	turn := 1
-	handler.Client.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: board(tiles),
 	})
@@ -135,7 +135,7 @@ func runTTT(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 					}
 					handler.DeleteHandler(itc.ID)
 				}
-				handler.Client.SendInteractionResponse(context.Background(), interaction, &disgord.CreateInteractionResponse{
+				handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackUpdateMessage,
 					Data: &disgord.CreateInteractionResponseData{
 						Content:    fmt.Sprintf("%s%s", playType, letter),

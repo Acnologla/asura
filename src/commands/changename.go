@@ -6,6 +6,7 @@ import (
 	"asura/src/handler"
 	"asura/src/rinha"
 	"asura/src/utils"
+	"context"
 
 	"asura/src/translation"
 
@@ -28,7 +29,7 @@ func init() {
 	})
 }
 
-func runChangeName(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func runChangeName(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	name := itc.Data.Options[0].Value.(string)
 	if len(name) > 25 || 3 > len(name) {
 		return &disgord.CreateInteractionResponse{
