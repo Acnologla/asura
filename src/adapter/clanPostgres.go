@@ -81,10 +81,10 @@ func (adapter ClanAdapterPsql) RemoveMember(clan *entities.Clan, member disgord.
 				_, err = adapter.Db.NewDelete().Model(&entities.ClanMember{}).Where("id = ? ", member).Exec(context.Background())
 				adapter.Db.NewUpdate().Model((*entities.ClanMember)(nil)).Set("role = ?", entities.Owner).Where("id = ?", clan.Members[1].ID).Exec(context.Background())
 			}
+			return err
 		}
-	} else {
-		_, err = adapter.Db.NewDelete().Model(&entities.ClanMember{}).Where("id = ? ", member).Exec(context.Background())
 	}
+	_, err = adapter.Db.NewDelete().Model(&entities.ClanMember{}).Where("id = ? ", member).Exec(context.Background())
 	return err
 }
 
