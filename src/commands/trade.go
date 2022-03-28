@@ -210,8 +210,8 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 		lockBattle(ctx, itc.Member.UserID, user.ID, authorUser.Username, user.Username)
 		defer unlockBattle(ctx, itc.Member.UserID, user.ID)
-		authorGalo := database.User.GetUser(itc.Member.UserID, "Galos", "Items")
-		userGalo := database.User.GetUser(user.ID, "Galos", "Items")
+		authorGalo := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items")
+		userGalo := database.User.GetUser(ctx, user.ID, "Galos", "Items")
 		minLevel := 0
 		optsUser := itemsToOptions(&userGalo, &minLevel)
 		optsAuthor := itemsToOptions(&authorGalo, &minLevel)
@@ -326,15 +326,15 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 							})
 							return
 						}
-						database.User.UpdateUser(authorUser.ID, func(a entities.User) entities.User {
-							database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+						database.User.UpdateUser(ctx, authorUser.ID, func(a entities.User) entities.User {
+							database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 								for _, item := range itemsAuthor {
 									itemID := uuid.MustParse(item.ID)
 									if item.Type == roosterTradeType {
 										galo := rinha.GetGaloByID(a.Galos, itemID)
 										if galo != nil {
-											database.User.RemoveRooster(itemID)
-											database.User.InsertRooster(&entities.Rooster{
+											database.User.RemoveRooster(ctx, itemID)
+											database.User.InsertRooster(ctx, &entities.Rooster{
 												UserID: user.ID,
 												Type:   galo.Type,
 											})
@@ -342,8 +342,8 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 									} else {
 										item := rinha.GetItemByID(a.Items, itemID)
 										if item != nil {
-											database.User.RemoveItem(a.Items, itemID)
-											database.User.InsertItem(u.ID, u.Items, item.ItemID, item.Type)
+											database.User.RemoveItem(ctx, a.Items, itemID)
+											database.User.InsertItem(ctx, u.ID, u.Items, item.ItemID, item.Type)
 										}
 									}
 								}
@@ -352,8 +352,8 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 									if item.Type == roosterTradeType {
 										galo := rinha.GetGaloByID(u.Galos, itemID)
 										if galo != nil {
-											database.User.RemoveRooster(itemID)
-											database.User.InsertRooster(&entities.Rooster{
+											database.User.RemoveRooster(ctx, itemID)
+											database.User.InsertRooster(ctx, &entities.Rooster{
 												UserID: authorUser.ID,
 												Type:   galo.Type,
 											})
@@ -361,8 +361,8 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 									} else {
 										item := rinha.GetItemByID(u.Items, itemID)
 										if item != nil {
-											database.User.RemoveItem(u.Items, itemID)
-											database.User.InsertItem(u.ID, a.Items, item.ItemID, item.Type)
+											database.User.RemoveItem(ctx, u.Items, itemID)
+											database.User.InsertItem(ctx, u.ID, a.Items, item.ItemID, item.Type)
 										}
 									}
 								}

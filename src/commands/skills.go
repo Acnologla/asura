@@ -66,7 +66,7 @@ func generateNumberOptions(i int) (opts []*disgord.SelectMenuOption) {
 }
 
 func runSkills(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	user := database.User.GetUser(itc.Member.User.ID, "Galos")
+	user := database.User.GetUser(ctx, itc.Member.User.ID, "Galos")
 	galo := rinha.GetEquippedGalo(&user)
 	equipedSkills := rinha.GetEquipedSkills(galo)
 	skills := rinha.GetSkills(*galo)
@@ -137,8 +137,8 @@ func runSkills(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cre
 			if rinha.IsIntInList(data, arrSkill) {
 				return
 			}
-			database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
-				database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+			database.User.UpdateUser(ctx, itc.Member.UserID, func(u entities.User) entities.User {
+				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 					skills := rinha.GetSkills(r)
 					if r.ID != galo.ID || r.Resets != galo.Resets || data >= len(skills) {
 						return r

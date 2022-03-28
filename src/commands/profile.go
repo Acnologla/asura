@@ -46,11 +46,11 @@ func init() {
 		}),
 	})
 }
-func GetClanPos(clan *entities.Clan) int {
+func GetClanPos(ctx context.Context, clan *entities.Clan) int {
 	if clan == nil || clan.Name == "" {
 		return 0
 	}
-	return database.Clan.GetClanPos(clan) + 1
+	return database.Clan.GetClanPos(ctx, clan) + 1
 }
 
 func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
@@ -76,13 +76,13 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	radius := 70.0
 	// Resize the images
 
-	galo := database.User.GetUser(user.ID, "Items", "Galos")
+	galo := database.User.GetUser(ctx, user.ID, "Items", "Galos")
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
 	img, err := utils.DownloadImage(rinha.GetBackground(&galo))
 	if err != nil {
 		return nil
 	}
-	clan := database.Clan.GetUserClan(user.ID).Clan
+	clan := database.Clan.GetUserClan(ctx, user.ID).Clan
 	img = resize.Resize(600, 250, img, resize.Lanczos3)
 	dc := gg.NewContext(600, 445)
 
@@ -132,7 +132,7 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	dc.LoadFontFace("./resources/Raleway-Bold.ttf", 25)
 	dc.DrawStringAnchored(strconv.Itoa(galo.Win), 260, 420, 0.5, 0.5)
 	dc.DrawStringAnchored(strconv.Itoa(galo.Lose), 350, 420, 0.5, 0.5)
-	dc.DrawStringAnchored("#"+strconv.Itoa(GetClanPos(clan)), 440, 420, 0.5, 0.5)
+	dc.DrawStringAnchored("#"+strconv.Itoa(GetClanPos(ctx, clan)), 440, 420, 0.5, 0.5)
 	dc.DrawStringAnchored(strconv.Itoa(len(galo.Galos)), 530, 420, 0.5, 0.5)
 
 	dc.LoadFontFace("./resources/Raleway-Light.ttf", 14)

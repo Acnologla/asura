@@ -34,7 +34,7 @@ func init() {
 
 func runUpgrades(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
-	galo := database.User.GetUser(user.ID)
+	galo := database.User.GetUser(ctx, user.ID)
 	if len(itc.Data.Options) == 0 {
 		desc := fmt.Sprintf("Upgrade Xp: **%d/%d**", galo.UserXp, rinha.CalcUserXp(&galo))
 		if len(galo.Upgrades) > 0 {
@@ -81,7 +81,7 @@ func runUpgrades(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 			},
 		}
 	}
-	database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+	database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 		u.Upgrades = append(u.Upgrades, i)
 		return u
 	})

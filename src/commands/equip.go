@@ -47,7 +47,7 @@ func genEquipOptions(user *entities.User) (opts []*disgord.SelectMenuOption) {
 }
 
 func runEquip(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	galo := database.User.GetUser(itc.Member.UserID, "Galos")
+	galo := database.User.GetUser(ctx, itc.Member.UserID, "Galos")
 	optsGalos := genEquipOptions(&galo)
 	r := entities.CreateMsg().
 		Embed(&disgord.Embed{
@@ -75,14 +75,14 @@ func runEquip(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 		itemID := uuid.MustParse(val)
 		msg := ""
-		database.User.UpdateUser(userIC.ID, func(u entities.User) entities.User {
+		database.User.UpdateUser(ctx, userIC.ID, func(u entities.User) entities.User {
 			if isInRinha(ctx, userIC) != "" {
 				msg = "IsInRinha"
 				return u
 			}
 			if name == "galoEquip" {
-				database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
-					database.User.UpdateRooster(&u, itemID, func(r2 entities.Rooster) entities.Rooster {
+				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+					database.User.UpdateRooster(ctx, &u, itemID, func(r2 entities.Rooster) entities.Rooster {
 						if r2.Type != 0 {
 							r.Equip = false
 							r2.Equip = true

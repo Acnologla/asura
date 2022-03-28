@@ -136,8 +136,8 @@ func generateUpgradesOptions() (opts []*disgord.SelectMenuOption) {
 }
 func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := itc.Data.Options[0].Name
-	user := database.User.GetUser(itc.Member.UserID)
-	userClan := database.Clan.GetUserClan(user.ID, "Members")
+	user := database.User.GetUser(ctx, itc.Member.UserID)
+	userClan := database.Clan.GetUserClan(ctx, user.ID, "Members")
 	clan := userClan.Clan
 	maxMembers := rinha.GetMaxMembers(clan)
 	member := userClan.Member
@@ -175,7 +175,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			}
 		}
-		clan := database.Clan.GetClan(name)
+		clan := database.Clan.GetClan(ctx, name)
 		if clan.Name != "" {
 			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -184,8 +184,8 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			}
 		}
-		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
-			clan := database.Clan.GetClan(name)
+		database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
+			clan := database.Clan.GetClan(ctx, name)
 			if clan.Name != "" {
 				msg = "ClanAlreadyIn"
 				return u
@@ -195,7 +195,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				return u
 			}
 			u.Money -= 1000
-			database.Clan.CreateClan(entities.Clan{
+			database.Clan.CreateClan(ctx, entities.Clan{
 				Name: name,
 			}, user.ID)
 			return u
@@ -257,7 +257,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}
 	case "mission":
 		clan = rinha.PopulateClanMissions(clan)
-		database.Clan.UpdateClan(clan, func(clanUpdate entities.Clan) entities.Clan {
+		database.Clan.UpdateClan(ctx, clan, func(clanUpdate entities.Clan) entities.Clan {
 			clanUpdate.Mission = clan.Mission
 			clanUpdate.MissionProgress = clan.MissionProgress
 			return clanUpdate
@@ -287,16 +287,16 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			"username": user.Username,
 		})
 		utils.Confirm(text, itc, user.ID, func() {
-			database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
-				uClan := database.Clan.GetUserClan(user.ID)
+			database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
+				uClan := database.Clan.GetUserClan(ctx, user.ID)
 				if uClan.Clan.Name != "" {
 					msg = "UserArleadyInClan"
 				} else {
 					if len(c.Members) >= maxMembers {
 						msg = "ClanMaxMembers"
 					} else {
-						database.User.GetUser(user.ID)
-						database.Clan.InsertMember(&c, &entities.ClanMember{
+						database.User.GetUser(ctx, user.ID)
+						database.Clan.InsertMember(ctx, &c, &entities.ClanMember{
 							ID: user.ID,
 						})
 						msg = "SucessInvite"
@@ -327,8 +327,8 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			}
 		}
-		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
-			uClan := database.Clan.GetUserClan(user.ID)
+		database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
+			uClan := database.Clan.GetUserClan(ctx, user.ID)
 			if uClan.Clan.Name != clan.Name {
 				msg = "UserNotInClan"
 			} else {
@@ -336,7 +336,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 					msg = "NoPermission"
 				} else {
 					msg = "SucessRemove"
-					database.Clan.RemoveMember(&c, user.ID, false)
+					database.Clan.RemoveMember(ctx, &c, user.ID, false)
 				}
 			}
 			return c
@@ -358,8 +358,8 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			}
 		}
 		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
-		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
-			uClan := database.Clan.GetUserClan(user.ID)
+		database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
+			uClan := database.Clan.GetUserClan(ctx, user.ID)
 			if uClan.Clan.Name != clan.Name {
 				msg = "UserNotInClan"
 			} else {
@@ -367,7 +367,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 					msg = "NoPermission"
 				} else {
 					uClan.Member.Role = entities.Administrator
-					database.Clan.UpdateMember(&c, uClan.Member)
+					database.Clan.UpdateMember(ctx, &c, uClan.Member)
 					msg = "SucessAdmin"
 				}
 			}
@@ -398,12 +398,12 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}
 	case "depositar":
 		money := int(itc.Data.Options[0].Options[0].Value.(float64))
-		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+		database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 			if u.Money < money {
 				msg = "NoMoney"
 			} else {
 				u.Money -= money
-				database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+				database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
 					c.Money += money
 					return c
 				})
@@ -454,7 +454,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			}
 			upgrade := ic.Data.Values[0]
 			if ic.Member.UserID == itc.Member.UserID {
-				database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+				database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
 					var money int
 					if upgrade == "membros" {
 						money = rinha.CalcClanUpgrade(c.MembersUpgrade, 1)
@@ -486,8 +486,8 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}, 100)
 	case "leave":
 		var msg string
-		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
-			err := database.Clan.RemoveMember(&c, user.ID, true)
+		database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
+			err := database.Clan.RemoveMember(ctx, &c, user.ID, true)
 			if err == nil {
 				msg = "sucessLeaveClan"
 			}
@@ -509,7 +509,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			}
 		}
-		database.Clan.UpdateClan(clan, func(c entities.Clan) entities.Clan {
+		database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
 			if c.Money < 10000 {
 				msg = "ClanNoMoney"
 			} else {

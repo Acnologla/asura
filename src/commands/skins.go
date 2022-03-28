@@ -52,7 +52,7 @@ func skinsToText(skins []*rinha.Cosmetic, items []*entities.Item) string {
 }
 
 func runSkins(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	galo := database.User.GetUser(itc.Member.UserID, "Items")
+	galo := database.User.GetUser(ctx, itc.Member.UserID, "Items")
 	skins, items := rinha.GetCosmeticsByTypes(galo.Items, rinha.Skin)
 	if len(skins) == 0 {
 		return &disgord.CreateInteractionResponse{
@@ -96,14 +96,14 @@ func runSkins(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			return
 		}
 		id := ic.Data.Values[0]
-		database.User.UpdateUser(u, func(u entities.User) entities.User {
-			database.User.UpdateItem(&u, uuid.MustParse(id), func(i entities.Item) entities.Item {
+		database.User.UpdateUser(ctx, u, func(u entities.User) entities.User {
+			database.User.UpdateItem(ctx, &u, uuid.MustParse(id), func(i entities.Item) entities.Item {
 				i.Equip = !i.Equip
 				return i
 			})
 			return u
 		}, "Items")
-		galo := database.User.GetUser(itc.Member.UserID, "Items")
+		galo := database.User.GetUser(ctx, itc.Member.UserID, "Items")
 		skins, items := rinha.GetCosmeticsByTypes(galo.Items, rinha.Skin)
 
 		ic.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{

@@ -41,7 +41,7 @@ func init() {
 
 func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	discordUser := itc.Member.User
-	user := database.User.GetUser(itc.Member.UserID, "Galos")
+	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos")
 	galo := rinha.GetEquippedGalo(&user)
 	command := itc.Data.Options[0].Name
 	switch command {
@@ -72,7 +72,7 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			return rinhaMessage(discordUser.Username, authorRinha)
 		}
 		if len(rinha.Dungeon) == user.Dungeon {
-			database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+			database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 				u.Dungeon = 0
 				u.DungeonReset++
 				return u
@@ -124,7 +124,7 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		if winner == 0 {
 
 			if user.DungeonReset != 0 && user.Dungeon+1 != len(rinha.Dungeon) {
-				database.User.UpdateUser(discordUser.ID, func(u entities.User) entities.User {
+				database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 					u.Dungeon++
 					return u
 				})
@@ -150,14 +150,14 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					break
 				}
 			}
-			database.User.UpdateUser(discordUser.ID, func(u entities.User) entities.User {
+			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 				if selected.PrizeType == entities.LootboxType {
-					database.User.InsertItem(u.ID, u.Items, selected.PrizeRarity, entities.LootboxType)
+					database.User.InsertItem(ctx, u.ID, u.Items, selected.PrizeRarity, entities.LootboxType)
 					endMsg = translation.T("DungeonWinLootbox", translation.GetLocale(itc), rinha.LootNames[selected.PrizeRarity])
 				} else {
 					item := rinha.GetItemByLevel(selected.PrizeRarity)
 					_item := rinha.Items[item]
-					database.User.InsertItem(u.ID, u.Items, item, entities.NormalType)
+					database.User.InsertItem(ctx, u.ID, u.Items, item, entities.NormalType)
 					endMsg = translation.T("DungeonWinItem", translation.GetLocale(itc), map[string]interface{}{
 						"rarity": rinha.LevelToString(_item.Level),
 						"name":   _item.Name,

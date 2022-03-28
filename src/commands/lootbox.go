@@ -57,7 +57,7 @@ func GenerateBuyOptions(arr []string) (opts []*disgord.SelectMenuOption) {
 
 func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := itc.Data.Options[0].Name
-	user := database.User.GetUser(itc.Member.UserID, "Items")
+	user := database.User.GetUser(ctx, itc.Member.UserID, "Items")
 	switch command {
 	case "view":
 		text := translation.T("LootboxView", "pt", rinha.VipMessage(&user))
@@ -112,7 +112,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			i := rinha.GetLbIndex(lb)
 			price := rinha.Prices[i]
 			done := false
-			database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+			database.User.UpdateUser(ctx, itc.Member.UserID, func(u entities.User) entities.User {
 				if price[0] == 0 {
 					if u.AsuraCoin >= price[1] {
 						done = true
@@ -123,7 +123,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					done = true
 				}
 				if done {
-					database.User.InsertItem(itc.Member.UserID, u.Items, i, entities.LootboxType)
+					database.User.InsertItem(ctx, itc.Member.UserID, u.Items, i, entities.LootboxType)
 				}
 				return u
 			}, "Items")
@@ -197,7 +197,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			pity := 0
 			extraMsg := ""
 			var rarity rinha.Rarity
-			database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+			database.User.UpdateUser(ctx, itc.Member.UserID, func(u entities.User) entities.User {
 				lbID, ok := rinha.GetLbID(u.Items, i)
 				if !ok {
 					return u
@@ -214,16 +214,16 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 
 					}
 				}
-				database.User.RemoveItem(u.Items, lbID)
+				database.User.RemoveItem(ctx, u.Items, lbID)
 				newVal, pity = rinha.Open(i, &u)
 				u.Pity = pity
 				if lb == "cosmetica" {
-					database.User.InsertItem(itc.Member.UserID, u.Items, newVal, entities.CosmeticType)
+					database.User.InsertItem(ctx, itc.Member.UserID, u.Items, newVal, entities.CosmeticType)
 				} else if lb == "items" {
-					database.User.InsertItem(itc.Member.UserID, u.Items, newVal, entities.NormalType)
+					database.User.InsertItem(ctx, itc.Member.UserID, u.Items, newVal, entities.NormalType)
 				} else {
 					if !rinha.HaveRooster(u.Galos, newVal) {
-						database.User.InsertRooster(&entities.Rooster{
+						database.User.InsertRooster(ctx, &entities.Rooster{
 							UserID: itc.Member.UserID,
 							Type:   newVal,
 						})

@@ -93,27 +93,27 @@ func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		var data func(u *entities.User) int
 		switch rankName {
 		case "players":
-			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "dungeonreset", "dungeon")
+			users = database.User.SortUsers(ctx, DEFAULT_RANK_LIMIT, "dungeonreset", "dungeon")
 			data = func(u *entities.User) int {
 				return (u.DungeonReset * len(rinha.Dungeon)) + u.Dungeon
 			}
 		case "money":
-			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "money")
+			users = database.User.SortUsers(ctx, DEFAULT_RANK_LIMIT, "money")
 			data = func(u *entities.User) int {
 				return u.Money
 			}
 		case "level":
-			users = database.User.SortUsersByRooster(DEFAULT_RANK_LIMIT, "resets", "xp")
+			users = database.User.SortUsersByRooster(ctx, DEFAULT_RANK_LIMIT, "resets", "xp")
 			data = func(u *entities.User) int {
 				return rinha.CalcLevel(u.Galos[0].Xp)
 			}
 		case "vitorias":
-			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "win")
+			users = database.User.SortUsers(ctx, DEFAULT_RANK_LIMIT, "win")
 			data = func(u *entities.User) int {
 				return u.Win
 			}
 		case "derrotas":
-			users = database.User.SortUsers(DEFAULT_RANK_LIMIT, "lose")
+			users = database.User.SortUsers(ctx, DEFAULT_RANK_LIMIT, "lose")
 			data = func(u *entities.User) int {
 				return u.Lose
 			}
@@ -135,12 +135,12 @@ func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		var data func(u *entities.Clan) int
 		switch rankName {
 		case "level":
-			clans = database.Clan.SortClan("xp", DEFAULT_RANK_LIMIT)
+			clans = database.Clan.SortClan(ctx, "xp", DEFAULT_RANK_LIMIT)
 			data = func(u *entities.Clan) int {
 				return rinha.ClanXpToLevel(u.Xp)
 			}
 		case "money":
-			clans = database.Clan.SortClan("money", DEFAULT_RANK_LIMIT)
+			clans = database.Clan.SortClan(ctx, "money", DEFAULT_RANK_LIMIT)
 			data = func(u *entities.Clan) int {
 				return u.Money
 			}

@@ -57,14 +57,14 @@ func runGiveMoney(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 		}
 	}
 	var msg string
-	database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+	database.User.UpdateUser(ctx, itc.Member.UserID, func(u entities.User) entities.User {
 		if money > u.Money {
 			msg = "NoMoney"
 			return u
 		}
 		msg = "GiveMoney"
 		u.Money -= money
-		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+		database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 			u.Money += money
 			return u
 		})

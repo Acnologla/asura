@@ -130,8 +130,8 @@ func executePVP(ctx context.Context, itc *disgord.InteractionCreate) {
 	user := utils.GetUser(itc, 0)
 	lockBattle(ctx, author.ID, user.ID, author.Username, user.Username)
 	defer unlockBattle(ctx, author.ID, user.ID)
-	authorDb := database.User.GetUser(author.ID, "Galos", "Items")
-	advDb := database.User.GetUser(user.ID, "Galos", "Items")
+	authorDb := database.User.GetUser(ctx, author.ID, "Galos", "Items")
+	advDb := database.User.GetUser(ctx, user.ID, "Galos", "Items")
 
 	galoAuthor := rinha.GetEquippedGalo(&authorDb)
 	galoAdv := rinha.GetEquippedGalo(&advDb)
@@ -169,12 +169,12 @@ func executePVP(ctx context.Context, itc *disgord.InteractionCreate) {
 		galoWinner := battle.Fighters[winnerTurn].Galo
 		galoLoser := battle.Fighters[turn].Galo
 		if 2 >= rinha.CalcLevel(galoWinner.Xp)-rinha.CalcLevel(galoLoser.Xp) {
-			database.User.UpdateUser(loser.ID, func(u entities.User) entities.User {
+			database.User.UpdateUser(ctx, loser.ID, func(u entities.User) entities.User {
 				u.Lose++
 				return u
 			})
 		}
-		database.User.UpdateUser(winner.ID, func(u entities.User) entities.User {
+		database.User.UpdateUser(ctx, winner.ID, func(u entities.User) entities.User {
 			u.Win++
 			return u
 		})

@@ -27,15 +27,15 @@ func init() {
 	})
 }
 
-func getMissions(user *entities.User) []*entities.Mission {
+func getMissions(ctx context.Context, user *entities.User) []*entities.Mission {
 	missions := rinha.PopulateMissions(user)
 	for _, mission := range missions {
-		database.User.InsertMission(user.ID, mission)
+		database.User.InsertMission(ctx, user.ID, mission)
 	}
 	if len(missions) > len(user.Missions) {
 		user.Missions = append(user.Missions, missions...)
 		user.LastMission = uint64(time.Now().Unix())
-		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+		database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 			u.LastMission = uint64(time.Now().Unix())
 			return u
 		})
@@ -43,17 +43,17 @@ func getMissions(user *entities.User) []*entities.Mission {
 	return user.Missions
 }
 
-func completeMission(user *entities.User, galoAdv *entities.Rooster, winner bool, itc *disgord.InteractionCreate) {
-	tempUser := database.User.GetUser(user.ID, "Missions")
+func completeMission(ctx context.Context, user *entities.User, galoAdv *entities.Rooster, winner bool, itc *disgord.InteractionCreate) {
+	tempUser := database.User.GetUser(ctx, user.ID, "Missions")
 	user.Missions = tempUser.Missions
 	user.LastMission = tempUser.LastMission
 	if len(user.Missions) == 3 {
-		database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+		database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 			u.LastMission = uint64(time.Now().Unix())
 			return u
 		})
 	}
-	user.Missions = getMissions(user)
+	user.Missions = getMissions(ctx, user)
 	xp := 0
 	money := 0
 	toRemove := []int{}
@@ -97,7 +97,7 @@ func completeMission(user *entities.User, galoAdv *entities.Rooster, winner bool
 			}
 		}
 		if mission.Progress != old {
-			database.User.UpdateMissions(user.ID, mission, done)
+			database.User.UpdateMissions(ctx, user.ID, mission, done)
 			if done {
 				toRemove = append(toRemove, i)
 			} else {
@@ -133,9 +133,9 @@ func completeMission(user *entities.User, galoAdv *entities.Rooster, winner bool
 			}),
 		})
 	}
-	database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+	database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 		u.Money += money
-		database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+		database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 			r.Xp += xp
 			return r
 		})
@@ -145,7 +145,7 @@ func completeMission(user *entities.User, galoAdv *entities.Rooster, winner bool
 
 func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	discordUser := itc.Member.User
-	user := database.User.GetUser(itc.Member.UserID, "Galos", "Items")
+	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items")
 	galo := rinha.GetEquippedGalo(&user)
 	text := translation.T("TrainMessage", translation.GetLocale(itc), discordUser.Username)
 	utils.Confirm(text, itc, discordUser.ID, func() {
@@ -183,7 +183,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 		ch := handler.Client.Channel(itc.ChannelID)
 
-		completeMission(&user, &galoAdv, winner == 0, itc)
+		completeMission(ctx, &user, &galoAdv, winner == 0, itc)
 
 		if winner == 0 {
 			xpOb := utils.RandInt(11) + 11
@@ -220,7 +220,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if user.TrainLimit == 0 || 1 <= ((uint64(time.Now().Unix())-user.TrainLimitReset)/60/60/24) {
 				user.TrainLimit = 0
 				user.TrainLimitReset = uint64(time.Now().Unix())
-				database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 					u.TrainLimit = 0
 					u.TrainLimitReset = user.TrainLimitReset
 					return u
@@ -246,7 +246,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				})
 				return
 			}
-			database.User.UpdateUser(discordUser.ID, func(u entities.User) entities.User {
+			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 
 				if rinha.IsVip(&u) {
 					xpOb += 9
@@ -264,7 +264,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 				u.UserXp++
 				u.TrainLimit++
-				clanUser := database.Clan.GetUserClan(discordUser.ID)
+				clanUser := database.Clan.GetUserClan(ctx, discordUser.ID)
 				clan := clanUser.Clan
 
 				if clan.Name != "" {
@@ -290,11 +290,11 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 							}
 						}
 					}
-					go database.Clan.CompleteClanMission(clan, discordUser.ID, clanXpOb)
+					go database.Clan.CompleteClanMission(ctx, clan, discordUser.ID, clanXpOb)
 					clanMsg = fmt.Sprintf("\nGanhou **%d** de xp para seu clan", clanXpOb)
 				}
 				u.Win++
-				database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 					r.Xp += xpOb
 					return r
 				})
@@ -319,7 +319,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			sendLevelUpEmbed(ctx, itc, galo, discordUser, xpOb)
 		} else {
 
-			database.User.UpdateUser(discordUser.ID, func(u entities.User) entities.User {
+			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 				u.Lose++
 				return u
 			})

@@ -27,8 +27,8 @@ func init() {
 
 func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
-	galo := database.User.GetUser(user.ID, "Missions")
-	galo.Missions = getMissions(&galo)
+	galo := database.User.GetUser(ctx, user.ID, "Missions")
+	galo.Missions = getMissions(ctx, &galo)
 	text := rinha.MissionsToString(user.ID, &galo)
 	embed := &disgord.Embed{
 		Color:       65535,
@@ -72,14 +72,14 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		handler.RegisterHandler(itc.ID, func(event *disgord.InteractionCreate) {
 			if event.Member.User.ID == user.ID {
 				i, _ := strconv.Atoi(event.Data.CustomID)
-				database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
+				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 					if 0 > i || i >= len(u.Missions) || (time.Now().Unix()-int64(u.TradeMission))/60/60/24 < 3 {
 						return u
 					}
 					newMission := rinha.CreateMission()
 					newMission.ID = u.Missions[i].ID
 					newMission.UserID = user.ID
-					database.User.UpdateMissions(user.ID, &newMission, false)
+					database.User.UpdateMissions(ctx, user.ID, &newMission, false)
 					u.TradeMission = uint64(time.Now().Unix())
 					return u
 				}, "Missions")

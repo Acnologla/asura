@@ -78,7 +78,7 @@ func genEquipItemsOptions(user *entities.User, itemType entities.ItemType) (opts
 }
 
 func runEquipItem(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	galo := database.User.GetUser(itc.Member.UserID, "Items")
+	galo := database.User.GetUser(ctx, itc.Member.UserID, "Items")
 	optsItems := genEquipItemsOptions(&galo, entities.NormalType)
 	optsBackground := genEquipItemsOptions(&galo, entities.CosmeticType)
 
@@ -136,7 +136,7 @@ func runEquipItem(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 		}
 		itemID := uuid.MustParse(val)
 		msg := ""
-		database.User.UpdateUser(userIC.ID, func(u entities.User) entities.User {
+		database.User.UpdateUser(ctx, userIC.ID, func(u entities.User) entities.User {
 			if isInRinha(ctx, userIC) != "" {
 				msg = "IsInRinha"
 				return u
@@ -147,12 +147,12 @@ func runEquipItem(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 			}
 			equipedItem := getEquipItem(u.Items, t)
 			if equipedItem != nil {
-				database.User.UpdateItem(&u, equipedItem.ID, func(i entities.Item) entities.Item {
+				database.User.UpdateItem(ctx, &u, equipedItem.ID, func(i entities.Item) entities.Item {
 					i.Equip = false
 					return i
 				})
 			}
-			database.User.UpdateItem(&u, itemID, func(i entities.Item) entities.Item {
+			database.User.UpdateItem(ctx, &u, itemID, func(i entities.Item) entities.Item {
 				i.Equip = true
 				return i
 			})

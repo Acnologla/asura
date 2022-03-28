@@ -47,7 +47,7 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	if user.Bot {
 		return nil
 	}
-	u := database.User.GetUser(user.ID, "Items", "Galos")
+	u := database.User.GetUser(ctx, user.ID, "Items", "Galos")
 	galo := rinha.GetEquippedGalo(&u)
 	skills := rinha.GetEquipedSkills(galo)
 	avatar, err := utils.DownloadImage(rinha.GetGaloImage(galo, u.Items))
@@ -201,8 +201,8 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
 			done := false
 			if ic.Member.UserID == user.ID {
-				database.User.UpdateUser(user.ID, func(u entities.User) entities.User {
-					database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
+					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 						level := rinha.CalcLevel(r.Xp)
 						if level >= 35 {
 							done = true

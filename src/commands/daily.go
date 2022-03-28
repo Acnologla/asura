@@ -24,14 +24,14 @@ func init() {
 }
 
 func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	galo := database.User.GetUser(itc.Member.UserID)
+	galo := database.User.GetUser(ctx, itc.Member.UserID)
 	topGGCalc := (uint64(time.Now().Unix()) - galo.Daily) / 60 / 60 / 12
 	voted := rinha.HasVoted(itc.Member.UserID)
 	if voted && topGGCalc >= 1 {
 		strike := 0
 		money := 0
 		xp := 0
-		database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+		database.User.UpdateUser(ctx, itc.Member.UserID, func(u entities.User) entities.User {
 			u.Daily = uint64(time.Now().Unix())
 			if topGGCalc >= 2 {
 				u.DailyStrikes = 0
@@ -40,7 +40,7 @@ func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			xp = 60 + u.DailyStrikes
 			u.DailyStrikes++
 			u.Money += money
-			database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 				r.Xp += xp
 				return r
 			})

@@ -41,7 +41,7 @@ func runChangeName(ctx context.Context, itc *disgord.InteractionCreate) *disgord
 	}
 	price := 100
 	var msg string
-	database.User.UpdateUser(itc.Member.UserID, func(u entities.User) entities.User {
+	database.User.UpdateUser(ctx, itc.Member.UserID, func(u entities.User) entities.User {
 		if rinha.IsVip(&u) {
 			price = 0
 		}
@@ -49,7 +49,7 @@ func runChangeName(ctx context.Context, itc *disgord.InteractionCreate) *disgord
 			msg = "NoMoney"
 			return u
 		}
-		database.User.UpdateEquippedRooster(u, func(r entities.Rooster) entities.Rooster {
+		database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 			r.Name = name
 			return r
 		})

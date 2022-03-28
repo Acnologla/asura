@@ -80,7 +80,7 @@ func genSellOptions(user *entities.User, isRooster bool) (opts []*disgord.Select
 }
 
 func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	galo := database.User.GetUser(itc.Member.UserID, "Galos", "Items")
+	galo := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items")
 	optsGalos := genSellOptions(&galo, true)
 	optsItems := genSellOptions(&galo, false)
 	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
@@ -163,7 +163,7 @@ func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		msg := ""
 		price := 0
 		isAsuraCoins := false
-		database.User.UpdateUser(userIC.ID, func(u entities.User) entities.User {
+		database.User.UpdateUser(ctx, userIC.ID, func(u entities.User) entities.User {
 			if isInRinha(ctx, userIC) != "" {
 				msg = "IsInRinha"
 				return u
@@ -171,7 +171,7 @@ func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			if name == "itemSell" {
 				item := rinha.GetItemByID(u.Items, itemID)
 				if item != nil {
-					database.User.RemoveItem(u.Items, itemID)
+					database.User.RemoveItem(ctx, u.Items, itemID)
 					msg = "SellItem"
 					if item.Type == entities.NormalType {
 						price = rinha.SellItem(*rinha.Items[item.ItemID])
@@ -184,7 +184,7 @@ func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				galo := rinha.GetGaloByID(u.Galos, itemID)
 				if galo != nil && !galo.Equip {
 					class := rinha.Classes[galo.Type]
-					database.User.RemoveRooster(itemID)
+					database.User.RemoveRooster(ctx, itemID)
 					msg = "SellGalo"
 					money, asuraCoins := rinha.Sell(class.Rarity, galo.Xp, galo.Resets)
 					price = money
