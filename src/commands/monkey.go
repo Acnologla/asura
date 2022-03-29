@@ -23,6 +23,8 @@ func init() {
 		Description: translation.T("MonkeyHelp", "pt"),
 		Run:         runMonkey,
 		Cooldown:    10,
+		Cache:       15,
+
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",
 			Description: translation.T("InvertOpt1", "pt"),

@@ -22,6 +22,7 @@ func init() {
 		Description: translation.T("RankHelp", "pt"),
 		Run:         runRank,
 		Cooldown:    20,
+		Cache:       20,
 		Category:    handler.Profile,
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{

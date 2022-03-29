@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"asura/src/cache"
 	"asura/src/telemetry"
 	"asura/src/translation"
 	"bytes"
@@ -47,6 +48,7 @@ type Command struct {
 	Category    CommandCategory
 	Dev         bool
 	Aliases     []string
+	Cache       int
 }
 
 var Commands = map[string]Command{}
@@ -78,6 +80,13 @@ func GetCommand(name string) Command {
 }
 
 func Run(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	cacheCommand := cache.GetCachedCommand(ctx, itc)
+	if cacheCommand != nil {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: cacheCommand,
+		}
+	}
 	command := GetCommand(itc.Data.Name)
 	if command.Run == nil {
 		return nil
@@ -93,7 +102,11 @@ func Run(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInt
 		}
 	}
 	SetCooldown(ctx, itc.Member.User.ID, command)
-	return command.Run(ctx, itc)
+	res := command.Run(ctx, itc)
+	if command.Cache != 0 && res != nil {
+		cache.CacheCommand(ctx, itc, res, command.Cache)
+	}
+	return res
 }
 
 func findCommand(command string, commands []*disgord.ApplicationCommand) *disgord.ApplicationCommand {
@@ -133,11 +146,11 @@ func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
 
 			return true
 		}
-		/*
-			if option.AutoComplete != realCommand.Options[i].AutoComplete {
-				return true
-			}
-		*/
+
+		if option.Autocomplete != realCommand.Options[i].Autocomplete {
+			return true
+		}
+
 	}
 	return false
 }
@@ -200,8 +213,7 @@ func HandleInteraction(itc *disgord.InteractionCreate) {
 		return
 	}
 	if itc.Type == disgord.InteractionApplicationCommand {
-		ctx, c := context.WithCancel(context.Background())
-		c()
+		ctx := context.Background()
 		response := ExecuteInteraction(ctx, itc)
 		if response != nil {
 			Client.SendInteractionResponse(ctx, itc, response)

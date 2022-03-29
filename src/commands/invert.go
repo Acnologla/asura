@@ -20,7 +20,9 @@ import (
 
 func init() {
 	handler.RegisterCommand(handler.Command{
-		Name:        "invert",
+		Name:  "invert",
+		Cache: 15,
+
 		Description: translation.T("InvertHelp", "pt"),
 		Run:         runInvert,
 		Cooldown:    10,
