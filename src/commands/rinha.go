@@ -105,7 +105,7 @@ func runRinha(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	author := itc.Member.User
 	text := translation.T("RinhaDuel", translation.GetLocale(itc), map[string]interface{}{"author": author.Username, "adv": user.Username})
-	utils.Confirm(text, itc, user.ID, func() {
+	utils.Confirm(ctx, text, itc, user.ID, func() {
 		userRinha := isInRinha(ctx, user)
 		if userRinha != "" {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{

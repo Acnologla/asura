@@ -55,9 +55,9 @@ func RegisterCommand(command Command) {
 	Commands[command.Name] = command
 }
 
-func ExecuteInteraction(interaction *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func ExecuteInteraction(ctx context.Context, interaction *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	if interaction.Type == disgord.InteractionApplicationCommand {
-		return Run(interaction)
+		return Run(ctx, interaction)
 	}
 	return nil
 }
@@ -77,13 +77,13 @@ func GetCommand(name string) Command {
 	return command
 }
 
-func Run(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+func Run(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := GetCommand(itc.Data.Name)
 	if command.Run == nil {
 		return nil
 	}
 	locale := translation.GetLocale(itc)
-	if cooldown, ok := GetCooldown(itc.Member.User.ID, command); ok {
+	if cooldown, ok := GetCooldown(ctx, itc.Member.User.ID, command); ok {
 		needTime := command.Cooldown - int(time.Since(cooldown).Seconds())
 		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -92,8 +92,7 @@ func Run(itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 			},
 		}
 	}
-	SetCooldown(itc.Member.User.ID, command)
-	ctx := context.Background()
+	SetCooldown(ctx, itc.Member.User.ID, command)
 	return command.Run(ctx, itc)
 }
 
@@ -201,9 +200,11 @@ func HandleInteraction(itc *disgord.InteractionCreate) {
 		return
 	}
 	if itc.Type == disgord.InteractionApplicationCommand {
-		response := ExecuteInteraction(itc)
+		ctx, c := context.WithCancel(context.Background())
+		c()
+		response := ExecuteInteraction(ctx, itc)
 		if response != nil {
-			Client.SendInteractionResponse(context.Background(), itc, response)
+			Client.SendInteractionResponse(ctx, itc, response)
 		}
 		author := itc.Member.User
 		tag := author.Username + "#" + author.Discriminator.String()

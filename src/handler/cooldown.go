@@ -9,12 +9,12 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-func SetCooldown(userId disgord.Snowflake, command Command) {
-	cache.Client.SetNX(context.Background(), command.Name+"_"+userId.String(), time.Now().Unix(), time.Duration(command.Cooldown)*time.Second)
+func SetCooldown(ctx context.Context, userId disgord.Snowflake, command Command) {
+	cache.Client.SetNX(ctx, command.Name+"_"+userId.String(), time.Now().Unix(), time.Duration(command.Cooldown)*time.Second)
 }
 
-func GetCooldown(userId disgord.Snowflake, command Command) (time.Time, bool) {
-	val := cache.Client.Get(context.Background(), command.Name+"_"+userId.String())
+func GetCooldown(ctx context.Context, userId disgord.Snowflake, command Command) (time.Time, bool) {
+	val := cache.Client.Get(ctx, command.Name+"_"+userId.String())
 	result, _ := val.Result()
 	if result == "" {
 		return time.Now(), false

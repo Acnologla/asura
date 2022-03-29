@@ -224,12 +224,12 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		if strings.Contains(userGaloImg, "imgur") {
 			img = &downloadedSprites[g.Type-1]
 		} else {
-			img = cache.GetImageFromCache("profile", userGaloImg)
+			img = cache.GetImageFromCache(ctx, "profile", userGaloImg)
 			if img == nil {
 				imgD, _ := utils.DownloadImage(userGaloImg)
 				imgD = resize.Resize(55, 55, imgD, resize.Lanczos3)
 				img = &imgD
-				cache.CacheProfileImage(img, userGaloImg)
+				cache.CacheProfileImage(ctx, img, userGaloImg)
 			}
 		}
 

@@ -148,7 +148,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items")
 	galo := rinha.GetEquippedGalo(&user)
 	text := translation.T("TrainMessage", translation.GetLocale(itc), discordUser.Username)
-	utils.Confirm(text, itc, discordUser.ID, func() {
+	utils.Confirm(ctx, text, itc, discordUser.ID, func() {
 		authorRinha := isInRinha(ctx, discordUser)
 		if authorRinha != "" {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{

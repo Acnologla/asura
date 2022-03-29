@@ -286,7 +286,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			"clan":     clan.Name,
 			"username": user.Username,
 		})
-		utils.Confirm(text, itc, user.ID, func() {
+		utils.Confirm(ctx, text, itc, user.ID, func() {
 			database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
 				uClan := database.Clan.GetUserClan(ctx, user.ID)
 				if uClan.Clan.Name != "" {

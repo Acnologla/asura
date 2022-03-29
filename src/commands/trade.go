@@ -189,7 +189,7 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	authorUser := itc.Member.User
 
-	utils.Confirm(translation.T("TradeMsg", translation.GetLocale(itc), map[string]interface{}{
+	utils.Confirm(ctx, translation.T("TradeMsg", translation.GetLocale(itc), map[string]interface{}{
 		"mentionedUsername": user.Username,
 		"username":          authorUser.Username,
 	}), itc, user.ID, func() {
