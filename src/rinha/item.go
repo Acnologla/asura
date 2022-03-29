@@ -59,19 +59,19 @@ func GetItem(user *entities.User) *Item {
 
 func SellItem(item Item) int {
 	if item.Level == 0 {
-		return 50
+		return 60
 	}
 	if item.Level == 1 {
-		return 170
+		return 190
 	}
 	if item.Level == 2 {
-		return 390
+		return 480
 	}
 	if item.Level == 3 {
-		return 1000
+		return 1600
 	}
 	if item.Level == 4 {
-		return 2000
+		return 3000
 	}
 	return 0
 }
