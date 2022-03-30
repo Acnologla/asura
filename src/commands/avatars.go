@@ -18,6 +18,7 @@ func init() {
 		Description: translation.T("AvatarsHelp", "pt"),
 		Run:         runAvatars,
 		Cooldown:    10,
+		Cache:       60,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",
 			Type:        disgord.OptionTypeUser,

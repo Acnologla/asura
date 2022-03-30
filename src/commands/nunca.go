@@ -23,6 +23,7 @@ func init() {
 		Description: translation.T("NuncaHelp", "pt"),
 		Run:         runNunca,
 		Cooldown:    10,
+		Cache:       60,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",
 			Description: translation.T("InvertOpt1", "pt"),

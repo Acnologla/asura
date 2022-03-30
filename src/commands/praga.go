@@ -23,8 +23,7 @@ func init() {
 		Description: translation.T("PragaHelp", "pt"),
 		Run:         runPraga,
 		Cooldown:    10,
-		Cache:       15,
-
+		Cache:       60,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",
 			Description: translation.T("InvertOpt1", "pt"),

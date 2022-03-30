@@ -17,6 +17,7 @@ import (
 func init() {
 	handler.RegisterCommand(handler.Command{
 		Name:        "skins",
+		Category:    handler.Profile,
 		Description: translation.T("SkinsHelp", "pt"),
 		Run:         runSkins,
 		Cooldown:    10,

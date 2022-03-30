@@ -25,7 +25,7 @@ func init() {
 
 		Description: translation.T("InvertHelp", "pt"),
 		Run:         runInvert,
-		Cooldown:    10,
+		Cooldown:    60,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",
 			Description: translation.T("InvertOpt1", "pt"),

@@ -80,6 +80,11 @@ func runEquip(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				msg = "IsInRinha"
 				return u
 			}
+			g := rinha.GetGaloByID(u.Galos, itemID)
+			if g == nil {
+				msg = ""
+				return u
+			}
 			if name == "galoEquip" {
 				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 					database.User.UpdateRooster(ctx, &u, itemID, func(r2 entities.Rooster) entities.Rooster {

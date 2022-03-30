@@ -19,7 +19,7 @@ import (
 
 func init() {
 	handler.RegisterCommand(handler.Command{
-		Cache:       15,
+		Cache:       60,
 		Name:        "lixeira",
 		Description: translation.T("LixeiraHelp", "pt"),
 		Run:         runTrashCan,

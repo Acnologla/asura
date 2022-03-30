@@ -21,6 +21,7 @@ func init() {
 		Description: translation.T("UserinfoHelp", "pt"),
 		Run:         runUserinfo,
 		Cooldown:    3,
+		Cache:       60,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",
 			Type:        disgord.OptionTypeUser,

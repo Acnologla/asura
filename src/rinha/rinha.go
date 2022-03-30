@@ -201,8 +201,8 @@ func GetEquippedGalo(user *entities.User) *entities.Rooster {
 			return galo
 		}
 	}
-	log.Fatal("excuse me wtf")
-	return nil
+	log.Println("excuse me wtf")
+	return user.Galos[0]
 }
 
 func GetName(username string, galo entities.Rooster) string {

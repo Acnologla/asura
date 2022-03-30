@@ -23,7 +23,7 @@ func init() {
 		Description: translation.T("MonkeyHelp", "pt"),
 		Run:         runMonkey,
 		Cooldown:    10,
-		Cache:       15,
+		Cache:       60,
 
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",
