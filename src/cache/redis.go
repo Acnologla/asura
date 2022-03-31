@@ -62,7 +62,7 @@ func Init() {
 func parseOpts(opts []*disgord.ApplicationCommandDataOption) string {
 	str := ""
 	for _, opt := range opts {
-		if opt.Type == disgord.OptionTypeSubCommand {
+		if opt.Type == disgord.OptionTypeSubCommand || opt.Type == disgord.OptionTypeSubCommandGroup {
 			return opt.Name + "-" + parseOpts(opt.Options)
 		} else {
 			str += fmt.Sprintf("%s:%v", opt.Name, opt.Value)
