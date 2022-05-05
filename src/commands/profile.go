@@ -215,7 +215,7 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			grad.AddColorStop(0.8, color.RGBA{255, 0, 255, 255})
 			grad.AddColorStop(1, color.RGBA{0, 255, 255, 255})
 			dc.SetFillStyle(grad)
-		} else {
+		} else if galo.Galos[i].Type != -1 {
 			colorE := rinha.Classes[galo.Galos[i].Type].Rarity.Color()
 			dc.SetHexColor(fmt.Sprintf("%06x", colorE))
 		}

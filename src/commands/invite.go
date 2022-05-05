@@ -20,6 +20,6 @@ func init() {
 
 func runInvite(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	return entities.CreateMsg().
-		Content("https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%%20bot&permissions=8").
+		Content("https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%20bot&permissions=8").
 		Res()
 }

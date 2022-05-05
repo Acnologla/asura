@@ -67,7 +67,6 @@ func runTrashCan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 	var b bytes.Buffer
 	pw := io.Writer(&b)
 	png.Encode(pw, dc.Image())
-
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{

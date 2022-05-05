@@ -192,7 +192,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			i := rinha.GetLbIndex(lb)
 			image := ""
 			name := ""
-			newVal := 0
+			newVal := -1
 			winType := ""
 			pity := 0
 			extraMsg := ""
@@ -237,7 +237,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				}
 				return u
 			}, "Items", "Galos")
-			if pity == 0 {
+			if newVal == -1 {
 				return
 			}
 			if lb == "cosmetica" {

@@ -192,6 +192,9 @@ func Sell(rarity Rarity, xp int, reset int) (int, int) {
 	if rarity == Legendary {
 		asuraCoins += 2
 	}
+	if rarity == Mythic {
+		asuraCoins += 4
+	}
 	return 0, asuraCoins
 }
 

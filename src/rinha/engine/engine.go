@@ -394,7 +394,10 @@ func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, optio
 	options.AdvLevel = rinha.CalcLevel(advGal.Xp)
 	options.AuthorLevel = rinha.CalcLevel(authorGal.Xp)
 	u, _ := handler.Client.User(options.IDs[0]).Get()
-	avatar, _ := u.AvatarURL(128, true)
+	var avatar string
+	if u != nil {
+		avatar, _ = u.AvatarURL(128, true)
+	}
 	embed := &disgord.Embed{
 		Title: "Briga de galo",
 		Color: RinhaColors[0],
