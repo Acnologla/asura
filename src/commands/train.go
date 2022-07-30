@@ -65,24 +65,24 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 			if winner {
 				mission.Progress++
 				if mission.Progress == (mission.Level+1)*3 {
-					xp += 40 * (mission.Level + 1)
-					money += 35 + (5 * mission.Level)
+					xp += 55 * (mission.Level + 1)
+					money += 45 + (5 * mission.Level)
 					done = true
 				}
 			}
 		case entities.Fight:
 			mission.Progress++
 			if mission.Progress == (mission.Level+1)*6 {
-				xp += 40 * (mission.Level + 1)
-				money += 35 + (5 * mission.Level)
+				xp += 55 * (mission.Level + 1)
+				money += 45 + (5 * mission.Level)
 				done = true
 			}
 		case entities.WinGalo:
 			if winner && galoAdv.Type == mission.Adv {
 				mission.Progress++
 				if mission.Progress == 4 {
-					xp += 130
-					money += 60
+					xp += 200
+					money += 80
 					done = true
 				}
 			}
@@ -90,8 +90,8 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 			if galoAdv.Type == mission.Adv {
 				mission.Progress++
 				if mission.Progress == 8 {
-					xp += 130
-					money += 60
+					xp += 200
+					money += 80
 					done = true
 				}
 			}
@@ -186,7 +186,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		completeMission(ctx, &user, &galoAdv, winner == 0, itc)
 
 		if winner == 0 {
-			xpOb := utils.RandInt(11) + 11
+			xpOb := utils.RandInt(20) + 11
 			if rinha.HasUpgrade(user.Upgrades, 0) {
 				xpOb++
 				if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
@@ -206,7 +206,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 			}
 			xpOb += calc
-			money := 6
+			money := 8
 
 			if galo.Resets > 0 {
 				for i := 0; i < galo.Resets; i++ {
@@ -282,7 +282,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 					if level >= 8 {
 						u.UserXp++
 					}
-					clanXpOb := 1
+					clanXpOb := 2
 					if item != nil {
 						if item.Effect == 10 {
 							if utils.RandInt(101) <= 30 {

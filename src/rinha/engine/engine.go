@@ -207,7 +207,7 @@ func RinhaEngineNew(battle *rinha.Battle, options *RinhaOptions, message *disgor
 		for _, effect := range effects {
 			text += EffectToStr(effect, affectedName, authorName, battle)
 		}
-		if round >= 35 {
+		if round >= 50 {
 			if battle.Fighters[1].Life >= battle.Fighters[0].Life {
 				text += "\n" + options.AuthorName + " Foi executado"
 				battle.Fighters[0].Life = 0

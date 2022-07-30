@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"asura/src/entities"
 	"asura/src/handler"
 	"context"
 
@@ -17,10 +18,5 @@ func init() {
 }
 
 func runSupport(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	return &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Content: "https://discord.gg/tdVWQGV",
-		},
-	}
+	return entities.CreateMsg().Content("https://discord.gg/tdVWQGV").Res()
 }
