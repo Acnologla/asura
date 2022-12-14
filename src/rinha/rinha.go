@@ -327,7 +327,7 @@ func GetItemByID(items []*entities.Item, id uuid.UUID) *entities.Item {
 }
 
 func IsInLimit(user *entities.User) bool {
-	max := 175
+	max := 250
 	if HasUpgrade(user.Upgrades, 0, 1, 0, 0) {
 		max += 30
 	}

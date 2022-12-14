@@ -258,7 +258,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 						xpOb += xpOb * int(item.Payload)
 					}
 					if item.Effect == 9 {
-						xpOb += 3
+						xpOb += 2
 						money++
 					}
 				}
