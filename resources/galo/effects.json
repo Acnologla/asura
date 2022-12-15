@@ -357,7 +357,7 @@
     "type": 1,
     "self": false,
     "phrase": "%s está sobre eclipse eterno! (-%d)",
-    "range": [25, 40]
+    "range": [40, 90]
   },
   {
     "name": "Envelhecer",
@@ -485,20 +485,20 @@
     "phrase": "%s esta assustado! (-%d)"
   },
   {
-    "range": [100, 100],
+    "range": [70, 70],
     "name": "Censurado",
     "turns": 2,
     "type": 4,
     "self": true,
-    "phrase": "%s esta censurado! (%d)"
+    "phrase": "%s esta censurado! (%d%%)"
   },
   {
-    "range": [50, 50],
+    "range": [100, 100],
     "type": 4,
     "name": "Se escondendo",
     "turns": 2,
     "self": true,
-    "phrase": "%s esta se escondendo! (%d)"
+    "phrase": "%s esta se escondendo! (%d%%)"
   },
   {
     "range": [50, 50],
@@ -508,7 +508,7 @@
     "phrase": "%s esta assombrado! (%d)"
   },
   {
-    "range": [50, 65],
+    "range": [50, 80],
     "name": "Protagonizando",
     "turns": 3,
     "type": 2,
@@ -516,7 +516,7 @@
     "phrase": "%s esta protagonizando! (+%d)"
   },
   {
-    "range": [60, 120],
+    "range": [70, 120],
     "name": "Hipnotizado",
     "turns": 4,
     "type": 1,

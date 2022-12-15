@@ -139,6 +139,7 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 						}),
 					}},
 				})
+				return nil
 			}
 			var endMsg string
 			percents := rinha.DungeonsPercentages[dungeon.Level]
