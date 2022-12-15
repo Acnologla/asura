@@ -456,38 +456,38 @@
     "range": [100, 100]
   },
   {
-    "range": [7, 10],
+    "range": [10, 15],
     "name": "Coberto por tinta",
-    "turns": "2",
+    "turns": 2,
     "type": 1,
     "phrase": "%s esta coberto por tinta! (-%d)"
   },
   {
-    "range": [10, 13],
+    "range": [5, 30],
     "name": "Explodindo",
-    "turns": "3",
+    "turns": 2,
     "type": 1,
     "phrase": "%s esta explodindo! (-%d)"
   },
   {
-    "range": [8, 13],
+    "range": [15, 25],
     "name": "Redesenhando",
-    "turns": "2",
+    "turns": 2,
     "type": 2,
     "self": true,
     "phrase": "%s redesenhou! (+%d)"
   },
   {
-    "range": [0, 0],
+    "range": [30, 30],
     "name": "Deixou assustado",
-    "turns": "1",
+    "turns": 2,
     "type": 6,
     "phrase": "%s esta assustado! (-%d)"
   },
   {
     "range": [100, 100],
     "name": "Censurado",
-    "turns": "2",
+    "turns": 2,
     "type": 4,
     "self": true,
     "phrase": "%s esta censurado! (%d)"
@@ -496,29 +496,29 @@
     "range": [50, 50],
     "type": 4,
     "name": "Se escondendo",
-    "turns": "2",
+    "turns": 2,
     "self": true,
     "phrase": "%s esta se escondendo! (%d)"
   },
   {
-    "range": [0, 0],
+    "range": [50, 50],
     "name": "Assombrado",
-    "turns": "2",
+    "turns": 2,
     "type": 6,
     "phrase": "%s esta assombrado! (%d)"
   },
   {
-    "range": [15, 20],
+    "range": [50, 65],
     "name": "Protagonizando",
-    "turns": "3",
+    "turns": 3,
     "type": 2,
     "self": true,
     "phrase": "%s esta protagonizando! (+%d)"
   },
   {
-    "range": [50, 70],
+    "range": [60, 120],
     "name": "Hipnotizado",
-    "turns": "2",
+    "turns": 4,
     "type": 1,
     "phrase": "%s esta hipnotizado! (-%d)"
   }
