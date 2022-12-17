@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Golpe slime",
+    "damage": [17, 26],
+    "level": 1
+  },
+  {
+    "name": "Martelo slime",
+    "damage": [20, 26],
+    "level": 2
+  },
+  {
+    "name": "Chute slime",
+    "damage": [24, 31],
+    "level": 3
+  },
+  {
+    "name": "Empoderamento slime",
+    "damage": [5, 25],
+    "level": 4,
+    "effect": [1, 61]
+  },
+  {
+    "name": "Chuva slime",
+    "damage": [25, 40],
+    "level": 5
+  },
+  {
+    "name": "Regeneração",
+    "damage": [15, 35],
+    "level": 7,
+    "effect": [1, 2],
+    "self": true
+  },
+  {
+    "name": "Abraço slime",
+    "damage": [40, 50],
+    "level": 9,
+    "effect": [1, 11]
+  },
+  {
+    "name": "Slime pulsante",
+    "damage": [47, 50],
+    "level": 11
+  },
+  {
+    "name": "Regeneração poderosa",
+    "damage": [15, 30],
+    "level": 12,
+    "self": true,
+    "effect": [1, 14]
+  },
+  {
+    "name": "Escudo slime",
+    "damage": [25, 45],
+    "level": 13,
+    "effect": [1, 4]
+  },
+  {
+    "name": "Slime atacante",
+    "damage": [45, 52],
+    "level": 15
+  },
+  {
+    "name": "Slime poderoso",
+    "damage": [53, 59],
+    "level": 17
+  },
+  {
+    "name": "Esfera slime",
+    "damage": [35, 40],
+    "level": 19,
+    "effect": [1, 14],
+    "self": true
+  },
+  {
+    "name": "Ataque viscoso",
+    "damage": [58, 62],
+    "level": 21
+  },
+  {
+    "name": "Armadura viscosa",
+    "damage": [30, 50],
+    "level": 22,
+    "effect": [1, 4]
+  },
+  {
+    "name": "Reflexão",
+    "damage": [15, 25],
+    "level": 25,
+    "effect": [0.25, 30]
+  },
+  {
+    "name": "Mundo slime",
+    "damage": [50, 80],
+    "level": 30,
+    "effect": [1, 47],
+    "self": true
+  }
+]

@@ -1,96 +1,96 @@
 [
-    {
-        "name": "Grãos de areia",
-        "damage": [18,24],
-        "level": 1
-    },
-    {
-        "name": "Espinho de areia",
-        "damage": [15,18],
-        "level": 2,
-        "effect": [0.5, 1]
-    },
-    {
-        "name": "Onda de areia",
-        "damage": [25,30],
-        "level": 3
-    },
-    {
-        "name": "Areia movediça",
-        "damage": [5,15],
-        "level": 4,
-        "effect": [0.5, 3]
-    },
-    {
-        "name": "Tornado de areia",
-        "damage": [30,35],
-        "level": 6
-    },
-    {
-        "name": "Areia cristalizada",
-        "damage": [34,37],
-        "level": 7
-    },
-    {
-        "name": "Tempestade de areia",
-        "damage": [10,15],
-        "level": 8,
-        "effect": [1, 39]
-    },
-    {
-        "name": "Armadura de areia",
-        "damage": [2,5],
-        "level": 10,
-        "effect": [1,4]
-    },
-    {
-        "name": "Espada de areia",
-        "damage": [15,25],
-        "level": 12,
-        "effect": [1,7]
-    },
-    {
-        "name": "Areia negra",
-        "damage": [38,45],
-        "level": 14
-    },
-    {
-        "name": "Tornado esmagador",
-        "damage": [40,50],
-        "level": 15
-    },
-    {
-        "name": "Tempestade de areia negra",
-        "damage": [25,30],
-        "level": 16,
-        "effect": [1,39]
-    },
-    {
-        "name": "Areia movediça potente",
-        "damage": [15,35],
-        "level": 18,
-        "effect": [0.7,3]
-    },
-    {
-        "name": "Golem de areia",
-        "damage": [1,5],
-        "level": 21,
-        "effect":[1,40]
-    },
-    {
-        "name": "Onda do deserto",
-        "damage": [50,55],
-        "level": 23
-    },
-    {
-        "name": "Tormenta de areia negra",
-        "damage": [35,45],
-        "level": 25,
-        "effect": [1, 39]
-    },
-    {
-        "name": "Arenização",
-        "damage": [60,90],
-        "level": 30
-    }
+  {
+    "name": "Grãos de areia",
+    "damage": [18, 24],
+    "level": 1
+  },
+  {
+    "name": "Espinho de areia",
+    "damage": [15, 18],
+    "level": 2,
+    "effect": [0.5, 1]
+  },
+  {
+    "name": "Onda de areia",
+    "damage": [25, 30],
+    "level": 3
+  },
+  {
+    "name": "Areia movediça",
+    "damage": [5, 15],
+    "level": 4,
+    "effect": [0.5, 3]
+  },
+  {
+    "name": "Tornado de areia",
+    "damage": [30, 35],
+    "level": 6
+  },
+  {
+    "name": "Areia cristalizada",
+    "damage": [30, 37],
+    "level": 7
+  },
+  {
+    "name": "Tempestade de areia",
+    "damage": [10, 15],
+    "level": 8,
+    "effect": [1, 39]
+  },
+  {
+    "name": "Armadura de areia",
+    "damage": [2, 4],
+    "level": 10,
+    "effect": [1, 4]
+  },
+  {
+    "name": "Espada de areia",
+    "damage": [15, 25],
+    "level": 12,
+    "effect": [1, 7]
+  },
+  {
+    "name": "Areia negra",
+    "damage": [38, 43],
+    "level": 14
+  },
+  {
+    "name": "Tornado esmagador",
+    "damage": [40, 50],
+    "level": 15
+  },
+  {
+    "name": "Tempestade de areia negra",
+    "damage": [20, 30],
+    "level": 16,
+    "effect": [1, 39]
+  },
+  {
+    "name": "Areia movediça potente",
+    "damage": [15, 35],
+    "level": 18,
+    "effect": [0.7, 3]
+  },
+  {
+    "name": "Golem de areia",
+    "damage": [1, 5],
+    "level": 21,
+    "effect": [1, 40]
+  },
+  {
+    "name": "Onda do deserto",
+    "damage": [50, 55],
+    "level": 23
+  },
+  {
+    "name": "Tormenta de areia negra",
+    "damage": [35, 45],
+    "level": 25,
+    "effect": [1, 39]
+  },
+  {
+    "name": "Arenização",
+    "damage": [60, 90],
+    "level": 30
+  }
 ]

@@ -521,5 +521,20 @@
     "turns": 4,
     "type": 1,
     "phrase": "%s esta hipnotizado! (-%d)"
+  },
+  {
+    "name": "Slime empoderado",
+    "turns": 2,
+    "type": 4,
+    "self": true,
+    "phrase": "%s está empoderado com %d%% de proteção!",
+    "range": [30, 40]
+  },
+  {
+    "range": [40, 50],
+    "name": "Batalhão",
+    "turns": 2,
+    "type": 1,
+    "phrase": "%s esta sob ataque do Batalhão! (-%d)"
   }
 ]

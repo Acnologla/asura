@@ -1,0 +1,94 @@
+[
+  {
+    "name": "Recruta",
+    "damage": [20, 22],
+    "level": 1
+  },
+  {
+    "name": "Faca de batalha",
+    "damage": [1, 4],
+    "level": 2,
+    "effect": [1, 1]
+  },
+  {
+    "name": "Soldado",
+    "damage": [20, 27],
+    "level": 3
+  },
+  {
+    "name": "Golpe certeiro",
+    "damage": [25, 30],
+    "level": 4
+  },
+  {
+    "name": "Punho atacante",
+    "damage": [25, 32],
+    "level": 6
+  },
+  {
+    "name": "Cabo",
+    "damage": [30, 33],
+    "level": 7
+  },
+  {
+    "name": "Escopeta",
+    "damage": [5, 25],
+    "level": 8,
+    "effect": [1, 7]
+  },
+  {
+    "name": "Coronhada",
+    "damage": [33, 34],
+    "level": 10
+  },
+  {
+    "name": "Arma",
+    "damage": [10, 28],
+    "level": 12,
+    "effect": [1, 1]
+  },
+  {
+    "name": "Colete",
+    "damage": [20, 25],
+    "level": 14,
+    "effect": [1, 4]
+  },
+  {
+    "name": "Sargento",
+    "damage": [40, 45],
+    "level": 15
+  },
+  {
+    "name": "Lança chamas",
+    "damage": [20, 30],
+    "level": 16,
+    "effect": [1, 9]
+  },
+  {
+    "name": "Metralhadora",
+    "damage": [10, 20],
+    "level": 18,
+    "effect": [1, 36]
+  },
+  {
+    "name": "Capitão",
+    "damage": [50, 59],
+    "level": 21
+  },
+  {
+    "name": "Bazooka",
+    "damage": [1, 140],
+    "level": 23
+  },
+  {
+    "name": "General",
+    "damage": [50, 75],
+    "level": 25
+  },
+  {
+    "name": "Batalhão",
+    "damage": [10, 15],
+    "level": 30,
+    "effect": [1, 68]
+  }
+]

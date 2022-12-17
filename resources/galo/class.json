@@ -198,5 +198,17 @@
   {
     "name": "Desenho",
     "rarity": 3
+  },
+  {
+    "name": "Esqueleto",
+    "rarity": 0
+  },
+  {
+    "name": "Slime",
+    "rarity": 2
+  },
+  {
+    "name": "Militar",
+    "rarity": 1
   }
 ]

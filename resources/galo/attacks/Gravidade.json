@@ -1,93 +1,93 @@
 [
-    {
-        "name": "Impulso",
-        "damage": [10, 33],
-        "level": 1
-    },
-    {
-        "name": "Soco de gravitons",
-        "damage": [12,34],
-        "level": 2
-    },
-    {
-        "name": "Barreira gravitacional",
-        "damage": [1,5],
-        "level": 3,
-        "effect": [1,4]
-    },
-    {
-        "name": "Repulsão",
-        "damage": [16,39],
-        "level": 4
-    },
-    {
-        "name": "Gravidade zero",
-        "damage": [16,44],
-        "level": 5
-    },
-    {
-        "name": "Atração gravitacional",
-        "damage": [15,18],
-        "level": 7,
-        "effect":[1,28]
-    },
-    {
-        "name": "Impulso forte",
-        "damage": [29,55],
-        "level": 9
-    },
-    {
-        "name": "Atração",
-        "damage": [20,25],
-        "effect": [0.3,3],
-        "level": 10
-    },
-    {
-        "name": "Gravidade negativa",
-        "damage": [39,65],
-        "level": 12
-    },
-    {
-        "name": "Destruição gravitacional",
-        "damage": [41,70],
-        "level": 13
-    },
-    {
-        "name": "Campo gravitacional",
-        "damage": [12,20],
-        "level": 15,
-        "effect": [0.5,3]
-    },
-    {
-        "name": "Meteoro",
-        "damage": [43,69],
-        "level": 17
-    },
-    {
-        "name": "Atração microcospica",
-        "damage": [25,35],
-        "level": 19,
-        "effect": [0.5,3]
-    },
-    {
-        "name": "Chuva de meteoros",
-        "damage": [50,72],
-        "level": 21
-    },
-    {
-        "name": "NodeModules",
-        "damage": [50,80],
-        "level": 22
-    },
-    {
-        "name": "Gravidade infinita",
-        "damage": [55,83],
-        "level": 24,
-        "effect": [1,28]
-    },
-    {
-        "name": "Repulsão avassaladora",
-        "damage": [80,130],
-        "level": 30
-    }
+  {
+    "name": "Impulso",
+    "damage": [10, 33],
+    "level": 1
+  },
+  {
+    "name": "Soco de gravitons",
+    "damage": [12, 34],
+    "level": 2
+  },
+  {
+    "name": "Barreira gravitacional",
+    "damage": [1, 5],
+    "level": 3,
+    "effect": [1, 4]
+  },
+  {
+    "name": "Repulsão",
+    "damage": [16, 39],
+    "level": 4
+  },
+  {
+    "name": "Gravidade zero",
+    "damage": [16, 44],
+    "level": 5
+  },
+  {
+    "name": "Atração gravitacional",
+    "damage": [15, 18],
+    "level": 7,
+    "effect": [1, 28]
+  },
+  {
+    "name": "Impulso forte",
+    "damage": [29, 55],
+    "level": 9
+  },
+  {
+    "name": "Atração",
+    "damage": [20, 25],
+    "effect": [0.3, 3],
+    "level": 10
+  },
+  {
+    "name": "Gravidade negativa",
+    "damage": [42, 65],
+    "level": 12
+  },
+  {
+    "name": "Destruição gravitacional",
+    "damage": [45, 70],
+    "level": 13
+  },
+  {
+    "name": "Campo gravitacional",
+    "damage": [12, 25],
+    "level": 15,
+    "effect": [0.5, 3]
+  },
+  {
+    "name": "Meteoro",
+    "damage": [45, 72],
+    "level": 17
+  },
+  {
+    "name": "Atração microcospica",
+    "damage": [25, 35],
+    "level": 19,
+    "effect": [0.5, 3]
+  },
+  {
+    "name": "Chuva de meteoros",
+    "damage": [50, 72],
+    "level": 21
+  },
+  {
+    "name": "NodeModules",
+    "damage": [50, 80],
+    "level": 22
+  },
+  {
+    "name": "Gravidade infinita",
+    "damage": [60, 83],
+    "level": 24,
+    "effect": [1, 28]
+  },
+  {
+    "name": "Repulsão avassaladora",
+    "damage": [80, 130],
+    "level": 30
+  }
 ]
