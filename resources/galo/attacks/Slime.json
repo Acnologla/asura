@@ -18,7 +18,7 @@
     "name": "Empoderamento slime",
     "damage": [5, 25],
     "level": 4,
-    "effect": [1, 61]
+    "effect": [1, 67]
   },
   {
     "name": "Chuva slime",
@@ -34,9 +34,8 @@
   },
   {
     "name": "Abraço slime",
-    "damage": [40, 50],
-    "level": 9,
-    "effect": [1, 11]
+    "damage": [42, 50],
+    "level": 9
   },
   {
     "name": "Slime pulsante",
