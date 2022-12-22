@@ -80,19 +80,19 @@
   },
   {
     "name": "Fenix eterna",
-    "damage": [35, 55],
+    "damage": [65, 80],
     "level": 22,
     "effect": [1, 31]
   },
   {
     "name": "Fenix da cremação",
-    "damage": [45, 65],
+    "damage": [80, 100],
     "level": 25,
     "effect": [1, 13]
   },
   {
     "name": "Fogo da fenix",
-    "damage": [40, 50],
+    "damage": [90, 120],
     "level": 30,
     "effect": [1, 49]
   }

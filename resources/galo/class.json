@@ -210,5 +210,13 @@
   {
     "name": "Militar",
     "rarity": 1
+  },
+  {
+    "name": "Apocalipse",
+    "rarity": 3
+  },
+  {
+    "name": "Existencial",
+    "rarity": 5
   }
 ]

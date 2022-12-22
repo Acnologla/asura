@@ -20,7 +20,7 @@ type Lootboxes struct {
 	Normal    int
 }
 
-var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2200, 0}, {0, 2}, {0, 2}, {320, 0}}
+var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2200, 0}, {0, 2}, {0, 2}, {500, 0}}
 var LootNames = [...]string{"comum", "normal", "rara", "epica", "lendaria", "items", "cosmetica"}
 
 func GenerateLootPrices() (text string) {
@@ -81,6 +81,7 @@ func GetLbIndex(name string) int {
 func CalcPity(pity int) float64 {
 	return (float64(pity) * PityMultiplier) / 100
 }
+
 func OpenEpic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
 	pitVal := int(CalcPity(pity) * 6)
@@ -94,10 +95,10 @@ func OpenEpic(pity int) (int, bool) {
 
 func OpenRare(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 140)
-	if 140+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 155)
+	if 155+pitVal >= value {
 		return GetRandByType(Epic), true
-	} else if 600 >= value {
+	} else if 620 >= value {
 		return GetRandByType(Rare), false
 	}
 	return GetRandByType(Common), false
@@ -105,10 +106,10 @@ func OpenRare(pity int) (int, bool) {
 
 func OpenNormal(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := int(CalcPity(pity) * 6)
-	if 6+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 7)
+	if 7+pitVal >= value {
 		return GetRandByType(Epic), true
-	} else if 31 >= value {
+	} else if 34 >= value {
 		return GetRandByType(Rare), false
 	}
 	return GetRandByType(Common), false
@@ -116,8 +117,8 @@ func OpenNormal(pity int) (int, bool) {
 
 func OpenCommon(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := int(CalcPity(pity) * 6)
-	if 6+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 9)
+	if 9+pitVal >= value {
 		return GetRandByType(Rare), true
 	}
 	return GetRandByType(Common), false
@@ -149,8 +150,8 @@ func GetPrice(lootType int) (int, int) {
 
 func OpenCosmetic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 15)
-	if 8+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 7)
+	if 7+pitVal >= value {
 		return GetCosmeticRandByType(Legendary), true
 	} else if 70 >= value {
 		return GetCosmeticRandByType(Epic), false
@@ -188,7 +189,7 @@ func Open(lootType int, user *entities.User) (int, int) {
 	if asuraCoins > 0 {
 		money = asuraCoins * 1900
 	}
-	newPity := money / 100
+	newPity := money / 80
 	return gal, newPity + user.Pity
 }
 

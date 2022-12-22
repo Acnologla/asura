@@ -185,7 +185,8 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 				effect_damage = receiver.Life - 1
 			}
 			if ataccker.Galo.Type == 33 {
-				ataccker.Life += effect_damage
+				lvl := CalcLevel(ataccker.Galo.Xp)
+				ataccker.Life += int(float64(effect_damage) * (1 + (0.1 * float64(lvl/10))))
 			}
 			receiver.Life -= effect_damage
 		}

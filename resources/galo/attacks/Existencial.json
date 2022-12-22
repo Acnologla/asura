@@ -1,0 +1,94 @@
+[
+  { "damage": [25, 35], "level": 1, "name": "Dano Existencial" },
+  {
+    "damage": [10, 25],
+    "level": 2,
+    "name": "Vírus Existencial",
+    "effect": [1, 80]
+  },
+  { "damage": [30, 50], "level": 3, "name": "Deja Vu" },
+  {
+    "damage": [15, 30],
+    "level": 4,
+    "name": "Roubar Universos Paralelos",
+    "self": true,
+    "effect": [1, 81]
+  },
+  { "damage": [40, 45], "level": 5, "name": "Crise Existencial" },
+  {
+    "damage": [15, 25],
+    "level": 7,
+    "name": "Invocar Fogo",
+    "effect": [1, 82]
+  },
+  {
+    "damage": [20, 30],
+    "level": 8,
+    "name": "Invocar Clones Aliados",
+    "effect": [0.5, 83]
+  },
+  { "damage": [50, 55], "level": 9, "name": "Ataque Quadridimensional" },
+  { "damage": [50, 65], "level": 11, "name": "Dano Existencial Significativo" },
+  {
+    "damage": [30, 45],
+    "level": 12,
+    "name": "Apagador de Ataques",
+    "effect": [1, 84]
+  },
+  {
+    "damage": [25, 40],
+    "level": 14,
+    "name": "Absorver Universos Paralelos",
+    "self": true,
+    "effect": [1, 85]
+  },
+  {
+    "damage": [30, 50],
+    "level": 15,
+    "name": "Invocar exército aliado",
+    "effect": [0.75, 83]
+  },
+  { "damage": [65, 80], "level": 18, "name": "Crise Existencial Aprimorada" },
+  {
+    "damage": [40, 50],
+    "level": 20,
+    "name": "Fragilizar Existência",
+    "effect": [1, 86]
+  },
+  {
+    "damage": [25, 40],
+    "level": 22,
+    "name": "Refletir Existência de Ataques",
+    "self": true,
+    "effect": [0.8, 87]
+  },
+  {
+    "damage": [25, 30],
+    "level": 25,
+    "name": "Anular Existência de Ataques",
+    "effect": [1, 88]
+  },
+  { "damage": [100, 280], "level": 30, "name": "Destruição do Universo" },
+  { "damage": [160, 500], "level": 34, "name": "Anti-Matéria" },
+  {
+    "damage": [85, 100],
+    "level": 38,
+    "name": "Englobar Universos Paralelos",
+    "self": true,
+    "effect": [1, 89]
+  },
+  {
+    "damage": [100, 150],
+    "level": 42,
+    "name": "Decaimento do Universo",
+    "effect": [1, 90]
+  },
+  {
+    "damage": [60, 90],
+    "level": 46,
+    "name": "Refletir Existência de Ataques",
+    "self": true,
+    "effect": [1, 91]
+  },
+  { "damage": [100, 1000], "level": 50, "name": "Destruição do Multiverso" }
+]

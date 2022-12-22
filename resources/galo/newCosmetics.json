@@ -64,5 +64,21 @@
     "type": 0,
     "name": "Sun Forest background",
     "value": "https://i.imgur.com/T8XSCVv.jpg"
+  },
+  {
+    "name": "Skin Original",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/U7LTMvh.png",
+    "value": "https://i.imgur.com/FfKGyWu.png",
+    "type": 2,
+    "extra": 41
+  },
+  {
+    "name": "Skin Popeye",
+    "rarity": 2,
+    "reverseValue": "https://i.imgur.com/uyuzRnk.png",
+    "value": "https://i.imgur.com/OwJvrKq.png",
+    "type": 2,
+    "extra": 41
   }
 ]

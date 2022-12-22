@@ -389,7 +389,7 @@
     "type": 1,
     "self": false,
     "phrase": "%s está sobre fogo da fenix! (-%d)",
-    "range": [100, 200]
+    "range": [145, 200]
   },
   {
     "name": "Depressão",
@@ -536,5 +536,177 @@
     "turns": 2,
     "type": 1,
     "phrase": "%s esta sob ataque do Batalhão! (-%d)"
+  },
+  {
+    "range": [10, 20],
+    "name": "Desnutrição",
+    "turns": 3,
+    "type": 6,
+    "phrase": "%s está desnutrido! (-%d)"
+  },
+  {
+    "range": [20, 20],
+    "type": 2,
+    "name": "Trocar Comida por Sangue",
+    "turns": 1,
+    "self": true,
+    "phrase": "%s está trocando comida por sangue! (+%d)"
+  },
+  {
+    "range": [50, 50],
+    "name": "Proteção de cadáveres",
+    "turns": 6,
+    "type": 4,
+    "self": true,
+    "phrase": "%s está protegido por cadáveres! (%d%%)"
+  },
+  {
+    "range": [50, 50],
+    "name": "Desnutrição",
+    "turns": 3,
+    "type": 6,
+    "phrase": "%s está desnutrido! (%d%%)"
+  },
+  {
+    "range": [10, 15],
+    "name": "Doença",
+    "turns": 5,
+    "type": 1,
+    "phrase": "%s está doente! (-%d)"
+  },
+  {
+    "range": [40, 40],
+    "name": "Trocar Comida por Sangue",
+    "turns": 1,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está trocando comida por sangue! (+%d)"
+  },
+  {
+    "range": [10, 20],
+    "name": "Dissolvendo",
+    "turns": 3,
+    "type": 1,
+    "phrase": "%s está dissolvendo em chuva ácida! (-%d)"
+  },
+  {
+    "range": [0, 0],
+    "name": "Falta de recursos",
+    "turns": 1,
+    "type": 3,
+    "phrase": "%s não tem recursos para atacar! (%d)"
+  },
+  {
+    "range": [100, 100],
+    "name": "Desnutrição",
+    "turns": 3,
+    "type": 6,
+    "phrase": "%s está desnutrido! (%d%%)"
+  },
+  {
+    "range": [60, 60],
+    "name": "Trocar Comida por Sangue",
+    "turns": 1,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está trocando comida por sangue! (+%d)"
+  },
+  {
+    "range": [0, 0],
+    "name": "Falta de Recursos",
+    "type": 3,
+    "turns": 1,
+    "phrase": "%s não tem recursos para atacar! (%d)"
+  },
+  {
+    "range": [5, 10],
+    "name": "Esvaecer Existência",
+    "turns": 3,
+    "type": 1,
+    "phrase": "%s está esvaecendo! (-%d)"
+  },
+  {
+    "range": [5, 10],
+    "name": "Regenerar Massa",
+    "turns": 3,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está regenerando com matéria exótica! (+%d)"
+  },
+  {
+    "range": [7, 12],
+    "name": "Fogo",
+    "turns": 3,
+    "type": 1,
+    "phrase": "%s está em chamas! (-%d)"
+  },
+  {
+    "range": [0, 0],
+    "name": "Confusão",
+    "turns": 1,
+    "type": 3,
+    "phrase": "%s está confuso sobre quem atacar! (%d)"
+  },
+  {
+    "range": [50, 50],
+    "name": "Apagar Ataques",
+    "turns": 5,
+    "type": 4,
+    "self": true,
+    "phrase": "%s está apagando partes dos ataques inimigos! (%d%%)"
+  },
+  {
+    "range": [15, 25],
+    "name": "Regenerar Massa",
+    "turns": 3,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está regenerando com matéria exótica! (+%d)"
+  },
+  {
+    "range": [35, 50],
+    "name": "Existência Fragilizada",
+    "turns": 4,
+    "type": 6,
+    "phrase": "%s está com suas moléculas instáveis... (-%d)"
+  },
+  {
+    "range": [100, 100],
+    "name": "Refletir Massas",
+    "turns": 1,
+    "type": 5,
+    "self": true,
+    "phrase": "%s refletiu a existência do ataque! (%d)"
+  },
+  {
+    "range": [100, 100],
+    "name": "Anular Ataques",
+    "turns": 2,
+    "type": 4,
+    "self": true,
+    "phrase": "%s anulou a existência do ataque inimigo! (%d)"
+  },
+  {
+    "range": [80, 120],
+    "name": "Regenerar Massa",
+    "turns": 3,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está regenerando com matéria exótica! (+%d)"
+  },
+  {
+    "range": [150, 150],
+    "name": "Existência Fragilizada",
+    "turns": 4,
+    "type": 6,
+    "phrase": "%s está com suas molécuas em decaimento profundo... (-%d)"
+  },
+  {
+    "range": [100, 100],
+    "name": "Refletir Massas",
+    "turns": 1,
+    "type": 5,
+    "self": true,
+    "phrase": "%s refletiu completamente o ataque inimigo! (%d)"
   }
 ]

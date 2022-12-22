@@ -264,7 +264,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 				u.UserXp++
 				u.TrainLimit++
-				clanUser := database.Clan.GetUserClan(ctx, discordUser.ID)
+				clanUser := database.Clan.GetUserClan(ctx, discordUser.ID, "Members")
 				clan := clanUser.Clan
 
 				if clan.Name != "" {

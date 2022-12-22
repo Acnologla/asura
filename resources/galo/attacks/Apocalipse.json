@@ -1,0 +1,81 @@
+[
+  { "damage": [25, 30], "level": 1, "name": "Início do Fim" },
+  {
+    "damage": [10, 20],
+    "level": 2,
+    "name": "Fome Comum",
+    "effect": [0.8, 69]
+  },
+  {
+    "damage": [10, 25],
+    "level": 3,
+    "name": "Efeitos da Guerra",
+    "effect": [1, 1]
+  },
+  {
+    "damage": [20, 20],
+    "level": 4,
+    "name": "Troca",
+    "self": true,
+    "effect": [1, 70]
+  },
+  { "damage": [40, 55], "level": 5, "name": "Destruição" },
+  {
+    "damage": [15, 35],
+    "level": 7,
+    "name": "Proteção Apocalíptica",
+    "effect": [1, 71]
+  },
+  {
+    "damage": [30, 50],
+    "level": 8,
+    "name": "Fome",
+    "effect": [0.8, 72]
+  },
+  {
+    "damage": [20, 30],
+    "level": 9,
+    "name": "Efeitos da Grande Guerra",
+    "effect": [1, 73]
+  },
+  {
+    "damage": [40, 40],
+    "level": 10,
+    "name": "Troca Melhorada",
+    "self": true,
+    "effect": [1, 74]
+  },
+  { "damage": [40, 60], "level": 12, "name": "Invasão de Gafanhotos" },
+  {
+    "damage": [30, 40],
+    "level": 13,
+    "name": "Chuva Ácida",
+    "effect": [1, 75]
+  },
+  {
+    "damage": [50, 80],
+    "level": 15,
+    "name": "Pobreza"
+  },
+  {
+    "damage": [40, 60],
+    "level": 17,
+    "name": "Fome Extrema",
+    "effect": [1, 77]
+  },
+  { "damage": [70, 90], "level": 19, "name": "Enxame de Gafanhotos" },
+  {
+    "damage": [60, 60],
+    "level": 20,
+    "name": "Troca Universal",
+    "self": true,
+    "effect": [1, 78]
+  },
+  {
+    "damage": [30, 50],
+    "level": 25,
+    "name": "Pobreza Extrema",
+    "effect": [0.75, 79]
+  },
+  { "damage": [50, 250], "level": 30, "name": "Fim dos Tempos" }
+]
