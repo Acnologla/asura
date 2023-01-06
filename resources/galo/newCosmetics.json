@@ -80,5 +80,13 @@
     "value": "https://i.imgur.com/OwJvrKq.png",
     "type": 2,
     "extra": 41
+  },
+  {
+    "name": "Skin Anime",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/mKSCFIS.png",
+    "value": "https://i.imgur.com/W3tlG0P.png",
+    "type": 2,
+    "extra": 41
   }
 ]

@@ -480,7 +480,7 @@
   {
     "range": [30, 30],
     "name": "Deixou assustado",
-    "turns": 2,
+    "turns": 3,
     "type": 6,
     "phrase": "%s esta assustado! (-%d)"
   },
@@ -503,7 +503,7 @@
   {
     "range": [50, 50],
     "name": "Assombrado",
-    "turns": 2,
+    "turns": 3,
     "type": 6,
     "phrase": "%s esta assombrado! (%d)"
   },
