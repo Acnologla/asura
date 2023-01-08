@@ -41,7 +41,7 @@ func init() {
 
 func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	discordUser := itc.Member.User
-	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos")
+	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items")
 	galo := rinha.GetEquippedGalo(&user)
 	command := itc.Data.Options[0].Name
 	switch command {
