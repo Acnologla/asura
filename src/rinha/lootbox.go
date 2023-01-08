@@ -84,8 +84,8 @@ func CalcPity(pity int) float64 {
 
 func OpenEpic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 6)
-	if 6+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 5)
+	if 5+pitVal >= value {
 		return GetRandByType(Legendary), true
 	} else if 250 >= value {
 		return GetRandByType(Epic), false
@@ -95,10 +95,10 @@ func OpenEpic(pity int) (int, bool) {
 
 func OpenRare(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 155)
-	if 155+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 160)
+	if 160+pitVal >= value {
 		return GetRandByType(Epic), true
-	} else if 620 >= value {
+	} else if 640 >= value {
 		return GetRandByType(Rare), false
 	}
 	return GetRandByType(Common), false
@@ -109,7 +109,7 @@ func OpenNormal(pity int) (int, bool) {
 	pitVal := int(CalcPity(pity) * 7)
 	if 7+pitVal >= value {
 		return GetRandByType(Epic), true
-	} else if 34 >= value {
+	} else if 35 >= value {
 		return GetRandByType(Rare), false
 	}
 	return GetRandByType(Common), false
@@ -117,8 +117,8 @@ func OpenNormal(pity int) (int, bool) {
 
 func OpenCommon(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := int(CalcPity(pity) * 9)
-	if 9+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 10)
+	if 10+pitVal >= value {
 		return GetRandByType(Rare), true
 	}
 	return GetRandByType(Common), false

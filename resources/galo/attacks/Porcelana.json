@@ -1,0 +1,73 @@
+[
+  { "damage": [19, 22], "level": 1, "name": "Bicada rígida " },
+  { "damage": [22, 27], "name": "Pratada ", "level": 2 },
+  {
+    "damage": [10, 20],
+    "name": "Corte superficial ",
+    "level": 3,
+    "effect": [0.5, 1]
+  },
+  {
+    "damage": [10, 11],
+    "name": "Cola ruim",
+    "level": 4,
+    "self": true,
+    "effect": [0.7, 98]
+  },
+  {
+    "damage": [11, 22],
+    "name": "Corte",
+    "level": 5,
+    "effect": [0.5, 1]
+  },
+  { "damage": [20, 27], "level": 7, "name": "Rabo rígido " },
+  {
+    "damage": [10, 15],
+    "level": 9,
+    "name": "Colete de porcelana",
+    "effect": [1, 99]
+  },
+  {
+    "damage": [11, 15],
+    "level": 11,
+    "name": "Cola",
+    "self": true,
+    "effect": [0.75, 98]
+  },
+  {
+    "damage": [22, 30],
+    "name": "Corte considerável",
+    "level": 12,
+    "effect": [0.5, 1]
+  },
+  { "damage": [30, 50], "level": 13, "name": "Mosaico " },
+  { "damage": [30, 55], "level": 15, "name": "Patada rígida" },
+  {
+    "damage": [30, 40],
+    "level": 17,
+    "name": "Porcelana temperada",
+    "effect": [1, 98]
+  },
+  { "damage": [45, 60], "level": 21, "name": "Garras rígidas" },
+  {
+    "damage": [20, 25],
+    "level": 23,
+    "name": "Cola considerável",
+    "self": true,
+    "effect": [0.7, 100]
+  },
+  { "damage": [50, 70], "level": 25, "name": "Porcelana infinita" },
+  {
+    "damage": [35, 45],
+    "level": 29,
+    "name": "Corte profundo",
+    "effect": [0.3, 36]
+  },
+  {
+    "damage": [40, 45],
+    "level": 30,
+    "name": "Super bonder",
+    "self": true,
+    "effect": [1, 100]
+  }
+]

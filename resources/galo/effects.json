@@ -708,5 +708,128 @@
     "type": 5,
     "self": true,
     "phrase": "%s refletiu completamente o ataque inimigo! (%d)"
+  },
+  {
+    "range": [5, 10],
+    "turns": 3,
+    "type": 2,
+    "name": "se preenchendo",
+    "self": true,
+    "phrase": "%s está trocando seu enchimento! (+%d)"
+  },
+  {
+    "range": [7, 12],
+    "name": "alérgico",
+    "turns": 5,
+    "type": 1,
+    "phrase": "%s está tendo um ataque alérgico! (-%d)"
+  },
+  {
+    "range": [14, 17],
+    "type": 1,
+    "name": "frustrado",
+    "turns": 5,
+    "phrase": "%s está frustrado por comprar produto falsificado! (-%d)"
+  },
+  {
+    "range": [20, 20],
+    "turns": 10,
+    "type": 4,
+    "name": "protegido",
+    "self": true,
+    "phrase": "%s está embalado no mais alto padrão de conforto. (%d)"
+  },
+  {
+    "range": [15, 25],
+    "name": "se preenchendo",
+    "turns": 3,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está trocando seu enchimento! (+%d)"
+  },
+  {
+    "range": [20, 30],
+    "type": 2,
+    "name": "jeitinho brasileiro",
+    "turns": 3,
+    "self": true,
+    "phrase": "%s está se curando por meios duvidosos! (+%d)"
+  },
+  {
+    "range": [10, 16],
+    "name": "colando os pedaços",
+    "turns": 5,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está colando seus pedaços! (+%d)"
+  },
+  {
+    "range": [40, 40],
+    "type": 4,
+    "turns": 7,
+    "name": "mais resistente ",
+    "self": true,
+    "phrase": "%s está sendo protegido por porcelana! (%d)"
+  },
+  {
+    "range": [25, 45],
+    "name": "colando os pedaços",
+    "turns": 3,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está colando seus pedaços! (+%d)"
+  },
+  {
+    "range": [8, 15],
+    "name": "Mumificar",
+    "turns": 3,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está mumificando! (+%d)"
+  },
+  {
+    "range": [10, 20],
+    "name": "Perseguição",
+    "turns": 3,
+    "type": 1,
+    "phrase": "%s está sendo perseguido! (-%d)"
+  },
+  {
+    "range": [15, 20],
+    "name": "Necrose",
+    "turns": 2,
+    "type": 1,
+    "phrase": "%s está necrosando! (-%d)"
+  },
+  {
+    "range": [20, 20],
+    "name": "Enfaixado rigorosamente",
+    "turns": 10,
+    "type": 4,
+    "self": true,
+    "phrase": "%s está rigorosamente enfaixado! (%d)"
+  },
+  {
+    "range": [50, 50],
+    "name": "Enfaixado em kevlar",
+    "turns": 5,
+    "type": 4,
+    "self": true,
+    "phrase": "%s está embalado em kevlar! (%d)"
+  },
+  {
+    "range": [20, 30],
+    "name": "Necrose",
+    "turns": 3,
+    "type": 1,
+    "phrase": "%s está necrosando! (-%d)"
+  },
+  {
+    "range": [30, 40],
+    "name": "Mumificar",
+    "turns": 1,
+    "type": 2,
+    "self": true,
+    "phrase": "%s está mumificando! (+%d)"
   }
 ]

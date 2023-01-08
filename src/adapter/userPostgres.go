@@ -27,7 +27,7 @@ func (adapter UserAdapterPsql) GetUser(ctx context.Context, id disgord.Snowflake
 		user.ID = id
 		adapter.SetUser(ctx, user)
 		adapter.InsertRooster(ctx, &entities.Rooster{
-			Type:   rinha.GetCommonOrRare(),
+			Type:   rinha.GetNewRooster(),
 			UserID: id,
 			Equip:  true,
 		})

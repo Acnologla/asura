@@ -1,0 +1,77 @@
+[
+  { "damage": [19, 23], "name": "Patada enfaixada", "level": 1 },
+  {
+    "damage": [1, 5],
+    "name": "Mumificação Simplificada",
+    "level": 2,
+    "self": true,
+    "effect": [1, 101]
+  },
+  {
+    "damage": [10, 15],
+    "name": "Embolar faixas",
+    "level": 3,
+    "effect": [0.5, 3]
+  },
+  { "damage": [20, 30], "name": "Rasteira Mumificada", "level": 4 },
+  {
+    "damage": [1, 5],
+    "name": "Brigada do Faraó",
+    "level": 5,
+    "effect": [1, 102]
+  },
+  {
+    "damage": [5, 7],
+    "level": 7,
+    "name": "Necrose",
+    "effect": [1, 103]
+  },
+  {
+    "damage": [10, 15],
+    "level": 8,
+    "name": "Enfaixamento rigoroso",
+    "effect": [1, 104]
+  },
+  { "damage": [30, 40], "level": 9, "name": "Sangue podre" },
+  {
+    "damage": [3, 10],
+    "level": 11,
+    "name": "Mumificação",
+    "self": true,
+    "effect": [1, 101]
+  },
+  {
+    "damage": [5, 10],
+    "level": 13,
+    "name": "Exército do Faraó",
+    "effect": [1, 102]
+  },
+  {
+    "damage": [10, 15],
+    "level": 15,
+    "name": "Embolar faixas severamente",
+    "effect": [1, 3]
+  },
+  { "damage": [30, 50], "level": 17, "name": "Apodrecimento" },
+  {
+    "damage": [20, 35],
+    "level": 19,
+    "name": "Bandagens de kevlar",
+    "effect": [1, 105]
+  },
+  {
+    "damage": [1, 2],
+    "level": 21,
+    "name": "Necrose Severa",
+    "effect": [1, 106]
+  },
+  {
+    "damage": [20, 45],
+    "level": 23,
+    "name": "Mumificação avançada",
+    "self": true,
+    "effect": [1, 107]
+  },
+  { "damage": [60, 75], "level": 25, "name": "Julgamento de Anúbis" },
+  { "damage": [1, 150], "level": 30, "name": "Ascenção do Faraó" }
+]

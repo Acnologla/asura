@@ -1,0 +1,73 @@
+[
+  { "damage": [15, 20], "name": "Bicada inocente", "level": 1 },
+  {
+    "damage": [1, 5],
+    "name": "Presentear pelúcia ",
+    "level": 2,
+    "effect": [1, 3]
+  },
+  {
+    "damage": [5, 7],
+    "level": 3,
+    "name": "Trocar enchimento",
+    "self": true,
+    "effect": [1, 92]
+  },
+  {
+    "damage": [20, 28],
+    "level": 4,
+    "name": "Tecido resistente "
+  },
+  { "damage": [22, 30], "level": 5, "name": "Chute felpudo" },
+  { "damage": [25, 50], "level": 7, "name": "Cócegas " },
+  {
+    "damage": [10, 25],
+    "level": 8,
+    "name": "Alergia",
+    "effect": [1, 93]
+  },
+  {
+    "damage": [30, 35],
+    "level": 11,
+    "name": "Embalagem"
+  },
+  {
+    "damage": [32, 40],
+    "level": 13,
+    "name": "Falsificação",
+    "effect": [1, 94]
+  },
+  { "damage": [37, 45], "level": 15, "name": "Abraço carinhoso" },
+  { "damage": [40, 45], "level": 16, "name": "Patada pistomática" },
+  {
+    "damage": [40, 50],
+    "level": 18,
+    "name": "Embalagem de rico",
+    "effect": [1, 95]
+  },
+  {
+    "damage": [35, 52],
+    "level": 21,
+    "name": "Kawaii"
+  },
+  { "damage": [40, 60], "level": 22, "name": "Tecido molhado" },
+  {
+    "damage": [15, 30],
+    "level": 24,
+    "name": "Enchimento aprimorado",
+    "self": true,
+    "effect": [1, 96]
+  },
+  {
+    "damage": [55, 60],
+    "level": 25,
+    "name": "Plástico bolha"
+  },
+  {
+    "damage": [20, 35],
+    "level": 30,
+    "name": "Gambiarra",
+    "self": true,
+    "effect": [1, 97]
+  }
+]

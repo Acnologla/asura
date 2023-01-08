@@ -65,9 +65,6 @@ func GetBenefits(xp int) (text string) {
 	if level >= 8 {
 		text += "1 de xp de upgrade a mais por rinha ganha\n"
 	}
-	if level >= 10 {
-		text += "Aumenta o limite de trains"
-	}
 	return
 }
 

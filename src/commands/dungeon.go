@@ -114,7 +114,7 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			AdvName:     "Boss " + rinha.Classes[galoAdv.Type].Name,
 			AuthorLevel: rinha.CalcLevel(galo.Xp),
 			AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
-			NoItems:     true,
+			NoItems:     false,
 		}, false)
 		if winner == -1 {
 			return nil

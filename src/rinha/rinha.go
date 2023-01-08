@@ -288,6 +288,16 @@ func GetNextSkill(galo entities.Rooster) []*Skill {
 	return skills
 }
 
+func GetNewRooster() int {
+	rand := utils.RandInt(100)
+	if 1 >= rand {
+		return GetRandByType(Epic)
+	} else if 5 >= rand {
+		return GetRandByType(Rare)
+	}
+	return GetRandByType(Common)
+}
+
 func GetCommonOrRare() int {
 	rand := utils.RandInt(100)
 	if 4 >= rand {

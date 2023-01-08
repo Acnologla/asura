@@ -218,5 +218,17 @@
   {
     "name": "Existencial",
     "rarity": 5
+  },
+  {
+    "name": "Pelucia",
+    "rarity": 0
+  },
+  {
+    "name": "Porcelana",
+    "rarity": 0
+  },
+  {
+    "name": "Mumia",
+    "rarity": 1
   }
 ]
