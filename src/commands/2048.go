@@ -148,10 +148,11 @@ func run2048(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			time.Sleep(time.Second)
 			if time.Since(lastPlay).Seconds()/60 >= 2 {
 				handler.DeleteHandler(itc.ID)
-
-				handler.Client.EditInteractionResponse(ctx, itc, &disgord.Message{
-					Content:    fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), draw2048Board(board)),
-					Components: []*disgord.MessageComponent{},
+				var str string = fmt.Sprintf(":skull:%s\n\n%s", drawPoints(points), draw2048Board(board))
+				var str2 *string = &str
+				handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+					Content:    str2,
+					Components: &[]*disgord.MessageComponent{},
 				})
 				return
 			}

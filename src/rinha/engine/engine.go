@@ -30,7 +30,7 @@ type RinhaOptions struct {
 
 var RinhaColors = [2]int{65280, 16711680}
 
-func EditRinhaMessage(ic *disgord.InteractionCreate, newMessage *disgord.CreateMessageParams, message *disgord.Message) {
+func EditRinhaMessage(ic *disgord.InteractionCreate, newMessage *disgord.CreateMessage, message *disgord.Message) {
 	if ic == nil {
 		EditRinhaComponents(message, newMessage)
 		return
@@ -44,21 +44,22 @@ func EditRinhaMessage(ic *disgord.InteractionCreate, newMessage *disgord.CreateM
 	})
 }
 
-func EditRinhaComponents(message *disgord.Message, newMessage *disgord.CreateMessageParams) {
+func EditRinhaComponents(message *disgord.Message, newMessage *disgord.CreateMessage) {
 	utils.Try(func() error {
-		msgUpdater := handler.Client.Channel(message.ChannelID).Message(message.ID).UpdateBuilder()
-		msgUpdater.SetEmbed(newMessage.Embed)
-		msgUpdater.Set("components", newMessage.Components)
-		_, err := msgUpdater.Execute()
+		_, err := handler.Client.Channel(message.ChannelID).Message(message.ID).Update(&disgord.UpdateMessage{
+			Embeds:     &([]*disgord.Embed{newMessage.Embed}),
+			Components: &newMessage.Components,
+		})
+
 		return err
 	}, 5)
 }
 
 func editRinhaEmbed(msg *disgord.Message, embed *disgord.Embed) {
 	utils.Try(func() error {
-		msgUpdater := handler.Client.Channel(msg.ChannelID).Message(msg.ID).UpdateBuilder()
-		msgUpdater.SetEmbed(embed)
-		_, err := msgUpdater.Execute()
+		_, err := handler.Client.Channel(msg.ChannelID).Message(msg.ID).Update(&disgord.UpdateMessage{
+			Embeds: &([]*disgord.Embed{embed}),
+		})
 		return err
 	}, 5)
 }
@@ -131,7 +132,7 @@ func getRandAvalaibleSkills(skills []*rinha.NewSkill, round int) int {
 	return -1
 }
 
-func GenerateRinhaButtons(round int, skills []*rinha.NewSkill, embed *disgord.CreateMessageParams, author *rinha.Fighter) *disgord.CreateMessageParams {
+func GenerateRinhaButtons(round int, skills []*rinha.NewSkill, embed *disgord.CreateMessage, author *rinha.Fighter) *disgord.CreateMessage {
 	embed.Components[0].Components = []*disgord.MessageComponent{}
 	for i, skill := range skills {
 		embed.Components[0].Components = append(embed.Components[0].Components, &disgord.MessageComponent{
@@ -145,7 +146,7 @@ func GenerateRinhaButtons(round int, skills []*rinha.NewSkill, embed *disgord.Cr
 	return embed
 }
 
-func getSkill(battle *rinha.Battle, options *RinhaOptions, message *disgord.Message, embed *disgord.CreateMessageParams, round int) (int, *disgord.InteractionCreate) {
+func getSkill(battle *rinha.Battle, options *RinhaOptions, message *disgord.Message, embed *disgord.CreateMessage, round int) (int, *disgord.InteractionCreate) {
 	skill := make(chan int)
 	turn := battle.GetTurn()
 	author := battle.Fighters[turn]
@@ -173,7 +174,7 @@ func getSkill(battle *rinha.Battle, options *RinhaOptions, message *disgord.Mess
 func RinhaEngineNew(battle *rinha.Battle, options *RinhaOptions, message *disgord.Message, embed *disgord.Embed) (int, *rinha.Battle) {
 	var lastEffects string
 	round := 1
-	newMsg := &disgord.CreateMessageParams{
+	newMsg := &disgord.CreateMessage{
 		Embed: embed,
 		Components: []*disgord.MessageComponent{
 			{

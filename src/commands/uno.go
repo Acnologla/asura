@@ -21,7 +21,7 @@ import (
 	"github.com/nfnt/resize"
 )
 
-var cards []string = []string{}
+var cards = []string{}
 
 func shuffle(arr []string) []string {
 	rand.Shuffle(len(arr), func(i, j int) { arr[i], arr[j] = arr[j], arr[i] })
@@ -345,7 +345,7 @@ func sendEmbed(ctx context.Context, itc *disgord.InteractionCreate, session disg
 	ch := session.Channel(itc.ChannelID)
 	if !isItc {
 		go ch.CreateMessage(&disgord.CreateMessage{
-			Files: []disgord.CreateMessageFileParams{
+			Files: []disgord.CreateMessageFile{
 				{bytes.NewReader(game.getBoard().Bytes()), "uno.png", false},
 			},
 			Embeds: []*disgord.Embed{
@@ -365,7 +365,7 @@ func sendEmbed(ctx context.Context, itc *disgord.InteractionCreate, session disg
 		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
-				Files: []disgord.CreateMessageFileParams{
+				Files: []disgord.CreateMessageFile{
 					{bytes.NewReader(game.getBoard().Bytes()), "uno.png", false},
 				},
 				Embeds: []*disgord.Embed{
@@ -423,7 +423,7 @@ func create(ctx context.Context, itc *disgord.InteractionCreate, session disgord
 			game = currentGames[itc.GuildID]
 			if 1 >= len(game.players) {
 				gameMutex.RUnlock()
-				go channel.CreateMessage(&disgord.CreateMessageParams{
+				go channel.CreateMessage(&disgord.CreateMessage{
 					Content: "Como só teve um jogador, o uno foi cancelado, uno /uno create para jogar novamente",
 				})
 				gameMutex.Lock()
