@@ -5,7 +5,7 @@ go 1.19
 require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/BurntSushi/toml v1.0.0
-	github.com/andersfylling/disgord v0.36.0
+	github.com/andersfylling/disgord v0.36.1
 	github.com/fogleman/gg v1.3.1-0.20210928143535-8febc0f526ad
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/google/uuid v1.3.0
