@@ -246,6 +246,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				})
 				return
 			}
+			bpXP := 0
 			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 
 				if rinha.IsVip(&u) {
@@ -295,7 +296,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 				u.Win++
 				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-					database.User.UpdateBp(ctx, &u, &r)
+					bpXP = database.User.UpdateBp(ctx, &u, &r)
 					r.Xp += xpOb
 					return r
 				})
@@ -312,6 +313,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 							"xp":       xpOb,
 							"money":    money,
 							"clanMsg":  clanMsg,
+							"bpXP":     bpXP,
 						}),
 					},
 				},

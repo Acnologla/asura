@@ -193,18 +193,20 @@ func (adapter UserAdapterPsql) UpdateItem(ctx context.Context, user *entities.Us
 	return err
 }
 
-func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User, rooster *entities.Rooster) {
+func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User, rooster *entities.Rooster) int {
 	level := rinha.CalcBPLevel(user.BattlePass)
 	isVip := rinha.IsVip(user)
 	if !isVip && level >= len(rinha.BattlePass)/2 {
-		return
+		return 0
 	}
 
-	user.BattlePass += utils.RandInt(3) + 1
+	xpOb := utils.RandInt(3) + 2
+
 	if isVip {
-		user.BattlePass += 2
+		xpOb += 2
 	}
 
+	user.BattlePass += xpOb
 	if level != rinha.CalcBPLevel(user.BattlePass) {
 		level++
 		if len(rinha.BattlePass) > level {
@@ -222,4 +224,5 @@ func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User
 
 		}
 	}
+	return xpOb
 }

@@ -373,7 +373,7 @@ other="**{{.}}** gostaria de treinar seu galo?"
 other="Parabens {{.}}, você perdeu. Use /train para treinar novamente"
 
 [TrainWin]
-other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhou **XP** para o passe de batalha"
+other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhou **{{.bpXP}}** de XP para o passe de batalha"
 
 [TrainLimit]
 other="Voce excedeu seu limite de trains ganhos por dia. Faltam {{.hours}} horas e {{.minutes}} minutos para voce poder usar mais"
