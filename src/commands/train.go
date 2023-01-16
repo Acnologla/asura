@@ -186,7 +186,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		completeMission(ctx, &user, &galoAdv, winner == 0, itc)
 
 		if winner == 0 {
-			xpOb := utils.RandInt(20) + 11
+			xpOb := utils.RandInt(13) + 11
 			if rinha.HasUpgrade(user.Upgrades, 0) {
 				xpOb++
 				if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
@@ -249,8 +249,8 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 
 				if rinha.IsVip(&u) {
-					xpOb += 9
-					money++
+					xpOb += 10
+					money += 2
 				}
 				item := rinha.GetItem(&u)
 				if item != nil {
@@ -295,6 +295,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 				u.Win++
 				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+					database.User.UpdateBp(ctx, &u, &r)
 					r.Xp += xpOb
 					return r
 				})

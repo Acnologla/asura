@@ -3,6 +3,7 @@ package adapter
 import (
 	"asura/src/entities"
 	"asura/src/rinha"
+	"asura/src/utils"
 	"context"
 	"database/sql"
 	"errors"
@@ -190,4 +191,35 @@ func (adapter UserAdapterPsql) UpdateItem(ctx context.Context, user *entities.Us
 	item = &cb
 	_, err := adapter.Db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(ctx)
 	return err
+}
+
+func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User, rooster *entities.Rooster) {
+	level := rinha.CalcBPLevel(user.BattlePass)
+	isVip := rinha.IsVip(user)
+	if !isVip && level >= len(rinha.BattlePass)/2 {
+		return
+	}
+
+	user.BattlePass += utils.RandInt(3) + 1
+	if isVip {
+		user.BattlePass += 2
+	}
+
+	if level != rinha.CalcBPLevel(user.BattlePass) {
+		level++
+		if len(rinha.BattlePass) > level {
+			currentLevel := rinha.BattlePass[level]
+			switch currentLevel.Type {
+			case rinha.BattlePassItem:
+				adapter.InsertItem(ctx, user.ID, user.Items, currentLevel.Value, currentLevel.ItemType)
+			case rinha.BattlePassMoney:
+				user.Money += currentLevel.Value
+			case rinha.BattlePassXp:
+				rooster.Xp += currentLevel.Value / (rooster.Resets + 1)
+			case rinha.BattlePassCoins:
+				user.AsuraCoin += currentLevel.Value
+			}
+
+		}
+	}
 }

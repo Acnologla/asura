@@ -373,7 +373,7 @@ other="**{{.}}** gostaria de treinar seu galo?"
 other="Parabens {{.}}, você perdeu. Use /train para treinar novamente"
 
 [TrainWin]
-other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}"
+other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhou **XP** para o passe de batalha"
 
 [TrainLimit]
 other="Voce excedeu seu limite de trains ganhos por dia. Faltam {{.hours}} horas e {{.minutes}} minutos para voce poder usar mais"
@@ -552,3 +552,6 @@ other="Equipe e desequipe skins"
 
 [SkinsNoSkins]
 other="Voce não tem nenhuma skin para equipar, ganhe skins abrindo lootboxs cosmesticas, use **/lootbox**"
+
+[BattlePassHelp]
+other="Veja o xp e os proximos niveis do passe de batalha"

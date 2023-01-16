@@ -1,0 +1,188 @@
+[
+  {},
+  {},
+  {
+    "type": 2,
+    "value": 60
+  },
+  {
+    "type": 1,
+    "value": 40
+  },
+  {
+    "type": 2,
+    "value": 120
+  },
+  {
+    "type": 0,
+    "value": 1,
+    "itemType": 1
+  },
+  {
+    "type": 1,
+    "value": 200
+  },
+  {
+    "type": 2,
+    "value": 400
+  },
+  {
+    "type": 0,
+    "value": 1,
+    "itemType": 1
+  },
+  {
+    "type": 2,
+    "value": 600
+  },
+  {
+    "type": 0,
+    "value": 2,
+    "itemType": 1
+  },
+  {
+    "type": 1,
+    "value": 700
+  },
+  {
+    "type": 0,
+    "value": 2,
+    "itemType": 1
+  },
+  {
+    "type": 2,
+    "value": 840
+  },
+  {
+    "type": 0,
+    "value": 2,
+    "itemType": 1
+  },
+  {
+    "type": 0,
+    "value": 3,
+    "itemType": 1
+  },
+  {
+    "type": 1,
+    "value": 1000
+  },
+  {
+    "type": 1,
+    "value": 1200
+  },
+  {
+    "type": 2,
+    "value": 1600
+  },
+  {
+    "type": 2,
+    "value": 2000
+  },
+  {
+    "type": 0,
+    "value": 3,
+    "itemType": 1
+  },
+  {
+    "type": 0,
+    "value": 170,
+    "itemType": 3
+  },
+  {
+    "type": 1,
+    "value": 3000
+  },
+  {
+    "type": 0,
+    "value": 3,
+    "itemType": 1
+  },
+  {
+    "type": 2,
+    "value": 4500
+  },
+  {
+    "type": 3,
+    "value": 2
+  },
+  {
+    "type": 0,
+    "value": 3,
+    "itemType": 1
+  },
+  {
+    "type": 0,
+    "value": 3,
+    "itemType": 1
+  },
+  {
+    "type": 2,
+    "value": 6000
+  },
+  {
+    "type": 0,
+    "value": 168,
+    "itemType": 3
+  },
+  {
+    "type": 0,
+    "value": 4,
+    "itemType": 1
+  },
+  {
+    "type": 0,
+    "value": 4,
+    "itemType": 1
+  },
+  {
+    "type": 0,
+    "value": 167,
+    "itemType": 3
+  },
+  {
+    "type": 3,
+    "value": 5
+  },
+  {
+    "type": 0,
+    "value": 4,
+    "itemType": 1
+  },
+  {
+    "type": 1,
+    "value": 7000
+  },
+  {
+    "type": 0,
+    "value": 166,
+    "itemType": 3
+  },
+  {
+    "type": 2,
+    "value": 12000
+  },
+  {
+    "type": 0,
+    "value": 4,
+    "itemType": 1
+  },
+  {
+    "type": 0,
+    "value": 169,
+    "itemType": 3
+  },
+  {
+    "type": 1,
+    "value": 8000
+  },
+  {
+    "type": 0,
+    "value": 171,
+    "itemType": 3
+  },
+  {
+    "type": 3,
+    "value": 15
+  }
+]

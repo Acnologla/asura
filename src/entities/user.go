@@ -88,4 +88,5 @@ type User struct {
 	Daily           uint64            `bun:"daily"`
 	DailyStrikes    int               `bun:"dailystrikes"`
 	Pity            int               `bun:"pity"`
+	BattlePass      int               `bun:"battlepass"`
 }

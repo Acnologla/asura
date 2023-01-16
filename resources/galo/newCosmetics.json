@@ -88,5 +88,49 @@
     "value": "https://i.imgur.com/W3tlG0P.png",
     "type": 2,
     "extra": 41
+  },
+  {
+    "name": "Skin pintor",
+    "rarity": 4,
+    "reverseValue": "https://i.imgur.com/1yBtbn4.png",
+    "value": "https://i.imgur.com/2Hr0epV.png",
+    "type": 2,
+    "extra": 41
+  },
+  {
+    "name": "Skin borboleta",
+    "rarity": 4,
+    "reverseValue": "https://i.imgur.com/nMOv1rh.png",
+    "value": "https://i.imgur.com/Pb4LrXP.png",
+    "type": 2,
+    "extra": 32
+  },
+  {
+    "name": "Skin Arcanjo",
+    "rarity": 4,
+    "reverseValue": "https://i.imgur.com/Yzf2ydn.png",
+    "value": "https://i.imgur.com/kB1BfE3.png",
+    "type": 2,
+    "extra": 19
+  },
+  {
+    "name": "Skin Fogo infernal",
+    "rarity": 4,
+    "reverseValue": "https://i.imgur.com/rK7d1Po.png",
+    "value": "https://i.imgur.com/QjJatsq.png",
+    "type": 2,
+    "extra": 23
+  },
+  {
+    "rarity": 4,
+    "type": 1,
+    "name": "Badge BP0",
+    "value": "https://media.discordapp.net/attachments/932046460969701396/1064628826736427170/Sem_Titulo-1.png"
+  },
+  {
+    "rarity": 4,
+    "type": 1,
+    "name": "Badge VIPBP0",
+    "value": "https://cdn.discordapp.com/attachments/932046460969701396/1064630645734772826/Sem_Titulo-1.png"
   }
 ]

@@ -80,6 +80,7 @@ var Skills []([]*Skill)
 var Sprites [][]string
 var Cosmetics []*Cosmetic
 var Upgrades []Upgrade
+var BattlePass []BattlePassLevel
 
 func SetTopToken(token string) {
 	TopToken = token
@@ -127,6 +128,8 @@ func init() {
 
 	byteValueUpgrades, _ := ioutil.ReadFile("./resources/galo/upgrades.json")
 	json.Unmarshal([]byte(byteValueUpgrades), &Upgrades)
+	byteValueBattlePass, _ := ioutil.ReadFile("./resources/galo/battlePass.json")
+	json.Unmarshal([]byte(byteValueBattlePass), &BattlePass)
 }
 
 const PityMultiplier = 1

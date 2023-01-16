@@ -25,4 +25,5 @@ type UserAdapter interface {
 	UpdateEquippedRooster(ctx context.Context, user entities.User, callback func(entities.Rooster) entities.Rooster) error
 	SortUsers(ctx context.Context, limit int, propertys ...string) []*entities.User
 	SortUsersByRooster(ctx context.Context, limit int, propertys ...string) []*entities.User
+	UpdateBp(ctx context.Context, user *entities.User, rooster *entities.Rooster)
 }

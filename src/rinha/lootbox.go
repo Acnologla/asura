@@ -84,10 +84,10 @@ func CalcPity(pity int) float64 {
 
 func OpenEpic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 5)
-	if 5+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 4)
+	if 4+pitVal >= value {
 		return GetRandByType(Legendary), true
-	} else if 250 >= value {
+	} else if 300 >= value {
 		return GetRandByType(Epic), false
 	}
 	return GetRandByType(Rare), false
