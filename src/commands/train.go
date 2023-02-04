@@ -186,7 +186,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		completeMission(ctx, &user, &galoAdv, winner == 0, itc)
 
 		if winner == 0 {
-			xpOb := utils.RandInt(13) + 11
+			xpOb := utils.RandInt(14) + 11
 			if rinha.HasUpgrade(user.Upgrades, 0) {
 				xpOb++
 				if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {

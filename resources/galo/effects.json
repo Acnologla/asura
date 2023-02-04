@@ -740,7 +740,7 @@
     "phrase": "%s está embalado no mais alto padrão de conforto. (%d)"
   },
   {
-    "range": [15, 25],
+    "range": [15, 20],
     "name": "se preenchendo",
     "turns": 3,
     "type": 2,
@@ -748,7 +748,7 @@
     "phrase": "%s está trocando seu enchimento! (+%d)"
   },
   {
-    "range": [20, 30],
+    "range": [15, 30],
     "type": 2,
     "name": "jeitinho brasileiro",
     "turns": 3,
@@ -756,7 +756,7 @@
     "phrase": "%s está se curando por meios duvidosos! (+%d)"
   },
   {
-    "range": [10, 16],
+    "range": [10, 15],
     "name": "colando os pedaços",
     "turns": 5,
     "type": 2,
@@ -772,7 +772,7 @@
     "phrase": "%s está sendo protegido por porcelana! (%d)"
   },
   {
-    "range": [25, 45],
+    "range": [25, 40],
     "name": "colando os pedaços",
     "turns": 3,
     "type": 2,
