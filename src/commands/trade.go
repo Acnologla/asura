@@ -46,7 +46,7 @@ type ItemTrade struct {
 	Name string
 }
 
-//is in ItemTrade array
+// is in ItemTrade array
 func isInItemTrade(id string, arr []*ItemTrade) bool {
 	for _, item := range arr {
 		if item.ID == id {
@@ -216,6 +216,73 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		optsUser := itemsToOptions(&userGalo, &minLevel)
 		optsAuthor := itemsToOptions(&authorGalo, &minLevel)
 		minLevel = 0
+		components := []*disgord.MessageComponent{
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:     disgord.MessageComponentButton,
+						Disabled: true,
+						Style:    disgord.Primary,
+						Label:    authorUser.Username,
+						CustomID: authorUser.Username + "Disabled",
+					},
+				},
+			},
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:        disgord.MessageComponentButton + 1,
+						Options:     optsAuthor,
+						Placeholder: "Select items",
+						MaxValues:   1,
+						CustomID:    itc.Member.UserID.String(),
+					},
+				},
+			},
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:     disgord.MessageComponentButton,
+						Disabled: true,
+						Style:    disgord.Primary,
+						Label:    user.Username,
+						CustomID: user.Username + "Disabled",
+					},
+				},
+			},
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:        disgord.MessageComponentButton + 1,
+						Options:     optsUser,
+						Placeholder: "Select items",
+						CustomID:    user.ID.String(),
+						MaxValues:   1,
+					},
+				},
+			},
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:     disgord.MessageComponentButton,
+						Style:    disgord.Success,
+						Label:    "Confirm",
+						CustomID: "done",
+					},
+					{
+						Type:     disgord.MessageComponentButton,
+						Style:    disgord.Danger,
+						Label:    "Reject",
+						CustomID: "reject",
+					},
+				},
+			},
+		}
 		msg, err := ch.CreateMessage(&disgord.CreateMessage{
 			Embeds: []*disgord.Embed{{
 				Title: "Trade",
@@ -228,73 +295,7 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 					Value: "0 Items",
 				}},
 			}},
-			Components: []*disgord.MessageComponent{
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:     disgord.MessageComponentButton,
-							Disabled: true,
-							Style:    disgord.Primary,
-							Label:    authorUser.Username,
-							CustomID: authorUser.Username + "Disabled",
-						},
-					},
-				},
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:        disgord.MessageComponentButton + 1,
-							Options:     optsAuthor,
-							Placeholder: "Select items",
-							MaxValues:   1,
-							CustomID:    itc.Member.UserID.String(),
-						},
-					},
-				},
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:     disgord.MessageComponentButton,
-							Disabled: true,
-							Style:    disgord.Primary,
-							Label:    user.Username,
-							CustomID: user.Username + "Disabled",
-						},
-					},
-				},
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:        disgord.MessageComponentButton + 1,
-							Options:     optsUser,
-							Placeholder: "Select items",
-							CustomID:    user.ID.String(),
-							MaxValues:   1,
-						},
-					},
-				},
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:     disgord.MessageComponentButton,
-							Style:    disgord.Success,
-							Label:    "Confirm",
-							CustomID: "done",
-						},
-						{
-							Type:     disgord.MessageComponentButton,
-							Style:    disgord.Danger,
-							Label:    "Reject",
-							CustomID: "reject",
-						},
-					},
-				},
-			},
+			Components: components,
 		})
 		if err == nil {
 			itemsAuthor := []*ItemTrade{}
@@ -321,7 +322,8 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 							handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 								Type: disgord.InteractionCallbackUpdateMessage,
 								Data: &disgord.CreateInteractionResponseData{
-									Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, translation.T("UserMinLevelTrade", translation.GetLocale(itc), minLevel))},
+									Embeds:     []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, translation.T("UserMinLevelTrade", translation.GetLocale(itc), minLevel))},
+									Components: components,
 								},
 							})
 							return
@@ -387,7 +389,8 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 						handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackUpdateMessage,
 							Data: &disgord.CreateInteractionResponseData{
-								Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, translation.T("UserAcceptTrade", translation.GetLocale(itc), acceptUsername))},
+								Embeds:     []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, translation.T("UserAcceptTrade", translation.GetLocale(itc), acceptUsername))},
+								Components: components,
 							},
 						})
 					}
@@ -452,7 +455,8 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 						handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackUpdateMessage,
 							Data: &disgord.CreateInteractionResponseData{
-								Embeds: []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, "")},
+								Embeds:     []*disgord.Embed{editEmbed(itemsAuthor, itemsUser, authorUser.Username, user.Username, minLevel, "")},
+								Components: components,
 							},
 						})
 					}

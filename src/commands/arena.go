@@ -89,9 +89,16 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	if !user.ArenaActive {
 		return entities.CreateMsg().Content("Você precisa comprar um ingresso para a arena").Res()
 	}
+	ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
+	authorRinha := isInRinha(ctx, itc.Member.User)
+	if authorRinha != "" {
+		ch.CreateMessage(&disgord.CreateMessage{
+			Content: rinhaMessage(itc.Member.User.Username, authorRinha).Data.Content,
+		})
+		return nil
+	}
 	lockEvent(ctx, itc.Member.User.ID, "Arena")
 	defer unlockEvent(ctx, itc.Member.User.ID)
-	ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
 	itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
