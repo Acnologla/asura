@@ -39,6 +39,8 @@ func init() {
 	})
 }
 
+const arenaPrice = 200
+
 func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := database.User.GetUser(ctx, itc.Member.User.ID, "Galos")
 	command := itc.Data.Options[0].Name
@@ -53,17 +55,17 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				})
 				return u
 			}
-			if 500 > user.Money {
+			if arenaPrice > user.Money {
 				fmt.Println("here")
 				itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
-						Content: "Você precisa ter **500** de dinheiro para comprar um ingresso na arena",
+						Content: fmt.Sprintf("Você precisa ter **%d** de dinheiro para comprar um ingresso na arena", arenaPrice),
 					},
 				})
 				return u
 			}
-			u.Money -= 500
+			u.Money -= arenaPrice
 			u.ArenaActive = true
 			u.ArenaWin = 0
 			u.ArenaLose = 0

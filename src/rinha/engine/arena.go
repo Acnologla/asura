@@ -143,7 +143,7 @@ func matchmaking() {
 func init() {
 	go matchmaking()
 	go func() {
-		ticker := time.NewTicker(time.Minute * 5)
+		ticker := time.NewTicker(time.Minute * 3)
 		for range ticker.C {
 			waitingQueueMutex.Lock()
 			toFilter := []int{}
