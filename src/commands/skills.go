@@ -81,36 +81,37 @@ func runSkills(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cre
 			}),
 		}}
 	}
+	components := []*disgord.MessageComponent{
+		{
+			Type: disgord.MessageComponentActionRow,
+			Components: []*disgord.MessageComponent{
+				{
+					Type:        disgord.MessageComponentButton + 1,
+					MaxValues:   1,
+					Placeholder: translation.T("SkillNumber", translation.GetLocale(itc)),
+					CustomID:    "number",
+					Options:     generateNumberOptions(len(equipedSkills)),
+				},
+			},
+		},
+		{
+			Type: disgord.MessageComponentActionRow,
+			Components: []*disgord.MessageComponent{
+				{
+					Type:        disgord.MessageComponentButton + 1,
+					MaxValues:   1,
+					Placeholder: translation.T("SkillSelect", translation.GetLocale(itc)),
+					CustomID:    "skill",
+					Options:     generateSkillsOptions(skills, galo),
+				},
+			},
+		},
+	}
 	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
-			Embeds: genEmbed(),
-			Components: []*disgord.MessageComponent{
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:        disgord.MessageComponentButton + 1,
-							MaxValues:   1,
-							Placeholder: translation.T("SkillNumber", translation.GetLocale(itc)),
-							CustomID:    "number",
-							Options:     generateNumberOptions(len(equipedSkills)),
-						},
-					},
-				},
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:        disgord.MessageComponentButton + 1,
-							MaxValues:   1,
-							Placeholder: translation.T("SkillSelect", translation.GetLocale(itc)),
-							CustomID:    "skill",
-							Options:     generateSkillsOptions(skills, galo),
-						},
-					},
-				},
-			},
+			Embeds:     genEmbed(),
+			Components: components,
 		},
 	})
 	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
@@ -128,7 +129,8 @@ func runSkills(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cre
 			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackUpdateMessage,
 				Data: &disgord.CreateInteractionResponseData{
-					Embeds: genEmbed(),
+					Embeds:     genEmbed(),
+					Components: components,
 				},
 			})
 		} else {
@@ -156,7 +158,8 @@ func runSkills(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cre
 				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackUpdateMessage,
 					Data: &disgord.CreateInteractionResponseData{
-						Embeds: genEmbed(),
+						Embeds:     genEmbed(),
+						Components: components,
 					},
 				})
 			}

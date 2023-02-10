@@ -63,7 +63,20 @@ func runSkins(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			},
 		}
 	}
-
+	components := []*disgord.MessageComponent{
+		{
+			Type: disgord.MessageComponentActionRow,
+			Components: []*disgord.MessageComponent{
+				{
+					MaxValues:   1,
+					Type:        disgord.MessageComponentSelectMenu,
+					Options:     genSkinOptions(skins, items),
+					CustomID:    "skins",
+					Placeholder: "Selecione a skin",
+				},
+			},
+		},
+	}
 	itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
@@ -72,20 +85,7 @@ func runSkins(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				Title:       "Skins",
 				Description: skinsToText(skins, items),
 			}},
-			Components: []*disgord.MessageComponent{
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							MaxValues:   1,
-							Type:        disgord.MessageComponentSelectMenu,
-							Options:     genSkinOptions(skins, items),
-							CustomID:    "skins",
-							Placeholder: "Selecione a skin",
-						},
-					},
-				},
-			},
+			Components: components,
 		},
 	})
 	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
@@ -115,6 +115,7 @@ func runSkins(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 					Title:       "Skins",
 					Description: skinsToText(skins, items),
 				}},
+				Components: components,
 			},
 		})
 
