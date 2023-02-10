@@ -1,104 +1,103 @@
 [
-    {
-        "name": "Soco do morto",
-        "damage": [21,29],
-        "level": 1
-    },
-    {
-        "name": "Galada zumbi",
-        "damage": [26,34],
-        "level": 2
-    },
-    {
-        "name": "Degeneração",
-        "damage": [10,15],
-        "level": 3,
-        "effect":[1,52]
-    },
-    {
-        "name": "Escudo de carne",
-        "damage": [22,25],
-        "effect": [1, 2],
-        "level": 4,
-        "self": true
-    },
-    {
-        "name": "Investida zumbi",
-        "damage": [31,54],
-        "level": 5
-    },
-    {
-        "name": "Bicada zumbi",
-        "damage": [36,54],
-        "level": 7
-    },
-    {
-        "name": "Ataque zumbi",
-        "damage": [5,10],
-        "level": 9,
-        "effect": [1,53]
-    },
-    {
-        "name": "Escudo de carne aprimorado",
-        "damage": [20,35],
-        "level": 10,
-        "self": true,
-        "effect": [1,14]
-    },
-    {
-        "name": "Soco degenerador",
-        "damage": [25, 35],
-        "level": 12,
-        "effect":[1,52]
-
-    },
-    {
-        "name": "Rasteira zumbi",
-        "damage": [40,65],
-        "level": 13
-    },
-    {
-        "name": "Escudo de carne avançado",
-        "damage": [30,40],
-        "level": 15,
-        "effect": [1,47],
-        "self": true
-    },
-    {
-        "name": "Degeneração potente",
-        "damage": [20,30],
-        "level": 17,
-        "effect": [1,54]
-    },
-    {
-        "name": "Terremoto de zumbis",
-        "damage": [30,45],
-        "effect": [1, 53],
-        "level": 19
-    },
-    {
-        "name": "Escudo de carne divino",
-        "damage": [40,50],
-        "effect": [1, 17],
-        "self": true,
-        "level": 21
-    },
-    {
-        "name": "Bicada degenerativa",
-        "damage": [70,80],
-        "effect": [1,52],
-        "level": 22
-    },
-    {
-        "name": "Carne zumbi",
-        "damage": [90,120],
-        "level": 25
-    },
-    {
-        "name": "Escudo de carne infinto",
-        "damage": [10, 20],
-        "level": 30,
-        "self": true,
-        "effect": [1, 55]
-    }
+  {
+    "name": "Soco do morto",
+    "damage": [21, 29],
+    "level": 1
+  },
+  {
+    "name": "Galada zumbi",
+    "damage": [26, 34],
+    "level": 2
+  },
+  {
+    "name": "Degeneração",
+    "damage": [10, 15],
+    "level": 3,
+    "effect": [1, 52]
+  },
+  {
+    "name": "Escudo de carne",
+    "damage": [22, 25],
+    "effect": [1, 2],
+    "level": 4,
+    "self": true
+  },
+  {
+    "name": "Investida zumbi",
+    "damage": [31, 54],
+    "level": 5
+  },
+  {
+    "name": "Bicada zumbi",
+    "damage": [36, 54],
+    "level": 7
+  },
+  {
+    "name": "Ataque zumbi",
+    "damage": [5, 10],
+    "level": 9,
+    "effect": [1, 53]
+  },
+  {
+    "name": "Escudo de carne aprimorado",
+    "damage": [20, 35],
+    "level": 10,
+    "self": true,
+    "effect": [1, 14]
+  },
+  {
+    "name": "Soco degenerador",
+    "damage": [25, 40],
+    "level": 12,
+    "effect": [1, 52]
+  },
+  {
+    "name": "Rasteira zumbi",
+    "damage": [45, 65],
+    "level": 13
+  },
+  {
+    "name": "Escudo de carne avançado",
+    "damage": [30, 40],
+    "level": 15,
+    "effect": [1, 47],
+    "self": true
+  },
+  {
+    "name": "Degeneração potente",
+    "damage": [20, 40],
+    "level": 17,
+    "effect": [1, 54]
+  },
+  {
+    "name": "Terremoto de zumbis",
+    "damage": [35, 45],
+    "effect": [1, 53],
+    "level": 19
+  },
+  {
+    "name": "Escudo de carne divino",
+    "damage": [40, 50],
+    "effect": [1, 17],
+    "self": true,
+    "level": 21
+  },
+  {
+    "name": "Bicada degenerativa",
+    "damage": [70, 80],
+    "effect": [1, 52],
+    "level": 22
+  },
+  {
+    "name": "Carne zumbi",
+    "damage": [90, 120],
+    "level": 25
+  },
+  {
+    "name": "Escudo de carne infinto",
+    "damage": [15, 30],
+    "level": 30,
+    "self": true,
+    "effect": [1, 55]
+  }
 ]

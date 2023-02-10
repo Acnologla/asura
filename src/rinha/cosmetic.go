@@ -15,24 +15,26 @@ const (
 )
 
 func GetBackground(galo *entities.User) string {
-	var equipBG *Cosmetic
 	if IsVip(galo) {
 		if galo.VipBackground != "" {
 			return galo.VipBackground
 		}
 	}
+	bgs := []*Cosmetic{}
 	for _, item := range galo.Items {
 		if item.Equip && item.Type == entities.CosmeticType {
 			c := Cosmetics[item.ItemID]
 			if c.Type == Background {
-				equipBG = c
-				break
+				bgs = append(bgs, c)
 			}
 		}
 	}
-	if equipBG != nil {
-		return equipBG.Value
+
+	if len(bgs) > 0 {
+		bg := bgs[utils.RandInt(len(bgs))]
+		return bg.Value
 	}
+
 	return "https://i.imgur.com/F64ybgg.jpg"
 }
 
@@ -81,17 +83,25 @@ func GetCosmeticRandByType(rarity Rarity) int {
 }
 
 func GetGaloImage(galo *entities.Rooster, items []*entities.Item, def ...string) string {
+	skins := []*Cosmetic{}
 	for _, item := range items {
 		if item.Type == entities.CosmeticType && item.Equip {
 			cosmetic := Cosmetics[item.ItemID]
 			if cosmetic.Type == Skin && cosmetic.Extra == galo.Type {
-				if len(def) > 0 {
-					return cosmetic.ReverseValue
-				}
-				return cosmetic.Value
+				skins = append(skins, cosmetic)
+
 			}
 		}
 	}
+
+	if len(skins) > 0 {
+		cosmetic := skins[utils.RandInt(len(skins))]
+		if len(def) > 0 {
+			return cosmetic.ReverseValue
+		}
+		return cosmetic.Value
+	}
+
 	if len(def) > 0 {
 		return Sprites[1][galo.Type-1]
 	}

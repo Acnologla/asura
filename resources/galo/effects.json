@@ -421,7 +421,7 @@
     "type": 1,
     "self": false,
     "phrase": "%s está degenerando! (-%d)",
-    "range": [15, 30]
+    "range": [18, 30]
   },
   {
     "name": "Degeneração potente",
@@ -437,7 +437,7 @@
     "type": 2,
     "self": true,
     "phrase": "%s se curou! (+%d)",
-    "range": [150, 300]
+    "range": [160, 320]
   },
   {
     "name": "Sugar oxigenio",
@@ -748,7 +748,7 @@
     "phrase": "%s está trocando seu enchimento! (+%d)"
   },
   {
-    "range": [15, 30],
+    "range": [15, 25],
     "type": 2,
     "name": "jeitinho brasileiro",
     "turns": 3,
@@ -758,7 +758,7 @@
   {
     "range": [10, 15],
     "name": "colando os pedaços",
-    "turns": 5,
+    "turns": 4,
     "type": 2,
     "self": true,
     "phrase": "%s está colando seus pedaços! (+%d)"
@@ -772,7 +772,7 @@
     "phrase": "%s está sendo protegido por porcelana! (%d)"
   },
   {
-    "range": [25, 40],
+    "range": [25, 35],
     "name": "colando os pedaços",
     "turns": 3,
     "type": 2,

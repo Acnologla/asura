@@ -208,7 +208,7 @@ func RinhaEngineNew(battle *rinha.Battle, options *RinhaOptions, message *disgor
 		for _, effect := range effects {
 			text += EffectToStr(effect, affectedName, authorName, battle)
 		}
-		if round >= 70 {
+		if round >= 75 {
 			if battle.Fighters[1].Life >= battle.Fighters[0].Life {
 				text += "\n" + options.AuthorName + " Foi executado"
 				battle.Fighters[0].Life = 0
@@ -356,7 +356,7 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, msg *disgord.Messa
 		EditRinhaEmbed(msg, embed, options.MessageID)
 		lastEffects = text
 		round++
-		time.Sleep(4 * time.Second)
+		time.Sleep(3 * time.Second)
 	}
 }
 func SpliceWaiting(slice []*rinha.Fighter, s int) []*rinha.Fighter {

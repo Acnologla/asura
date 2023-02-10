@@ -67,7 +67,7 @@
     "effect": [1, 65]
   },
   {
-    "damage": [50, 70],
+    "damage": [40, 50],
     "level": 30,
     "name": "Mensagem subliminar",
     "effect": [1, 66]

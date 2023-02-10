@@ -20,7 +20,7 @@ type Lootboxes struct {
 	Normal    int
 }
 
-var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2200, 0}, {0, 2}, {0, 2}, {500, 0}}
+var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2200, 0}, {0, 3}, {0, 2}, {500, 0}}
 var LootNames = [...]string{"comum", "normal", "rara", "epica", "lendaria", "items", "cosmetica"}
 
 func GenerateLootPrices() (text string) {
@@ -126,8 +126,8 @@ func OpenCommon(pity int) (int, bool) {
 
 func OpenLegendary(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 4)
-	if 4+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 2)
+	if 2+pitVal >= value {
 		return GetRandByType(Mythic), true
 	} else if 50 >= value {
 		return GetRandByType(Legendary), false

@@ -36,8 +36,12 @@ func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if topGGCalc >= 2 {
 				u.DailyStrikes = 0
 			}
-			money = 40 + u.DailyStrikes/4
-			xp = 60 + u.DailyStrikes
+			money = 45 + u.DailyStrikes/3
+			xp = 60 + int((float64(u.DailyStrikes) * 1.25))
+			if rinha.IsVip(&u) {
+				money += int(float64(money) * 0.2)
+				xp += int(float64(xp) * 0.2)
+			}
 			u.DailyStrikes++
 			u.Money += money
 			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
