@@ -197,7 +197,8 @@ func run2048(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackUpdateMessage,
 					Data: &disgord.CreateInteractionResponseData{
-						Content: fmt.Sprintf("%s\n\n%s", drawPoints(points), draw2048Board(board)),
+						Content:    fmt.Sprintf("%s\n\n%s", drawPoints(points), draw2048Board(board)),
+						Components: generate2048Buttons(),
 					},
 				})
 			}

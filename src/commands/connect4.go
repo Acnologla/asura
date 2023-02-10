@@ -169,14 +169,16 @@ func runConnect4(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 					handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 						Type: disgord.InteractionCallbackUpdateMessage,
 						Data: &disgord.CreateInteractionResponseData{
-							Content: emoji + "\n\n" + drawConnect4Board(board),
+							Content:    emoji + "\n\n" + drawConnect4Board(board),
+							Components: generateConnect4(),
 						},
 					})
 				} else {
 					handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 						Type: disgord.InteractionCallbackUpdateMessage,
 						Data: &disgord.CreateInteractionResponseData{
-							Content: connect4Emojis[turn+1] + "\n\n" + drawConnect4Board(board),
+							Content:    connect4Emojis[turn+1] + "\n\n" + drawConnect4Board(board),
+							Components: generateConnect4(),
 						},
 					})
 					if turn == 1 {

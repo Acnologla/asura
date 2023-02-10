@@ -52,6 +52,31 @@ func runAvatars(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		}
 	}
 	count := 0
+	components := []*disgord.MessageComponent{
+		{
+			Type: disgord.MessageComponentActionRow,
+			Components: []*disgord.MessageComponent{
+				{
+					Type:  disgord.MessageComponentButton,
+					Style: disgord.Primary,
+					Emoji: &disgord.Emoji{
+						Name: "⬅️",
+					},
+					Label:    "\u200f",
+					CustomID: "back",
+				},
+				{
+					Type:  disgord.MessageComponentButton,
+					Style: disgord.Primary,
+					Emoji: &disgord.Emoji{
+						Name: "➡️",
+					},
+					Label:    "\u200f",
+					CustomID: "next",
+				},
+			},
+		},
+	}
 	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
@@ -64,31 +89,7 @@ func runAvatars(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					},
 				},
 			},
-			Components: []*disgord.MessageComponent{
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:  disgord.MessageComponentButton,
-							Style: disgord.Primary,
-							Emoji: &disgord.Emoji{
-								Name: "⬅️",
-							},
-							Label:    "\u200f",
-							CustomID: "back",
-						},
-						{
-							Type:  disgord.MessageComponentButton,
-							Style: disgord.Primary,
-							Emoji: &disgord.Emoji{
-								Name: "➡️",
-							},
-							Label:    "\u200f",
-							CustomID: "next",
-						},
-					},
-				},
-			},
+			Components: components,
 		},
 	})
 	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
@@ -120,6 +121,7 @@ func runAvatars(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 							},
 						},
 					},
+					Components: components,
 				},
 			})
 		}
