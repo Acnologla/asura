@@ -132,5 +132,349 @@
     "type": 1,
     "name": "Badge VIPBP0",
     "value": "https://cdn.discordapp.com/attachments/932046460969701396/1064630645734772826/Sem_Titulo-1.png"
+  },
+  {
+    "name": "Skin Sakura",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/AbXBj3F.png",
+    "value": "https://i.imgur.com/BS7zq90.png",
+    "type": 2,
+    "extra": 33
+  },
+
+  {
+    "name": "Skin Fome",
+    "rarity": 2,
+    "reverseValue": "https://i.imgur.com/63XEYqk.png",
+    "value": "https://i.imgur.com/cfUY65h.png",
+    "type": 2,
+    "extra": 45
+  },
+
+  {
+    "name": "Skin Guerra",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/ZVbpzij.png",
+    "value": "https://i.imgur.com/iNf9ezX.png",
+    "type": 2,
+    "extra": 45
+  },
+
+  {
+    "name": "Skin Morte",
+    "rarity": 2,
+    "reverseValue": "https://i.imgur.com/0kOe1g4.png",
+    "value": "https://i.imgur.com/of3oqe2.png",
+    "type": 2,
+    "extra": 45
+  },
+
+  {
+    "name": "Skin Esqueleto Amaldicoado",
+    "rarity": 1,
+    "reverseValue": "https://i.imgur.com/81xwxsA.png",
+    "value": "https://i.imgur.com/GvXBLse.png",
+    "type": 2,
+    "extra": 42
+  },
+
+  {
+    "name": "Skin Esqueleto Congelado",
+    "rarity": 0,
+    "reverseValue": "https://i.imgur.com/EhNbdr0.png",
+    "value": "https://i.imgur.com/m6SjTPQ.png",
+    "type": 2,
+    "extra": 42
+  },
+
+  {
+    "name": "Skin Esqueleto Tostado",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/exGEJ3e.png",
+    "value": "https://i.imgur.com/TgC0MlF.png",
+    "type": 2,
+    "extra": 42
+  },
+
+  {
+    "name": "Skin Era dos Buracos Negros",
+    "rarity": 2,
+    "reverseValue": "https://i.imgur.com/UZgtv9T.png",
+    "value": "https://i.imgur.com/cOgn3iV.png",
+    "type": 2,
+    "extra": 46
+  },
+
+  {
+    "name": "Skin Digital Existence",
+    "rarity": 2,
+    "reverseValue": "https://i.imgur.com/YikdeEs.png",
+    "value": "https://i.imgur.com/cRMAaLG.png",
+    "type": 2,
+    "extra": 46
+  },
+
+  {
+    "name": "Skin Existencia Maligna",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/tgg263P.png",
+    "value": "https://i.imgur.com/BFTA3gP.png",
+    "type": 2,
+    "extra": 46
+  },
+
+  {
+    "name": "Skin Existencia Distorcida",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/jyCkbDF.png",
+    "value": "https://i.imgur.com/qMYr5H5.png",
+    "type": 2,
+    "extra": 46
+  },
+
+  {
+    "name": "Skin Deutsch WW2",
+    "rarity": 0,
+    "reverseValue": "https://i.imgur.com/JVw5I26.png",
+    "value": "https://i.imgur.com/gp4PDd3.png",
+    "type": 2,
+    "extra": 44
+  },
+
+  {
+    "name": "Skin Soviet",
+    "rarity": 2,
+    "reverseValue": "https://i.imgur.com/K2zO2wH.png",
+    "value": "https://i.imgur.com/TmMAFZb.png",
+    "type": 2,
+    "extra": 44
+  },
+
+  {
+    "name": "Skin Tundra",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/75l7d8g.png",
+    "value": "https://i.imgur.com/cbJOpfn.png",
+    "type": 2,
+    "extra": 44
+  },
+
+  {
+    "name": "Skin Cadaver Seco",
+    "rarity": 0,
+    "reverseValue": "https://i.imgur.com/y1otr3B.png",
+    "value": "https://i.imgur.com/9WrBb3e.png",
+    "type": 2,
+    "extra": 49
+  },
+
+  {
+    "name": "Skin Florestal",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/rLyRiaq.png",
+    "value": "https://i.imgur.com/9h16n2G.png",
+    "type": 2,
+    "extra": 49
+  },
+
+  {
+    "name": "Skin Mumia Antiga",
+    "rarity": 1,
+    "reverseValue": "https://i.imgur.com/VxMa542.png",
+    "value": "https://i.imgur.com/pq2O7FR.png",
+    "type": 2,
+    "extra": 49
+  },
+
+  {
+    "name": "Skin Extra-Terrestre",
+    "rarity": 0,
+    "reverseValue": "https://i.imgur.com/RyIcGUY.png",
+    "value": "https://i.imgur.com/yjVhJL4.png",
+    "type": 2,
+    "extra": 47
+  },
+
+  {
+    "name": "Skin Fluorescente",
+    "rarity": 1,
+    "reverseValue": "https://i.imgur.com/k3np977.png",
+    "value": "https://i.imgur.com/m9IaYAc.png",
+    "type": 2,
+    "extra": 47
+  },
+
+  {
+    "name": "Skin Strong Red",
+    "rarity": 2,
+    "reverseValue": "https://i.imgur.com/vATiaRc.png",
+    "value": "https://i.imgur.com/3OkxbLi.png",
+    "type": 2,
+    "extra": 47
+  },
+
+  {
+    "name": "Skin Degrade de Calor",
+    "rarity": 2,
+    "reverseValue": "https://i.imgur.com/xYh11yC.png",
+    "value": "https://i.imgur.com/QGCuYhC.png",
+    "type": 2,
+    "extra": 48
+  },
+
+  {
+    "name": "Skin Ladrilhado",
+    "rarity": 1,
+    "reverseValue": "https://i.imgur.com/PdmedCH.png",
+    "value": "https://i.imgur.com/Or2q3ne.png",
+    "type": 2,
+    "extra": 48
+  },
+
+  {
+    "name": "Skin Porcelana Estilizada",
+    "rarity": 0,
+    "reverseValue": "https://i.imgur.com/kE4rP7h.png",
+    "value": "https://i.imgur.com/smJwh00.png",
+    "type": 2,
+    "extra": 48
+  },
+
+  {
+    "name": "Skin Slime Maldito",
+    "rarity": 1,
+    "reverseValue": "https://i.imgur.com/hqQ1Qe9.png",
+    "value": "https://i.imgur.com/K9ET4Bq.png",
+    "type": 2,
+    "extra": 43
+  },
+
+  {
+    "name": "Skin Slime MetÃ¡lico",
+    "rarity": 3,
+    "reverseValue": "https://i.imgur.com/0MBPkvY.png",
+    "value": "https://i.imgur.com/mLpnAB5.png",
+    "type": 2,
+    "extra": 43
+  },
+
+  {
+    "name": "Skin Slime Incandescente",
+    "rarity": 2,
+    "reverseValue": "https://i.imgur.com/iLq4Eiw.png",
+    "value": "https://i.imgur.com/jCIce6d.png",
+    "type": 2,
+    "extra": 43
+  },
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Amazon Rainflorest",
+    "value": "https://i.imgur.com/wLHHaII.png"
+  },
+
+  {
+    "rarity": 1,
+    "type": 0,
+    "name": "Astronaut in Moon",
+    "value": "https://i.imgur.com/Bnco47x.png"
+  },
+
+  {
+    "rarity": 2,
+    "type": 0,
+    "name": "Binary Planet",
+    "value": "https://i.imgur.com/FzHHScF.png"
+  },
+
+  {
+    "rarity": 1,
+    "type": 0,
+    "name": "Modern Carrier",
+    "value": "https://i.imgur.com/Jrztz10.png"
+  },
+
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Sun Rising Empire",
+    "value": "https://i.imgur.com/vGU69kl.png"
+  },
+
+  {
+    "rarity": 1,
+    "type": 0,
+    "name": "Jetfighter",
+    "value": "https://i.imgur.com/10hq3lP.png"
+  },
+
+  {
+    "rarity": 1,
+    "type": 0,
+    "name": "Jungle Path",
+    "value": "https://i.imgur.com/skGj20w.png"
+  },
+
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Dollar Rain",
+    "value": "https://i.imgur.com/jWfuPXr.png"
+  },
+
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Moon Effect",
+    "value": "https://i.imgur.com/e9kuReq.png"
+  },
+
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Moscow",
+    "value": "https://i.imgur.com/sOGZJDm.png"
+  },
+
+  {
+    "rarity": 3,
+    "type": 0,
+    "name": "Polar Northern Lights",
+    "value": "https://i.imgur.com/An7Nhcv.png"
+  },
+
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "Plains River",
+    "value": "https://i.imgur.com/Eq3GBPi.png"
+  },
+
+  {
+    "rarity": 2,
+    "type": 0,
+    "name": "Sakura Path",
+    "value": "https://i.imgur.com/bFc4xcH.png"
+  },
+
+  {
+    "rarity": 1,
+    "type": 0,
+    "name": "Ultra Tech Civilization",
+    "value": "https://i.imgur.com/Pl8gcIg.png"
+  },
+
+  {
+    "rarity": 2,
+    "type": 0,
+    "name": "100 years war",
+    "value": "https://i.imgur.com/JtyMxq7.png"
+  },
+
+  {
+    "rarity": 0,
+    "type": 0,
+    "name": "WW2 Map",
+    "value": "https://i.imgur.com/kDxWVSp.png"
   }
 ]
