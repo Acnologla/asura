@@ -108,7 +108,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	message, err := ch.CreateMessage(&disgord.CreateMessage{
 		Embeds: []*disgord.Embed{
 			{
-				Title: "Procurando opoente...",
+				Title: "Procurando oponente...",
 				Color: 65535,
 			},
 		},
