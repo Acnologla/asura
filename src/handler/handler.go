@@ -216,7 +216,8 @@ func HandleInteraction(itc *disgord.InteractionCreate) {
 		ctx := context.Background()
 		response := ExecuteInteraction(ctx, itc)
 		if response != nil {
-			Client.SendInteractionResponse(ctx, itc, response)
+			err := Client.SendInteractionResponse(ctx, itc, response)
+			fmt.Println(err)
 		}
 		author := itc.Member.User
 		tag := author.Username + "#" + author.Discriminator.String()
