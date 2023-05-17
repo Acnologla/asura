@@ -80,6 +80,7 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
 	img, err := utils.DownloadImage(rinha.GetBackground(&galo))
 	if err != nil {
+		fmt.Println(err)
 		return nil
 	}
 	clan := database.Clan.GetUserClan(ctx, user.ID).Clan
