@@ -223,8 +223,8 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				memberMsg += fmt.Sprintf("[**%s**] %s (**%d** XP)\n", member.Role.ToString(), user.Username, member.Xp)
 			}
 		}
-		if len(memberMsg) > 1500 {
-			memberMsg = memberMsg[:1500]
+		if len(memberMsg) > 1150 {
+			memberMsg = memberMsg[:1150]
 		}
 		benefits := rinha.GetBenefits(clan.Xp)
 		bg := clan.Background
