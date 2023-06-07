@@ -34,8 +34,8 @@ func GetBackground(galo *entities.User) string {
 		bg := bgs[utils.RandInt(len(bgs))]
 		return bg.Value
 	}
-
-	return "https://i.imgur.com/F64ybgg.jpg"
+	return "https://cdn.discordapp.com/attachments/736504238565359637/1116056675145744454/F64ybgg.png"
+	//return "https://i.imgur.com/F64ybgg.jpg"
 }
 
 type Cosmetic struct {
