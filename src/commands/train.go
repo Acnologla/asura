@@ -22,7 +22,7 @@ func init() {
 		Name:        "train",
 		Description: translation.T("TrainHelp", "pt"),
 		Run:         runTrain,
-		Cooldown:    15,
+		Cooldown:    8,
 		Category:    handler.Rinha,
 	})
 }

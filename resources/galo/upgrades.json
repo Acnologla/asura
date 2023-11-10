@@ -1,205 +1,204 @@
 [
-    {
-        "name": "Ultilitarios",
-        "value": "Ganha 1 de xp a mais por treino",
+  {
+    "name": "Ultilitarios",
+    "value": "Ganha 1 de xp a mais por treino",
+    "childs": [
+      {
+        "name": "Sorte aumentada",
+        "value": "Lootbox tem chances maiores de vir galos raros",
         "childs": [
-            {
-                "name": "Sorte aumentada",
-                "value": "Lootbox tem chances maiores de vir galos raros",
-                "childs": [
-                    {
-                        "name": "Sorte nas caixas",
-                        "value": "Lootbox tem chances maiores de vir galos epicos",
-                        "childs": [
-                            {
-                                "name": "Sorte lendaria",
-                                "value": "Lootbox tem chances maiores de vir galos lendarios"
-                            },
-                            {
-                                "name": "Sorte Epica",
-                                "value": "Lootbox tem chances maiores de vir galos Epicos e raros"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Sorte nas habilidades",
-                        "value": "Efeitos tem mais chances de serem aplicados",
-                        "childs": [
-                            {
-                                "name": "Mais Sorte nas habilidades",
-                                "value": "Efeitos tem ainda mais chances de serem aplicados"
-                            },
-                            {
-                                "name": "Sorte na dungeon",
-                                "value": "Dungeon tem chance de dar itens melhores"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Mais bonus",
-                "value": "Missoes dão dinheiro extra",
-                "childs": [
-                    {
-                        "name": "Rinhas ricas",
-                        "value": "Rinhas dão um de dinheiro extra",
-                        "childs": [
-                            {
-                                "name": "Mais treino",
-                                "value": "30 treinos extras por dia"
-                            },
-                            {
-                                "name": "MissoesXP",
-                                "value": "Xp extra por missoes"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Rinhas habilidosas",
-                        "value": "Rinhas dão dois de xp extra",
-                        "childs": [
-                            {
-                                "name": "Rinhas mais habilidosas",
-                                "value": "Rinhas dão tres de xp extra"
-                            },
-                            {
-                                "name": "MissoesDinheiro",
-                                "value": "Dinheiro extra por missoes"
-                            }
-                        ]
-                    }
-                ]
-            }
+          {
+            "name": "Sorte nas caixas",
+            "value": "Lootbox tem chances maiores de vir galos epicos",
+            "childs": [
+              {
+                "name": "Sorte lendaria",
+                "value": "Lootbox tem chances maiores de vir galos lendarios"
+              },
+              {
+                "name": "Sorte Epica",
+                "value": "Lootbox tem chances maiores de vir galos Epicos e raros"
+              }
+            ]
+          },
+          {
+            "name": "Sorte nas habilidades",
+            "value": "Efeitos tem mais chances de serem aplicados",
+            "childs": [
+              {
+                "name": "Mais Sorte nas habilidades",
+                "value": "Efeitos tem ainda mais chances de serem aplicados"
+              },
+              {
+                "name": "Sorte na dungeon",
+                "value": "Dungeon tem chance de dar itens melhores"
+              }
+            ]
+          }
         ]
-    },
-    {
+      },
+      {
+        "name": "Mais bonus",
+        "value": "Missoes dão dinheiro extra",
+        "childs": [
+          {
+            "name": "Rinhas ricas",
+            "value": "Rinhas dão um de dinheiro extra",
+            "childs": [
+              {
+                "name": "Mais treino",
+                "value": "30 treinos extras por dia"
+              },
+              {
+                "name": "MissoesXP",
+                "value": "Xp extra por missoes"
+              }
+            ]
+          },
+          {
+            "name": "Rinhas habilidosas",
+            "value": "Rinhas dão dois de xp extra",
+            "childs": [
+              {
+                "name": "Rinhas mais habilidosas",
+                "value": "Rinhas dão tres de xp extra"
+              },
+              {
+                "name": "MissoesDinheiro",
+                "value": "Dinheiro extra por missoes"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Buff de vida",
+    "value": "Seu galo começa com 10 de vida extra nas batalhas",
+    "childs": [
+      {
+        "name": "Buff de dano",
+        "value": "Os ataques do seu galo tem 2 de dano adicional",
+        "childs": [
+          {
+            "name": "Buff de dano",
+            "value": "Os ataques do seu galo tem 2 de dano adicional",
+            "childs": [
+              {
+                "name": "Buff de dano aprimorado",
+                "value": "Os ataques do seu galo tem 3 de dano adicional"
+              }
+            ]
+          },
+          {
+            "name": "Efeitos mais fortes",
+            "value": "Os Efeitos do seu galo tem 2 de dano adicional",
+            "childs": [
+              {
+                "name": "Efeitos ainda mais fortes",
+                "value": "Os Efeitos do seu galo tem 3 de dano adicional"
+              }
+            ]
+          }
+        ]
+      },
+      {
         "name": "Buff de vida",
-        "value": "Seu galo começa com 5 de vida extra nas batalhas",
+        "value": "Seu galo começa com 20 de vida extra nas batalhas",
         "childs": [
-            {
-                "name": "Buff de dano",
-                "value": "Os ataques do seu galo tem 2 de dano adicional",
-                "childs": [
-                    {
-                        "name": "Buff de dano",
-                        "value": "Os ataques do seu galo tem 2 de dano adicional",
-                        "childs": [
-                            {
-                                "name": "Buff de dano aprimorado",
-                                "value":  "Os ataques do seu galo tem 3 de dano adicional"
-                            }
-
-                        ]
-                    },
-                    {
-                        "name": "Efeitos mais fortes",
-                        "value": "Os Efeitos do seu galo tem 2 de dano adicional",
-                        "childs": [
-                            {
-                                "name": "Efeitos ainda mais fortes",
-                                "value": "Os Efeitos do seu galo tem 3 de dano adicional"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Buff de vida",
-                "value": "Seu galo começa com 10 de vida extra nas batalhas",
-                "childs": [
-                    {
-                        "name": "Regeneração",
-                        "value": "Seu galo regenera 3 de vida a cada ataque",
-                        "childs": [
-                            {
-                                "name": "Regeneração Amplificada",
-                                "value": "Seu galo regenera 6 de vida a cada ataque"
-                            },
-                            {
-                                "name": "Degeneração",
-                                "value": "O galo do oponente perde 3 de vida a cada ataque"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Mais vida",
-                        "value": "Seu galo começa com mais 10 de vida extra nas batalhas",
-                        "childs": [
-                            {
-                                "name": "Intankavel",
-                                "value": "Seu galo começa com mais 12 de vida extra nas batalhas"
-                            }
-                        ]
-                    }
-                ]
-            }
+          {
+            "name": "Regeneração",
+            "value": "Seu galo regenera 3 de vida a cada ataque",
+            "childs": [
+              {
+                "name": "Regeneração Amplificada",
+                "value": "Seu galo regenera 6 de vida a cada ataque"
+              },
+              {
+                "name": "Degeneração",
+                "value": "O galo do oponente perde 3 de vida a cada ataque"
+              }
+            ]
+          },
+          {
+            "name": "Mais vida",
+            "value": "Seu galo começa com mais 20 de vida extra nas batalhas",
+            "childs": [
+              {
+                "name": "Intankavel",
+                "value": "Seu galo começa com mais 24 de vida extra nas batalhas"
+              }
+            ]
+          }
         ]
-    },
-    {
-        "name": "Esquiva",
-        "value": "Seu galo tem 4% de chance de se esquivar de dano de ataques",
+      }
+    ]
+  },
+  {
+    "name": "Esquiva",
+    "value": "Seu galo tem 4% de chance de se esquivar de dano de ataques",
+    "childs": [
+      {
+        "name": "Esquiva melhorada",
+        "value": "Chance de esquiva aumenta para 6%",
         "childs": [
-            {
-                "name": "Esquiva melhorada",
-                "value": "Chance de esquiva aumenta para 6%",
-                "childs": [
-                    {
-                        "name": "Chance adicional",
-                        "value": "Chance de esquiva aumenta para 9%",
-                        "childs": [
-                            {
-                                "name": "Esquiva suprema",
-                                "value": "Chance de esquiva aumenta para 12%"
-                            },
-                            {
-                                "name": "Esquiva em efeitos",
-                                "value": "Afeta efeitos de dano"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Ataques criticos",
-                        "value": "Chance de 10% de causar um ataque critico de 120%",
-                        "childs": [
-                            {
-                                "name": "Mais chance",
-                                "value": "Chance de ataque critico aumentado para 20%"
-                            },
-                            {
-                                "name": "Mais dano",
-                                "value": "Dano do ataque critico aumentado para 140%"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Voodoo",
-                "value": "O galo do seu oponente começa com 5 de vida a menos",
-                "childs": [
-                    {
-                        "name": "Fraqueza",
-                        "value": "O galo do oponente começa 1 nivel a menos",
-                        "childs": [
-                            {
-                                "name": "Fraqueza amplificada",
-                                "value": "O galo do oponente começa 2 niveis a menos"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Voodoo melhorado",
-                        "value": "O galo do seu oponente começa com 15 de vida a menos",
-                        "childs": [
-                            {
-                                "name": "Voodo eterno",
-                                "value": "O galo do seu oponente começa com 30 de vida a menos"
-                            }
-                        ]
-                    }
-                ]
-            }
+          {
+            "name": "Chance adicional",
+            "value": "Chance de esquiva aumenta para 9%",
+            "childs": [
+              {
+                "name": "Esquiva suprema",
+                "value": "Chance de esquiva aumenta para 12%"
+              },
+              {
+                "name": "Esquiva em efeitos",
+                "value": "Afeta efeitos de dano"
+              }
+            ]
+          },
+          {
+            "name": "Ataques criticos",
+            "value": "Chance de 10% de causar um ataque critico de 120%",
+            "childs": [
+              {
+                "name": "Mais chance",
+                "value": "Chance de ataque critico aumentado para 20%"
+              },
+              {
+                "name": "Mais dano",
+                "value": "Dano do ataque critico aumentado para 140%"
+              }
+            ]
+          }
         ]
-    }
+      },
+      {
+        "name": "Voodoo",
+        "value": "O galo do seu oponente começa com 5 de vida a menos",
+        "childs": [
+          {
+            "name": "Fraqueza",
+            "value": "O galo do oponente começa 1 nivel a menos",
+            "childs": [
+              {
+                "name": "Fraqueza amplificada",
+                "value": "O galo do oponente começa 2 niveis a menos"
+              }
+            ]
+          },
+          {
+            "name": "Voodoo melhorado",
+            "value": "O galo do seu oponente começa com 15 de vida a menos",
+            "childs": [
+              {
+                "name": "Voodo eterno",
+                "value": "O galo do seu oponente começa com 30 de vida a menos"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 ]

@@ -217,6 +217,7 @@ func HandleInteraction(itc *disgord.InteractionCreate) {
 		response := ExecuteInteraction(ctx, itc)
 		if response != nil {
 			err := Client.SendInteractionResponse(ctx, itc, response)
+			fmt.Println("Interaction error")
 			fmt.Println(err)
 		}
 		author := itc.Member.User

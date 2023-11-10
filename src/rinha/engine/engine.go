@@ -28,6 +28,8 @@ type RinhaOptions struct {
 	Images      [2]string
 }
 
+const MAX_ROUNDS = 85
+
 var RinhaColors = [2]int{65280, 16711680}
 
 func EditRinhaMessage(ic *disgord.InteractionCreate, newMessage *disgord.CreateMessage, message *disgord.Message) {
@@ -208,7 +210,7 @@ func RinhaEngineNew(battle *rinha.Battle, options *RinhaOptions, message *disgor
 		for _, effect := range effects {
 			text += EffectToStr(effect, affectedName, authorName, battle)
 		}
-		if round >= 75 {
+		if round >= MAX_ROUNDS {
 			if battle.Fighters[1].Life >= battle.Fighters[0].Life {
 				text += "\n" + options.AuthorName + " Foi executado"
 				battle.Fighters[0].Life = 0

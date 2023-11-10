@@ -14,9 +14,8 @@
     "value": 120
   },
   {
-    "type": 0,
-    "value": 1,
-    "itemType": 1
+    "type": 1,
+    "value": 150
   },
   {
     "type": 1,
@@ -27,9 +26,8 @@
     "value": 400
   },
   {
-    "type": 0,
-    "value": 1,
-    "itemType": 1
+    "type": 1,
+    "value": 300
   },
   {
     "type": 2,
@@ -85,9 +83,8 @@
     "itemType": 1
   },
   {
-    "type": 0,
-    "value": 170,
-    "itemType": 3
+    "type": 2,
+    "value": 3250
   },
   {
     "type": 1,
@@ -121,9 +118,8 @@
     "value": 6000
   },
   {
-    "type": 0,
-    "value": 168,
-    "itemType": 3
+    "type": 1,
+    "value": 5200
   },
   {
     "type": 0,
@@ -136,9 +132,8 @@
     "itemType": 1
   },
   {
-    "type": 0,
-    "value": 167,
-    "itemType": 3
+    "type": 2,
+    "value": 9000
   },
   {
     "type": 3,
@@ -155,8 +150,8 @@
   },
   {
     "type": 0,
-    "value": 166,
-    "itemType": 3
+    "value": 4,
+    "itemType": 1
   },
   {
     "type": 2,
@@ -168,9 +163,8 @@
     "itemType": 1
   },
   {
-    "type": 0,
-    "value": 169,
-    "itemType": 3
+    "type": 2,
+    "value": 15000
   },
   {
     "type": 1,
@@ -178,11 +172,11 @@
   },
   {
     "type": 0,
-    "value": 171,
-    "itemType": 3
+    "value": 4,
+    "itemType": 1
   },
   {
     "type": 3,
-    "value": 15
+    "value": 16
   }
 ]

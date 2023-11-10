@@ -82,7 +82,7 @@ func init() {
 		Name:        "rinha",
 		Description: translation.T("RinhaHelp", "pt"),
 		Run:         runRinha,
-		Cooldown:    15,
+		Cooldown:    8,
 		Category:    handler.Rinha,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",

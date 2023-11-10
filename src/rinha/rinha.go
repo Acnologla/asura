@@ -19,6 +19,8 @@ import (
 
 type Rarity int
 
+const BASE_LIMIT = 270
+
 var client = &http.Client{}
 var TopToken string
 
@@ -339,12 +341,16 @@ func GetItemByID(items []*entities.Item, id uuid.UUID) *entities.Item {
 	return nil
 }
 
-func IsInLimit(user *entities.User) bool {
-	max := 270
+func CalcLimit(user *entities.User) int {
+	limit := BASE_LIMIT
 	if HasUpgrade(user.Upgrades, 0, 1, 0, 0) {
-		max += 30
+		limit += 30
 	}
-	return user.TrainLimit >= max
+	return limit
+}
+
+func IsInLimit(user *entities.User) bool {
+	return user.TrainLimit >= CalcLimit(user)
 }
 
 func SkillToString(skill *Skill) (text string, effectText string) {

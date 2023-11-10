@@ -56,7 +56,6 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				return u
 			}
 			if arenaPrice > user.Money {
-				fmt.Println("here")
 				itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{

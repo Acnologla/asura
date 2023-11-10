@@ -22,11 +22,11 @@ type BattlePassLevel struct {
 }
 
 func CalcBPLevel(xp int) int {
-	return int(math.Floor(math.Sqrt(float64(xp)/50))) + 1
+	return int(math.Floor(math.Sqrt(float64(xp)/42))) + 1
 }
 
 func CalcBPXP(level int) int {
-	return int(math.Pow(float64(level-1), 2)) * 50
+	return int(math.Pow(float64(level-1), 2)) * 42
 }
 
 func BPLevelToString(level int) string {
