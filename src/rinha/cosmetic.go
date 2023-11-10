@@ -30,7 +30,7 @@ func GetBackground(galo *entities.User) string {
 		}
 	}
 
-	if len(bgs) == -1 {
+	if len(bgs) > 0 {
 		bg := bgs[utils.RandInt(len(bgs))]
 		return bg.Value
 	}
