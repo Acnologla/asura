@@ -215,6 +215,12 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	case "view":
+		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Carregando...",
+			},
+		})
 		level := rinha.ClanXpToLevel(clan.Xp)
 		memberMsg := ""
 		for _, member := range clan.Members {
@@ -249,12 +255,13 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				URL: bg,
 			}
 		}
-		return &disgord.CreateInteractionResponse{
-			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.CreateInteractionResponseData{
-				Embeds: []*disgord.Embed{embed},
-			},
-		}
+		str := ""
+		handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+			Embeds:  &([]*disgord.Embed{embed}),
+			Content: &str,
+		})
+
+		return nil
 	case "mission":
 		clan = rinha.PopulateClanMissions(clan)
 		database.Clan.UpdateClan(ctx, clan, func(clanUpdate entities.Clan) entities.Clan {
