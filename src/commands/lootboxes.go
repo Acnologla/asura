@@ -1,15 +1,15 @@
 package commands
 
 import (
-	"asura/src/utils"
-	"asura/src/rinha"
-	"asura/src/handler"
-	"strings"
-	"asura/src/entities"
 	"asura/src/database"
-	"fmt"
+	"asura/src/entities"
+	"asura/src/handler"
+	"asura/src/rinha"
+	"asura/src/utils"
 	"context"
-	
+	"fmt"
+	"strings"
+
 	"github.com/andersfylling/disgord"
 )
 
@@ -20,43 +20,43 @@ func init() {
 		Run:         runLootboxs,
 		Cooldown:    5,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
-			Type: 			disgord.OptionTypeSubCommand,
-			Name: 			"buy",
-			Description:	"compre lootboxes",
+			Type:        disgord.OptionTypeSubCommand,
+			Name:        "buy",
+			Description: "compre lootboxes",
 			Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
-				Type: 		disgord.OptionTypeString,
-				Name: 		"type",
-				Required: 	true,
-				Description:"tipo da lootbox (lendaria, items, epica, rara, cosmetico, normal, comum)",
+				Type:        disgord.OptionTypeString,
+				Name:        "type",
+				Required:    true,
+				Description: "tipo da lootbox (lendaria, items, epica, rara, cosmetico, normal, comum)",
 			},
-			&disgord.ApplicationCommandOption{
-				Type: 		disgord.OptionTypeNumber,
-				Name: 		"quantity",
-				Required: 	true,
-				Description:"quantidade para comprar",
-				MinValue:   1,
-				MaxValue:	100,
-			}),
+				&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeNumber,
+					Name:        "quantity",
+					Required:    true,
+					Description: "quantidade para comprar",
+					MinValue:    1,
+					MaxValue:    100,
+				}),
 		},
-		&disgord.ApplicationCommandOption{
-			Type: 			disgord.OptionTypeSubCommand,
-			Name: 			"open",
-			Description:	"abra as lootboxes",
-			Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
-				Type: 		disgord.OptionTypeString,
-				Name: 		"type",
-				Required: 	true,
-				Description:"tipo da lootbox (lendaria, items, epica, rara, cosmetico, normal, comum)",
-			},
 			&disgord.ApplicationCommandOption{
-				Type: 		disgord.OptionTypeNumber,
-				Name: 		"quantity",
-				Required: 	true,
-				Description:"quantidade para abrir",
-				MinValue:   1,
-				MaxValue:	10,
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "open",
+				Description: "abra as lootboxes",
+				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
+					Type:        disgord.OptionTypeString,
+					Name:        "type",
+					Required:    true,
+					Description: "tipo da lootbox (lendaria, items, epica, rara, cosmetico, normal, comum)",
+				},
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeNumber,
+						Name:        "quantity",
+						Required:    true,
+						Description: "quantidade para abrir",
+						MinValue:    1,
+						MaxValue:    10,
+					}),
 			}),
-		}),
 	})
 }
 
@@ -77,36 +77,36 @@ func runLootboxs(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 	lockEvent(ctx, author.ID, "Comprando ou abrindo lootboxes.")
 	defer unlockEvent(ctx, author.ID)
 
+	lootType := itc.Data.Options[0].Options[0].Value.(string)
+	lootboxes := rinha.LootNames
+	found := false
+
+	for _, name := range lootboxes {
+		if lootType == name {
+			found = true
+			break
+		}
+	}
+	if !found {
+		lootNamesMapped := strings.Join(lootboxes[:], ", ")
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: fmt.Sprintf("lootbox inválida\nopções: %s", lootNamesMapped),
+			},
+		}
+	}
+
 	switch command {
 	case "buy":
-		lootType := itc.Data.Options[0].Options[0].Value.(string)
-		lootboxes := rinha.LootNames
-		found := false
-
-		for _, name := range lootboxes {
-			if lootType == name {
-				found = true
-				break
-			}
-		}
-		if !found {
-			lootNamesMapped := strings.Join(lootboxes[:], ", ")
-			return &disgord.CreateInteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.CreateInteractionResponseData{
-					Content: fmt.Sprintf("lootbox inválida\nopções: %s", lootNamesMapped),
-				},
-			}
-		}
-
 		quantity := int(itc.Data.Options[0].Options[1].Value.(float64))
 		index := rinha.GetLbIndex(lootType)
-		price := rinha.Prices[index] //indice 0 = money, indice 1 = asuracoin
+		price := rinha.Prices[index]
 		totalPrice := 0
 		done := false
 		moneyType := "dinheiro"
 
-		database.User.UpdateUser(ctx, author.ID, func (u entities.User) entities.User {
+		database.User.UpdateUser(ctx, author.ID, func(u entities.User) entities.User {
 			if price[0] == 0 {
 				totalPrice = quantity * price[1]
 				moneyType = "asura coins"
@@ -143,26 +143,6 @@ func runLootboxs(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 		user := database.User.GetUser(ctx, itc.Member.UserID, "Items")
 		lootbox := rinha.GetLootboxes(&user)
 		quantity := int(itc.Data.Options[0].Options[1].Value.(float64))
-		lootType := itc.Data.Options[0].Options[0].Value.(string)
-
-		lootboxesNames := rinha.LootNames
-		found := false
-
-		for _, name := range lootboxesNames {
-			if lootType == name {
-				found = true
-				break
-			}
-		}
-		if !found {
-			lootNamesMapped := strings.Join(lootboxesNames[:], ", ")
-			return &disgord.CreateInteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.CreateInteractionResponseData{
-					Content: fmt.Sprintf("lootbox inválida\nopções: %s", lootNamesMapped),
-				},
-			}
-		}
 
 		lootIndex := rinha.GetLbIndex(lootType)
 		lootTotal := rinha.GetLootboxQuantity(lootbox, lootType)
@@ -192,15 +172,15 @@ func runLootboxs(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 			},
 		})
 
-		database.User.UpdateUser(ctx, author.ID, func (u entities.User) entities.User {
+		database.User.UpdateUser(ctx, author.ID, func(u entities.User) entities.User {
 			if lootType != "cosmetica" && lootType != "items" {
 				if len(u.Galos) >= 10 {
 					itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 						Type: disgord.InteractionCallbackChannelMessageWithSource,
 						Data: &disgord.CreateInteractionResponseData{
-					 		Content: "Voce já chegou no limite de galos (10)",
-					 	},
-					 })
+							Content: "Voce já chegou no limite de galos (10)",
+						},
+					})
 					return u
 				}
 			}
@@ -245,7 +225,6 @@ func runLootboxs(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 					userDatabase := database.User.GetUser(ctx, author.ID, "Items", "Galos")
 					if len(userDatabase.Galos) >= 10 {
 						stopMsg = fmt.Sprintf("\na abertura do restante das lootboxes foi cancelada pois você atingiu o limite de 10 galos.")
-						//fmt.Println(fmt.Sprintf("user %s stoped open many lootboxes because already have 10 rooster", author.Username))
 						break
 						return u
 					}
