@@ -35,6 +35,27 @@ func GenerateLootPrices() (text string) {
 	return
 }
 
+func GetLootboxQuantity(lootboxes Lootboxes, lootboxType string) int {
+	switch lootboxType {
+	case "comum":
+		return lootboxes.Common
+	case "rara":
+		return lootboxes.Rare
+	case "epica":
+		return lootboxes.Epic
+	case "lendaria":
+		return lootboxes.Legendary
+	case "items":
+		return lootboxes.Items
+	case "cosmetica":
+		return lootboxes.Cosmetic
+	case "normal":
+		return lootboxes.Normal
+	default:
+		return 0
+	}
+}
+
 func GetUserLootboxes(user *entities.User) (loot []string) {
 	for _, item := range user.Items {
 		if item.Type == entities.LootboxType {
