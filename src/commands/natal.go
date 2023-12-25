@@ -33,12 +33,12 @@ func runNatal(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		return rinhaMessage(discordUser.Username, authorRinha)
 	}
 	galoType := rinha.GetRandByType(rinha.Classes[galo.Type].Rarity)
-	advLevel := 200
+	advLevel := 180
 	galoAdv := entities.Rooster{
 		Xp:     rinha.CalcXP(advLevel) + 1,
 		Type:   galoType,
 		Equip:  true,
-		Resets: 5,
+		Resets: 1 + galo.Resets,
 	}
 	lockEvent(ctx, discordUser.ID, "Boss evento"+rinha.Classes[galoAdv.Type].Name)
 	defer unlockEvent(ctx, discordUser.ID)
@@ -71,7 +71,7 @@ func runNatal(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		content := "Parabens voce ganhou o evento de natal\nE recebeu uma lootbox"
 		database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 			number := utils.RandInt(100)
-			if number == 0 {
+			if number <= 1 {
 				database.User.InsertItem(ctx, discordUser.ID, u.Items, 43, entities.NormalType)
 				content = "Parabens voce ganhou o evento de natal\nE recebeu um item especial"
 			} else if number < 15 {
