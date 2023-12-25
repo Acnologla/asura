@@ -4,8 +4,8 @@ import "asura/src/entities"
 
 func CalcArena(user *entities.User) (int, int) {
 	wins := user.ArenaWin
-	money := 60 * wins
-	xp := 20 * wins
+	money := 70 * wins
+	xp := 30 * wins
 	user.Money += money
 	user.ArenaWin = 0
 	user.ArenaLose = 0
