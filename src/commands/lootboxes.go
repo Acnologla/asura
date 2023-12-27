@@ -27,7 +27,7 @@ func init() {
 				Type:        disgord.OptionTypeString,
 				Name:        "type",
 				Required:    true,
-				Description: "tipo da lootbox (lendaria, items, epica, rara, cosmetico, normal, comum)",
+				Description: "tipo da lootbox (lendaria, items, epica, rara, cosmetica, normal, comum)",
 			},
 				&disgord.ApplicationCommandOption{
 					Type:        disgord.OptionTypeNumber,
@@ -46,7 +46,7 @@ func init() {
 					Type:        disgord.OptionTypeString,
 					Name:        "type",
 					Required:    true,
-					Description: "tipo da lootbox (lendaria, items, epica, rara, cosmetico, normal, comum)",
+					Description: "tipo da lootbox (lendaria, items, epica, rara, cosmetica, normal, comum)",
 				},
 					&disgord.ApplicationCommandOption{
 						Type:        disgord.OptionTypeNumber,
@@ -193,10 +193,10 @@ func runLootboxs(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 					database.User.RemoveItem(ctx, userDatabase.Items, lbID)
 					newVal, pity = rinha.Open(lootIndex, &u)
 					u.Pity = pity
-					database.User.InsertItem(ctx, author.ID, userDatabase.Items, newVal, entities.CosmeticType)
+					database.User.InsertItem(ctx, author.ID, userDatabase.Items, newVal, entities.NormalType)
 					item := rinha.Items[newVal]
 					if item.Level == 4 {
-						rarity = rinha.Mythic
+						rarity = rinha.Special
 					} else {
 						rarity = rinha.Legendary
 					}
@@ -224,9 +224,8 @@ func runLootboxs(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 				for i := 1; i <= quantity; i++ {
 					userDatabase := database.User.GetUser(ctx, author.ID, "Items", "Galos")
 					if len(userDatabase.Galos) >= 10 {
-						stopMsg = fmt.Sprintf("\na abertura do restante das lootboxes foi cancelada pois você atingiu o limite de 10 galos.")
+						stopMsg = fmt.Sprintf("\na abertura do restante das lootboxes foi cancelado pois você atingiu o limite de 10 galos.")
 						break
-						return u
 					}
 
 					lbID, _ := rinha.GetLbID(userDatabase.Items, lootIndex)

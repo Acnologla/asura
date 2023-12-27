@@ -140,12 +140,58 @@ func IsVip(user *entities.User) bool {
 	return uint64(time.Now().Unix()) <= user.Vip
 }
 
+func DurationToString(timeInSeconds uint64) string {
+	duration := time.Duration(timeInSeconds) * time.Second
+
+	var parts []string
+
+	periods := []struct {
+		unit   time.Duration
+		format string
+	}{
+		{365 * 24 * time.Hour, "%d ano"},
+		{30 * 24 * time.Hour, "%d mês"},
+		{24 * time.Hour, "%d dia"},
+		{time.Hour, "%d hora"},
+		{time.Minute, "%d minuto"},
+		{time.Second, "%d segundo"},
+	}
+
+	for _, p := range periods {
+		value := duration / p.unit
+		duration -= value * p.unit
+		if value > 0 {
+			if value > 1 {
+				if strings.Contains(p.format, "mês") {
+					p.format = "%d meses"
+				} else {
+					p.format += "s"
+				}
+			}
+			parts = append(parts, fmt.Sprintf(p.format, value))
+		}
+	}
+
+	if len(parts) == 0 {
+		return "agora"
+	}
+
+	if len(parts) > 1 {
+		lastPart := parts[len(parts)-1]
+		otherParts := parts[:len(parts)-1]
+		return fmt.Sprintf("%s e %s", strings.Join(otherParts, ", "), lastPart)
+	}
+
+	return parts[0]
+}
+
 func VipMessage(user *entities.User) string {
 	now := uint64(time.Now().Unix())
 	if now >= user.Vip {
 		return ""
 	}
-	return fmt.Sprintf("Vip por **%d** dias", (user.Vip-now)/60/60/24)
+	timeFormated := DurationToString(user.Vip - now)
+	return fmt.Sprintf("Vip por %s", timeFormated)
 }
 
 func findClassIndex(class string) int {
