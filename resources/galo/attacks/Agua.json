@@ -96,5 +96,11 @@
     "name": "Agua espiritual",
     "damage": [60, 90],
     "level": 30
+  },
+  {
+    "name": "Agua espiritual reforçada",
+    "damage": [80, 110],
+    "level": 30,
+    "evolved": true
   }
 ]

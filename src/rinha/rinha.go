@@ -67,11 +67,12 @@ type Class struct {
 }
 
 type Skill struct {
-	Name   string     `json:"name"`
-	Damage [2]int     `json:"damage"`
-	Level  int        `json:"level"`
-	Effect [2]float64 `json:"effect"`
-	Self   bool       `json:"self"`
+	Name    string     `json:"name"`
+	Damage  [2]int     `json:"damage"`
+	Level   int        `json:"level"`
+	Effect  [2]float64 `json:"effect"`
+	Self    bool       `json:"self"`
+	Evolved bool       `json:"evolved"`
 }
 
 var Dungeon []*Room
@@ -83,6 +84,7 @@ var Sprites [][]string
 var Cosmetics []*Cosmetic
 var Upgrades []Upgrade
 var BattlePass []BattlePassLevel
+var Ranks []*Rank
 
 func SetTopToken(token string) {
 	TopToken = token
@@ -132,6 +134,8 @@ func init() {
 	json.Unmarshal([]byte(byteValueUpgrades), &Upgrades)
 	byteValueBattlePass, _ := ioutil.ReadFile("./resources/galo/battlePass.json")
 	json.Unmarshal([]byte(byteValueBattlePass), &BattlePass)
+	byteValueRanks, _ := ioutil.ReadFile("./resources/galo/ranks.json")
+	json.Unmarshal([]byte(byteValueRanks), &Ranks)
 }
 
 const PityMultiplier = 1
@@ -214,10 +218,17 @@ func GetEquippedGalo(user *entities.User) *entities.Rooster {
 }
 
 func GetName(username string, galo entities.Rooster) string {
-	if galo.Name == "" {
-		return username
+	prefix := ""
+
+	if galo.Evolved {
+		prefix = "[⭐] "
 	}
-	return galo.Name
+
+	if galo.Name == "" {
+		return prefix + username
+	}
+
+	return prefix + galo.Name
 }
 
 func IsIntInList(a int, arry []int) bool {
@@ -236,9 +247,15 @@ func GetSkills(galo entities.Rooster) []int {
 		return skills
 	}
 	for i := 0; i < len(Skills[galo.Type-1]); i++ {
-		if Skills[galo.Type-1][i].Level > lvl {
+		skill := Skills[galo.Type-1][i]
+		if skill.Level > lvl {
 			continue
 		}
+
+		if skill.Evolved && !galo.Evolved {
+			continue
+		}
+
 		skills = append(skills, i)
 	}
 	return skills
@@ -295,9 +312,9 @@ func GetNextSkill(galo entities.Rooster) []*Skill {
 
 func GetNewRooster() int {
 	rand := utils.RandInt(100)
-	if 1 >= rand {
+	if 3 >= rand {
 		return GetRandByType(Epic)
-	} else if 5 >= rand {
+	} else if 8 >= rand {
 		return GetRandByType(Rare)
 	}
 	return GetRandByType(Common)

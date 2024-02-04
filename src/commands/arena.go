@@ -116,9 +116,9 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		return nil
 	}
 
-	c := engine.AddToMatchMaking(itc.Member.User, user.ArenaLastFight, message)
+	c := engine.AddToMatchMaking(itc.Member.User, user.ArenaLastFight, message, engine.ArenaNormal, 0)
 	result := <-c
-	if result == engine.TimeExceeded {
+	if result.Type == engine.TimeExceeded {
 		handler.Client.Channel(message.ChannelID).Message(message.ID).Update(&disgord.UpdateMessage{
 			Embeds: &([]*disgord.Embed{
 				{
@@ -129,10 +129,10 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		})
 		return nil
 	}
-	if result == engine.ArenaTie {
+	if result.Type == engine.ArenaTie {
 		return nil
 	}
-	if result == engine.ArenaWin {
+	if result.Type == engine.ArenaWin {
 		database.User.UpdateUser(ctx, itc.Member.User.ID, func(u entities.User) entities.User {
 			u.ArenaWin++
 			if u.ArenaWin >= 12 {
@@ -163,7 +163,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			}
 			return u
 		}, "Galos")
-	} else if result == engine.ArenaLose {
+	} else if result.Type == engine.ArenaLose {
 		database.User.UpdateUser(ctx, itc.Member.User.ID, func(u entities.User) entities.User {
 			u.ArenaLose++
 			if u.ArenaLose >= 3 {

@@ -39,6 +39,8 @@ func init() {
 	})
 }
 
+var evolvedPrice = 25
+
 func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
 	if len(itc.Data.Options) > 0 {
@@ -98,6 +100,8 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		grad.AddColorStop(0.8, color.RGBA{255, 0, 255, 255})
 		grad.AddColorStop(1, color.RGBA{0, 255, 255, 255})
 		dc.SetFillStyle(grad)
+	} else if galo.Evolved {
+		dc.SetHexColor(fmt.Sprintf("%06x", 0))
 	} else {
 		color := rinha.Classes[galo.Type].Rarity.Color()
 		dc.SetHexColor(fmt.Sprintf("%06x", color))
@@ -194,33 +198,75 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			},
 		}
+	}
+	if !galo.Evolved && galo.Resets > 4 && u.AsuraCoin > evolvedPrice {
+		component := &disgord.MessageComponent{
+			Type:     disgord.MessageComponentButton,
+			Label:    "Evoluir",
+			CustomID: "Evolve",
+			Style:    disgord.Primary,
+		}
+
+		if len(data.Components) == 1 {
+			data.Components[0].Components = append(data.Components[0].Components, component)
+		} else {
+			data.Components = []*disgord.MessageComponent{
+				{
+					Type: disgord.MessageComponentActionRow,
+					Components: []*disgord.MessageComponent{
+						component,
+					},
+				},
+			}
+		}
+
+	}
+	if len(data.Components) > 0 {
 		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: data,
 		})
 		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
 			done := false
+			isEvolved := ic.Data.CustomID == "Evolve"
 			if ic.Member.UserID == user.ID {
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-						level := rinha.CalcLevel(r.Xp)
-						if level >= 35 {
-							done = true
-							r.Equipped = []int{}
-							r.Xp = 0
-							r.Resets++
+						if isEvolved {
+							if u.AsuraCoin > evolvedPrice && r.Resets > 4 && !r.Evolved {
+								r.Evolved = true
+								u.AsuraCoin -= evolvedPrice
+								done = true
+							}
+						} else {
+							level := rinha.CalcLevel(r.Xp)
+							if level >= 35 {
+								done = true
+								r.Equipped = []int{}
+								r.Xp = 0
+								r.Resets++
+							}
 						}
 						return r
 					})
 					return u
 				}, "Galos")
 				if done {
-					ic.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
-						Type: disgord.InteractionCallbackChannelMessageWithSource,
-						Data: &disgord.CreateInteractionResponseData{
-							Content: translation.T("GaloUpgrade", translation.GetLocale(itc)),
-						},
-					})
+					if isEvolved {
+						ic.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+							Type: disgord.InteractionCallbackChannelMessageWithSource,
+							Data: &disgord.CreateInteractionResponseData{
+								Content: "Galo evoluido com sucesso",
+							},
+						})
+					} else {
+						ic.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+							Type: disgord.InteractionCallbackChannelMessageWithSource,
+							Data: &disgord.CreateInteractionResponseData{
+								Content: translation.T("GaloUpgrade", translation.GetLocale(itc)),
+							},
+						})
+					}
 				}
 			}
 		}, 100)

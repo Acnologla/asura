@@ -6,19 +6,32 @@ import (
 	"asura/src/handler"
 	"asura/src/rinha"
 	"context"
+	"math"
 	"sync"
 	"time"
 
 	"github.com/andersfylling/disgord"
 )
 
-type ArenaResult = int
+type ArenaResultType = int
 
 const (
-	TimeExceeded ArenaResult = iota
+	TimeExceeded ArenaResultType = iota
 	ArenaWin
 	ArenaLose
 	ArenaTie
+)
+
+type ArenaResult struct {
+	Type ArenaResultType
+	Adv  disgord.Snowflake
+}
+
+type ArenaType = int
+
+const (
+	ArenaNormal ArenaType = iota
+	ArenaRanked
 )
 
 type Finder struct {
@@ -28,6 +41,8 @@ type Finder struct {
 	Message   *disgord.Message
 	LastFight disgord.Snowflake
 	Timestamp time.Time
+	Type      ArenaType
+	Rank      int
 }
 
 var waitingQueue = []*Finder{}
@@ -41,7 +56,8 @@ func isInMatchMaking(id disgord.Snowflake) int {
 	}
 	return -1
 }
-func AddToMatchMaking(u *disgord.User, lastFight disgord.Snowflake, message *disgord.Message) chan ArenaResult {
+
+func AddToMatchMaking(u *disgord.User, lastFight disgord.Snowflake, message *disgord.Message, t ArenaType, rank int) chan ArenaResult {
 	waitingQueueMutex.Lock()
 	defer waitingQueueMutex.Unlock()
 	i := isInMatchMaking(u.ID)
@@ -54,6 +70,8 @@ func AddToMatchMaking(u *disgord.User, lastFight disgord.Snowflake, message *dis
 			LastFight: lastFight,
 			C:         c,
 			Timestamp: time.Now(),
+			Type:      t,
+			Rank:      rank,
 		})
 	}
 	return c
@@ -95,25 +113,44 @@ func initBattle(first, second *Finder) {
 		u.ArenaLastFight = first.ID
 		return u
 	})
+
+	resultFirst := ArenaResult{
+		Adv: second.ID,
+	}
+	resultSecond := ArenaResult{
+		Adv: first.ID,
+	}
 	if winner == -1 {
-		first.C <- ArenaTie
-		second.C <- ArenaTie
+
+		resultFirst.Type = ArenaTie
+		resultSecond.Type = ArenaTie
 	}
 	if winner == 0 {
-		first.C <- ArenaWin
-		second.C <- ArenaLose
+		resultFirst.Type = ArenaWin
+		resultSecond.Type = ArenaLose
 	}
 	if winner == 1 {
-		first.C <- ArenaLose
-		second.C <- ArenaWin
+		resultFirst.Type = ArenaLose
+		resultSecond.Type = ArenaWin
 	}
+
+	first.C <- resultFirst
+	second.C <- resultSecond
 }
+
+const MAX_RANK_DIFF = 300
 
 func FindFight() []int {
 	arr := []int{0}
 	firstFighter := waitingQueue[0]
 	for i, finder := range waitingQueue {
-		if i != 0 {
+		if i != 0 && finder.Type == firstFighter.Type {
+			rankDiff := finder.Rank - firstFighter.Rank
+
+			if finder.Type == ArenaRanked && math.Abs(float64(rankDiff)) > MAX_RANK_DIFF {
+				continue
+			}
+
 			if firstFighter.LastFight != finder.ID {
 				arr = append(arr, i)
 				break
@@ -149,7 +186,9 @@ func init() {
 			toFilter := []int{}
 			for i, finder := range waitingQueue {
 				if time.Since(finder.Timestamp).Minutes() >= 1 {
-					finder.C <- TimeExceeded
+					finder.C <- ArenaResult{
+						Type: TimeExceeded,
+					}
 					toFilter = append(toFilter, i)
 				}
 			}

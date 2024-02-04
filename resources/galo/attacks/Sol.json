@@ -94,5 +94,12 @@
     "name": "Betelgeuse",
     "damage": [60, 100],
     "level": 30
+  },
+  {
+    "name": "Explosão solar",
+    "damage": [20, 35],
+    "level": 30,
+    "evolved": true,
+    "effect": [1, 31]
   }
 ]

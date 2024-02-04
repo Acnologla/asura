@@ -99,5 +99,11 @@
     "name": "Magia nuclear",
     "damage": [120, 180],
     "level": 30
+  },
+  {
+    "name": "Magia do vazio",
+    "damage": [160, 220],
+    "level": 30,
+    "evolved": true
   }
 ]

@@ -99,5 +99,12 @@
     "level": 30,
     "self": true,
     "effect": [1, 55]
+  },
+  {
+    "name": "Mundo zumbi",
+    "damage": [85, 95],
+    "effect": [1, 53],
+    "level": 30,
+    "evolved": true
   }
 ]

@@ -101,5 +101,12 @@
     "damage": [70, 85],
     "level": 30,
     "effect": [1, 45]
+  },
+  {
+    "name": "Eclipse divino",
+    "damage": [100, 115],
+    "level": 30,
+    "effect": [1, 45],
+    "evolved": true
   }
 ]

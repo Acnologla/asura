@@ -56,6 +56,7 @@ type Rooster struct {
 	Xp       int               `bun:"xp"`
 	Type     int               `bun:"type"`
 	Equipped []int             `bun:"equipped,array"`
+	Evolved  bool              `bun:"evolved"`
 }
 
 type User struct {
@@ -83,6 +84,7 @@ type User struct {
 	ArenaWin        int               `bun:"arenawin"`
 	ArenaLose       int               `bun:"arenalose"`
 	ArenaLastFight  disgord.Snowflake `bun:"arenalastfight"`
+	RankedLastFight disgord.Snowflake `bun:"rankedlastfight"`
 	Rank            int               `bun:"rank"`
 	TradeItem       uint64            `bun:"tradeitem"`
 	Daily           uint64            `bun:"daily"`

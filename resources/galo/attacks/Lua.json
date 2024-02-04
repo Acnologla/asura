@@ -1,101 +1,103 @@
 [
-    {
-        "name": "Feixe luar",
-        "damage": [16,27],
-        "level": 1
-    },
-    {
-        "name": "Frio",
-        "damage": [21,25],
-        "level": 2
-    },
-    {
-        "name": "Maré alta",
-        "damage": [25, 30],
-        "level": 3
-    },
-    {
-        "name": "Congelamento",
-        "damage": [3,7],
-        "level": 4,
-        "effect": [1,11]
-    },
-    {
-        "name": "Cratera luar",
-        "damage": [25,35],
-        "level": 5
-    },
-    {
-        "name": "Benção da lua",
-        "damage": [10,15],
-        "level": 7,
-        "effect": [1,2],
-        "self": true
-    },
-    {
-        "name": "Vento luar",
-        "damage": [20,30],
-        "level": 9,
-        "effect": [1,11]
-
-    },
-    {
-        "name": "Lua minguante",
-        "damage": [47,50],
-        "level": 11
-    },
-    {
-        "name": "Viga luar",
-        "damage": [50,55],
-        "level": 12
-    },
-    {
-        "name": "Frio luar",
-        "damage": [1,4],
-        "level": 13,
-        "effect": [1,41]
-    },
-    {
-        "name": "Lua negra",
-        "damage": [50,55],
-        "level": 15
-    },
-    {
-        "name": "Golem de lua",
-        "damage": [1 ,2],
-        "level": 17,
-        "effect": [1,40]
-
-    },
-    {
-        "name": "Milagre da lua",
-        "damage": [30,35],
-        "level": 19,
-        "effect": [1,14],
-        "self":  true
-    },
-    {
-        "name": "Congelamento luar",
-        "damage": [20,25],
-        "level": 21,
-        "effect": [1,41]
-
-    },
-    {
-        "name": "Lua cheia",
-        "damage": [50,60],
-        "level": 22
-     
-    },
-    {
-        "name": "Maldição da lua",
-        "damage": [40,60],
-        "level": 25,
-        "effect": [1,11]
-    },
-    {
-        "name": "Eclipse",
-        "damage": [50, 95],
-        "level": 30
-    }
+  {
+    "name": "Feixe luar",
+    "damage": [16, 27],
+    "level": 1
+  },
+  {
+    "name": "Frio",
+    "damage": [21, 25],
+    "level": 2
+  },
+  {
+    "name": "Maré alta",
+    "damage": [25, 30],
+    "level": 3
+  },
+  {
+    "name": "Congelamento",
+    "damage": [3, 7],
+    "level": 4,
+    "effect": [1, 11]
+  },
+  {
+    "name": "Cratera luar",
+    "damage": [25, 35],
+    "level": 5
+  },
+  {
+    "name": "Benção da lua",
+    "damage": [10, 15],
+    "level": 7,
+    "effect": [1, 2],
+    "self": true
+  },
+  {
+    "name": "Vento luar",
+    "damage": [20, 30],
+    "level": 9,
+    "effect": [1, 11]
+  },
+  {
+    "name": "Lua minguante",
+    "damage": [47, 50],
+    "level": 11
+  },
+  {
+    "name": "Viga luar",
+    "damage": [50, 55],
+    "level": 12
+  },
+  {
+    "name": "Frio luar",
+    "damage": [1, 4],
+    "level": 13,
+    "effect": [1, 41]
+  },
+  {
+    "name": "Lua negra",
+    "damage": [50, 55],
+    "level": 15
+  },
+  {
+    "name": "Golem de lua",
+    "damage": [1, 2],
+    "level": 17,
+    "effect": [1, 40]
+  },
+  {
+    "name": "Milagre da lua",
+    "damage": [30, 35],
+    "level": 19,
+    "effect": [1, 14],
+    "self": true
+  },
+  {
+    "name": "Congelamento luar",
+    "damage": [20, 25],
+    "level": 21,
+    "effect": [1, 41]
+  },
+  {
+    "name": "Lua cheia",
+    "damage": [50, 60],
+    "level": 22
+  },
+  {
+    "name": "Maldição da lua",
+    "damage": [40, 60],
+    "level": 25,
+    "effect": [1, 11]
+  },
+  {
+    "name": "Eclipse",
+    "damage": [50, 95],
+    "level": 30
+  },
+  {
+    "name": "Eclipse divino",
+    "damage": [80, 125],
+    "level": 30,
+    "evolved": true
+  }
 ]

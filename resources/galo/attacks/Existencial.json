@@ -90,5 +90,12 @@
     "self": true,
     "effect": [1, 91]
   },
-  { "damage": [100, 1000], "level": 50, "name": "Destruição do Multiverso" }
+  { "damage": [100, 1000], "level": 50, "name": "Destruição do Multiverso" },
+  {
+    "damage": [230, 300],
+    "level": 50,
+    "name": "Destruição completa",
+    "evolved": true,
+    "effect": [1, 90]
+  }
 ]

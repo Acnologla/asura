@@ -95,5 +95,11 @@
     "name": "Dragão supremo",
     "damage": [60, 100],
     "level": 30
+  },
+  {
+    "name": "Dragão deus",
+    "damage": [90, 130],
+    "level": 30,
+    "evolved": true
   }
 ]

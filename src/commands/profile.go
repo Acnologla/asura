@@ -216,8 +216,12 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			grad.AddColorStop(1, color.RGBA{0, 255, 255, 255})
 			dc.SetFillStyle(grad)
 		} else if galo.Galos[i].Type != -1 {
-			colorE := rinha.Classes[galo.Galos[i].Type].Rarity.Color()
-			dc.SetHexColor(fmt.Sprintf("%06x", colorE))
+			if galo.Galos[i].Evolved {
+				dc.SetHexColor(fmt.Sprintf("%06x", 0))
+			} else {
+				colorE := rinha.Classes[galo.Galos[i].Type].Rarity.Color()
+				dc.SetHexColor(fmt.Sprintf("%06x", colorE))
+			}
 		}
 		userGaloImg := rinha.GetGaloImage(g, galo.Items)
 		var img *image.Image

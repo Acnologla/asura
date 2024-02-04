@@ -1,0 +1,77 @@
+[
+  {
+    "name": "Bronze I",
+    "rank": 100,
+    "emoji": "🟫"
+  },
+  {
+    "name": "Bronze II",
+    "rank": 200,
+    "emoji": "🟫"
+  },
+  {
+    "name": "Bronze III",
+    "rank": 300,
+    "emoji": "🟫"
+  },
+  {
+    "name": "Bronze IV",
+    "rank": 400,
+    "emoji": "🟫"
+  },
+  {
+    "name": "Bronze V",
+    "rank": 500,
+    "emoji": "🟫"
+  },
+  {
+    "name": "Prata I",
+    "rank": 700,
+    "emoji": "⬜"
+  },
+  {
+    "name": "Prata II",
+    "rank": 900,
+    "emoji": "⬜"
+  },
+  {
+    "name": "Prata III",
+    "rank": 1100,
+    "emoji": "⬜"
+  },
+  {
+    "name": "Prata IV",
+    "rank": 1300,
+    "emoji": "⬜"
+  },
+  {
+    "name": "Ouro I",
+    "rank": 1650,
+    "emoji": "🟧"
+  },
+  {
+    "name": "Ouro II",
+    "rank": 2000,
+    "emoji": "🟧"
+  },
+  {
+    "name": "Ouro III",
+    "rank": 2350,
+    "emoji": "🟧"
+  },
+  {
+    "name": "Platina I",
+    "rank": 2850,
+    "emoji": "🟪 "
+  },
+  {
+    "name": "Platina II",
+    "rank": 3350,
+    "emoji": "🟪 "
+  },
+  {
+    "name": "Diamante",
+    "rank": 4000,
+    "emoji": "🟦"
+  }
+]

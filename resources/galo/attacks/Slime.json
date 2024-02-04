@@ -95,5 +95,11 @@
     "level": 30,
     "effect": [1, 47],
     "self": true
+  },
+  {
+    "name": "Ataque slime",
+    "damage": [65, 145],
+    "level": 30,
+    "evolved": true
   }
 ]

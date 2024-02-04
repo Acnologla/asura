@@ -77,5 +77,6 @@
     "name": "Pobreza Extrema",
     "effect": [0.75, 79]
   },
-  { "damage": [50, 250], "level": 30, "name": "Fim dos Tempos" }
+  { "damage": [50, 250], "level": 30, "name": "Fim dos Tempos" },
+  { "damage": [150, 250], "level": 30, "name": "Vazio", "evolved": true }
 ]

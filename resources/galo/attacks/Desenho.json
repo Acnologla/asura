@@ -71,5 +71,12 @@
     "level": 30,
     "name": "Mensagem subliminar",
     "effect": [1, 66]
+  },
+  {
+    "damage": [70, 90],
+    "level": 30,
+    "name": "Pacto Supremo",
+    "effect": [1, 64],
+    "evolved": true
   }
 ]

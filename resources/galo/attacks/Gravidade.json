@@ -89,5 +89,11 @@
     "name": "Repulsão avassaladora",
     "damage": [80, 130],
     "level": 30
+  },
+  {
+    "name": "Destruição planteria",
+    "damage": [100, 180],
+    "level": 30,
+    "evolved": true
   }
 ]

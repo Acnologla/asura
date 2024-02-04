@@ -200,7 +200,7 @@ func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User
 		return 0
 	}
 
-	xpOb := utils.RandInt(3) + 2
+	xpOb := utils.RandInt(5) + 2
 
 	if isVip {
 		xpOb += 2
