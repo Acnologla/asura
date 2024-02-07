@@ -109,13 +109,14 @@ func Run(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInt
 	return res
 }
 
-func findCommand(command string, commands []*disgord.ApplicationCommand) *disgord.ApplicationCommand {
-	for _, c := range commands {
-		if c.Name == command {
-			return c
+func findCommand(name string, commands []*disgord.ApplicationCommand) bool {
+	for _, command := range commands {
+		if command.Name == name {
+			return true
 		}
 	}
-	return nil
+
+	return false
 }
 
 func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
@@ -157,54 +158,59 @@ func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
 
 func Init(appID, token string, session *disgord.Client) {
 	var commands []*disgord.ApplicationCommand
+
 	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
 	request, err := http.NewRequest("GET", endpoint, nil)
+
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	request.Header.Set("authorization", "Bot "+token)
 	resp, err := client.Do(request)
 	json.NewDecoder(resp.Body).Decode(&commands)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	for name, command := range Commands {
-		commandR := findCommand(name, commands)
-		request := func(method string, name string) {
-			var newCommand disgord.ApplicationCommand
-			newCommand.Name = name
-			newCommand.DefaultPermission = true
-			newCommand.Type = disgord.ApplicationCommandChatInput
-			newCommand.Options = command.Options
-			newCommand.Description = command.Description
-			val, _ := json.Marshal(newCommand)
-			reader := bytes.NewBuffer(val)
-			_endpoint := endpoint
-			if method == "PATCH" {
-				_endpoint += fmt.Sprintf("/%d", commandR.ID)
-			}
-			req, _ := http.NewRequest(method, _endpoint, reader)
-			req.Header.Add("Authorization", "Bot "+token)
-			req.Header.Add("Content-Type", "application/json")
-			res, err := client.Do(req)
-			if err != nil {
-				log.Fatal(err)
-			}
-			x, _ := ioutil.ReadAll(res.Body)
-			fmt.Println(string(x))
-		}
-		if commandR == nil {
-			fmt.Println("criando")
 
-			request("POST", command.Name)
-			for _, alias := range command.Aliases {
-				request("POST", alias)
+	var newCommands []disgord.ApplicationCommand
+
+	for name, command := range Commands {
+		if !findCommand(name, commands) {
+			newCommand := disgord.ApplicationCommand{
+				Name:              name,
+				DefaultPermission: true,
+				Type:              disgord.ApplicationCommandChatInput,
+				Options:           command.Options,
+				Description:       command.Description,
 			}
-		} else if HasChanged(commandR, command) {
-			fmt.Println("atualizando")
-			request("PATCH", command.Name)
+			newCommands = append(newCommands, newCommand)
+
+			for _, commandAlias := range command.Aliases {
+				newCommand.Name = commandAlias
+				newCommands = append(newCommands, newCommand)
+			}
 		}
 	}
+
+	if len(newCommands) > 0 {
+		cmds, _ := json.Marshal(newCommands)
+		reader := bytes.NewBuffer(cmds)
+		req, _ := http.NewRequest("PUT", endpoint, reader)
+		req.Header.Add("Authorization", "Bot "+token)
+		req.Header.Add("Content-Type", "application/json")
+		res, err := client.Do(req)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		body, _ := ioutil.ReadAll(res.Body)
+
+		fmt.Println(string(body))
+	}
+
 	Client = session
 }
 
