@@ -151,3 +151,20 @@ func GetBadges(galo *entities.User) []*Cosmetic {
 	}
 	return badges
 }
+
+func FindRandomSkin(galo *entities.Rooster) entities.Item {
+	skinArr := utils.Filter(Cosmetics, func(c *Cosmetic) bool {
+		return c.Type == Skin && c.Extra == galo.Type
+	})
+
+	selected := skinArr[utils.RandInt(len(skinArr))]
+	i := utils.GetIndex(Cosmetics, func(c *Cosmetic) bool {
+		return c.Name == selected.Name
+	})
+
+	return entities.Item{
+		ItemID: i,
+		Type:   entities.CosmeticType,
+		Equip:  true,
+	}
+}

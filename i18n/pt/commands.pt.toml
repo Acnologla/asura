@@ -8,13 +8,13 @@ other="Veja meu ping"
 other="Convide o bot para seu servidor"
 
 [AvatarHelp]
-other="Veja o avatar de um usuario"
+other="Veja o avatar de um usuário"
 
 [AvatarsHelp]
 other="Veja os avatares antigos de um usuario"
 
 [Private]
-other="O historico esse usuario é privado use /private para desprivar"
+other="O histórico desse usuário é privado use /private para desprivar"
 
 
 [NotFoundAvatars]
@@ -370,14 +370,13 @@ other="Treine seu galo ganhando dinheiro e xp"
 other="**{{.}}** gostaria de treinar seu galo?"
 
 [TrainLose]
-other="Parabens {{.}}, você perdeu. Use /train para treinar novamente"
+other="Infelizmente {{.username}}, você perdeu. Mas por bondade, você ganhou **{{.money}}** de dinheiro e **{{.xp}}** de xp. Use /train para treinar novamente"
 
 [TrainWin]
 other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhou **{{.bpXP}}** de XP para o passe de batalha"
 
 [TrainLimit]
 other="Voce excedeu seu limite de trains ganhos por dia. Faltam {{.hours}} horas e {{.minutes}} minutos para voce poder usar mais"
-
 
 [ChangeNameHelp]
 other="Troque o nome do seu galo equipado"
