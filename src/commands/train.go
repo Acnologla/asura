@@ -5,6 +5,7 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
+	"asura/src/rinha/engine"
 	"asura/src/telemetry"
 	"asura/src/utils"
 	"context"
@@ -165,7 +166,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 		lockEvent(ctx, discordUser.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
 		defer unlockEvent(ctx, discordUser.ID)
-		/*userAdv := entities.User{
+		userAdv := entities.User{
 			Galos: []*entities.Rooster{&galoAdv},
 		}
 		winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
@@ -176,8 +177,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			AdvName:     "Clone de " + rinha.Classes[galoAdv.Type].Name,
 			AuthorLevel: rinha.CalcLevel(galo.Xp),
 			AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
-		}, false)*/
-		winner := 1
+		}, false)
 		if winner == -1 {
 			return
 		}
