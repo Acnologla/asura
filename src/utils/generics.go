@@ -21,3 +21,25 @@ func GetDefault[T any]() T {
 	var result T
 	return result
 }
+
+func Filter[T any](arr []T, b func(T) bool) []T {
+	result := []T{}
+
+	for _, elem := range arr {
+		if b(elem) {
+			result = append(result, elem)
+		}
+	}
+
+	return result
+}
+
+func GetIndex[T any](arr []T, b func(T) bool) int {
+	for i, elem := range arr {
+		if b(elem) {
+			return i
+		}
+	}
+
+	return -1
+}

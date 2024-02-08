@@ -5,7 +5,6 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
-	"asura/src/rinha/engine"
 	"asura/src/telemetry"
 	"asura/src/utils"
 	"context"
@@ -166,7 +165,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 		lockEvent(ctx, discordUser.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
 		defer unlockEvent(ctx, discordUser.ID)
-		userAdv := entities.User{
+		/*userAdv := entities.User{
 			Galos: []*entities.Rooster{&galoAdv},
 		}
 		winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
@@ -177,7 +176,8 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			AdvName:     "Clone de " + rinha.Classes[galoAdv.Type].Name,
 			AuthorLevel: rinha.CalcLevel(galo.Xp),
 			AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
-		}, false)
+		}, false)*/
+		winner := 1
 		if winner == -1 {
 			return
 		}
@@ -248,7 +248,6 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			}
 			bpXP := 0
 			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
-
 				if rinha.IsVip(&u) {
 					xpOb += 10
 					money += 2
@@ -321,21 +320,37 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			galo.Xp += xpOb
 			sendLevelUpEmbed(ctx, itc, galo, discordUser, xpOb)
 		} else {
+			xpO := utils.RandInt(5) + 1
+			moneyO := utils.RandInt(2) + 1
 
 			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 				u.Lose++
+				u.Money += moneyO
+
+				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+					r.Xp += xpO
+					return r
+				})
+
 				return u
-			})
+			}, "Galos", "Items")
+
 			ch.CreateMessage(&disgord.CreateMessage{
 				Embeds: []*disgord.Embed{
 					{
-						Color:       16711680,
-						Title:       "Train",
-						Description: translation.T("TrainLose", translation.GetLocale(itc), discordUser.Username),
+						Color: 16711680,
+						Title: "Train",
+						Description: translation.T("TrainLose", translation.GetLocale(itc), map[string]interface{}{
+							"username": discordUser.Username,
+							"xp":       xpO,
+							"money":    moneyO,
+						}),
 					},
 				},
 			})
 
+			galo.Xp += xpO
+			sendLevelUpEmbed(ctx, itc, galo, discordUser, xpO)
 		}
 	})
 	return nil
