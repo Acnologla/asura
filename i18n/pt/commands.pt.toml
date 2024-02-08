@@ -8,13 +8,13 @@ other="Veja meu ping"
 other="Convide o bot para seu servidor"
 
 [AvatarHelp]
-other="Veja o avatar de um usuario"
+other="Veja o avatar de um usuário"
 
 [AvatarsHelp]
 other="Veja os avatares antigos de um usuario"
 
 [Private]
-other="O historico esse usuario é privado use /private para desprivar"
+other="O histórico desse usuário é privado use /private para desprivar"
 
 
 [NotFoundAvatars]
@@ -377,7 +377,6 @@ other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e
 
 [TrainLimit]
 other="Voce excedeu seu limite de trains ganhos por dia. Faltam {{.hours}} horas e {{.minutes}} minutos para voce poder usar mais"
-
 
 [ChangeNameHelp]
 other="Troque o nome do seu galo equipado"
