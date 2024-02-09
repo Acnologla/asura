@@ -19,13 +19,16 @@ func init() {
 			Name:        "user",
 			Type:        disgord.OptionTypeUser,
 			Description: "user avatar",
-			Required:    true,
+			Required:    false,
 		}),
 	})
 }
 
 func runAvatar(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	user := utils.GetUser(itc, 0)
+	user := itc.Member.User
+	if len(itc.Data.Options) > 0 {
+		user = utils.GetUser(itc, 0)
+	}
 	avatar, _ := user.AvatarURL(1024, true)
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,

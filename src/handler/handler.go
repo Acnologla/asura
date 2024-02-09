@@ -8,7 +8,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -109,57 +109,46 @@ func Run(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInt
 	return res
 }
 
-func findCommand(name string, commands []*disgord.ApplicationCommand) bool {
+func findCommand(name string, commands []*disgord.ApplicationCommand) *disgord.ApplicationCommand {
 	for _, command := range commands {
 		if command.Name == name {
-			return true
+			return command
 		}
 	}
 
-	return false
+	return nil
 }
 
 func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
-	if command.Description != realCommand.Description {
+	if command.Description != realCommand.Description || len(command.Options) != len(realCommand.Options) {
 		return true
 	}
-	if len(command.Options) != len(realCommand.Options) {
-		return true
-	}
+
 	for i, option := range command.Options {
-		if option.Name != realCommand.Options[i].Name {
+		realOption := realCommand.Options[i]
+		if option.Name != realOption.Name || option.Type != realOption.Type ||
+			option.Description != realOption.Description || option.Required != realOption.Required ||
+			option.MaxValue != realOption.MaxValue || option.MinValue != realOption.MinValue ||
+			option.Autocomplete != realOption.Autocomplete {
 			return true
 		}
-		if option.Type != realCommand.Options[i].Type {
-			return true
-		}
-		if option.Description != realCommand.Options[i].Description {
-			return true
-		}
-		if option.Required != realCommand.Options[i].Required {
-			return true
-		}
-
-		if option.MaxValue != realCommand.Options[i].MaxValue {
-			return true
-		}
-		if option.MinValue != realCommand.Options[i].MinValue {
-
-			return true
-		}
-
-		if option.Autocomplete != realCommand.Options[i].Autocomplete {
-			return true
-		}
-
 	}
+
 	return false
 }
 
-func Init(appID, token string, session *disgord.Client) {
-	var commands []*disgord.ApplicationCommand
+func createDiscordCommand(name string, command Command) disgord.ApplicationCommand {
+	return disgord.ApplicationCommand{
+		Name:              name,
+		DefaultPermission: true,
+		Type:              disgord.ApplicationCommandChatInput,
+		Options:           command.Options,
+		Description:       command.Description,
+	}
+}
 
-	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
+func getExistingCommands(appID, endpoint, token string) []*disgord.ApplicationCommand {
+	var commands []*disgord.ApplicationCommand
 	request, err := http.NewRequest("GET", endpoint, nil)
 
 	if err != nil {
@@ -174,41 +163,58 @@ func Init(appID, token string, session *disgord.Client) {
 		log.Fatal(err)
 	}
 
+	return commands
+}
+
+func uploadCommands(appID, endpoint, token string, commands []disgord.ApplicationCommand) {
+	cmds, _ := json.Marshal(commands)
+	reader := bytes.NewBuffer(cmds)
+	req, _ := http.NewRequest("PUT", endpoint, reader)
+	req.Header.Add("Authorization", "Bot "+token)
+	req.Header.Add("Content-Type", "application/json")
+	res, err := client.Do(req)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(body))
+}
+
+func Init(appID, token string, session *disgord.Client) {
 	var newCommands []disgord.ApplicationCommand
 
-	for name, command := range Commands {
-		if !findCommand(name, commands) {
-			newCommand := disgord.ApplicationCommand{
-				Name:              name,
-				DefaultPermission: true,
-				Type:              disgord.ApplicationCommandChatInput,
-				Options:           command.Options,
-				Description:       command.Description,
-			}
-			newCommands = append(newCommands, newCommand)
+	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
+	commands := getExistingCommands(appID, endpoint, token)
+	needUpload := false
 
-			for _, commandAlias := range command.Aliases {
-				newCommand.Name = commandAlias
-				newCommands = append(newCommands, newCommand)
+	for _, command := range commands {
+		realCommand, hasCommand := Commands[command.Name]
+
+		if hasCommand {
+			if HasChanged(command, realCommand) {
+				needUpload = true
 			}
+
+			newCommands = append(newCommands, createDiscordCommand(command.Name, realCommand))
+
+			delete(Commands, command.Name)
 		}
 	}
 
-	if len(newCommands) > 0 {
-		cmds, _ := json.Marshal(newCommands)
-		reader := bytes.NewBuffer(cmds)
-		req, _ := http.NewRequest("PUT", endpoint, reader)
-		req.Header.Add("Authorization", "Bot "+token)
-		req.Header.Add("Content-Type", "application/json")
-		res, err := client.Do(req)
+	if len(Commands) != 0 {
+		needUpload = true
 
-		if err != nil {
-			log.Fatal(err)
+		for name, command := range Commands {
+			newCommands = append(newCommands, createDiscordCommand(name, command))
 		}
+	}
 
-		body, _ := ioutil.ReadAll(res.Body)
-
-		fmt.Println(string(body))
+	if needUpload {
+		fmt.Println("Upando comandos novos!")
+		uploadCommands(appID, endpoint, token, newCommands)
 	}
 
 	Client = session

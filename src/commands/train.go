@@ -327,10 +327,14 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				u.Lose++
 				u.Money += moneyO
 
-				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-					r.Xp += xpO
-					return r
-				})
+				if galo.Resets > 2 {
+					xpO = 0
+				} else {
+					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+						r.Xp += xpO
+						return r
+					})
+				}
 
 				return u
 			}, "Galos", "Items")

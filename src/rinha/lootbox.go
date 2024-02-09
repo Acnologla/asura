@@ -78,6 +78,27 @@ func GetLbIndex(name string) int {
 	return -1
 }
 
+func GetLootboxQuantity(lootboxes Lootboxes, lootboxType string) int {
+	switch lootboxType {
+	case "comum":
+		return lootboxes.Common
+	case "rara":
+		return lootboxes.Rare
+	case "epica":
+		return lootboxes.Epic
+	case "lendaria":
+		return lootboxes.Legendary
+	case "items":
+		return lootboxes.Items
+	case "cosmetica":
+		return lootboxes.Cosmetic
+	case "normal":
+		return lootboxes.Normal
+	default:
+		return 0
+	}
+}
+
 func CalcPity(pity int) float64 {
 	return (float64(pity) * PityMultiplier) / 100
 }

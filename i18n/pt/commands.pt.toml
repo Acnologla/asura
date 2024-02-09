@@ -142,7 +142,7 @@ other="Compre uma lootbox"
 other="Use `/lootbox buy` para comprar lootbox\nUse `/lootbox open` para abrir lootbox\nUse `/changename` para trocar o nome do galo (precisa de 100 money)\n{{.}}\n\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**"
 
 [LootboxBuyDone]
-other="Comprou a lootbox {{.}} com sucesso"
+other="Comprou **{{.q}}** lootboxes **{{.lb}}** com sucesso"
 
 [NoMoney]
 other="Dinheiro insuficiente use **/lootbox** para ver seu dinheiro"

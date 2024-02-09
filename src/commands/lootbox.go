@@ -131,7 +131,10 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
-						Content: translation.T("LootboxBuyDone", translation.GetLocale(interaction), lb),
+						Content: translation.T("LootboxBuyDone", translation.GetLocale(interaction), map[string]interface{}{
+							"lb": lb,
+							"q":  1,
+						}),
 					},
 				})
 			} else {
