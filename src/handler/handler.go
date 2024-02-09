@@ -120,39 +120,20 @@ func findCommand(name string, commands []*disgord.ApplicationCommand) *disgord.A
 }
 
 func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
-	if command.Description != realCommand.Description {
+	if command.Description != realCommand.Description || len(command.Options) != len(realCommand.Options) {
 		return true
 	}
-	if len(command.Options) != len(realCommand.Options) {
-		return true
-	}
+
 	for i, option := range command.Options {
-		if option.Name != realCommand.Options[i].Name {
+		realOption := realCommand.Options[i]
+		if option.Name != realOption.Name || option.Type != realOption.Type ||
+			option.Description != realOption.Description || option.Required != realOption.Required ||
+			option.MaxValue != realOption.MaxValue || option.MinValue != realOption.MinValue ||
+			option.Autocomplete != realOption.Autocomplete {
 			return true
 		}
-		if option.Type != realCommand.Options[i].Type {
-			return true
-		}
-		if option.Description != realCommand.Options[i].Description {
-			return true
-		}
-		if option.Required != realCommand.Options[i].Required {
-			return true
-		}
-
-		if option.MaxValue != realCommand.Options[i].MaxValue {
-			return true
-		}
-		if option.MinValue != realCommand.Options[i].MinValue {
-
-			return true
-		}
-
-		if option.Autocomplete != realCommand.Options[i].Autocomplete {
-			return true
-		}
-
 	}
+
 	return false
 }
 
@@ -207,31 +188,32 @@ func Init(appID, token string, session *disgord.Client) {
 
 	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
 	commands := getExistingCommands(appID, endpoint, token)
+	needUpload := false
 
-	for name, command := range Commands {
-		discordCommand := findCommand(name, commands)
+	for _, command := range commands {
+		realCommand, hasCommand := Commands[command.Name]
 
-		if discordCommand == nil {
-			newCommand := createDiscordCommand(name, command)
-			newCommands = append(newCommands, newCommand)
-
-			for _, commandAlias := range command.Aliases {
-				newCommand.Name = commandAlias
-				newCommands = append(newCommands, newCommand)
-			}
-		} else if HasChanged(discordCommand, command) {
-			fmt.Println("um comando mudou")
-			newCommands = make([]disgord.ApplicationCommand, 0)
-
-			for name, command := range Commands {
-				newCommands = append(newCommands, createDiscordCommand(name, command))
+		if hasCommand {
+			if HasChanged(command, realCommand) {
+				needUpload = true
 			}
 
-			break
+			newCommands = append(newCommands, createDiscordCommand(command.Name, realCommand))
+
+			delete(Commands, command.Name)
 		}
 	}
 
-	if len(newCommands) > 0 {
+	if len(Commands) != 0 {
+		needUpload = true
+
+		for name, command := range Commands {
+			newCommands = append(newCommands, createDiscordCommand(name, command))
+		}
+	}
+
+	if needUpload {
+		fmt.Println("Upando comandos novos!")
 		uploadCommands(appID, endpoint, token, newCommands)
 	}
 

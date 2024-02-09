@@ -88,6 +88,29 @@ func (adapter UserAdapterPsql) InsertItem(ctx context.Context, id disgord.Snowfl
 	return err
 }
 
+func (adapter UserAdapterPsql) InsertManyItems(ctx context.Context, id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType, quantity int) error {
+	var itemUpdate *entities.Item
+	for _, item := range items {
+		if item.Type == itemType && item.ItemID == itemID {
+			itemUpdate = item
+		}
+	}
+	if itemUpdate != nil {
+		itemUpdate.Quantity += quantity
+		_, err := adapter.Db.NewUpdate().Model(itemUpdate).Where("id = ?", itemUpdate.ID).Exec(ctx)
+
+		return err
+	}
+	newItem := entities.Item{
+		Type:     itemType,
+		Quantity: quantity,
+		ItemID:   itemID,
+		UserID:   id,
+	}
+	_, err := adapter.Db.NewInsert().Model(&newItem).Exec(ctx)
+	return err
+}
+
 func (adapter UserAdapterPsql) RemoveItem(ctx context.Context, items []*entities.Item, itemUUID uuid.UUID) error {
 	for _, item := range items {
 		if item.ID == itemUUID {
