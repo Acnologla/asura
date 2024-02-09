@@ -20,6 +20,7 @@ type UserAdapter interface {
 	InsertManyItems(ctx context.Context, id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType, quantity int) error
 	UpdateItem(ctx context.Context, user *entities.User, id uuid.UUID, callback func(entities.Item) entities.Item) error
 	RemoveItem(ctx context.Context, items []*entities.Item, itemUUID uuid.UUID) error
+	RemoveManyItems(ctx context.Context, items []*entities.Item, itemUUID uuid.UUID, quantity int) error
 	InsertRooster(ctx context.Context, rooster *entities.Rooster) error
 	RemoveRooster(ctx context.Context, id uuid.UUID) error
 	UpdateRooster(ctx context.Context, user *entities.User, id uuid.UUID, callback func(entities.Rooster) entities.Rooster) error
