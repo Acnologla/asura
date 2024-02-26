@@ -28,6 +28,9 @@ func GetRank(u *entities.User) *Rank {
 			i = j - 1
 			break
 		}
+		if j == len(Ranks)-1 {
+			i = j
+		}
 	}
 
 	if i == -1 {

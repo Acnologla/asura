@@ -30,6 +30,7 @@ func init() {
 	if len(rinha.Sprites) > 0 {
 		for _, sprite := range rinha.Sprites[0] {
 			img, _ := utils.DownloadImage(sprite)
+			fmt.Println(sprite)
 			downloadedSprites = append(downloadedSprites, resize.Resize(55, 55, img, resize.Lanczos3))
 		}
 	}
