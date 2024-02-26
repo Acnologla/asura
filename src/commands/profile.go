@@ -30,7 +30,6 @@ func init() {
 	if len(rinha.Sprites) > 0 {
 		for _, sprite := range rinha.Sprites[0] {
 			img, _ := utils.DownloadImage(sprite)
-			fmt.Println(sprite)
 			downloadedSprites = append(downloadedSprites, resize.Resize(55, 55, img, resize.Lanczos3))
 		}
 	}
@@ -179,11 +178,16 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			if len(badges) <= badgeN {
 				break
 			}
+
 			badge := badges[badgeN]
-			badgeImg, _ := utils.DownloadImage(badge.Value)
+			badgeImg, err := utils.DownloadImage(badge.Value)
+			badgeN++
+
+			if err != nil {
+				continue
+			}
 			badgeImg = resize.Resize(40, 40, badgeImg, resize.Lanczos3)
 
-			badgeN++
 			dc.DrawImage(badgeImg, 10+i*47, 345+j*47)
 		}
 	}
@@ -246,6 +250,7 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	var b bytes.Buffer
 	pw := io.Writer(&b)
 	png.Encode(pw, dc.Image())
+	fmt.Println("Returning")
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
