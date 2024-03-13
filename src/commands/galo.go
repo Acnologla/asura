@@ -55,8 +55,6 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	avatar, err := utils.DownloadImage(rinha.GetGaloImage(galo, u.Items))
 
 	if err != nil {
-		fmt.Println("erro gal img")
-		fmt.Println(err)
 		return nil
 	}
 
@@ -71,8 +69,7 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 
 	img, err := utils.DownloadImage(rinha.GetBackground(&u))
 	if err != nil {
-		fmt.Println("erro gal img bg")
-		fmt.Println(rinha.GetBackground(&u))
+
 		fmt.Println(err)
 		return nil
 	}
