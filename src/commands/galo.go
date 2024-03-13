@@ -71,6 +71,9 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 
 	img, err := utils.DownloadImage(rinha.GetBackground(&u))
 	if err != nil {
+		fmt.Println("erro gal img bg")
+		fmt.Println(rinha.GetBackground(&u))
+		fmt.Println(err)
 		return nil
 	}
 	img = resize.Resize(320, 200, img, resize.Lanczos3)
