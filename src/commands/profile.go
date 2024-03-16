@@ -29,7 +29,13 @@ var downloadedSprites = []image.Image{}
 func init() {
 	if len(rinha.Sprites) > 0 {
 		for _, sprite := range rinha.Sprites[0] {
-			img, _ := utils.DownloadImage(sprite)
+			img, err := utils.DownloadImage(sprite)
+			if err != nil {
+				fmt.Println(sprite)
+				fmt.Println(err)
+				downloadedSprites = append(downloadedSprites, image.NewRGBA(image.Rect(0, 0, 55, 55)))
+				continue
+			}
 			downloadedSprites = append(downloadedSprites, resize.Resize(55, 55, img, resize.Lanczos3))
 		}
 	}
