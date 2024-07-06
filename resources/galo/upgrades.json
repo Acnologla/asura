@@ -1,7 +1,7 @@
 [
   {
     "name": "Utilitarios",
-    "value": "Ganha 1 de xp a mais por treino",
+    "value": "Ganha 3 de xp a mais por treino",
     "childs": [
       {
         "name": "Sorte aumentada",
@@ -43,11 +43,11 @@
         "childs": [
           {
             "name": "Rinhas ricas",
-            "value": "Rinhas dão um de dinheiro extra",
+            "value": "Rinhas dão 3 de dinheiro extra",
             "childs": [
               {
                 "name": "Mais treino",
-                "value": "30 treinos extras por dia"
+                "value": "40 treinos extras por dia"
               },
               {
                 "name": "MissoesXP",
@@ -57,11 +57,11 @@
           },
           {
             "name": "Rinhas habilidosas",
-            "value": "Rinhas dão dois de xp extra",
+            "value": "Rinhas dão 6 de xp extra",
             "childs": [
               {
                 "name": "Rinhas mais habilidosas",
-                "value": "Rinhas dão tres de xp extra"
+                "value": "Rinhas dão 10 de xp extra"
               },
               {
                 "name": "MissoesDinheiro",
@@ -75,29 +75,29 @@
   },
   {
     "name": "Buff de vida",
-    "value": "Seu galo começa com 10 de vida extra nas batalhas",
+    "value": "Seu galo começa com 20 de vida extra nas batalhas",
     "childs": [
       {
         "name": "Buff de dano",
-        "value": "Os ataques do seu galo tem 2 de dano adicional",
+        "value": "Os ataques do seu galo tem 5 de dano adicional",
         "childs": [
           {
             "name": "Buff de dano",
-            "value": "Os ataques do seu galo tem 2 de dano adicional",
+            "value": "Os ataques do seu galo tem mais 10 de dano adicional",
             "childs": [
               {
                 "name": "Buff de dano aprimorado",
-                "value": "Os ataques do seu galo tem 3 de dano adicional"
+                "value": "Os ataques do seu galo tem mais 20 de dano adicional"
               }
             ]
           },
           {
             "name": "Efeitos mais fortes",
-            "value": "Os Efeitos do seu galo tem 2 de dano adicional",
+            "value": "Os Efeitos do seu galo tem 10 de dano adicional",
             "childs": [
               {
                 "name": "Efeitos ainda mais fortes",
-                "value": "Os Efeitos do seu galo tem 3 de dano adicional"
+                "value": "Os Efeitos do seu galo tem mais 20 de dano adicional"
               }
             ]
           }
@@ -105,29 +105,29 @@
       },
       {
         "name": "Buff de vida",
-        "value": "Seu galo começa com 20 de vida extra nas batalhas",
+        "value": "Seu galo começa com 45 de vida extra nas batalhas",
         "childs": [
           {
             "name": "Regeneração",
-            "value": "Seu galo regenera 3 de vida a cada ataque",
+            "value": "Seu galo regenera 5 de vida a cada ataque",
             "childs": [
               {
                 "name": "Regeneração Amplificada",
-                "value": "Seu galo regenera 6 de vida a cada ataque"
+                "value": "Seu galo regenera 12 de vida a cada ataque"
               },
               {
                 "name": "Degeneração",
-                "value": "O galo do oponente perde 3 de vida a cada ataque"
+                "value": "O galo do oponente perde 12 de vida a cada ataque"
               }
             ]
           },
           {
             "name": "Mais vida",
-            "value": "Seu galo começa com mais 20 de vida extra nas batalhas",
+            "value": "Seu galo começa com 65 de vida extra nas batalhas",
             "childs": [
               {
                 "name": "Intankavel",
-                "value": "Seu galo começa com mais 24 de vida extra nas batalhas"
+                "value": "Seu galo começa com 95 de vida extra nas batalhas"
               }
             ]
           }
@@ -175,7 +175,7 @@
       },
       {
         "name": "Voodoo",
-        "value": "O galo do seu oponente começa com 5 de vida a menos",
+        "value": "O galo do seu oponente começa com 10 de vida a menos",
         "childs": [
           {
             "name": "Fraqueza",
@@ -183,17 +183,17 @@
             "childs": [
               {
                 "name": "Fraqueza amplificada",
-                "value": "O galo do oponente começa 2 niveis a menos"
+                "value": "O galo do oponente começa 3 niveis a menos"
               }
             ]
           },
           {
             "name": "Voodoo melhorado",
-            "value": "O galo do seu oponente começa com 15 de vida a menos",
+            "value": "O galo do seu oponente começa com 30 de vida a menos",
             "childs": [
               {
                 "name": "Voodo eterno",
-                "value": "O galo do seu oponente começa com 30 de vida a menos"
+                "value": "O galo do seu oponente começa com 50 de vida a menos"
               }
             ]
           }

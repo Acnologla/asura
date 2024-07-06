@@ -39,7 +39,7 @@ func init() {
 	})
 }
 
-var evolvedPrice = 25
+var evolvedPrice = 10
 
 func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User

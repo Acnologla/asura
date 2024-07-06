@@ -55,12 +55,12 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 		user = round.Attacker.User
 		if HasUpgrade(user.Upgrades, 1, 1, 0) {
 			if HasUpgrade(user.Upgrades, 1, 1, 0, 1) {
-				round.Target.Life -= 3
+				round.Target.Life -= 12
 			}
 			if HasUpgrade(user.Upgrades, 1, 1, 0, 0) {
-				round.Attacker.Life += 3
+				round.Attacker.Life += 7
 			}
-			round.Attacker.Life += 3
+			round.Attacker.Life += 5
 		}
 	} else {
 		reflected = true
@@ -75,15 +75,18 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 		min, max := CalcDamage(round.Skill, galo)
 		attack_damage = int(float32(Between([2]int{min, max})))
 	}
+
+	attack_damage += user.Attributes[1]
 	if HasUpgrade(user.Upgrades, 1, 0) {
-		attack_damage += 2
+		attack_damage += 5
 		if HasUpgrade(user.Upgrades, 1, 0, 0) {
-			attack_damage += 2
+			attack_damage += 10
 			if HasUpgrade(user.Upgrades, 1, 0, 0, 0) {
-				attack_damage += 3
+				attack_damage += 20
 			}
 		}
 	}
+
 	if HasUpgrade(user.Upgrades, 2, 0, 1) {
 		critChance := 9
 		if HasUpgrade(user.Upgrades, 2, 0, 1, 0) {
@@ -176,9 +179,9 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 				}
 			}
 			if HasUpgrade(ataccker.User.Upgrades, 1, 0, 1) {
-				effect_damage += 2
+				effect_damage += 10
 				if HasUpgrade(ataccker.User.Upgrades, 1, 0, 1, 0) {
-					effect_damage += 3
+					effect_damage += 20
 				}
 			}
 			if effect_damage >= receiver.Life {

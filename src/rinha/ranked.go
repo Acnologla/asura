@@ -40,9 +40,9 @@ func GetRank(u *entities.User) *Rank {
 	return Ranks[i]
 }
 
-const BASE_RANK = 10
-const MIN_RANK = 3
-const MAX_RANK = 15
+const BASE_RANK = 15
+const MIN_RANK = 5
+const MAX_RANK = 25
 
 func CalcRank(winnerRank, loserRank int) int {
 	diff := float64(winnerRank - loserRank)

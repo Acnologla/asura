@@ -312,9 +312,9 @@ func GetNextSkill(galo entities.Rooster) []*Skill {
 
 func GetNewRooster() int {
 	rand := utils.RandInt(100)
-	if 3 >= rand {
+	if 4 >= rand {
 		return GetRandByType(Epic)
-	} else if 8 >= rand {
+	} else if 10 >= rand {
 		return GetRandByType(Rare)
 	}
 	return GetRandByType(Common)
@@ -361,7 +361,7 @@ func GetItemByID(items []*entities.Item, id uuid.UUID) *entities.Item {
 func CalcLimit(user *entities.User) int {
 	limit := BASE_LIMIT
 	if HasUpgrade(user.Upgrades, 0, 1, 0, 0) {
-		limit += 30
+		limit += 40
 	}
 	return limit
 }

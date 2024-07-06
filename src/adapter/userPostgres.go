@@ -131,6 +131,29 @@ func (adapter UserAdapterPsql) SortUsers(ctx context.Context, limit int, propert
 	return
 }
 
+func (adapter UserAdapterPsql) GetRoosterPosMultiple(ctx context.Context, user entities.User, p1, p2 string, v1, v2 int) int {
+	count, _ := adapter.Db.NewSelect().Model((*entities.Rooster)(nil)).
+		Where(fmt.Sprintf("%s > ? OR (%s = ? AND %s > ?)", p1, p1, p2), v1, v1, v2).
+		Column("userid").
+		Group("userid").
+		Count(ctx)
+
+	return count
+}
+
+func (adapter UserAdapterPsql) GetPosMultiple(ctx context.Context, user entities.User, p1, p2 string, v1, v2 int) int {
+	count, _ := adapter.Db.NewSelect().Model((*entities.User)(nil)).
+		Where(fmt.Sprintf("%s > ? OR (%s = ? AND %s > ?)", p1, p1, p2), v1, v1, v2).
+		Count(ctx)
+
+	return count
+}
+
+func (adapter UserAdapterPsql) GetPos(ctx context.Context, user entities.User, property string, data func(u *entities.User) int) int {
+	count, _ := adapter.Db.NewSelect().Model((*entities.User)(nil)).Where(fmt.Sprintf("%s > %d", property, data(&user))).Count(ctx)
+	return count
+}
+
 func (adapter UserAdapterPsql) SortUsersByRooster(ctx context.Context, limit int, propertys ...string) (users []*entities.User) {
 	var roosters []*entities.Rooster
 	query := adapter.Db.NewSelect().Model(&roosters)
@@ -200,10 +223,10 @@ func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User
 		return 0
 	}
 
-	xpOb := utils.RandInt(5) + 2
+	xpOb := utils.RandInt(7) + 2
 
 	if isVip {
-		xpOb += 2
+		xpOb += 4
 	}
 
 	user.BattlePass += xpOb

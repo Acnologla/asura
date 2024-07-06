@@ -89,6 +89,14 @@ func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	rankType := itc.Data.Options[0].Name
 	rankName := itc.Data.Options[0].Options[0].Name
 	var text string
+	uRank := -1
+	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos")
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: "Carregando...",
+		},
+	})
 	if rankType == "usuario" {
 		var users []*entities.User
 		var data func(u *entities.User) int
@@ -98,26 +106,33 @@ func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			data = func(u *entities.User) int {
 				return (u.DungeonReset * len(rinha.Dungeon)) + u.Dungeon
 			}
+			uRank = database.User.GetPosMultiple(ctx, user, "dungeonreset", "dungeon", user.DungeonReset, user.Dungeon)
 		case "money":
 			users = database.User.SortUsers(ctx, DEFAULT_RANK_LIMIT, "money")
 			data = func(u *entities.User) int {
 				return u.Money
 			}
+			uRank = database.User.GetPos(ctx, user, "money", data)
 		case "level":
 			users = database.User.SortUsersByRooster(ctx, DEFAULT_RANK_LIMIT, "resets", "xp")
 			data = func(u *entities.User) int {
 				return rinha.CalcLevel(u.Galos[0].Xp)
 			}
+			gal := rinha.GetEquippedGalo(&user)
+			uRank = database.User.GetRoosterPosMultiple(ctx, user, "resets", "xp", gal.Resets, gal.Xp)
 		case "vitorias":
 			users = database.User.SortUsers(ctx, DEFAULT_RANK_LIMIT, "win")
 			data = func(u *entities.User) int {
 				return u.Win
 			}
+			uRank = database.User.GetPos(ctx, user, "win", data)
+
 		case "derrotas":
 			users = database.User.SortUsers(ctx, DEFAULT_RANK_LIMIT, "lose")
 			data = func(u *entities.User) int {
 				return u.Lose
 			}
+			uRank = database.User.GetPos(ctx, user, "lose", data)
 		}
 		for i, user := range users {
 			u, err := handler.Client.User(user.ID).Get()
@@ -150,16 +165,27 @@ func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			text += fmt.Sprintf("[**%d**] - %s\n%s: %d\n", i+1, clan.Name, rankNameToType[rankName], data(clan))
 		}
 	}
-	return &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Embeds: []*disgord.Embed{
-				{
-					Title:       rankName + " Rank",
-					Color:       65535,
-					Description: text,
-				},
+	response := &disgord.CreateInteractionResponseData{
+		Embeds: []*disgord.Embed{
+			{
+				Title:       rankName + " Rank",
+				Color:       65535,
+				Description: text,
 			},
 		},
 	}
+
+	if uRank != -1 {
+		response.Embeds[0].Footer = &disgord.EmbedFooter{
+			Text: fmt.Sprintf("Sua posição: %d", uRank+1),
+		}
+	}
+
+	str := ""
+	handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+		Embeds:  &response.Embeds,
+		Content: &str,
+	})
+
+	return nil
 }

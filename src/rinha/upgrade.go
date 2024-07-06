@@ -3,7 +3,6 @@ package rinha
 import (
 	"asura/src/entities"
 	"fmt"
-	"math"
 )
 
 type Upgrade struct {
@@ -26,12 +25,22 @@ func HasUpgrade(upgrades []int, upgradeList ...int) bool {
 	return isFalse
 }
 
-func CalcUserXp(galo *entities.User) int {
-	n := len(galo.Upgrades)
-	if n == 0 {
+func CalcUserXp(user *entities.User) int {
+	n := len(user.Upgrades)
+	switch n {
+	case 0:
 		return 150
+	case 1:
+		return 800
+	case 2:
+		return 5000
+	case 3:
+		return 15000
+	case 4:
+		return 50000
+	default:
+		return 100000
 	}
-	return 250 * (6 * int(math.Pow(float64(n), 2)))
 }
 
 func GetCurrentUpgrade(galo *entities.User) Upgrade {

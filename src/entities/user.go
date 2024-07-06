@@ -91,4 +91,5 @@ type User struct {
 	DailyStrikes    int               `bun:"dailystrikes"`
 	Pity            int               `bun:"pity"`
 	BattlePass      int               `bun:"battlepass"`
+	Attributes      [3]int            `bun:"attributes,array"`
 }

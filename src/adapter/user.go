@@ -26,4 +26,7 @@ type UserAdapter interface {
 	SortUsers(ctx context.Context, limit int, propertys ...string) []*entities.User
 	SortUsersByRooster(ctx context.Context, limit int, propertys ...string) []*entities.User
 	UpdateBp(ctx context.Context, user *entities.User, rooster *entities.Rooster) int
+	GetPos(ctx context.Context, user entities.User, property string, data func(u *entities.User) int) int
+	GetPosMultiple(ctx context.Context, user entities.User, p1, p2 string, v1, v2 int) int
+	GetRoosterPosMultiple(ctx context.Context, user entities.User, p1, p2 string, v1, v2 int) int
 }

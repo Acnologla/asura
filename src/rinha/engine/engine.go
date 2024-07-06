@@ -101,7 +101,7 @@ func EffectToStr(effect *rinha.Result, affected string, author string, battle *r
 	}
 	if effect.Effect == rinha.Damaged {
 		if effect.Skill.Self {
-			return fmt.Sprintf("%s **%s** Usou **%s** em si mesmo\n", RinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name)
+			return fmt.Sprintf("%s **%s** Usou **%s** em si (**%d** de dano)\n", RinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
 		}
 		if effect.Reflected {
 			return fmt.Sprintf("%s **%s** Refletiu o ataque **%s** causando **%d** de dano\n", RinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
@@ -308,7 +308,7 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, msg *disgord.Messa
 		for _, effect := range effects {
 			text += EffectToStr(effect, affectedName, authorName, battle)
 		}
-		if round >= 35 {
+		if round >= 60 {
 			if battle.Fighters[1].Life >= battle.Fighters[0].Life {
 				text += "\n" + options.AuthorName + " Foi executado"
 				battle.Fighters[0].Life = 0
@@ -377,15 +377,15 @@ func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, optio
 	advURL := rinha.GetGaloImage(advGal, options.GaloAdv.Items, "reverse")
 	options.Images = [2]string{authorURL, advURL}
 	if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0) {
-		advGal.Xp = rinha.CalcXP(rinha.CalcLevel(advGal.Xp)) - 1
+		advGal.Xp = rinha.CalcXP(rinha.CalcLevel(advGal.Xp) - 1)
 		if rinha.HasUpgrade(options.GaloAuthor.Upgrades, 2, 1, 0, 0) {
-			advGal.Xp = rinha.CalcXP(rinha.CalcLevel(advGal.Xp)) - 1
+			advGal.Xp = rinha.CalcXP(rinha.CalcLevel(advGal.Xp) - 2)
 		}
 	}
 	if rinha.HasUpgrade(options.GaloAdv.Upgrades, 2, 1, 0) {
-		authorGal.Xp = rinha.CalcXP(rinha.CalcLevel(authorGal.Xp)) - 1
+		authorGal.Xp = rinha.CalcXP(rinha.CalcLevel(authorGal.Xp) - 1)
 		if rinha.HasUpgrade(options.GaloAdv.Upgrades, 2, 1, 0, 0) {
-			authorGal.Xp = rinha.CalcXP(rinha.CalcLevel(authorGal.Xp)) - 1
+			authorGal.Xp = rinha.CalcXP(rinha.CalcLevel(authorGal.Xp) - 2)
 		}
 	}
 	if authorGal.Xp < 0 {

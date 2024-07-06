@@ -47,7 +47,7 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 	tempUser := database.User.GetUser(ctx, user.ID, "Missions")
 	user.Missions = tempUser.Missions
 	user.LastMission = tempUser.LastMission
-	if len(user.Missions) == 3 {
+	if len(user.Missions) == 4 {
 		database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 			u.LastMission = uint64(time.Now().Unix())
 			return u
@@ -80,18 +80,18 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 		case entities.WinGalo:
 			if winner && galoAdv.Type == mission.Adv {
 				mission.Progress++
-				if mission.Progress == 4 {
-					xp += 200
-					money += 80
+				if mission.Progress == 6 {
+					xp += 360
+					money += 135
 					done = true
 				}
 			}
 		case entities.FightGalo:
 			if galoAdv.Type == mission.Adv {
 				mission.Progress++
-				if mission.Progress == 8 {
-					xp += 200
-					money += 80
+				if mission.Progress == 12 {
+					xp += 360
+					money += 135
 					done = true
 				}
 			}
@@ -110,13 +110,13 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 		xp = xp / (galo.Resets + 1)
 	}
 	if rinha.HasUpgrade(user.Upgrades, 0, 1) {
-		money += 3
+		money += 7
 	}
 	if rinha.HasUpgrade(user.Upgrades, 0, 1, 0, 1) {
-		xp += 8
+		xp += 30
 	}
 	if rinha.HasUpgrade(user.Upgrades, 0, 1, 1, 1) {
-		money += 3
+		money += 7
 	}
 	if len(toRemove) > 0 {
 		text := "missão"
@@ -185,15 +185,34 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 
 		completeMission(ctx, &user, &galoAdv, winner == 0, itc)
 
+		isLimit := rinha.IsInLimit(&user)
+		if isLimit {
+			need := uint64(time.Now().Unix()) - user.TrainLimitReset
+			embed := &disgord.Embed{
+				Color: 16776960,
+				Title: "Train",
+				Description: translation.T("TrainLimit", translation.GetLocale(itc), map[string]interface{}{
+					"hours":   23 - (need / 60 / 60),
+					"minutes": 59 - (need / 60 % 60),
+				}),
+			}
+			ch.CreateMessage(&disgord.CreateMessage{
+				Embeds: []*disgord.Embed{embed},
+			})
+			telemetry.Debug(fmt.Sprintf("%s in rinha limit", discordUser.Username), map[string]string{
+				"user": fmt.Sprintf("%d", discordUser.ID),
+			})
+			return
+		}
 		if winner == 0 {
 			xpOb := utils.RandInt(14) + 11
 			if rinha.HasUpgrade(user.Upgrades, 0) {
-				xpOb++
+				xpOb += 3
 				if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
-					xpOb += 2
+					xpOb += 3
 				}
 				if rinha.HasUpgrade(user.Upgrades, 0, 1, 1, 0) {
-					xpOb += 3
+					xpOb += 4
 				}
 			}
 			calc := int(rinha.Classes[galoAdv.Type].Rarity - rinha.Classes[galo.Type].Rarity)
@@ -214,7 +233,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 			}
 			if rinha.HasUpgrade(user.Upgrades, 0, 1, 0) {
-				money++
+				money += 3
 			}
 			clanMsg := ""
 			if user.TrainLimit == 0 || 1 <= ((uint64(time.Now().Unix())-user.TrainLimitReset)/60/60/24) {
@@ -225,26 +244,6 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 					u.TrainLimitReset = user.TrainLimitReset
 					return u
 				})
-			}
-
-			isLimit := rinha.IsInLimit(&user)
-			if isLimit {
-				need := uint64(time.Now().Unix()) - user.TrainLimitReset
-				embed := &disgord.Embed{
-					Color: 16776960,
-					Title: "Train",
-					Description: translation.T("TrainLimit", translation.GetLocale(itc), map[string]interface{}{
-						"hours":   23 - (need / 60 / 60),
-						"minutes": 59 - (need / 60 % 60),
-					}),
-				}
-				ch.CreateMessage(&disgord.CreateMessage{
-					Embeds: []*disgord.Embed{embed},
-				})
-				telemetry.Debug(fmt.Sprintf("%s in rinha limit", discordUser.Username), map[string]string{
-					"user": fmt.Sprintf("%d", discordUser.ID),
-				})
-				return
 			}
 			bpXP := 0
 			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
@@ -320,9 +319,13 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			galo.Xp += xpOb
 			sendLevelUpEmbed(ctx, itc, galo, discordUser, xpOb)
 		} else {
-			xpO := utils.RandInt(5) + 1
-			moneyO := utils.RandInt(2) + 1
-
+			xpO := utils.RandInt(7) + 2
+			moneyO := utils.RandInt(3) + 1
+			if galo.Resets > 0 {
+				for i := 0; i < galo.Resets; i++ {
+					xpO = int(float64(xpO) * 0.75)
+				}
+			}
 			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 				u.Lose++
 				u.Money += moneyO

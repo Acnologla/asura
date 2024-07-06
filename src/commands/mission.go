@@ -32,7 +32,7 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	text := rinha.MissionsToString(user.ID, &galo)
 	embed := &disgord.Embed{
 		Color:       65535,
-		Title:       fmt.Sprintf("Missoes (%d/3)", len(galo.Missions)),
+		Title:       fmt.Sprintf("Missoes (%d/4)", len(galo.Missions)),
 		Description: text,
 	}
 	if len(galo.Missions) != 3 {
@@ -45,7 +45,7 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		}
 	}
 	components := []*disgord.MessageComponent{}
-	if (time.Now().Unix()-int64(galo.TradeMission))/60/60/24 >= 3 {
+	if (time.Now().Unix()-int64(galo.TradeMission))/60/60/24 >= 1 {
 		for i := range galo.Missions {
 			components = append(components, &disgord.MessageComponent{
 				Type:     disgord.MessageComponentButton,

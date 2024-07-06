@@ -277,7 +277,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 								"lootbox":  lb,
 								"extraMsg": extraMsg,
 							}),
-							Title: "Lootbox open",
+							Title: fmt.Sprintf("Lootbox open (%s)", rarity.String()),
 						},
 					},
 				},
