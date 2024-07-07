@@ -184,9 +184,9 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		ch := handler.Client.Channel(itc.ChannelID)
 
 		completeMission(ctx, &user, &galoAdv, winner == 0, itc)
-
 		isLimit := rinha.IsInLimit(&user)
-		if isLimit {
+		resetLimit := user.TrainLimit == 0 || 1 <= ((uint64(time.Now().Unix())-user.TrainLimitReset)/60/60/24)
+		if isLimit && !resetLimit {
 			need := uint64(time.Now().Unix()) - user.TrainLimitReset
 			embed := &disgord.Embed{
 				Color: 16776960,
@@ -236,7 +236,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				money += 3
 			}
 			clanMsg := ""
-			if user.TrainLimit == 0 || 1 <= ((uint64(time.Now().Unix())-user.TrainLimitReset)/60/60/24) {
+			if resetLimit {
 				user.TrainLimit = 0
 				user.TrainLimitReset = uint64(time.Now().Unix())
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {

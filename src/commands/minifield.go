@@ -18,7 +18,7 @@ func init() {
 		Name:        "minifield",
 		Description: translation.T("MinifieldHelp", "pt"),
 		Run:         runMinifield,
-		Cooldown:    15,
+		Cooldown:    10,
 		Category:    handler.Games,
 	})
 }
@@ -185,6 +185,6 @@ func runMinifield(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 				Components: newMsg,
 			},
 		})
-	}, 60*2)
+	}, 60*8)
 	return nil
 }

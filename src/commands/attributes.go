@@ -24,7 +24,7 @@ func init() {
 	})
 }
 
-const MAX_POINTS = 250
+const MAX_POINTS = 300
 
 func getPointOptions(selectPoints int) []*disgord.SelectMenuOption {
 	return []*disgord.SelectMenuOption{
@@ -159,7 +159,7 @@ func runAttributes(ctx context.Context, itc *disgord.InteractionCreate) *disgord
 						if selectPoints > calcAvailPoints(u) {
 							return u
 						}
-						if u.Attributes[n-1] >= MAX_POINTS {
+						if u.Attributes[n-1] >= MAX_POINTS || u.Attributes[n-1]+selectPoints > MAX_POINTS {
 							return u
 						}
 						u.Attributes[n-1] += selectPoints
