@@ -48,7 +48,7 @@ func init() {
 			Name:        "user",
 			Type:        disgord.OptionTypeUser,
 			Description: "user profile",
-			Required:    true,
+			Required:    false,
 		}),
 	})
 }
