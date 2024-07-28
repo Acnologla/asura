@@ -78,7 +78,7 @@ func calcPoints(userDb entities.User) int {
 }
 
 func calcAvailPoints(userDb entities.User) int {
-	return calcPoints(userDb) - (userDb.Attributes[0] + userDb.Attributes[1] + userDb.Attributes[2])
+	return calcPoints(userDb) - (userDb.Attributes[0] + userDb.Attributes[1] + userDb.Attributes[2] + userDb.Attributes[3])
 }
 
 func generateDesc(userDb entities.User, selectPoints int) (desc string) {
