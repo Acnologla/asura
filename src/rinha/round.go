@@ -76,7 +76,7 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 		attack_damage = int(float32(Between([2]int{min, max})))
 	}
 
-	attack_damage += user.Attributes[1]
+	attack_damage += int(float32(user.Attributes[1]) * 0.6)
 	if HasUpgrade(user.Upgrades, 1, 0) {
 		attack_damage += 5
 		if HasUpgrade(user.Upgrades, 1, 0, 0) {
@@ -189,8 +189,9 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 			}
 			if ataccker.Galo.Type == 33 {
 				lvl := CalcLevel(ataccker.Galo.Xp)
-				ataccker.Life += int(float64(effect_damage) * (1 + (0.2 * float64(lvl/10))))
+				ataccker.Life += int(float64(effect_damage) * (1 + (0.16 * float64(lvl/10))))
 			}
+			effect_damage += int(float32(ataccker.User.Attributes[3]) * 0.3)
 			receiver.Life -= effect_damage
 		}
 	case 2:

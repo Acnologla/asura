@@ -35,6 +35,17 @@ func GenerateLootPrices() (text string) {
 	return
 }
 
+func MessageRandomLootbox() (Rarity, int) {
+	rand := utils.RandInt(100)
+	if rand < 15 {
+		return Epic, 2
+	}
+	if rand < 38 {
+		return Rare, 1
+	}
+	return Common, 0
+}
+
 func GetUserLootboxes(user *entities.User) (loot []string) {
 	for _, item := range user.Items {
 		if item.Type == entities.LootboxType {

@@ -227,7 +227,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 							UserID: itc.Member.UserID,
 							Type:   newVal,
 						})
-					} else {
+					} else if rinha.Classes[newVal].Rarity != rinha.Mythic {
 						gal := rinha.Classes[newVal]
 						money, _ := rinha.Sell(gal.Rarity, 0, 0)
 						u.Money += money

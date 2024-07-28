@@ -9,6 +9,7 @@ import (
 	"asura/src/utils"
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/andersfylling/disgord"
 )
@@ -226,7 +227,11 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		for _, member := range clan.Members {
 			user, err := handler.Client.User(disgord.Snowflake(member.ID)).Get()
 			if err == nil {
-				memberMsg += fmt.Sprintf("[**%s**] `%s` (**%d** XP)\n", member.Role.ToString(), user.Username, member.Xp)
+				username := user.Username
+				if strings.Contains(strings.ToLower(username), "deleted_user") {
+					username = user.ID.String()
+				}
+				memberMsg += fmt.Sprintf("[**%s**] `%s` (**%d** XP)\n", member.Role.ToString(), username, member.Xp)
 			}
 		}
 		if len(memberMsg) > 1000 {
