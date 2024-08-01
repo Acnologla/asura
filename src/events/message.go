@@ -117,7 +117,7 @@ func RecieveLootbox(msg *disgord.Message) {
 		randomNumber = rand.Intn(20)
 	}
 	if members > MIN_MEMBERS {
-		if randomNumber < 300 && now > cache.NewLootBoxTime && !IsFlood(msg, cache) {
+		if randomNumber < 3 && now > cache.NewLootBoxTime && !IsFlood(msg, cache) {
 			setNewLootboxTime(cache, now)
 			go SendLootbox(msg)
 		}
