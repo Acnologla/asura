@@ -240,7 +240,11 @@ func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User
 			case rinha.BattlePassMoney:
 				user.Money += currentLevel.Value
 			case rinha.BattlePassXp:
-				rooster.Xp += currentLevel.Value / (rooster.Resets + 1)
+				divider := 1
+				if rooster.Resets > 1 {
+					divider = 2
+				}
+				rooster.Xp += currentLevel.Value / divider
 			case rinha.BattlePassCoins:
 				user.AsuraCoin += currentLevel.Value
 			}

@@ -119,9 +119,9 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 	for _, rooster := range user.Galos {
 		if !rooster.Equip {
 			galo := rinha.Classes[rooster.Type]
-			lvl := int(galo.Rarity) * 50
+			lvl := int(galo.Rarity) * 75
 			if galo.Rarity >= rinha.Legendary {
-				lvl += 150
+				lvl += 330
 			}
 			if lvl > *minLevel {
 				*minLevel = lvl
@@ -140,11 +140,13 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 			switch item.Type {
 			case entities.NormalType:
 				_item := rinha.Items[item.ItemID]
-				lvl = int(_item.Level) * 50
-				if _item.Level >= 3 {
-					lvl += 100
+				if 6 > _item.Level {
+					lvl = int(_item.Level) * 70
+					if _item.Level >= 3 {
+						lvl += 250
+					}
+					name = _item.Name
 				}
-				name = _item.Name
 			case entities.CosmeticType:
 				_item := rinha.Cosmetics[item.ItemID]
 				lvl = int(_item.Rarity) * 40

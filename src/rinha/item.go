@@ -38,6 +38,7 @@ func LevelToString(level int) string {
 		3: "lendario",
 		4: "especial",
 		5: "evento",
+		6: "mitico",
 	}[level]
 }
 
@@ -106,6 +107,10 @@ func ItemToString(item *Item) string {
 	}
 	if item.Effect == 10 {
 		return "Tem chance de ganhar 1 de xp extra para seu clan nos treinos"
+	}
+	if item.Effect == 11 {
+		effect := int(math.Round((item.Payload - 1) * 100))
+		return fmt.Sprintf("Aumenta sua cura em %d%% e diminui a do oponente em %d%%", effect, effect)
 	}
 	return ""
 }

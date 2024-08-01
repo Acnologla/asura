@@ -405,7 +405,7 @@ func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, optio
 		Title: "Briga de galo",
 		Color: RinhaColors[0],
 		Footer: &disgord.EmbedFooter{
-			Text:    u.Username,
+			Text:    options.AuthorName,
 			IconURL: avatar,
 		},
 		Image: &disgord.EmbedImage{

@@ -11,36 +11,40 @@ import (
 )
 
 type Lootboxes struct {
-	Common    int
-	Rare      int
-	Epic      int
-	Legendary int
-	Items     int
-	Cosmetic  int
-	Normal    int
+	Common      int
+	Rare        int
+	Epic        int
+	Legendary   int
+	Items       int
+	Cosmetic    int
+	Normal      int
+	Mythic      int
+	ItemsMythic int
 }
 
-var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2200, 0}, {0, 3}, {0, 2}, {500, 0}}
-var LootNames = [...]string{"comum", "normal", "rara", "epica", "lendaria", "items", "cosmetica"}
+var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2200, 0}, {0, 3}, {0, 2}, {500, 0}, {-1, 10}, {-1, 20}}
+var LootNames = [...]string{"comum", "normal", "rara", "epica", "lendaria", "items", "cosmetica", "mistica", "items mistica"}
 
 func GenerateLootPrices() (text string) {
 	for i, name := range LootNames {
 		price := Prices[i][0]
-		priceText := strconv.Itoa(price)
-		if price == 0 {
-			priceText = fmt.Sprintf("%d AsuraCoins", Prices[i][1])
+		if price != -1 {
+			priceText := strconv.Itoa(price)
+			if price == 0 {
+				priceText = fmt.Sprintf("%d AsuraCoins", Prices[i][1])
+			}
+			text += fmt.Sprintf("[%s] Lootbox %s\n", priceText, name)
 		}
-		text += fmt.Sprintf("[%s] Lootbox %s\n", priceText, name)
 	}
 	return
 }
 
 func MessageRandomLootbox() (Rarity, int) {
 	rand := utils.RandInt(100)
-	if rand < 15 {
+	if rand < 17 {
 		return Epic, 2
 	}
-	if rand < 38 {
+	if rand < 41 {
 		return Rare, 1
 	}
 	return Common, 0
@@ -73,6 +77,10 @@ func GetLootboxes(user *entities.User) (lootboxes Lootboxes) {
 				lootboxes.Items += item.Quantity
 			case 6:
 				lootboxes.Cosmetic += item.Quantity
+			case 7:
+				lootboxes.Mythic += item.Quantity
+			case 8:
+				lootboxes.ItemsMythic += item.Quantity
 
 			}
 		}
@@ -106,8 +114,8 @@ func OpenEpic(pity int) (int, bool) {
 
 func OpenRare(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 160)
-	if 160+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 175)
+	if 175+pitVal >= value {
 		return GetRandByType(Epic), true
 	} else if 640 >= value {
 		return GetRandByType(Rare), false
@@ -117,8 +125,8 @@ func OpenRare(pity int) (int, bool) {
 
 func OpenNormal(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := int(CalcPity(pity) * 7)
-	if 7+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 8)
+	if 8+pitVal >= value {
 		return GetRandByType(Epic), true
 	} else if 35 >= value {
 		return GetRandByType(Rare), false
@@ -137,13 +145,22 @@ func OpenCommon(pity int) (int, bool) {
 
 func OpenLegendary(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 2)
+	pitVal := int(CalcPity(pity) * 1.8)
 	if 2+pitVal >= value {
 		return GetRandByType(Mythic), true
-	} else if 50 >= value {
+	} else if 90 >= value {
 		return GetRandByType(Legendary), false
 	}
 	return GetRandByType(Epic), false
+}
+
+func OpenMythic(pity int) (int, bool) {
+	value := utils.RandInt(1001)
+	pitVal := int(CalcPity(pity) * 40)
+	if 40+pitVal >= value {
+		return GetRandByType(Mythic), true
+	}
+	return GetRandByType(Legendary), false
 }
 
 func OpenItems(pity int) (int, bool) {
@@ -153,6 +170,15 @@ func OpenItems(pity int) (int, bool) {
 		return GetItemByLevel(4), true
 	}
 	return GetItemByLevel(3), false
+}
+
+func OpenItemsMythic(pity int) (int, bool) {
+	value := utils.RandInt(101)
+	pitVal := int(CalcPity(pity) * 2)
+	if 2+pitVal >= value {
+		return GetItemByLevel(6), true
+	}
+	return GetItemByLevel(4), false
 }
 
 func GetPrice(lootType int) (int, int) {
@@ -190,6 +216,10 @@ func Open(lootType int, user *entities.User) (int, int) {
 		gal, isRarest = OpenItems(user.Pity)
 	case 6:
 		gal, isRarest = OpenCosmetic(user.Pity)
+	case 7:
+		gal, isRarest = OpenMythic(user.Pity)
+	case 8:
+		gal, isRarest = OpenItemsMythic(user.Pity)
 	}
 
 	if isRarest {

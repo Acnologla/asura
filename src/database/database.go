@@ -27,6 +27,7 @@ type DBConfig struct {
 
 var User adapter.UserAdapter
 var Clan adapter.ClanAdapter
+var Guild adapter.GuildAdapter
 
 func GetEnvConfig() (config *DBConfig) {
 	dbconfig := os.Getenv("DB_CONFIG")
@@ -60,6 +61,9 @@ func Connect(config *DBConfig) (*bun.DB, error) {
 		Db: Database,
 	}
 	Clan = adapter.ClanAdapterPsql{
+		Db: Database,
+	}
+	Guild = adapter.GuildAdapterPsql{
 		Db: Database,
 	}
 	return Database, nil

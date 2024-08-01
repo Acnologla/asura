@@ -9,24 +9,24 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-func MissionsToString(id disgord.Snowflake, user *entities.User) string {
-	text := ""
+func MissionsToString(id disgord.Snowflake, user *entities.User) (arr []string) {
 	for _, mission := range user.Missions {
+		text := ""
 		switch mission.Type {
 		case entities.Win:
-			text += fmt.Sprintf("Vencer %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*3, mission.Progress, (mission.Level+1)*3, 45+5*mission.Level, 55*(mission.Level+1))
+			text += fmt.Sprintf("Vencer %d galos (%d/%d)\nMoney: %d\nXp:  %d", (mission.Level+1)*3, mission.Progress, (mission.Level+1)*3, 45+5*mission.Level, 55*(mission.Level+1))
 		case entities.Fight:
-			text += fmt.Sprintf("Batalhar contra %d galos (%d/%d)\nMoney: **%d**\nXp:  **%d**", (mission.Level+1)*6, mission.Progress, (mission.Level+1)*6, 45+5*mission.Level, 55*(mission.Level+1))
+			text += fmt.Sprintf("Batalhar contra %d galos (%d/%d)\nMoney: %d\nXp:  %d", (mission.Level+1)*6, mission.Progress, (mission.Level+1)*6, 45+5*mission.Level, 55*(mission.Level+1))
 		case entities.WinGalo:
 			className := Classes[mission.Adv].Name
-			text += fmt.Sprintf("Vencer contra 6 galos do tipo %s (%d/6)\nMoney: **135**\nXp:  **360**", className, mission.Progress)
+			text += fmt.Sprintf("Vencer contra 6 galos do tipo %s (%d/6)\nMoney: 135\nXp:  360", className, mission.Progress)
 		case entities.FightGalo:
 			className := Classes[mission.Adv].Name
-			text += fmt.Sprintf("Batalhar contra 12 galos do tipo %s (%d/12)\nMoney: **135**\nXp:  **360**", className, mission.Progress)
+			text += fmt.Sprintf("Batalhar contra 12 galos do tipo %s (%d/12)\nMoney: 135\nXp:  360", className, mission.Progress)
 		}
-		text += "\n"
+		arr = append(arr, text)
 	}
-	return text
+	return
 }
 
 func CreateMission() entities.Mission {

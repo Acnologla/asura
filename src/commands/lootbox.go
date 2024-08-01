@@ -45,12 +45,15 @@ func init() {
 }
 
 func GenerateBuyOptions(arr []string) (opts []*disgord.SelectMenuOption) {
-	for _, name := range arr {
-		opts = append(opts, &disgord.SelectMenuOption{
-			Label:       name,
-			Description: fmt.Sprintf("%s lootbox", name),
-			Value:       name,
-		})
+	for i, name := range arr {
+		price := rinha.Prices[i]
+		if price[0] != -1 {
+			opts = append(opts, &disgord.SelectMenuOption{
+				Label:       name,
+				Description: fmt.Sprintf("%s lootbox", name),
+				Value:       name,
+			})
+		}
 	}
 	return
 }
@@ -69,7 +72,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					{
 						Title:       "Lootbox",
 						Color:       65535,
-						Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\nPity: **%d%%**\nTreinos diarios: **%d/%d** \n\nLootbox comum: **%d**\nLootbox normal: **%d**\nLootbox rara: **%d**\nLootbox epica: **%d**\nLootbox lendaria: **%d**\nLootbox items: **%d**\nLootbox cosmetica: **%d**\n\n%s", user.Money, user.AsuraCoin, user.Pity*rinha.PityMultiplier, user.TrainLimit, rinha.CalcLimit(&user), lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic, text),
+						Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\nPity: **%d%%**\nTreinos diarios: **%d/%d** \n\nLootbox comum: **%d**\nLootbox normal: **%d**\nLootbox rara: **%d**\nLootbox epica: **%d**\nLootbox lendaria: **%d**\nLootbox items: **%d**\nLootbox cosmetica: **%d**\nLootbox mitica: **%d**\nLootbox items mitica: **%d**\n\n%s", user.Money, user.AsuraCoin, user.Pity*rinha.PityMultiplier, user.TrainLimit, rinha.CalcLimit(&user), lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic, lootbox.Mythic, lootbox.ItemsMythic, text),
 					},
 				},
 			},
@@ -162,7 +165,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					{
 						Title:       "Lootbox open",
 						Color:       65535,
-						Description: fmt.Sprintf("Lootbox comum: **%d**\nLootbox normal: **%d**\nLootbox rara: **%d**\nLootbox epica: **%d**\nLootbox lendaria: **%d**\nLootbox items: **%d**\nLootbox cosmetica: **%d**", lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic),
+						Description: fmt.Sprintf("Use **/lootbox buy** para comprar lootboxes\n\nLootbox comum: **%d**\nLootbox normal: **%d**\nLootbox rara: **%d**\nLootbox epica: **%d**\nLootbox lendaria: **%d**\nLootbox items: **%d**\nLootbox cosmetica: **%d**\nLootbox mistica: **%d**\nLootbox items mitica: **%d**", lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic, lootbox.Mythic, lootbox.ItemsMythic),
 					},
 				},
 				Components: []*disgord.MessageComponent{
@@ -202,7 +205,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				if !ok {
 					return u
 				}
-				if lb != "cosmetica" && lb != "items" {
+				if lb != "cosmetica" && lb != "items" && lb != "items mistica" {
 					if len(u.Galos) >= 10 {
 						handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -219,7 +222,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				u.Pity = pity
 				if lb == "cosmetica" {
 					database.User.InsertItem(ctx, itc.Member.UserID, u.Items, newVal, entities.CosmeticType)
-				} else if lb == "items" {
+				} else if lb == "items" || lb == "items mistica" {
 					database.User.InsertItem(ctx, itc.Member.UserID, u.Items, newVal, entities.NormalType)
 				} else {
 					if !rinha.HaveRooster(u.Galos, newVal) {
@@ -246,9 +249,9 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				winType = "cosmetico"
 				name = cosmetic.Name
 				rarity = cosmetic.Rarity
-			} else if lb == "items" {
+			} else if lb == "items" || lb == "items mistica" {
 				item := rinha.Items[newVal]
-				if item.Level == 4 {
+				if item.Level >= 4 {
 					rarity = rinha.Mythic
 				} else {
 					rarity = rinha.Legendary

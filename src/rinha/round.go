@@ -184,6 +184,8 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 					effect_damage += 20
 				}
 			}
+
+			effect_damage += int(float32(ataccker.User.Attributes[3]) * 0.4)
 			if effect_damage >= receiver.Life {
 				effect_damage = receiver.Life - 1
 			}
@@ -191,11 +193,18 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 				lvl := CalcLevel(ataccker.Galo.Xp)
 				ataccker.Life += int(float64(effect_damage) * (1 + (0.16 * float64(lvl/10))))
 			}
-			effect_damage += int(float32(ataccker.User.Attributes[3]) * 0.3)
+
 			receiver.Life -= effect_damage
 		}
 	case 2:
 		{
+			if receiver.ItemEffect == 6 {
+				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
+			}
+			if ataccker.ItemEffect == 6 {
+				effect_damage = int(ataccker.ItemPayload * (2 - float64(effect_damage)))
+			}
+
 			if round.FragilityUser == receiver {
 				effect_damage = int(float32(effect_damage) * (1 - round.Fragility))
 			}

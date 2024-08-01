@@ -67,7 +67,7 @@ func runHelp(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{{
-					Description: commandText + "\n\n[**Support**](https://discord.gg/tdVWQGV)\n[**Vote**](https://top.gg/bot/470684281102925844)\n[**Website**](https://acnologla.github.io/asura-site/)",
+					Description: commandText + "\n\n[**Como jogar rinha de galo**](https://acnologla.github.io/asura-site/tutorial)\n[Support](https://discord.gg/tdVWQGV)\n[Vote](https://top.gg/bot/470684281102925844)\n[Website](https://acnologla.github.io/asura-site/)",
 					Color:       65535,
 					Title:       "Commands",
 				}},

@@ -121,7 +121,6 @@ func initBattle(first, second *Finder) {
 		Adv: first.ID,
 	}
 	if winner == -1 {
-
 		resultFirst.Type = ArenaTie
 		resultSecond.Type = ArenaTie
 	}
@@ -138,7 +137,7 @@ func initBattle(first, second *Finder) {
 	second.C <- resultSecond
 }
 
-const MAX_RANK_DIFF = 300
+const MAX_RANK_DIFF = 550
 
 func FindFight() []int {
 	arr := []int{0}

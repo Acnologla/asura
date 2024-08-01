@@ -5,14 +5,22 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
+	"asura/src/utils"
+	"bytes"
 	"context"
 	"fmt"
+	"image/png"
+	"io"
+	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
+	"github.com/fogleman/gg"
+	"github.com/nfnt/resize"
 )
 
 func init() {
@@ -29,13 +37,77 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	user := itc.Member.User
 	galo := database.User.GetUser(ctx, user.ID, "Missions")
 	galo.Missions = getMissions(ctx, &galo)
-	text := rinha.MissionsToString(user.ID, &galo)
-	embed := &disgord.Embed{
-		Color:       65535,
-		Title:       fmt.Sprintf("Missoes (%d/4)", len(galo.Missions)),
-		Description: text,
+	texts := rinha.MissionsToString(user.ID, &galo)
+	galoImage, err := utils.DownloadImage(rinha.Sprites[0][0])
+	if err != nil {
+		return nil
 	}
-	if len(galo.Missions) != 3 {
+	re := regexp.MustCompile(`\(([^)]+)\)`)
+
+	width, height := 580, 480
+	dc := gg.NewContext(width, height)
+	dc.SetRGB(1, 1, 1)
+
+	dc.DrawRectangle(0, 0, float64(width), float64(height))
+	dc.Fill()
+	radius := 50
+	imageSize := radius * 2
+	for i, mission := range galo.Missions {
+		missionImage := galoImage
+		if mission.Adv != 0 {
+			missionImage, _ = utils.DownloadImage(rinha.Sprites[0][mission.Adv-1])
+		}
+		text := texts[i]
+		splited := strings.Split(text, "\n")
+		missionText := splited[0]
+		money := splited[1]
+		xp := splited[2]
+		img := resize.Resize(uint(imageSize), uint(imageSize), missionImage, resize.Lanczos3)
+		imageVerticalMargin := 20 + i*imageSize + 15*i
+		dc.SetRGB(0, 0, 0)
+		//radius := float64(imageSize) / (math.Sqrt(math.Pi))
+		dc.DrawCircle(float64(10+radius), float64(imageVerticalMargin+radius), float64(radius))
+		dc.Clip()
+		dc.Fill()
+		dc.DrawImage(img, 10, imageVerticalMargin)
+		dc.ResetClip()
+		dc.SetRGB(0, 0, 0)
+		textMargin := float64(imageSize + 30)
+		verticalMargin := float64(imageVerticalMargin) + 24
+		dc.LoadFontFace("./resources/Raleway-Bold.ttf", 18)
+		dc.DrawString(missionText, textMargin, verticalMargin)
+		dc.LoadFontFace("./resources/Raleway-Light.ttf", 19)
+		dc.DrawString(money, textMargin, verticalMargin+20)
+		dc.DrawString(xp, textMargin, verticalMargin+40)
+		//progress bar
+		matches := re.FindAllStringSubmatch(text, -1)
+		splitedMatches := strings.Split(matches[0][1], "/")
+		progress, _ := strconv.Atoi(splitedMatches[0])
+		total, _ := strconv.Atoi(splitedMatches[1])
+		percentange := float64(progress) / float64(total)
+		barWidth := float64(width) - 50 - textMargin
+		barHeight := 15
+		dc.DrawRoundedRectangle(textMargin, verticalMargin+50, barWidth, float64(barHeight), 4)
+		dc.SetRGB(0.8, 0.8, 0.8)
+		dc.Fill()
+		if percentange > 0 {
+			dc.SetRGB(0.2, 0.8, 0.2)
+			dc.DrawRoundedRectangle(textMargin, verticalMargin+50, barWidth*percentange, float64(barHeight), 4)
+			dc.Fill()
+		}
+	}
+
+	var b bytes.Buffer
+	pw := io.Writer(&b)
+	png.Encode(pw, dc.Image())
+	embed := &disgord.Embed{
+		Color: 65535,
+		Title: fmt.Sprintf("Missoes (%d/4)", len(galo.Missions)),
+		Image: &disgord.EmbedImage{
+			URL: "attachment://mission.png",
+		},
+	}
+	if len(galo.Missions) != 4 {
 		need := uint64(time.Now().Unix()) - galo.LastMission
 		embed.Footer = &disgord.EmbedFooter{
 			Text: translation.T("MissionTime", translation.GetLocale(itc), map[string]interface{}{
@@ -59,7 +131,13 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		Type:       disgord.MessageComponentActionRow,
 		Components: components,
 	}}
-	params := &disgord.CreateInteractionResponseData{}
+	params := &disgord.CreateInteractionResponseData{
+		Files: []disgord.CreateMessageFile{{
+			Reader:     bytes.NewReader(b.Bytes()),
+			FileName:   "mission.png",
+			SpoilerTag: false},
+		},
+	}
 	params.Embeds = []*disgord.Embed{embed}
 	if len(components) > 0 {
 		params.Components = component

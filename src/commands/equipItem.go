@@ -20,6 +20,7 @@ func init() {
 		Run:         runEquipItem,
 		Cooldown:    15,
 		Category:    handler.Profile,
+		Aliases:     []string{"item"},
 	})
 }
 

@@ -164,7 +164,7 @@
   },
   {
     "type": 0,
-    "value": 4,
+    "value": 7,
     "itemType": 1
   },
   {
@@ -182,7 +182,8 @@
     "itemType": 3
   },
   {
-    "type": 3,
-    "value": 15
+    "type": 0,
+    "value": 8,
+    "itemType": 1
   }
 ]
