@@ -85,14 +85,12 @@ func SendLootbox(msg *disgord.Message) {
 
 func GetGuildInfo(guildID string) *GuildInfo {
 	if cache[guildID] == nil {
-		fmt.Println("Creating new cache for guild", guildID)
 		cache[guildID] = &GuildInfo{}
 	}
 	return cache[guildID]
 }
 
 func IsFlood(msg *disgord.Message, cache *GuildInfo) bool {
-	fmt.Println(cache.LastUser)
 	if cache.LastUser == msg.Author.ID.String() {
 		return true
 	}
@@ -113,8 +111,6 @@ func RecieveLootbox(msg *disgord.Message) {
 		return
 	}
 	cache := GetGuildInfo(msg.GuildID.String())
-	cache.Lock()
-	defer cache.Unlock()
 	now := time.Now().Unix()
 	guild, _ := handler.Client.Cache().GetGuild(msg.GuildID)
 	members := guild.MemberCount
@@ -123,7 +119,8 @@ func RecieveLootbox(msg *disgord.Message) {
 		randomNumber = rand.Intn(20)
 	}
 	if members > MIN_MEMBERS {
-		if randomNumber < 3 && now > cache.NewLootBoxTime && !IsFlood(msg, cache) {
+		isFlood := IsFlood(msg, cache)
+		if !isFlood && randomNumber < 3 && now > cache.NewLootBoxTime {
 			setNewLootboxTime(cache, now)
 			go SendLootbox(msg)
 		}
