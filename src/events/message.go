@@ -10,12 +10,14 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/andersfylling/disgord"
 )
 
 type GuildInfo struct {
+	sync.Mutex
 	NewLootBoxTime int64
 	LastUser       string
 }
@@ -109,6 +111,8 @@ func RecieveLootbox(msg *disgord.Message) {
 		return
 	}
 	cache := GetGuildInfo(msg.GuildID.String())
+	cache.Lock()
+	defer cache.Unlock()
 	now := time.Now().Unix()
 	guild, _ := handler.Client.Cache().GetGuild(msg.GuildID)
 	members := guild.MemberCount
