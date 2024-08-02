@@ -15,12 +15,12 @@ import (
 
 func init() {
 	handler.RegisterCommand(handler.Command{
-		Name:        "equipitem",
+		Name:        "item",
 		Description: translation.T("RunEquipItem", "pt"),
 		Run:         runEquipItem,
 		Cooldown:    15,
 		Category:    handler.Profile,
-		Aliases:     []string{"item"},
+		Aliases:     []string{"equipitem"},
 	})
 }
 
