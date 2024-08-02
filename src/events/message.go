@@ -85,12 +85,14 @@ func SendLootbox(msg *disgord.Message) {
 
 func GetGuildInfo(guildID string) *GuildInfo {
 	if cache[guildID] == nil {
+		fmt.Println("Creating new cache for guild", guildID)
 		cache[guildID] = &GuildInfo{}
 	}
 	return cache[guildID]
 }
 
 func IsFlood(msg *disgord.Message, cache *GuildInfo) bool {
+	fmt.Println(cache.LastUser)
 	if cache.LastUser == msg.Author.ID.String() {
 		return true
 	}
