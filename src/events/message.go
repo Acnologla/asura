@@ -103,7 +103,7 @@ func setNewLootboxTime(cache *GuildInfo, now int64) {
 	cache.NewLootBoxTime = now + 60*60*1.5 + int64(randomMinutes)*60
 }
 
-const MIN_MEMBERS = 1 //change later to a real value
+const MIN_MEMBERS = 35 //change later to a real value
 
 func RecieveLootbox(msg *disgord.Message) {
 	guildDb := database.Guild.GetGuild(context.Background(), msg.GuildID)
@@ -116,6 +116,7 @@ func RecieveLootbox(msg *disgord.Message) {
 	members := guild.MemberCount
 	randomNumber := rand.Intn(100 + int(members/100))
 	if msg.GuildID.String() == "710179373860519997" {
+		fmt.Println("Asura guild")
 		randomNumber = rand.Intn(20)
 	}
 	if members > MIN_MEMBERS {
@@ -126,8 +127,6 @@ func RecieveLootbox(msg *disgord.Message) {
 		}
 	}
 }
-
-var activeGuilds = []string{"710179373860519997", "597089324114116635", "1189997575697338441", "862649888290242570", "1266918944971948225", "1177549280156860427"}
 
 func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
 	msg := h.Message
@@ -140,8 +139,8 @@ func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
 					break
 				}
 			}
-
-			if utils.Includes(activeGuilds, msg.GuildID.String()) {
+			shardID := disgord.ShardID(msg.GuildID, 8)
+			if shardID == 7 {
 				RecieveLootbox(msg)
 			}
 		}
