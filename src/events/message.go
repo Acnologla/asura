@@ -80,7 +80,7 @@ func SendLootbox(msg *disgord.Message) {
 				},
 			})
 
-		}, 100)
+		}, 300)
 	}
 }
 
@@ -121,7 +121,7 @@ func RecieveLootbox(msg *disgord.Message) {
 	}
 	if members > MIN_MEMBERS {
 		isFlood := IsFlood(msg, cache)
-		if !isFlood && randomNumber < 3 && now > cache.NewLootBoxTime {
+		if !isFlood && randomNumber < 5 && now > cache.NewLootBoxTime {
 			setNewLootboxTime(cache, now)
 			telemetry.Debug(fmt.Sprintf("%s drop lootbox", guild.Name), map[string]string{
 				"id": msg.GuildID.String(),
@@ -142,10 +142,7 @@ func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
 					break
 				}
 			}
-			shardID := disgord.ShardID(msg.GuildID, 8)
-			if shardID > 5 {
-				RecieveLootbox(msg)
-			}
+			RecieveLootbox(msg)
 		}
 	}
 }
