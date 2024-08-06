@@ -5,6 +5,7 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
+	"asura/src/telemetry"
 	"asura/src/utils"
 	"context"
 	"fmt"
@@ -116,13 +117,15 @@ func RecieveLootbox(msg *disgord.Message) {
 	members := guild.MemberCount
 	randomNumber := rand.Intn(100 + int(members/100))
 	if msg.GuildID.String() == "710179373860519997" {
-		fmt.Println("Asura guild")
 		randomNumber = rand.Intn(20)
 	}
 	if members > MIN_MEMBERS {
 		isFlood := IsFlood(msg, cache)
 		if !isFlood && randomNumber < 3 && now > cache.NewLootBoxTime {
 			setNewLootboxTime(cache, now)
+			telemetry.Debug(fmt.Sprintf("%s drop lootbox", guild.Name), map[string]string{
+				"id": msg.GuildID.String(),
+			})
 			go SendLootbox(msg)
 		}
 	}
@@ -140,7 +143,7 @@ func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
 				}
 			}
 			shardID := disgord.ShardID(msg.GuildID, 8)
-			if shardID == 7 {
+			if shardID > 5 {
 				RecieveLootbox(msg)
 			}
 		}
