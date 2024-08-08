@@ -59,7 +59,11 @@ func SendLootbox(msg *disgord.Message) {
 		},
 	}
 	newMessage, err := msg.Reply(context.Background(), handler.Client, message)
+	guild, _ := handler.Client.Cache().GetGuild(msg.GuildID)
 	if err == nil {
+		telemetry.Debug(fmt.Sprintf("%s drop lootbox", guild.Name), map[string]string{
+			"id": msg.GuildID.String(),
+		})
 		handler.RegisterHandler(newMessage.ID, func(ic *disgord.InteractionCreate) {
 			done := false
 			if done {
@@ -104,7 +108,7 @@ func setNewLootboxTime(cache *GuildInfo, now int64) {
 	cache.NewLootBoxTime = now + 60*60*1.5 + int64(randomMinutes)*60
 }
 
-const MIN_MEMBERS = 35 //change later to a real value
+const MIN_MEMBERS = 25 //change later to a real value
 
 func RecieveLootbox(msg *disgord.Message) {
 	guildDb := database.Guild.GetGuild(context.Background(), msg.GuildID)
@@ -121,11 +125,8 @@ func RecieveLootbox(msg *disgord.Message) {
 	}
 	if members > MIN_MEMBERS {
 		isFlood := IsFlood(msg, cache)
-		if !isFlood && randomNumber < 5 && now > cache.NewLootBoxTime {
+		if !isFlood && randomNumber < 7 && now > cache.NewLootBoxTime {
 			setNewLootboxTime(cache, now)
-			telemetry.Debug(fmt.Sprintf("%s drop lootbox", guild.Name), map[string]string{
-				"id": msg.GuildID.String(),
-			})
 			go SendLootbox(msg)
 		}
 	}
