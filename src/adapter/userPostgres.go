@@ -105,6 +105,9 @@ func (adapter UserAdapterPsql) RemoveItem(ctx context.Context, items []*entities
 }
 
 func (adapter UserAdapterPsql) InsertRooster(ctx context.Context, rooster *entities.Rooster) error {
+	if rooster.Type == 0 {
+		panic("rooster type is 0")
+	}
 	_, err := adapter.Db.NewInsert().Model(rooster).Exec(ctx)
 	return err
 }
