@@ -102,10 +102,17 @@ func GetGaloImage(galo *entities.Rooster, items []*entities.Item, def ...string)
 		return cosmetic.Value
 	}
 
-	if len(def) > 0 {
-		return Sprites[1][galo.Type-1]
+	i := galo.Type - 1
+	if i == -1 {
+		i = 0
+		fmt.Println(galo.UserID)
 	}
-	return Sprites[0][galo.Type-1]
+
+	if len(def) > 0 {
+		return Sprites[1][i]
+	}
+
+	return Sprites[0][i]
 }
 
 func SellCosmetic(cosmetic Cosmetic) int {
