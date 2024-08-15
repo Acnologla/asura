@@ -418,7 +418,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}
 	case "battle":
 		lastTime := cache.Client.Get(ctx, fmt.Sprintf("clanBattle:%s", clan.Name))
-		if lastTime.Val() != "1" {
+		if lastTime.Val() != "" {
 			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
