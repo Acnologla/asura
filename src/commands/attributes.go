@@ -88,7 +88,7 @@ func generateDesc(userDb entities.User, selectPoints int) (desc string) {
 	luckyPoints := userDb.Attributes[2]
 	effectDamagePoints := userDb.Attributes[3]
 	desc += fmt.Sprintf("Vida extra: **%d**\nDano extra: **%d**\nSorte: **%d**\nDano em efeitos: **%d**", healthPoints, attackPoints, luckyPoints, effectDamagePoints)
-	desc += "\n\nVoce ganha um ponto a cada 100 rinhas\nUm ponto em vida te da 3 de vida\nUm ponto em dano te da 0,6 de dano em cada ataque\nUm ponto em dano de efeito adiciona 0,4 de dano em efeitos"
+	desc += "\n\nVoce ganha um ponto a cada 100 rinhas\nUm ponto em vida te da 3 de vida\nUm ponto em dano te da 0,6 de dano em cada ataque\nUm ponto em dano de efeito adiciona 0,5 de dano em efeitos"
 	desc += fmt.Sprintf("\n\nVoce tem **%d** pontos para gastar\nVoce esta colocando atualmente **%d** pontos", points, selectPoints)
 	return
 }

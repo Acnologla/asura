@@ -104,8 +104,8 @@ func IsFlood(msg *disgord.Message, cache *GuildInfo) bool {
 }
 
 func setNewLootboxTime(cache *GuildInfo, now int64) {
-	randomMinutes := utils.RandInt(150)
-	cache.NewLootBoxTime = now + 60*60*1.5 + int64(randomMinutes)*60
+	randomMinutes := utils.RandInt(230)
+	cache.NewLootBoxTime = now + 60*60*2.3 + int64(randomMinutes)*60
 }
 
 const MIN_MEMBERS = 25 //change later to a real value
@@ -125,7 +125,7 @@ func RecieveLootbox(msg *disgord.Message) {
 	}
 	if members > MIN_MEMBERS {
 		isFlood := IsFlood(msg, cache)
-		if !isFlood && randomNumber < 7 && now > cache.NewLootBoxTime {
+		if !isFlood && randomNumber < 3 && now > cache.NewLootBoxTime {
 			setNewLootboxTime(cache, now)
 			go SendLootbox(msg)
 		}

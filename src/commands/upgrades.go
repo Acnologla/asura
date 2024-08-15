@@ -28,7 +28,7 @@ func init() {
 			MinValue:    0,
 			MaxValue:    4,
 		}),
-		Category: handler.Profile,
+		Category: handler.Rinha,
 	})
 }
 

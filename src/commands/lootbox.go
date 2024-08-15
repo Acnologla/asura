@@ -72,7 +72,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					{
 						Title:       "Lootbox",
 						Color:       65535,
-						Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\nPity: **%d%%**\nTreinos diarios: **%d/%d** \n\nLootbox comum: **%d**\nLootbox normal: **%d**\nLootbox rara: **%d**\nLootbox epica: **%d**\nLootbox lendaria: **%d**\nLootbox items: **%d**\nLootbox cosmetica: **%d**\nLootbox mitica: **%d**\nLootbox items mitica: **%d**\n\n%s", user.Money, user.AsuraCoin, user.Pity*rinha.PityMultiplier, user.TrainLimit, rinha.CalcLimit(&user), lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic, lootbox.Mythic, lootbox.ItemsMythic, text),
+						Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\nPity: **%d%%**\nTreinos diarios: **%d/%d** \n\n<:lt_comum:1271148114102714479> Lootbox comum: **%d**\n<:lt_normal:1271148156414984286> Lootbox normal: **%d**\n<:lt_rara:1271148187725594644> Lootbox rara: **%d**\n<:lt_epica:1271148219623145493> Lootbox epica: **%d**\n<:lt_lendaria:1271148244767998115> Lootbox lendaria: **%d**\n<:lt_itens:1271148268969267201> Lootbox items: **%d**\n<:lt_cosmetica:1271148294952980614> Lootbox cosmetica: **%d**\n<:lt_mitica:1271148323344093246> Lootbox mitica: **%d**\n<:lt_itens_mitica:1271148347700412578>  Lootbox items mitica: **%d**\n\n%s\n**Entre no meu [Servidor](https://discord.gg/tdVWQGV) para ganhar um bonus no daily**", user.Money, user.AsuraCoin, user.Pity*rinha.PityMultiplier, user.TrainLimit, rinha.CalcLimit(&user), lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic, lootbox.Mythic, lootbox.ItemsMythic, text),
 					},
 				},
 			},
@@ -165,7 +165,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					{
 						Title:       "Lootbox open",
 						Color:       65535,
-						Description: fmt.Sprintf("Use **/lootbox buy** para comprar lootboxes\n\nLootbox comum: **%d**\nLootbox normal: **%d**\nLootbox rara: **%d**\nLootbox epica: **%d**\nLootbox lendaria: **%d**\nLootbox items: **%d**\nLootbox cosmetica: **%d**\nLootbox mistica: **%d**\nLootbox items mitica: **%d**", lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic, lootbox.Mythic, lootbox.ItemsMythic),
+						Description: fmt.Sprintf("Use **/lootbox buy** para comprar lootboxes\n\n<:lt_comum:1271148114102714479> Lootbox comum: **%d**\n<:lt_normal:1271148156414984286> Lootbox normal: **%d**\n<:lt_rara:1271148187725594644> Lootbox rara: **%d**\n<:lt_epica:1271148219623145493> Lootbox epica: **%d**\n<:lt_lendaria:1271148244767998115> Lootbox lendaria: **%d**\n<:lt_itens:1271148268969267201> Lootbox items: **%d**\n<:lt_cosmetica:1271148294952980614> Lootbox cosmetica: **%d**\n<:lt_mitica:1271148323344093246> Lootbox mistica: **%d**\n<:lt_itens_mitica:1271148347700412578>  Lootbox items mitica: **%d**", lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic, lootbox.Mythic, lootbox.ItemsMythic),
 					},
 				},
 				Components: []*disgord.MessageComponent{

@@ -14,6 +14,7 @@ func init() {
 		Description: "Comando do evento de natal",
 		Run:         runNatal,
 		Cooldown:    5,
+		Category:    handler.Rinha,
 	})
 }
 

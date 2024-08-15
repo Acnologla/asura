@@ -29,7 +29,7 @@ func init() {
 			Name:        "user",
 			Description: "user trade",
 		}),
-		Category: handler.Profile,
+		Category: handler.Rinha,
 	})
 }
 
@@ -121,7 +121,7 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 			galo := rinha.Classes[rooster.Type]
 			lvl := int(galo.Rarity) * 75
 			if galo.Rarity >= rinha.Legendary {
-				lvl += 330
+				lvl += 550
 			}
 			if lvl > *minLevel {
 				*minLevel = lvl
@@ -141,9 +141,9 @@ func itemsToOptions(user *entities.User, minLevel *int) (opts []*disgord.SelectM
 			case entities.NormalType:
 				_item := rinha.Items[item.ItemID]
 				if 6 > _item.Level {
-					lvl = int(_item.Level) * 70
+					lvl = int(_item.Level) * 75
 					if _item.Level >= 3 {
-						lvl += 250
+						lvl += 550
 					}
 					name = _item.Name
 				}

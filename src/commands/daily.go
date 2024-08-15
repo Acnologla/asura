@@ -26,8 +26,7 @@ func init() {
 func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	galo := database.User.GetUser(ctx, itc.Member.UserID)
 	topGGCalc := (uint64(time.Now().Unix()) - galo.Daily) / 60 / 60 / 12
-	voted := rinha.HasVoted(itc.Member.UserID)
-	if voted && topGGCalc >= 1 {
+	if topGGCalc >= 1 {
 		strike := 0
 		money := 0
 		xp := 0
@@ -41,6 +40,11 @@ func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if rinha.IsVip(&u) {
 				money += int(float64(money) * 0.2)
 				xp += int(float64(xp) * 0.2)
+			}
+			member, err := handler.Client.Guild(710179373860519997).Member(itc.Member.UserID).Get()
+			if err != nil && member != nil {
+				money += 30
+				xp += 60
 			}
 			u.DailyStrikes++
 			u.Money += money
@@ -69,23 +73,15 @@ func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 	} else {
 		need := uint64(time.Now().Unix()) - galo.Daily
-		if topGGCalc >= 1 && !voted {
-			return &disgord.CreateInteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.CreateInteractionResponseData{
-					Content: translation.T("VoteMessage", translation.GetLocale(itc)),
-				},
-			}
-		} else {
-			return &disgord.CreateInteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.CreateInteractionResponseData{
-					Content: translation.T("TimeMessage", translation.GetLocale(itc), map[string]interface{}{
-						"minutes": 59 - (need / 60 % 60),
-						"hours":   11 - (need / 60 / 60),
-					}),
-				},
-			}
+
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: translation.T("TimeMessage", translation.GetLocale(itc), map[string]interface{}{
+					"minutes": 59 - (need / 60 % 60),
+					"hours":   11 - (need / 60 / 60),
+				}),
+			},
 		}
 	}
 }

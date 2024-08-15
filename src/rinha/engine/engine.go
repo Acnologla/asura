@@ -101,7 +101,7 @@ func EffectToStr(effect *rinha.Result, affected string, author string, battle *r
 	}
 	if effect.Effect == rinha.Damaged {
 		if effect.Skill.Self {
-			return fmt.Sprintf("%s **%s** Usou **%s** em si (**%d** de dano)\n", RinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
+			return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", RinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
 		}
 		if effect.Reflected {
 			return fmt.Sprintf("%s **%s** Refletiu o ataque **%s** causando **%d** de dano\n", RinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
@@ -294,7 +294,7 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, msg *disgord.Messa
 	for {
 		effects := battle.Play(-1)
 		var text string
-
+		options.Images[0] = rinha.GetGaloImage(battle.Fighters[0].Galo, battle.Fighters[0].User.Items)
 		authorName := GetUsername(battle.Fighters[0].Username, options.AuthorName)
 		affectedName := options.AdvName
 

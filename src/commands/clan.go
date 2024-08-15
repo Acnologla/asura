@@ -1,15 +1,19 @@
 package commands
 
 import (
+	"asura/src/cache"
 	"asura/src/database"
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
+	"asura/src/rinha/engine"
 	"asura/src/translation"
 	"asura/src/utils"
 	"context"
 	"fmt"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/andersfylling/disgord"
 )
@@ -42,6 +46,11 @@ func init() {
 				Type:        disgord.OptionTypeSubCommand,
 				Name:        "mission",
 				Description: "Clan mission",
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "battle",
+				Description: "Batalhe um chefe",
 			},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
@@ -135,6 +144,22 @@ func generateUpgradesOptions() (opts []*disgord.SelectMenuOption) {
 	}
 	return
 }
+
+func getBattleEmbed(users []*disgord.User) *disgord.Embed {
+	msg := "Membros que iram participar da batalha: \n\n"
+	for _, user := range users {
+		msg += fmt.Sprintf("%s\n", user.Mention())
+	}
+	return &disgord.Embed{
+		Title:       "Clan Battle",
+		Description: msg,
+		Color:       65535,
+		Footer: &disgord.EmbedFooter{
+			Text: "Em dois minutos a batalha ira começar (maximo de 5 jogadores)",
+		},
+	}
+}
+
 func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	command := itc.Data.Options[0].Name
 	user := database.User.GetUser(ctx, itc.Member.UserID)
@@ -390,6 +415,161 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Data: &disgord.CreateInteractionResponseData{
 				Content: translation.T(msg, translation.GetLocale(itc), user.Username),
 			},
+		}
+	case "battle":
+		lastTime := cache.Client.Get(ctx, fmt.Sprintf("clanBattle:%s", clan.Name))
+		if lastTime.Val() != "1" {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "O chefe só estará disponível daqui a quatro horas. Por favor, aguarde um pouco",
+				},
+			}
+		}
+		duration := time.Hour * 4
+		cache.Client.Set(ctx, fmt.Sprintf("clanBattle:%s", clan.Name), "1", duration)
+		users := []*disgord.User{
+			itc.Member.User,
+		}
+		err := handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: []*disgord.Embed{getBattleEmbed(users)},
+				Components: []*disgord.MessageComponent{
+					{
+						Type: disgord.MessageComponentActionRow,
+						Components: []*disgord.MessageComponent{
+							{
+								Type:     disgord.MessageComponentButton,
+								Label:    "Entrar",
+								CustomID: "joinBattle",
+								Style:    disgord.Primary,
+							},
+						},
+					},
+				},
+			},
+		})
+		if err != nil {
+			fmt.Println(err)
+			return nil
+		}
+		isInUsers := func(user *disgord.User) bool {
+			for _, u := range users {
+				if u.ID == user.ID {
+					return true
+				}
+			}
+			return false
+		}
+		mutex := sync.Mutex{}
+		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+			mutex.Lock()
+			defer mutex.Unlock()
+			if isInUsers(ic.Member.User) {
+				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.CreateInteractionResponseData{
+						Content: "Voce ja esta na batalha",
+					},
+				})
+				return
+			}
+			if len(users) >= 5 {
+				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.CreateInteractionResponseData{
+						Content: "A batalha ja chegou ao maximo (5)",
+					},
+				})
+				return
+			}
+			user := database.User.GetUser(ctx, ic.Member.User.ID)
+			newuserClan := database.Clan.GetUserClan(ctx, user.ID, "Members")
+			if newuserClan.Clan.Name != clan.Name {
+				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.CreateInteractionResponseData{
+						Content: "Voce não são do mesmo clan",
+					},
+				})
+				return
+			}
+			users = append(users, ic.Member.User)
+			handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+				Embeds: &([]*disgord.Embed{getBattleEmbed(users)}),
+			})
+			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: fmt.Sprintf("%s Entrou na batalha", ic.Member.User.Mention()),
+				},
+			})
+		}, 20)
+		var usersDb []*entities.User
+		for _, user := range users {
+			u := database.User.GetUser(ctx, user.ID, "Galos")
+			usersDb = append(usersDb, &u)
+		}
+		var highestRarity rinha.Rarity = 0
+		sumOfXp := 0
+		sumOfAttributes := 0
+		sumOfResets := 0
+		for _, user := range usersDb {
+			galo := rinha.GetEquippedGalo(user)
+			class := rinha.Classes[galo.Type]
+			if class.Rarity > highestRarity {
+				highestRarity = class.Rarity
+			}
+			sumOfXp += galo.Xp
+			sumOfResets += galo.Resets
+			sumOfAttributes += user.Attributes[0] + user.Attributes[1]
+		}
+		galoAdv := entities.Rooster{
+			Xp:      sumOfXp * (2 + len(usersDb) + sumOfResets),
+			Type:    rinha.GetRandByType(highestRarity),
+			Equip:   true,
+			Evolved: true,
+			Resets:  3*len(usersDb) + 1 + sumOfResets,
+		}
+		userAdv := entities.User{
+			Galos:      []*entities.Rooster{&galoAdv},
+			Attributes: [4]int{sumOfAttributes, sumOfAttributes, 0, sumOfAttributes},
+		}
+		usernames := make([]string, len(usersDb))
+		for i, user := range users {
+			usernames[i] = user.Username
+		}
+		galo := rinha.GetEquippedGalo(usersDb[0])
+		winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
+			GaloAuthor:  usersDb[0],
+			GaloAdv:     &userAdv,
+			IDs:         [2]disgord.Snowflake{users[0].ID},
+			AuthorName:  rinha.GetName(users[0].Username, *galo),
+			AdvName:     "Chefe do clan",
+			AuthorLevel: rinha.CalcLevel(galo.Xp),
+			AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
+			Waiting:     usersDb,
+			Usernames:   usernames,
+		}, false)
+		if winner == 0 {
+			for _, user := range users {
+				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
+					u.Money += 300
+					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+						r.Xp += 350
+						return r
+					})
+					return u
+				}, "Galos")
+			}
+			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **300**\nXp: **350**",
+			})
+		} else {
+			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+				Content: "O boss venceu",
+			})
 		}
 	case "banco":
 		return &disgord.CreateInteractionResponse{

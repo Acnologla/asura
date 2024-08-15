@@ -185,7 +185,7 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 				}
 			}
 
-			effect_damage += int(float32(ataccker.User.Attributes[3]) * 0.4)
+			effect_damage += int(float32(ataccker.User.Attributes[3]) * 0.5)
 			if effect_damage >= receiver.Life {
 				effect_damage = receiver.Life - 1
 			}
