@@ -426,6 +426,14 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			}
 		}
+		if 8 > len(clan.Members) || rinha.ClanXpToLevel(clan.Xp) < 3 {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "O clan precisa de no minimo 8 pessoas para batalhar e ser level 3",
+				},
+			}
+		}
 		duration := time.Hour * 4
 		cache.Client.Set(ctx, fmt.Sprintf("clanBattle:%s", clan.Name), "1", duration)
 		users := []*disgord.User{
@@ -490,7 +498,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
-						Content: "Voce não são do mesmo clan",
+						Content: fmt.Sprintf("%s Voces não são do mesmo clan", ic.Member.User.Mention()),
 					},
 				})
 				return
@@ -505,7 +513,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 					Content: fmt.Sprintf("%s Entrou na batalha", ic.Member.User.Mention()),
 				},
 			})
-		}, 20)
+		}, 120)
 		var usersDb []*entities.User
 		for _, user := range users {
 			u := database.User.GetUser(ctx, user.ID, "Galos")
@@ -530,7 +538,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Type:    rinha.GetRandByType(highestRarity),
 			Equip:   true,
 			Evolved: true,
-			Resets:  3*len(usersDb) + 1 + sumOfResets,
+			Resets:  2*len(usersDb) + sumOfResets,
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
@@ -557,7 +565,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 					u.Money += 300
 					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-						r.Xp += 350
+						r.Xp += 400
 						return r
 					})
 					return u
