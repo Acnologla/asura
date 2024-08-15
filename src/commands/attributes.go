@@ -19,7 +19,7 @@ func init() {
 		Description: translation.T("AtributtesHelp", "pt"),
 		Run:         runAttributes,
 		Cooldown:    12,
-		Category:    handler.Profile,
+		Category:    handler.Rinha,
 		Aliases:     []string{"atributos"},
 	})
 }

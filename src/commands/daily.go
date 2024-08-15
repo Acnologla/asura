@@ -42,7 +42,7 @@ func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				xp += int(float64(xp) * 0.2)
 			}
 			member, err := handler.Client.Guild(710179373860519997).Member(itc.Member.UserID).Get()
-			if err != nil && member != nil {
+			if err == nil && member != nil {
 				money += 30
 				xp += 60
 			}
