@@ -483,11 +483,11 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				})
 				return
 			}
-			if len(users) >= 5 {
+			if len(users) >= 7 {
 				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
-						Content: "A batalha ja chegou ao maximo (5)",
+						Content: "A batalha ja chegou ao maximo (7)",
 					},
 				})
 				return
@@ -534,15 +534,15 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			sumOfAttributes += user.Attributes[0] + user.Attributes[1]
 		}
 		galoAdv := entities.Rooster{
-			Xp:      sumOfXp * (2 + len(usersDb) + sumOfResets),
+			Xp:      sumOfXp * (5 + (len(usersDb) / 2) + (sumOfResets / 2)),
 			Type:    rinha.GetRandByType(highestRarity),
 			Equip:   true,
 			Evolved: true,
-			Resets:  2*len(usersDb) + sumOfResets,
+			Resets:  3 + len(usersDb) + sumOfResets,
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [4]int{sumOfAttributes, sumOfAttributes, 0, sumOfAttributes},
+			Attributes: [4]int{sumOfAttributes + 150, sumOfAttributes, 0, sumOfAttributes},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {
@@ -565,14 +565,14 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 					u.Money += 300
 					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-						r.Xp += 400
+						r.Xp += 450
 						return r
 					})
 					return u
 				}, "Galos")
 			}
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **300**\nXp: **350**",
+				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **300**\nXp: **450**",
 			})
 		} else {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{

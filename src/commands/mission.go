@@ -117,7 +117,7 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		}
 	}
 	components := []*disgord.MessageComponent{}
-	if (time.Now().Unix()-int64(galo.TradeMission))/60/60/24 >= 1 {
+	if (time.Now().Unix()-int64(galo.TradeMission))/60/60/12 >= 1 {
 		for i := range galo.Missions {
 			components = append(components, &disgord.MessageComponent{
 				Type:     disgord.MessageComponentButton,

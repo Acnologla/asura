@@ -37,14 +37,14 @@ func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			}
 			money = 45 + u.DailyStrikes/3
 			xp = 60 + int((float64(u.DailyStrikes) * 1.25))
+			member, err := handler.Client.Guild(710179373860519997).Member(itc.Member.UserID).Get()
+			if err == nil && member != nil {
+				money += 20
+				xp += 40
+			}
 			if rinha.IsVip(&u) {
 				money += int(float64(money) * 0.2)
 				xp += int(float64(xp) * 0.2)
-			}
-			member, err := handler.Client.Guild(710179373860519997).Member(itc.Member.UserID).Get()
-			if err == nil && member != nil {
-				money += 30
-				xp += 60
 			}
 			u.DailyStrikes++
 			u.Money += money
