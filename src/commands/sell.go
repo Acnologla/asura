@@ -24,7 +24,7 @@ func init() {
 	})
 }
 
-func genSellOptions(user *entities.User, isRooster bool) (opts []*disgord.SelectMenuOption) {
+func genSellOptions(user *entities.User, isRooster bool, isCosmetic bool) (opts []*disgord.SelectMenuOption) {
 	if isRooster {
 		for _, galo := range user.Galos {
 			if !galo.Equip {
@@ -47,11 +47,11 @@ func genSellOptions(user *entities.User, isRooster bool) (opts []*disgord.Select
 			var label string
 			var itemName string
 			var price int
-			if item.Type == entities.NormalType {
+			if item.Type == entities.NormalType && !isCosmetic {
 				item := rinha.Items[item.ItemID]
 				itemName = item.Name
 				price = rinha.SellItem(*item)
-			} else if item.Type == entities.CosmeticType {
+			} else if item.Type == entities.CosmeticType && isCosmetic {
 				cosmetic := rinha.Cosmetics[item.ItemID]
 				itemName = cosmetic.Name
 				price = rinha.SellCosmetic(*cosmetic)
@@ -81,8 +81,9 @@ func genSellOptions(user *entities.User, isRooster bool) (opts []*disgord.Select
 
 func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	galo := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items")
-	optsGalos := genSellOptions(&galo, true)
-	optsItems := genSellOptions(&galo, false)
+	optsGalos := genSellOptions(&galo, true, false)
+	optsItems := genSellOptions(&galo, false, false)
+	optCosmetics := genSellOptions(&galo, false, true)
 	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
@@ -143,6 +144,19 @@ func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 						},
 					},
 				},
+				{
+					Type: disgord.MessageComponentActionRow,
+					Components: []*disgord.MessageComponent{
+						{
+							Type:        disgord.MessageComponentButton + 1,
+							Style:       disgord.Primary,
+							Placeholder: "Selecione os cosmeticos para vender",
+							CustomID:    "cosmeticSell",
+							Options:     optCosmetics,
+							MaxValues:   1,
+						},
+					},
+				},
 			},
 		},
 	})
@@ -168,7 +182,7 @@ func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				msg = "IsInRinha"
 				return u
 			}
-			if name == "itemSell" {
+			if name == "itemSell" || name == "cosmeticSell" {
 				item := rinha.GetItemByID(u.Items, itemID)
 				if item != nil {
 					database.User.RemoveItem(ctx, u.Items, itemID)

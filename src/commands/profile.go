@@ -84,6 +84,12 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	// Resize the images
 
 	galo := database.User.GetUser(ctx, user.ID, "Items", "Galos")
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: "Carregando...",
+		},
+	})
 	avatar = resize.Resize(uint(radius*2), uint(radius*2), avatar, resize.Lanczos3)
 	img, err := utils.DownloadImage(rinha.GetBackground(&galo))
 	if err != nil {
@@ -257,16 +263,16 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	var b bytes.Buffer
 	pw := io.Writer(&b)
 	png.Encode(pw, dc.Image())
-	fmt.Println("Returning")
-	return &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Files: []disgord.CreateMessageFile{{
-				Reader:     bytes.NewReader(b.Bytes()),
-				FileName:   "profile.jpg",
-				SpoilerTag: false},
-			},
-		},
-	}
+	str := ""
 
+	handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+		File: &disgord.CreateMessageFile{
+			Reader:     bytes.NewReader(b.Bytes()),
+			FileName:   "profile.jpg",
+			SpoilerTag: false,
+		},
+		Content: &str,
+	})
+
+	return nil
 }

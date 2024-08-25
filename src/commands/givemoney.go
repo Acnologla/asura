@@ -30,7 +30,7 @@ func init() {
 				Type:        disgord.OptionTypeNumber,
 				Required:    true,
 				MinValue:    0,
-				MaxValue:    12000,
+				MaxValue:    20000,
 				Name:        "money",
 				Description: "money to give",
 			}),

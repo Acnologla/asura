@@ -71,6 +71,12 @@ var attributeButtons = []*disgord.MessageComponent{
 		CustomID: "4",
 		Style:    disgord.Primary,
 	},
+	{
+		Type:     disgord.MessageComponentButton,
+		Label:    "Regeneração",
+		CustomID: "5",
+		Style:    disgord.Primary,
+	},
 }
 
 func calcPoints(userDb entities.User) int {
@@ -78,7 +84,7 @@ func calcPoints(userDb entities.User) int {
 }
 
 func calcAvailPoints(userDb entities.User) int {
-	return calcPoints(userDb) - (userDb.Attributes[0] + userDb.Attributes[1] + userDb.Attributes[2] + userDb.Attributes[3])
+	return calcPoints(userDb) - (userDb.Attributes[0] + userDb.Attributes[1] + userDb.Attributes[2] + userDb.Attributes[3] + userDb.Attributes[4])
 }
 
 func generateDesc(userDb entities.User, selectPoints int) (desc string) {
@@ -87,8 +93,9 @@ func generateDesc(userDb entities.User, selectPoints int) (desc string) {
 	attackPoints := userDb.Attributes[1]
 	luckyPoints := userDb.Attributes[2]
 	effectDamagePoints := userDb.Attributes[3]
-	desc += fmt.Sprintf("Vida extra: **%d**\nDano extra: **%d**\nSorte: **%d**\nDano em efeitos: **%d**", healthPoints, attackPoints, luckyPoints, effectDamagePoints)
-	desc += "\n\nVoce ganha um ponto a cada 100 rinhas\nUm ponto em vida te da 3 de vida\nUm ponto em dano te da 0,6 de dano em cada ataque\nUm ponto em dano de efeito adiciona 0,5 de dano em efeitos"
+	regenPoints := userDb.Attributes[4]
+	desc += fmt.Sprintf("Vida extra: **%d**\nDano extra: **%d**\nSorte: **%d**\nDano em efeitos: **%d**\nRegeneração: **%d**", healthPoints, attackPoints, luckyPoints, effectDamagePoints, regenPoints)
+	desc += "\n\nVoce ganha um ponto a cada 100 rinhas\nUm ponto em vida te da 3 de vida\nUm ponto em dano te da 0,6 de dano em cada ataque\nUm ponto em dano de efeito adiciona 0,5 de dano em efeitos\nUm ponto em regeneração faz voce regenerar 0,4 por turno"
 	desc += fmt.Sprintf("\n\nVoce tem **%d** pontos para gastar\nVoce esta colocando atualmente **%d** pontos", points, selectPoints)
 	return
 }
@@ -157,7 +164,7 @@ func runAttributes(ctx context.Context, itc *disgord.InteractionCreate) *disgord
 					}
 					selectPoints = newPoints
 				}
-				if ic.Data.CustomID == "1" || ic.Data.CustomID == "2" || ic.Data.CustomID == "3" || ic.Data.CustomID == "4" {
+				if ic.Data.CustomID == "1" || ic.Data.CustomID == "2" || ic.Data.CustomID == "3" || ic.Data.CustomID == "4" || ic.Data.CustomID == "5" {
 					n, err := strconv.Atoi(ic.Data.CustomID)
 					if err != nil {
 						return

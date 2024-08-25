@@ -169,11 +169,13 @@
   },
   {
     "name": "Samurai",
-    "rarity": 1
+    "rarity": 1,
+    "disadvantages": [12]
   },
   {
     "name": "Emo",
-    "rarity": 0
+    "rarity": 0,
+    "disadvantages": [2, 14, 31, 7]
   },
   {
     "name": "Zumbi",
@@ -181,11 +183,13 @@
   },
   {
     "name": "Dinossauro",
-    "rarity": 0
+    "rarity": 0,
+    "disadvantages": [5, 15, 25]
   },
   {
     "name": "Ar",
-    "rarity": 1
+    "rarity": 1,
+    "disadvantages": [20, 15]
   },
   {
     "name": "Fantasma",
@@ -201,7 +205,8 @@
   },
   {
     "name": "Esqueleto",
-    "rarity": 0
+    "rarity": 0,
+    "disadvantages": [6, 26, 36, 3]
   },
   {
     "name": "Slime",
@@ -209,7 +214,8 @@
   },
   {
     "name": "Militar",
-    "rarity": 1
+    "rarity": 1,
+    "disadvantages": [20]
   },
   {
     "name": "Apocalipse",
@@ -221,14 +227,21 @@
   },
   {
     "name": "Pelucia",
-    "rarity": 0
+    "rarity": 0,
+    "disadvantages": [4, 5, 12, 17]
   },
   {
     "name": "Porcelana",
-    "rarity": 0
+    "rarity": 0,
+    "disadvantages": [4, 5, 12, 17]
   },
   {
     "name": "Mumia",
-    "rarity": 1
+    "rarity": 1,
+    "disadvantages": [26]
+  },
+  {
+    "name": "Black",
+    "rarity": 5
   }
 ]

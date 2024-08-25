@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	"asura/src/translation"
 
@@ -21,7 +22,7 @@ func init() {
 		Name:        "lootbox",
 		Description: translation.T("LootboxHelp", "pt"),
 		Run:         runLootbox,
-		Cooldown:    8,
+		Cooldown:    5,
 		Category:    handler.Profile,
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
@@ -265,26 +266,67 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				rarity = galo.Rarity
 				winType = "galo"
 			}
-			handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.CreateInteractionResponseData{
-					Embeds: []*disgord.Embed{
-						{
-							Color: rarity.Color(),
-							Image: &disgord.EmbedImage{
-								URL: image,
-							},
-							Description: translation.T("LootboxOpen", translation.GetLocale(interaction), map[string]interface{}{
-								"name":     name,
-								"type":     winType,
-								"lootbox":  lb,
-								"extraMsg": extraMsg,
-							}),
-							Title: fmt.Sprintf("Lootbox open (%s)", rarity.String()),
+
+			embed := disgord.Embed{
+				Color: rarity.Color(),
+				Image: &disgord.EmbedImage{
+					URL: image,
+				},
+				Description: translation.T("LootboxOpen", translation.GetLocale(interaction), map[string]interface{}{
+					"name":     name,
+					"type":     winType,
+					"lootbox":  lb,
+					"extraMsg": extraMsg,
+				}),
+				Title: fmt.Sprintf("Lootbox open (%s)", rarity.String()),
+			}
+
+			if winType == "galo" {
+				rand := rinha.GetRand()
+				class := rinha.Classes[rand]
+				openEmbed := disgord.Embed{
+					Color: class.Rarity.Color(),
+					Image: &disgord.EmbedImage{
+						URL: rinha.Sprites[0][rand-1],
+					},
+					Title: "Abrindo lootbox",
+				}
+				err := handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.CreateInteractionResponseData{
+						Embeds: []*disgord.Embed{
+							&openEmbed,
 						},
 					},
-				},
-			})
+				})
+				if err != nil {
+					return
+				}
+				for i := 0; i < 4; i++ {
+					time.Sleep(3 * time.Second)
+					rand := rinha.GetRand()
+					openEmbed.Color = rinha.Classes[rand].Rarity.Color()
+					openEmbed.Image = &disgord.EmbedImage{
+						URL: rinha.Sprites[0][rand-1],
+					}
+					handler.Client.EditInteractionResponse(ctx, interaction, &disgord.UpdateMessage{
+						Embeds: &([]*disgord.Embed{&openEmbed}),
+					})
+				}
+				time.Sleep(3 * time.Second)
+				handler.Client.EditInteractionResponse(ctx, interaction, &disgord.UpdateMessage{
+					Embeds: &([]*disgord.Embed{&embed}),
+				})
+			} else {
+				handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.CreateInteractionResponseData{
+						Embeds: []*disgord.Embed{
+							&embed,
+						},
+					},
+				})
+			}
 			author := itc.Member.User
 			tag := author.Username + "#" + author.Discriminator.String()
 			telemetry.Debug(fmt.Sprintf("%s wins %s", tag, name), map[string]string{

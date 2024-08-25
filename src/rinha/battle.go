@@ -26,6 +26,7 @@ type Fighter struct {
 	Username    string
 	MaxLife     int
 	Effect      [4]int
+	IsBlack     bool
 }
 
 type Battle struct {
@@ -114,15 +115,15 @@ func CreateBattle(first *entities.User, sec *entities.User, noItems bool, firstI
 		firstFighter.Life -= 10
 		firstFighter.MaxLife -= 10
 	}
-	initEquips(firstFighter)
-	initEquips(secFighter)
+	initEquips(firstFighter, secFighter)
+	initEquips(secFighter, firstFighter)
 	firstFighter.ID = firstID
 	secFighter.ID = secondID
 	waitingBattle := []*Fighter{}
 	if len(waiting) > 0 {
 		for i, galo := range waiting {
 			galoFighter := InitFighter(galo, noItems)
-			initEquips(galoFighter)
+			initEquips(galoFighter, secFighter)
 			if i == 0 {
 				galoFighter = firstFighter
 			}
@@ -144,8 +145,12 @@ func CreateBattle(first *entities.User, sec *entities.User, noItems bool, firstI
 }
 
 func GetEquipedSkills(galo *entities.Rooster) []*NewSkill {
+	if galo.Type == 50 {
+		return []*NewSkill{}
+	}
 	skills := GetSkills(*galo)
 	newSkill := []*NewSkill{}
+
 	if len(skills) == 0 {
 		skills = append(skills, 0)
 	}
@@ -168,7 +173,15 @@ func GetEquipedSkills(galo *entities.Rooster) []*NewSkill {
 	return newSkill
 }
 
-func initEquips(fighter *Fighter) {
+func initEquips(fighter *Fighter, adv *Fighter) {
+	if fighter.Galo.Type == 50 {
+		fighter.IsBlack = true
+		if adv.Galo.Type != 50 {
+			fighter.Galo.Type = adv.Galo.Type
+		} else {
+			fighter.Galo.Type = 1
+		}
+	}
 	fighter.Equipped = GetEquipedSkills(fighter.Galo)
 }
 

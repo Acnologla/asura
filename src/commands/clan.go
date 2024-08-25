@@ -155,7 +155,7 @@ func getBattleEmbed(users []*disgord.User) *disgord.Embed {
 		Description: msg,
 		Color:       65535,
 		Footer: &disgord.EmbedFooter{
-			Text: "Em dois minutos a batalha ira começar (maximo de 5 jogadores)",
+			Text: "Em dois minutos a batalha ira começar (maximo de 7 jogadores)",
 		},
 	}
 }
@@ -534,15 +534,15 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			sumOfAttributes += user.Attributes[0] + user.Attributes[1]
 		}
 		galoAdv := entities.Rooster{
-			Xp:      sumOfXp * (5 + (len(usersDb) / 2) + (sumOfResets / 2)),
+			Xp:      sumOfXp * (5 + (len(usersDb) / 3) + (sumOfResets / 2)),
 			Type:    rinha.GetRandByType(highestRarity),
 			Equip:   true,
 			Evolved: true,
-			Resets:  3 + len(usersDb) + sumOfResets,
+			Resets:  5 + (len(usersDb) / 2) + sumOfResets,
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [4]int{sumOfAttributes + 150, sumOfAttributes, 0, sumOfAttributes},
+			Attributes: [5]int{sumOfAttributes + 130, 90 + (sumOfAttributes / 3), 0, sumOfAttributes, sumOfAttributes},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {
@@ -565,14 +565,14 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 					u.Money += 300
 					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-						r.Xp += 450
+						r.Xp += 500
 						return r
 					})
 					return u
 				}, "Galos")
 			}
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **300**\nXp: **450**",
+				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **300**\nXp: **500**",
 			})
 		} else {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{

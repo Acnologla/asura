@@ -350,6 +350,11 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, msg *disgord.Messa
 				} else {
 					embed.Description += fmt.Sprintf("\n**%s** venceu a batalha!", options.AuthorName)
 				}
+				for _, fighter := range battle.Fighters {
+					if fighter.IsBlack {
+						fighter.Galo.Type = 50
+					}
+				}
 				EditRinhaEmbed(msg, embed, options.MessageID)
 				return winnerTurn, battle
 			}

@@ -104,8 +104,8 @@ func IsFlood(msg *disgord.Message, cache *GuildInfo) bool {
 }
 
 func setNewLootboxTime(cache *GuildInfo, now int64) {
-	randomMinutes := utils.RandInt(250)
-	cache.NewLootBoxTime = now + 60*60*2.2 + int64(randomMinutes)*60
+	randomMinutes := utils.RandInt(310)
+	cache.NewLootBoxTime = now + 60*60*2.5 + int64(randomMinutes)*60
 }
 
 const MIN_MEMBERS = 25 //change later to a real value
@@ -125,7 +125,7 @@ func RecieveLootbox(msg *disgord.Message) {
 	}
 	if members > MIN_MEMBERS {
 		isFlood := IsFlood(msg, cache)
-		if !isFlood && randomNumber < 5 && now > cache.NewLootBoxTime {
+		if !isFlood && randomNumber < 3 && now > cache.NewLootBoxTime {
 			setNewLootboxTime(cache, now)
 			go SendLootbox(msg)
 		}
@@ -139,7 +139,7 @@ func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
 		if msg.GuildID != 0 {
 			for _, user := range msg.Mentions {
 				if user.ID.String() == appID {
-					msg.Reply(context.Background(), s, "Use /help para ver meus comandos\nCaso meus comandos não aparecam me readicione no servidor com este link:\nhttps://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%%20bot&permissions=8")
+					msg.Reply(context.Background(), s, "Use **/help** para ver meus comandos\nUse **/rinhahelp** para ver o **tutorial de rinha**")
 					break
 				}
 			}
