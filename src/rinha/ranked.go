@@ -57,8 +57,8 @@ func CalcRank(winnerRank, loserRank int) int {
 }
 
 func CalcRankedPrize(rank *Rank) (money int, xp int, asuraCoins int) {
-	money = rank.Rank
-	xp = int(float64(rank.Rank) * 2.5)
+	money = int(float64(rank.Rank) * 0.85)
+	xp = int(float64(rank.Rank) * 1.8)
 
 	if rank.Rank > 2500 {
 		money = 0

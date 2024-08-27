@@ -92,4 +92,5 @@ type User struct {
 	Pity            int               `bun:"pity"`
 	BattlePass      int               `bun:"battlepass"`
 	Attributes      [5]int            `bun:"attributes,array"`
+	LastRank        int               `bun:"lastrank"`
 }

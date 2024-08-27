@@ -542,7 +542,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [5]int{sumOfAttributes + 130, 90 + (sumOfAttributes / 3), 0, sumOfAttributes, sumOfAttributes},
+			Attributes: [5]int{sumOfAttributes + 100, 70 + (sumOfAttributes / 3), 0, sumOfAttributes, sumOfAttributes},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {
