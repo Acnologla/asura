@@ -150,7 +150,7 @@ func runRanked(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cre
 				money, xp, asuraCoins := rinha.CalcRankedPrize(newRank)
 				u.Money += money
 				u.AsuraCoin += asuraCoins
-				u.LastRank = u.Rank
+				u.LastRank = u.Rank + rinha.MAX_RANK + 1
 				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 					r.Xp += xp
 					return r

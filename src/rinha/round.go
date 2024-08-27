@@ -203,10 +203,11 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 		}
 	case 2:
 		{
-			if receiver.ItemEffect == 6 {
-				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
+			if receiver.ItemEffect == 11 {
+
+				effect_damage = int(receiver.ItemPayload * float64(effect_damage))
 			}
-			if ataccker.ItemEffect == 6 {
+			if ataccker.ItemEffect == 11 {
 				effect_damage = int(ataccker.ItemPayload * (2 - float64(effect_damage)))
 			}
 

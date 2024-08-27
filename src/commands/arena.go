@@ -17,7 +17,7 @@ func init() {
 		Name:        "arena",
 		Description: "Arena de galos",
 		Run:         runArena,
-		Cooldown:    10,
+		Cooldown:    5,
 		Category:    handler.Rinha,
 		Options: []*disgord.ApplicationCommandOption{
 			{
@@ -39,7 +39,7 @@ func init() {
 	})
 }
 
-const arenaPrice = 200
+const arenaPrice = 300
 
 func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := database.User.GetUser(ctx, itc.Member.User.ID, "Galos")
@@ -138,7 +138,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if u.ArenaWin >= 12 {
 				xp, money := rinha.CalcArena(&u)
 				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-					r.Xp += xp
+					r.Xp += xp / (r.Resets + 1)
 					return r
 				})
 				ch.CreateMessage(&disgord.CreateMessage{

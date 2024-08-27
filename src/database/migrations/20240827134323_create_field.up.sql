@@ -5,8 +5,3 @@ ALTER TABLE
     Users
 ADD
     lastRank int;
-
-ALTER TABLE
-    Users
-ADD
-    rankedLastFight BIGINT
