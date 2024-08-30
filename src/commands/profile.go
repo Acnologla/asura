@@ -197,6 +197,7 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			badgeN++
 
 			if err != nil {
+				fmt.Println(err)
 				continue
 			}
 			badgeImg = resize.Resize(40, 40, badgeImg, resize.Lanczos3)

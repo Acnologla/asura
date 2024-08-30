@@ -135,7 +135,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			if interaction.Member.UserID != itc.Member.UserID {
 				return
 			}
-			if interaction.Data.CustomID == "quantity" {
+			if interaction.Data.CustomID == "quantity" && len(interaction.Data.Values) > 0 {
 				quantity, _ = strconv.Atoi(interaction.Data.Values[0])
 				handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
