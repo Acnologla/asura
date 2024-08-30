@@ -65,7 +65,7 @@ func (adapter UserAdapterPsql) GetItems(ctx context.Context, id disgord.Snowflak
 	return items
 }
 
-func (adapter UserAdapterPsql) InsertItem(ctx context.Context, id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType) error {
+func (adapter UserAdapterPsql) InsertItemQuantity(ctx context.Context, id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType, quantity int) error {
 	var itemUpdate *entities.Item
 	for _, item := range items {
 		if item.Type == itemType && item.ItemID == itemID {
@@ -80,12 +80,16 @@ func (adapter UserAdapterPsql) InsertItem(ctx context.Context, id disgord.Snowfl
 	}
 	newItem := entities.Item{
 		Type:     itemType,
-		Quantity: 1,
+		Quantity: quantity,
 		ItemID:   itemID,
 		UserID:   id,
 	}
 	_, err := adapter.Db.NewInsert().Model(&newItem).Exec(ctx)
 	return err
+}
+
+func (adapter UserAdapterPsql) InsertItem(ctx context.Context, id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType) error {
+	return adapter.InsertItemQuantity(ctx, id, items, itemID, itemType, 1)
 }
 
 func (adapter UserAdapterPsql) RemoveItem(ctx context.Context, items []*entities.Item, itemUUID uuid.UUID) error {

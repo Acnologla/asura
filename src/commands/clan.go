@@ -11,6 +11,7 @@ import (
 	"asura/src/utils"
 	"context"
 	"fmt"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -24,7 +25,7 @@ func init() {
 		Description: translation.T("ClanHelp", "pt"),
 		Run:         runClan,
 		Category:    handler.Rinha,
-		Cooldown:    8,
+		Cooldown:    6,
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
@@ -46,6 +47,11 @@ func init() {
 				Type:        disgord.OptionTypeSubCommand,
 				Name:        "mission",
 				Description: "Clan mission",
+			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "membros",
+				Description: "Veja os membros do seu clan",
 			},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
@@ -240,15 +246,17 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				Content: translation.T("ClanCreated", translation.GetLocale(itc), name),
 			},
 		}
-	case "view":
+	case "membros":
 		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Carregando...",
 			},
 		})
-		level := rinha.ClanXpToLevel(clan.Xp)
 		memberMsg := ""
+		sort.SliceStable(clan.Members, func(i, j int) bool {
+			return clan.Members[i].Xp > clan.Members[j].Xp
+		})
 		for _, member := range clan.Members {
 			user, err := handler.Client.User(disgord.Snowflake(member.ID)).Get()
 			if err == nil {
@@ -259,9 +267,28 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				memberMsg += fmt.Sprintf("[**%s**] `%s` (**%d** XP)\n", member.Role.ToString(), username, member.Xp)
 			}
 		}
-		if len(memberMsg) > 1000 {
-			memberMsg = memberMsg[:1000]
+
+		if len(memberMsg) > 1650 {
+			memberMsg = memberMsg[:1650]
 		}
+
+		embed := &disgord.Embed{
+			Title: clan.Name,
+			Color: 65535,
+			Footer: &disgord.EmbedFooter{
+				Text: translation.T("ClanFooter", translation.GetLocale(itc)),
+			},
+			Description: fmt.Sprintf("Membros (**%d/%d**):\n\n%s", len(clan.Members), maxMembers, memberMsg),
+		}
+		str := ""
+		handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+			Embeds:  &([]*disgord.Embed{embed}),
+			Content: &str,
+		})
+
+		return nil
+	case "view":
+		level := rinha.ClanXpToLevel(clan.Xp)
 		benefits := rinha.GetBenefits(clan.Xp)
 		bg := clan.Background
 		embed := &disgord.Embed{
@@ -277,7 +304,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				"benefits":    benefits,
 				"members":     len(clan.Members),
 				"maxMembers":  maxMembers,
-				"membersText": memberMsg,
+				"membersText": "",
 			}),
 		}
 		if bg != "" {
@@ -285,10 +312,12 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				URL: bg,
 			}
 		}
-		str := ""
-		handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
-			Embeds:  &([]*disgord.Embed{embed}),
-			Content: &str,
+
+		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: ([]*disgord.Embed{embed}),
+			},
 		})
 
 		return nil
@@ -340,7 +369,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 					}
 				}
 				return c
-			})
+			}, "Members")
 		})
 
 		ch.CreateMessage(&disgord.CreateMessage{
@@ -483,11 +512,11 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				})
 				return
 			}
-			if len(users) >= 7 {
+			if len(users) >= 8 {
 				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
-						Content: "A batalha ja chegou ao maximo (7)",
+						Content: "A batalha ja chegou ao maximo (8)",
 					},
 				})
 				return
@@ -542,7 +571,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [5]int{sumOfAttributes + 100, 70 + (sumOfAttributes / 3), 0, sumOfAttributes, sumOfAttributes},
+			Attributes: [5]int{sumOfAttributes + 80, 60 + (sumOfAttributes / 3), 0, 20 + (sumOfAttributes / 2), sumOfAttributes},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {
@@ -563,16 +592,16 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		if winner == 0 {
 			for _, user := range users {
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
-					u.Money += 300
+					u.Money += 400
 					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-						r.Xp += 500
+						r.Xp += 750
 						return r
 					})
 					return u
 				}, "Galos")
 			}
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **300**\nXp: **500**",
+				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **400**\nXp: **750**",
 			})
 		} else {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{

@@ -56,12 +56,12 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 		round.Attacker.Life += int(0.4 * float64(user.Attributes[4]))
 		if HasUpgrade(user.Upgrades, 1, 1, 0) {
 			if HasUpgrade(user.Upgrades, 1, 1, 0, 1) {
-				round.Target.Life -= 12
+				round.Target.Life -= 40
 			}
 			if HasUpgrade(user.Upgrades, 1, 1, 0, 0) {
-				round.Attacker.Life += 7
+				round.Attacker.Life += 25
 			}
-			round.Attacker.Life += 5
+			round.Attacker.Life += 20
 		}
 	} else {
 		reflected = true
@@ -83,11 +83,11 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 
 	attack_damage += int(float32(user.Attributes[1]) * 0.6)
 	if HasUpgrade(user.Upgrades, 1, 0) {
-		attack_damage += 5
+		attack_damage += 10
 		if HasUpgrade(user.Upgrades, 1, 0, 0) {
-			attack_damage += 10
+			attack_damage += 20
 			if HasUpgrade(user.Upgrades, 1, 0, 0, 0) {
-				attack_damage += 20
+				attack_damage += 30
 			}
 		}
 	}
@@ -175,6 +175,9 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 	switch effect.Type {
 	case 1:
 		{
+			if ataccker.IsBlack {
+				effect_damage = int(float64(effect_damage) * 1.25)
+			}
 			if ataccker.ItemEffect == 6 {
 				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
 			}
@@ -184,9 +187,9 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 				}
 			}
 			if HasUpgrade(ataccker.User.Upgrades, 1, 0, 1) {
-				effect_damage += 10
+				effect_damage += 30
 				if HasUpgrade(ataccker.User.Upgrades, 1, 0, 1, 0) {
-					effect_damage += 20
+					effect_damage += 30
 				}
 			}
 
@@ -194,6 +197,7 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 			if effect_damage >= receiver.Life {
 				effect_damage = receiver.Life - 1
 			}
+
 			if ataccker.Galo.Type == 33 {
 				lvl := CalcLevel(ataccker.Galo.Xp)
 				ataccker.Life += int(float64(effect_damage) * (1 + (0.16 * float64(lvl/10))))
@@ -204,11 +208,11 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 	case 2:
 		{
 			if receiver.ItemEffect == 11 {
-
 				effect_damage = int(receiver.ItemPayload * float64(effect_damage))
 			}
+
 			if ataccker.ItemEffect == 11 {
-				effect_damage = int(ataccker.ItemPayload * (2 - float64(effect_damage)))
+				effect_damage = int(float64(effect_damage) * (2 - ataccker.ItemPayload))
 			}
 
 			if round.FragilityUser == receiver {

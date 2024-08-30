@@ -22,7 +22,7 @@ func init() {
 		Name:        "dungeon",
 		Description: translation.T("DungeonHelp", "pt"),
 		Run:         runDungeon,
-		Cooldown:    9,
+		Cooldown:    6,
 		Category:    handler.Rinha,
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{

@@ -18,7 +18,7 @@ func init() {
 		Name:        "item",
 		Description: translation.T("RunEquipItem", "pt"),
 		Run:         runEquipItem,
-		Cooldown:    15,
+		Cooldown:    8,
 		Category:    handler.Profile,
 		Aliases:     []string{"equipitem"},
 	})

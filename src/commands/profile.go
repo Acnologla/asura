@@ -43,7 +43,7 @@ func init() {
 		Name:        "profile",
 		Description: translation.T("ProfileHelp", "pt"),
 		Run:         runProfile,
-		Cooldown:    15,
+		Cooldown:    10,
 		Category:    handler.Profile,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",

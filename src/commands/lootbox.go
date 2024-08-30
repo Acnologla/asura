@@ -22,7 +22,7 @@ func init() {
 		Name:        "lootbox",
 		Description: translation.T("LootboxHelp", "pt"),
 		Run:         runLootbox,
-		Cooldown:    5,
+		Cooldown:    3,
 		Category:    handler.Profile,
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
@@ -43,6 +43,18 @@ func init() {
 		),
 	})
 
+}
+
+func generateQuantityOptions() (opts []*disgord.SelectMenuOption) {
+	for i := 1; i <= 10; i++ {
+		opts = append(opts, &disgord.SelectMenuOption{
+			Label: fmt.Sprintf("Comprar %d lootboxes", i),
+			//		Description: fmt.Sprintf("Quantidade de lootboxes"),
+			Value:   strconv.Itoa(i),
+			Default: i == 1,
+		})
+	}
+	return
 }
 
 func GenerateBuyOptions(arr []string) (opts []*disgord.SelectMenuOption) {
@@ -73,7 +85,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					{
 						Title:       "Lootbox",
 						Color:       65535,
-						Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\nPity: **%d%%**\nTreinos diarios: **%d/%d** \n\n<:lt_comum:1271148114102714479> Lootbox comum: **%d**\n<:lt_normal:1271148156414984286> Lootbox normal: **%d**\n<:lt_rara:1271148187725594644> Lootbox rara: **%d**\n<:lt_epica:1271148219623145493> Lootbox epica: **%d**\n<:lt_lendaria:1271148244767998115> Lootbox lendaria: **%d**\n<:lt_itens:1271148268969267201> Lootbox items: **%d**\n<:lt_cosmetica:1271148294952980614> Lootbox cosmetica: **%d**\n<:lt_mitica:1271148323344093246> Lootbox mitica: **%d**\n<:lt_itens_mitica:1271148347700412578>  Lootbox items mitica: **%d**\n\n%s\n**Entre no meu [Servidor](https://discord.gg/tdVWQGV) para ganhar um bonus no daily**", user.Money, user.AsuraCoin, user.Pity*rinha.PityMultiplier, user.TrainLimit, rinha.CalcLimit(&user), lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic, lootbox.Mythic, lootbox.ItemsMythic, text),
+						Description: fmt.Sprintf("Money: **%d**\nAsuraCoins: **%d**\nPity: **%d%%**\n\n<:lt_comum:1271148114102714479> Lootbox comum: **%d**\n<:lt_normal:1271148156414984286> Lootbox normal: **%d**\n<:lt_rara:1271148187725594644> Lootbox rara: **%d**\n<:lt_epica:1271148219623145493> Lootbox epica: **%d**\n<:lt_lendaria:1271148244767998115> Lootbox lendaria: **%d**\n<:lt_itens:1271148268969267201> Lootbox items: **%d**\n<:lt_cosmetica:1271148294952980614> Lootbox cosmetica: **%d**\n<:lt_mitica:1271148323344093246> Lootbox mitica: **%d**\n<:lt_itens_mitica:1271148347700412578>  Lootbox items mitica: **%d**\n%s\n**Entre no meu [Servidor](https://discord.gg/tdVWQGV) para ganhar um bonus no daily**", user.Money, user.AsuraCoin, user.Pity*rinha.PityMultiplier, lootbox.Common, lootbox.Normal, lootbox.Rare, lootbox.Epic, lootbox.Legendary, lootbox.Items, lootbox.Cosmetic, lootbox.Mythic, lootbox.ItemsMythic, text),
 					},
 				},
 			},
@@ -95,6 +107,18 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 						Components: []*disgord.MessageComponent{
 							{
 								Type:        disgord.MessageComponentButton + 1,
+								Options:     generateQuantityOptions(),
+								CustomID:    "quantity",
+								MaxValues:   1,
+								Placeholder: "Selecione a quantidade",
+							},
+						},
+					},
+					{
+						Type: disgord.MessageComponentActionRow,
+						Components: []*disgord.MessageComponent{
+							{
+								Type:        disgord.MessageComponentButton + 1,
 								Options:     GenerateBuyOptions(rinha.LootNames[:]),
 								CustomID:    "type",
 								MaxValues:   1,
@@ -105,29 +129,45 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				},
 			},
 		})
+		quantity := 1
+		lastValue := ""
 		handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 			if interaction.Member.UserID != itc.Member.UserID {
 				return
 			}
-			if len(interaction.Data.Values) == 0 {
+			if interaction.Data.CustomID == "quantity" {
+				quantity, _ = strconv.Atoi(interaction.Data.Values[0])
+				handler.Client.SendInteractionResponse(ctx, interaction, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.CreateInteractionResponseData{
+						Content: fmt.Sprintf("Quantidade selecionada: %d", quantity),
+					},
+				})
 				return
 			}
+			if len(interaction.Data.Values) == 0 {
+				interaction.Data.Values = []string{lastValue}
+				if lastValue == "" {
+					return
+				}
+			}
+			lastValue = interaction.Data.Values[0]
 			lb := interaction.Data.Values[0]
 			i := rinha.GetLbIndex(lb)
 			price := rinha.Prices[i]
 			done := false
 			database.User.UpdateUser(ctx, itc.Member.UserID, func(u entities.User) entities.User {
 				if price[0] == 0 {
-					if u.AsuraCoin >= price[1] {
+					if u.AsuraCoin >= price[1]*quantity {
 						done = true
-						u.AsuraCoin -= price[1]
+						u.AsuraCoin -= price[1] * quantity
 					}
-				} else if u.Money >= price[0] {
-					u.Money -= price[0]
+				} else if u.Money >= price[0]*quantity {
+					u.Money -= price[0] * quantity
 					done = true
 				}
 				if done {
-					database.User.InsertItem(ctx, itc.Member.UserID, u.Items, i, entities.LootboxType)
+					database.User.InsertItemQuantity(ctx, itc.Member.UserID, u.Items, i, entities.LootboxType, quantity)
 				}
 				return u
 			}, "Items")
@@ -159,7 +199,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				},
 			}
 		}
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		err := handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
@@ -185,13 +225,21 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				},
 			},
 		})
+		if err != nil {
+			return nil
+		}
+		lastValue := ""
 		handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
 			if interaction.Member.UserID != itc.Member.UserID {
 				return
 			}
 			if len(interaction.Data.Values) == 0 {
-				return
+				interaction.Data.Values = []string{lastValue}
+				if lastValue == "" {
+					return
+				}
 			}
+			lastValue = interaction.Data.Values[0]
 			lb := interaction.Data.Values[0]
 			i := rinha.GetLbIndex(lb)
 			image := ""

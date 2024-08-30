@@ -80,18 +80,18 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 		case entities.WinGalo:
 			if winner && galoAdv.Type == mission.Adv {
 				mission.Progress++
-				if mission.Progress == 6 {
-					xp += 360
-					money += 135
+				if mission.Progress >= 3 {
+					xp += 260
+					money += 110
 					done = true
 				}
 			}
 		case entities.FightGalo:
 			if galoAdv.Type == mission.Adv {
 				mission.Progress++
-				if mission.Progress == 12 {
-					xp += 360
-					money += 135
+				if mission.Progress >= 6 {
+					xp += 260
+					money += 110
 					done = true
 				}
 			}
@@ -147,214 +147,221 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	discordUser := itc.Member.User
 	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items")
 	galo := rinha.GetEquippedGalo(&user)
-	text := translation.T("TrainMessage", translation.GetLocale(itc), discordUser.Username)
-	utils.Confirm(ctx, text, itc, discordUser.ID, func() {
-		authorRinha := isInRinha(ctx, discordUser)
-		if authorRinha != "" {
-			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: rinhaMessage(discordUser.Username, authorRinha).Data.Content,
-			})
-			return
-		}
-		galoAdv := entities.Rooster{
-			Xp:    galo.Xp,
-			Type:  rinha.GetRand(),
-			Equip: true,
-		}
-		if rinha.CalcLevel(galo.Xp) > 1 {
-			galoAdv.Xp = rinha.CalcXP(rinha.CalcLevel(galo.Xp) - 1)
-		}
-		lockEvent(ctx, discordUser.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
-		defer unlockEvent(ctx, discordUser.ID)
-		userAdv := entities.User{
-			Galos: []*entities.Rooster{&galoAdv},
-		}
-		winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
-			GaloAuthor:  &user,
-			GaloAdv:     &userAdv,
-			IDs:         [2]disgord.Snowflake{discordUser.ID},
-			AuthorName:  rinha.GetName(discordUser.Username, *galo),
-			AdvName:     "Clone de " + rinha.Classes[galoAdv.Type].Name,
-			AuthorLevel: rinha.CalcLevel(galo.Xp),
-			AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
-		}, false)
-		if winner == -1 {
-			return
-		}
-		ch := handler.Client.Channel(itc.ChannelID)
+	//text := translation.T("TrainMessage", translation.GetLocale(itc), discordUser.Username)
+	//utils.Confirm(ctx, text, itc, discordUser.ID, func() {
 
-		completeMission(ctx, &user, &galoAdv, winner == 0, itc)
-		isLimit := rinha.IsInLimit(&user)
-		resetLimit := user.TrainLimit == 0 || 1 <= ((uint64(time.Now().Unix())-user.TrainLimitReset)/60/60/24)
-		if isLimit && !resetLimit {
-			need := uint64(time.Now().Unix()) - user.TrainLimitReset
-			embed := &disgord.Embed{
-				Color: 16776960,
-				Title: "Train",
-				Description: translation.T("TrainLimit", translation.GetLocale(itc), map[string]interface{}{
-					"hours":   23 - (need / 60 / 60),
-					"minutes": 59 - (need / 60 % 60),
-				}),
-			}
-			ch.CreateMessage(&disgord.CreateMessage{
-				Embeds: []*disgord.Embed{embed},
-			})
-			telemetry.Debug(fmt.Sprintf("%s in rinha limit", discordUser.Username), map[string]string{
-				"user": fmt.Sprintf("%d", discordUser.ID),
-			})
-			return
+	authorRinha := isInRinha(ctx, discordUser)
+	if authorRinha != "" {
+		handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+			Content: rinhaMessage(discordUser.Username, authorRinha).Data.Content,
+		})
+		return nil
+	}
+	galoAdv := entities.Rooster{
+		Xp:    galo.Xp,
+		Type:  rinha.GetRand(),
+		Equip: true,
+	}
+	if rinha.CalcLevel(galo.Xp) > 1 {
+		galoAdv.Xp = rinha.CalcXP(rinha.CalcLevel(galo.Xp) - 1)
+	}
+	lockEvent(ctx, discordUser.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
+	defer unlockEvent(ctx, discordUser.ID)
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: "A batalha esta iniciando...",
+		},
+	})
+	userAdv := entities.User{
+		Galos: []*entities.Rooster{&galoAdv},
+	}
+	winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
+		GaloAuthor:  &user,
+		GaloAdv:     &userAdv,
+		IDs:         [2]disgord.Snowflake{discordUser.ID},
+		AuthorName:  rinha.GetName(discordUser.Username, *galo),
+		AdvName:     "Clone de " + rinha.Classes[galoAdv.Type].Name,
+		AuthorLevel: rinha.CalcLevel(galo.Xp),
+		AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
+	}, false)
+	if winner == -1 {
+		return nil
+	}
+	ch := handler.Client.Channel(itc.ChannelID)
+
+	completeMission(ctx, &user, &galoAdv, winner == 0, itc)
+	isLimit := rinha.IsInLimit(&user)
+	resetLimit := user.TrainLimit == 0 || 1 <= ((uint64(time.Now().Unix())-user.TrainLimitReset)/60/60/24)
+	if isLimit && !resetLimit {
+		need := uint64(time.Now().Unix()) - user.TrainLimitReset
+		embed := &disgord.Embed{
+			Color: 16776960,
+			Title: "Train",
+			Description: translation.T("TrainLimit", translation.GetLocale(itc), map[string]interface{}{
+				"hours":   23 - (need / 60 / 60),
+				"minutes": 59 - (need / 60 % 60),
+			}),
 		}
-		if winner == 0 {
-			xpOb := utils.RandInt(14) + 11
-			if rinha.HasUpgrade(user.Upgrades, 0) {
+		ch.CreateMessage(&disgord.CreateMessage{
+			Embeds: []*disgord.Embed{embed},
+		})
+		telemetry.Debug(fmt.Sprintf("%s in rinha limit", discordUser.Username), map[string]string{
+			"user": fmt.Sprintf("%d", discordUser.ID),
+		})
+		return nil
+	}
+	if winner == 0 {
+		xpOb := utils.RandInt(14) + 11
+		if rinha.HasUpgrade(user.Upgrades, 0) {
+			xpOb += 3
+			if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
 				xpOb += 3
-				if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
-					xpOb += 3
-				}
-				if rinha.HasUpgrade(user.Upgrades, 0, 1, 1, 0) {
-					xpOb += 4
-				}
 			}
-			calc := int(rinha.Classes[galoAdv.Type].Rarity - rinha.Classes[galo.Type].Rarity)
-			if calc > 0 {
-				calc++
+			if rinha.HasUpgrade(user.Upgrades, 0, 1, 1, 0) {
+				xpOb += 4
 			}
-			if calc < 0 {
-				if rinha.Classes[galo.Type].Rarity == rinha.Legendary {
-					calc -= 2
-				}
+		}
+		calc := int(rinha.Classes[galoAdv.Type].Rarity - rinha.Classes[galo.Type].Rarity)
+		if calc > 0 {
+			calc++
+		}
+		if calc < 0 {
+			if rinha.Classes[galo.Type].Rarity == rinha.Legendary {
+				calc -= 2
 			}
-			xpOb += calc
-			money := 8
+		}
+		xpOb += calc
+		money := 8
 
-			if galo.Resets > 0 {
-				for i := 0; i < galo.Resets; i++ {
-					xpOb = int(float64(xpOb) * 0.75)
+		if galo.Resets > 0 {
+			for i := 0; i < galo.Resets; i++ {
+				xpOb = int(float64(xpOb) * 0.75)
+			}
+		}
+		if rinha.HasUpgrade(user.Upgrades, 0, 1, 0) {
+			money += 3
+		}
+		clanMsg := ""
+		if resetLimit {
+			user.TrainLimit = 0
+			user.TrainLimitReset = uint64(time.Now().Unix())
+			database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
+				u.TrainLimit = 0
+				u.TrainLimitReset = user.TrainLimitReset
+				return u
+			})
+		}
+		bpXP := 0
+		database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
+			if rinha.IsVip(&u) {
+				xpOb += 10
+				money += 2
+			}
+			item := rinha.GetItem(&u)
+			if item != nil {
+				if item.Effect == 8 {
+					xpOb += xpOb * int(item.Payload)
+				}
+				if item.Effect == 9 {
+					xpOb += 2
+					money++
 				}
 			}
-			if rinha.HasUpgrade(user.Upgrades, 0, 1, 0) {
-				money += 3
-			}
-			clanMsg := ""
-			if resetLimit {
-				user.TrainLimit = 0
-				user.TrainLimitReset = uint64(time.Now().Unix())
-				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
-					u.TrainLimit = 0
-					u.TrainLimitReset = user.TrainLimitReset
-					return u
-				})
-			}
-			bpXP := 0
-			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
-				if rinha.IsVip(&u) {
-					xpOb += 10
-					money += 2
-				}
-				item := rinha.GetItem(&u)
-				if item != nil {
-					if item.Effect == 8 {
-						xpOb += xpOb * int(item.Payload)
-					}
-					if item.Effect == 9 {
-						xpOb += 2
-						money++
-					}
-				}
-				u.UserXp++
-				u.TrainLimit++
-				clanUser := database.Clan.GetUserClan(ctx, discordUser.ID, "Members")
-				clan := clanUser.Clan
+			u.UserXp++
+			u.TrainLimit++
+			clanUser := database.Clan.GetUserClan(ctx, discordUser.ID, "Members")
+			clan := clanUser.Clan
 
-				if clan.Name != "" {
+			if clan.Name != "" {
+				xpOb++
+				level := rinha.ClanXpToLevel(clan.Xp)
+				if level >= 2 {
 					xpOb++
-					level := rinha.ClanXpToLevel(clan.Xp)
-					if level >= 2 {
-						xpOb++
-					}
-					if level >= 4 {
-						money++
-					}
-					if level >= 6 {
-						money++
-					}
-					if level >= 8 {
-						u.UserXp++
-					}
-					clanXpOb := 2
-					if item != nil {
-						if item.Effect == 10 {
-							if utils.RandInt(101) <= 30 {
-								clanXpOb++
-							}
+				}
+				if level >= 4 {
+					money++
+				}
+				if level >= 6 {
+					money++
+				}
+				if level >= 8 {
+					u.UserXp++
+				}
+				clanXpOb := 2
+				if item != nil {
+					if item.Effect == 10 {
+						if utils.RandInt(101) <= 30 {
+							clanXpOb++
 						}
 					}
-					go database.Clan.CompleteClanMission(ctx, clan, discordUser.ID, clanXpOb)
-					clanMsg = fmt.Sprintf("\nGanhou **%d** de xp para seu clan", clanXpOb)
 				}
-				u.Win++
-				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-					bpXP = database.User.UpdateBp(ctx, &u, &r)
-					r.Xp += xpOb
-					return r
-				})
-				u.Money += money
-				return u
-			}, "Galos", "Items")
-			ch.CreateMessage(&disgord.CreateMessage{
-				Embeds: []*disgord.Embed{
-					{
-						Color: 16776960,
-						Title: "Train",
-						Description: translation.T("TrainWin", translation.GetLocale(itc), map[string]interface{}{
-							"username": discordUser.Username,
-							"xp":       xpOb,
-							"money":    money,
-							"clanMsg":  clanMsg,
-							"bpXP":     bpXP,
-						}),
-					},
-				},
-			})
-			galo.Xp += xpOb
-			sendLevelUpEmbed(ctx, itc, galo, discordUser, xpOb)
-		} else {
-			xpO := utils.RandInt(7) + 2
-			moneyO := utils.RandInt(3) + 1
-			if galo.Resets > 0 {
-				for i := 0; i < galo.Resets; i++ {
-					xpO = int(float64(xpO) * 0.75)
-				}
+				go database.Clan.CompleteClanMission(ctx, clan, discordUser.ID, clanXpOb)
+				clanMsg = fmt.Sprintf("\nGanhou **%d** de xp para seu clan", clanXpOb)
 			}
-			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
-				u.Lose++
-				u.Money += moneyO
-
-				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-					r.Xp += xpO
-					return r
-				})
-
-				return u
-			}, "Galos", "Items")
-
-			ch.CreateMessage(&disgord.CreateMessage{
-				Embeds: []*disgord.Embed{
-					{
-						Color: 16711680,
-						Title: "Train",
-						Description: translation.T("TrainLose", translation.GetLocale(itc), map[string]interface{}{
-							"username": discordUser.Username,
-							"xp":       xpO,
-							"money":    moneyO,
-						}),
-					},
+			u.Win++
+			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+				bpXP = database.User.UpdateBp(ctx, &u, &r)
+				r.Xp += xpOb
+				return r
+			})
+			u.Money += money
+			return u
+		}, "Galos", "Items")
+		ch.CreateMessage(&disgord.CreateMessage{
+			Embeds: []*disgord.Embed{
+				{
+					Color: 16776960,
+					Title: "Train",
+					Description: translation.T("TrainWin", translation.GetLocale(itc), map[string]interface{}{
+						"username": discordUser.Username,
+						"xp":       xpOb,
+						"money":    money,
+						"clanMsg":  clanMsg,
+						"bpXP":     bpXP,
+					}),
 				},
+			},
+		})
+		galo.Xp += xpOb
+		sendLevelUpEmbed(ctx, itc, galo, discordUser, xpOb)
+	} else {
+		xpO := utils.RandInt(7) + 2
+		moneyO := utils.RandInt(3) + 1
+		if galo.Resets > 0 {
+			for i := 0; i < galo.Resets; i++ {
+				xpO = int(float64(xpO) * 0.75)
+			}
+		}
+		database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
+			u.Lose++
+			u.Money += moneyO
+
+			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+				r.Xp += xpO
+				return r
 			})
 
-			galo.Xp += xpO
-			sendLevelUpEmbed(ctx, itc, galo, discordUser, xpO)
-		}
-	})
+			return u
+		}, "Galos", "Items")
+
+		ch.CreateMessage(&disgord.CreateMessage{
+			Embeds: []*disgord.Embed{
+				{
+					Color: 16711680,
+					Title: "Train",
+					Description: translation.T("TrainLose", translation.GetLocale(itc), map[string]interface{}{
+						"username": discordUser.Username,
+						"xp":       xpO,
+						"money":    moneyO,
+					}),
+				},
+			},
+		})
+
+		galo.Xp += xpO
+		sendLevelUpEmbed(ctx, itc, galo, discordUser, xpO)
+	}
+	//	})
 	return nil
 }

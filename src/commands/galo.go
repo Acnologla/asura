@@ -28,7 +28,7 @@ func init() {
 		Name:        "galo",
 		Description: translation.T("GaloHelp", "pt"),
 		Run:         runGalo,
-		Cooldown:    15,
+		Cooldown:    8,
 		Category:    handler.Profile,
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Name:        "user",

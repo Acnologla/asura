@@ -139,7 +139,7 @@ other="Abra uma lootbox"
 other="Compre uma lootbox"
 
 [LootboxView]
-other="Use `/lootbox buy` para comprar lootbox\nUse `/lootbox open` para abrir lootbox\n{{.}}\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**"
+other="\nUse `/rinhahelp` para ver o tutorial de rinha\nUse `/lootbox buy` para comprar lootbox\nUse `/lootbox open` para abrir lootbox\n{{.}}\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**"
 
 [LootboxBuyDone]
 other="Comprou a lootbox {{.}} com sucesso"
@@ -215,13 +215,13 @@ other="Veja informaçoes sobre seu clan"
 other="Voce não esta em um clan"
 
 [ClanFooter]
-other="Use /clan invite <user> para convidar | /clan remove <user> para remover | /clan admin <user> para promover membros"
+other="Use /clan invite <user> para convidar | /clan remove <user> para remover | /clan banco para ver os upgrades | /clan admin <user> para promover membros"
 
 [ClanRemove]
 other="Retirar um usuario do seu clan"
 
 [ClanDescription]
-other="Level: **{{.level}}** ({{.xp}}/{{.needXp}})\nVantagens do clan:\n {{.benefits}}\nMembros ({{.members}}/{{.maxMembers}}):\n {{.membersText}}\nUse **/clan missao** para ver a missão mensal do clan\nUse **/clan banco** para ver o banco do clan"
+other="Level: **{{.level}}** ({{.xp}}/{{.needXp}})\nMembros: **{{.members}}/{{.maxMembers}}**\n\nVantagens do clan:\n {{.benefits}} {{.membersText}}\nUse **/clan membros** para ver os membros do clan\nUse **/clan battle** para batalhar contra o chefe do clan\nUse **/clan missao** para ver a missão mensal do clan\nUse **/clan banco** para ver o banco do clan"
 
 
 [UserArleadyInClan]

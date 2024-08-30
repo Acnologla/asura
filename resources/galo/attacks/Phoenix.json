@@ -12,13 +12,13 @@
   },
   {
     "name": "Calor",
-    "damage": [5, 17],
+    "damage": [10, 17],
     "level": 3,
     "effect": [1, 9]
   },
   {
     "name": "Ave Fenix",
-    "damage": [23, 32],
+    "damage": [25, 32],
     "level": 4
   },
   {
@@ -28,13 +28,13 @@
   },
   {
     "name": "Turbilhão de chamas",
-    "damage": [22, 30],
+    "damage": [25, 30],
     "level": 7,
     "effect": [1, 8]
   },
   {
     "name": "Pena flamejante",
-    "damage": [13, 20],
+    "damage": [15, 35],
     "level": 9,
     "effect": [1, 10]
   },
@@ -51,12 +51,12 @@
   },
   {
     "name": "Bicada da fenix",
-    "damage": [50, 70],
+    "damage": [55, 75],
     "level": 13
   },
   {
     "name": "Fogo eterno",
-    "damage": [15, 25],
+    "damage": [25, 40],
     "level": 15,
     "effect": [1, 13]
   },
@@ -68,37 +68,37 @@
   },
   {
     "name": "Espada da fenix",
-    "damage": [50, 75],
+    "damage": [60, 75],
     "effect": [1, 10],
     "level": 19
   },
   {
     "name": "Repouso da fenix",
-    "damage": [55, 70],
+    "damage": [60, 75],
     "effect": [1, 8],
     "level": 21
   },
   {
     "name": "Fenix eterna",
-    "damage": [70, 80],
+    "damage": [75, 90],
     "level": 22,
     "effect": [1, 31]
   },
   {
     "name": "Fenix da cremação",
-    "damage": [85, 100],
+    "damage": [95, 105],
     "level": 25,
     "effect": [1, 13]
   },
   {
     "name": "Fogo da fenix",
-    "damage": [100, 120],
+    "damage": [110, 135],
     "level": 30,
     "effect": [1, 49]
   },
   {
     "name": "Fenix suprema",
-    "damage": [180, 220],
+    "damage": [200, 250],
     "level": 30,
     "effect": [1, 13],
     "evolved": true

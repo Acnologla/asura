@@ -17,7 +17,7 @@ func init() {
 		Name:        "ranked",
 		Description: "Jogue rinha ranqueada e ganhe vários premios",
 		Run:         runRanked,
-		Cooldown:    10,
+		Cooldown:    8,
 		Category:    handler.Rinha,
 		Aliases:     []string{"ranqueada"},
 		Options: []*disgord.ApplicationCommandOption{

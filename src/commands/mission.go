@@ -55,7 +55,15 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	for i, mission := range galo.Missions {
 		missionImage := galoImage
 		if mission.Adv != 0 {
-			missionImage, _ = utils.DownloadImage(rinha.Sprites[0][mission.Adv-1])
+			missionImage, err = utils.DownloadImage(rinha.Sprites[0][mission.Adv-1])
+			if err != nil {
+				return &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.CreateInteractionResponseData{
+						Content: "Tente novamente",
+					},
+				}
+			}
 		}
 		text := texts[i]
 		splited := strings.Split(text, "\n")
@@ -151,7 +159,7 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			if event.Member.User.ID == user.ID {
 				i, _ := strconv.Atoi(event.Data.CustomID)
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
-					if 0 > i || i >= len(u.Missions) || (time.Now().Unix()-int64(u.TradeMission))/60/60/24 < 3 {
+					if 0 > i || i >= len(u.Missions) || (time.Now().Unix()-int64(u.TradeMission))/60/60/12 < 1 {
 						return u
 					}
 					newMission := rinha.CreateMission()

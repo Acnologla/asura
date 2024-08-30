@@ -19,7 +19,7 @@ func init() {
 		Name:        "skills",
 		Description: translation.T("SkillsHelp", "pt"),
 		Run:         runSkills,
-		Cooldown:    15,
+		Cooldown:    8,
 		Category:    handler.Profile,
 	})
 }

@@ -75,29 +75,29 @@
   },
   {
     "name": "Buff de vida",
-    "value": "Seu galo começa com 20 de vida extra nas batalhas",
+    "value": "Seu galo começa com 25 de vida extra nas batalhas",
     "childs": [
       {
         "name": "Buff de dano",
-        "value": "Os ataques do seu galo tem 5 de dano adicional",
+        "value": "Os ataques do seu galo tem 10 de dano adicional",
         "childs": [
           {
             "name": "Buff de dano",
-            "value": "Os ataques do seu galo tem mais 10 de dano adicional",
+            "value": "Os ataques do seu galo tem 30 de dano adicional",
             "childs": [
               {
                 "name": "Buff de dano aprimorado",
-                "value": "Os ataques do seu galo tem mais 20 de dano adicional"
+                "value": "Os ataques do seu galo tem 60 de dano adicional"
               }
             ]
           },
           {
             "name": "Efeitos mais fortes",
-            "value": "Os Efeitos do seu galo tem 10 de dano adicional",
+            "value": "Os Efeitos do seu galo tem 30 de dano adicional",
             "childs": [
               {
                 "name": "Efeitos ainda mais fortes",
-                "value": "Os Efeitos do seu galo tem mais 20 de dano adicional"
+                "value": "Os Efeitos do seu galo tem 60 de dano adicional"
               }
             ]
           }
@@ -105,29 +105,29 @@
       },
       {
         "name": "Buff de vida",
-        "value": "Seu galo começa com 45 de vida extra nas batalhas",
+        "value": "Seu galo começa com 55 de vida extra nas batalhas",
         "childs": [
           {
             "name": "Regeneração",
-            "value": "Seu galo regenera 5 de vida a cada ataque",
+            "value": "Seu galo regenera 20 de vida a cada ataque",
             "childs": [
               {
                 "name": "Regeneração Amplificada",
-                "value": "Seu galo regenera 12 de vida a cada ataque"
+                "value": "Seu galo regenera 45 de vida a cada ataque"
               },
               {
                 "name": "Degeneração",
-                "value": "O galo do oponente perde 12 de vida a cada ataque"
+                "value": "O galo do oponente perde 40 de vida a cada ataque"
               }
             ]
           },
           {
             "name": "Mais vida",
-            "value": "Seu galo começa com 65 de vida extra nas batalhas",
+            "value": "Seu galo começa com 90 de vida extra nas batalhas",
             "childs": [
               {
                 "name": "Intankavel",
-                "value": "Seu galo começa com 95 de vida extra nas batalhas"
+                "value": "Seu galo começa com 150 de vida extra nas batalhas"
               }
             ]
           }
