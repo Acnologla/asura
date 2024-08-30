@@ -73,7 +73,7 @@ func (adapter UserAdapterPsql) InsertItemQuantity(ctx context.Context, id disgor
 		}
 	}
 	if itemUpdate != nil {
-		itemUpdate.Quantity++
+		itemUpdate.Quantity += quantity
 		_, err := adapter.Db.NewUpdate().Model(itemUpdate).Where("id = ?", itemUpdate.ID).Exec(ctx)
 
 		return err
