@@ -110,7 +110,7 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			xpMultiplier = 3 + rooster.Resets
 		}
 		if class.Rarity > rinha.Epic {
-			xpMultiplier = (int(class.Rarity) + rooster.Resets) * 3
+			xpMultiplier = (int(class.Rarity) + rooster.Resets) * 4
 		}
 		xp := rinha.CalcXP(15+(trial.Win*7)) * xpMultiplier
 		level := rinha.CalcLevel(xp)
@@ -130,7 +130,7 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if class.Rarity == rinha.Legendary {
 				atbs = atbs / 2
 			}
-			userAdv.Attributes = [5]int{(atbs * 2) + 900, atbs / 5, atbs, atbs / 3, atbs / 3}
+			userAdv.Attributes = [5]int{atbs + 700, atbs / 6, atbs, atbs / 4, atbs / 4}
 		}
 
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
