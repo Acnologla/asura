@@ -159,7 +159,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	galoAdv := entities.Rooster{
 		Xp:    galo.Xp,
-		Type:  rinha.GetRandByType(rinha.Legendary),
+		Type:  rinha.GetRand(),
 		Equip: true,
 	}
 

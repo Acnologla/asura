@@ -78,7 +78,7 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 	}
 
 	if round.Attacker.IsBlack {
-		attack_damage = int(float64(attack_damage) * 1.3)
+		attack_damage = int(float64(attack_damage) * 1.35)
 	}
 
 	attack_damage = int(float64(attack_damage) * GetTrialsMultiplier(user))
@@ -182,7 +182,7 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 	case 1:
 		{
 			if ataccker.IsBlack {
-				effect_damage = int(float64(effect_damage) * 1.3)
+				effect_damage = int(float64(effect_damage) * 1.35)
 			}
 			if ataccker.ItemEffect == 6 {
 				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
