@@ -49,11 +49,16 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	if user.Bot {
 		return nil
 	}
-	u := database.User.GetUser(ctx, user.ID, "Items", "Galos")
+	u := database.User.GetUser(ctx, user.ID, "Items", "Galos", "Trials")
 	galo := rinha.GetEquippedGalo(&u)
 	skills := rinha.GetEquipedSkills(galo)
 	avatar, err := utils.DownloadImage(rinha.GetGaloImage(galo, u.Items))
-
+	trial := getTrial(u.Trials, galo.Type)
+	if trial == nil {
+		trial = &entities.Trial{
+			Rooster: galo.Type,
+		}
+	}
 	if err != nil {
 		return nil
 	}
@@ -142,25 +147,28 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	dc.SetRGB255(255, 255, 255)
 	dc.DrawStringAnchored(fmt.Sprintf("%d/%d", galo.Xp-int(curLevelXP), int(nextLevelXp-curLevelXP)), 320/2, 203.5, 0.5, 0.5)
 	dc.SetRGB(0, 0, 0)
-	dc.DrawString("Tipo", 10, 240)
-	dc.DrawString("Level", 10, 255)
-	dc.DrawString("Item", 10, 270)
+	dc.DrawString("Tipo", 10, 238)
+	dc.DrawString("Level", 10, 253)
+	dc.DrawString("Item", 10, 268)
+	dc.DrawString("Trials", 10, 283)
+
 	levelText := strconv.Itoa(rinha.CalcLevel(galo.Xp))
 	if galo.Resets > 0 {
 		levelText += "["
 		levelText += strconv.Itoa(galo.Resets)
 		levelText += "]"
 	}
-	dc.DrawStringAnchored(rinha.Classes[galo.Type].Name, 310, 240, 1, 0)
-	dc.DrawStringAnchored(levelText, 310, 255, 1, 0)
+	dc.DrawStringAnchored(rinha.Classes[galo.Type].Name, 310, 238, 1, 0)
+	dc.DrawStringAnchored(levelText, 310, 253, 1, 0)
 	item := rinha.GetEquippedItem(&u)
 	if item != -1 {
 		i := rinha.Items[item]
-		dc.DrawStringAnchored(i.Name, 310, 270, 1, 0)
+		dc.DrawStringAnchored(i.Name, 310, 268, 1, 0)
 	} else {
-		dc.DrawStringAnchored("Nenhum", 310, 270, 1, 0)
+		dc.DrawStringAnchored("Nenhum", 310, 268, 1, 0)
 
 	}
+	dc.DrawStringAnchored(fmt.Sprintf("%d/%d", trial.Win, MAX_TRIALS), 310, 283, 1, 0)
 
 	for i, skill := range skills {
 		rinhaSkill := rinha.Skills[galo.Type-1][skill.Skill]

@@ -18,6 +18,8 @@ type UserAdapter interface {
 	InsertMission(ctx context.Context, id disgord.Snowflake, mission *entities.Mission)
 	InsertItemQuantity(ctx context.Context, id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType, quantity int) error
 	InsertItem(ctx context.Context, id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType) error
+	InsertTrial(ctx context.Context, id disgord.Snowflake, trial *entities.Trial) error
+	AddTrialWin(ctx context.Context, trial *entities.Trial) error
 	UpdateItem(ctx context.Context, user *entities.User, id uuid.UUID, callback func(entities.Item) entities.Item) error
 	RemoveItem(ctx context.Context, items []*entities.Item, itemUUID uuid.UUID) error
 	InsertRooster(ctx context.Context, rooster *entities.Rooster) error

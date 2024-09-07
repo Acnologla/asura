@@ -130,8 +130,8 @@ func executePVP(ctx context.Context, itc *disgord.InteractionCreate) {
 	user := utils.GetUser(itc, 0)
 	lockBattle(ctx, author.ID, user.ID, author.Username, user.Username)
 	defer unlockBattle(ctx, author.ID, user.ID)
-	authorDb := database.User.GetUser(ctx, author.ID, "Galos", "Items")
-	advDb := database.User.GetUser(ctx, user.ID, "Galos", "Items")
+	authorDb := database.User.GetUser(ctx, author.ID, "Galos", "Items", "Trials")
+	advDb := database.User.GetUser(ctx, user.ID, "Galos", "Items", "Trials")
 
 	galoAuthor := rinha.GetEquippedGalo(&authorDb)
 	galoAdv := rinha.GetEquippedGalo(&advDb)

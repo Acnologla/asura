@@ -19,7 +19,7 @@ func MissionsToString(id disgord.Snowflake, user *entities.User) (arr []string) 
 			text += fmt.Sprintf("Batalhar contra %d galos (%d/%d)\nMoney: %d\nXp:  %d", (mission.Level+1)*6, mission.Progress, (mission.Level+1)*6, 45+5*mission.Level, 55*(mission.Level+1))
 		case entities.WinGalo:
 			className := Classes[mission.Adv].Name
-			text += fmt.Sprintf("Vencer contra 3 galos do tipo %s (%d/12)\nMoney: 110\nXp:  260", className, mission.Progress)
+			text += fmt.Sprintf("Vencer contra 3 galos do tipo %s (%d/3)\nMoney: 110\nXp:  260", className, mission.Progress)
 		case entities.FightGalo:
 			className := Classes[mission.Adv].Name
 			text += fmt.Sprintf("Batalhar contra 6 galos do tipo %s (%d/6)\nMoney: 110\nXp:  260", className, mission.Progress)

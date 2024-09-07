@@ -243,5 +243,9 @@
   {
     "name": "Black",
     "rarity": 5
+  },
+  {
+    "name": "White",
+    "rarity": 5
   }
 ]

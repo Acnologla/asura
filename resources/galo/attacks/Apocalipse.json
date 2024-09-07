@@ -21,7 +21,7 @@
   },
   { "damage": [40, 55], "level": 5, "name": "Destruição" },
   {
-    "damage": [15, 35],
+    "damage": [20, 35],
     "level": 7,
     "name": "Proteção Apocalíptica",
     "effect": [1, 71]
@@ -33,7 +33,7 @@
     "effect": [0.8, 72]
   },
   {
-    "damage": [20, 30],
+    "damage": [25, 30],
     "level": 9,
     "name": "Efeitos da Grande Guerra",
     "effect": [1, 73]
@@ -72,11 +72,11 @@
     "effect": [1, 78]
   },
   {
-    "damage": [30, 50],
+    "damage": [30, 55],
     "level": 25,
     "name": "Pobreza Extrema",
-    "effect": [0.75, 79]
+    "effect": [0.8, 79]
   },
   { "damage": [50, 250], "level": 30, "name": "Fim dos Tempos" },
-  { "damage": [150, 250], "level": 30, "name": "Vazio", "evolved": true }
+  { "damage": [150, 270], "level": 30, "name": "Vazio", "evolved": true }
 ]

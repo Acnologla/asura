@@ -89,8 +89,8 @@ func SpliceQueue(slice []*Finder, s []int) []*Finder {
 
 func initBattle(first, second *Finder) {
 	ctx := context.Background()
-	galo := database.User.GetUser(ctx, first.ID, "Galos")
-	advGalo := database.User.GetUser(ctx, second.ID, "Galos")
+	galo := database.User.GetUser(ctx, first.ID, "Galos", "Trials")
+	advGalo := database.User.GetUser(ctx, second.ID, "Galos", "Trials")
 	rooster := rinha.GetEquippedGalo(&galo)
 	advRooster := rinha.GetEquippedGalo(&advGalo)
 	authorLevel := rinha.CalcLevel(rooster.Xp)

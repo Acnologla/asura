@@ -35,6 +35,15 @@ type Mission struct {
 	Adv      int               `bun:"adv"`
 }
 
+type Trial struct {
+	bun.BaseModel `bun:"table:trials,alias:trials"`
+	ID            uuid.UUID `bun:"id,pk"`
+
+	UserID  disgord.Snowflake `bun:"userid"`
+	Rooster int               `bun:"rooster"`
+	Win     int               `bun:"win"`
+}
+
 type Item struct {
 	bun.BaseModel `bun:"table:item,alias:item"`
 
@@ -66,6 +75,7 @@ type User struct {
 	UserXp          int               `bun:"xp"`
 	Galos           []*Rooster        `bun:"rel:has-many,join:id=userid"`
 	Items           []*Item           `bun:"rel:has-many,join:id=userid"`
+	Trials          []*Trial          `bun:"rel:has-many,join:id=userid"`
 	Upgrades        []int             `bun:"upgrades,array"`
 	Win             int               `bun:"win"`
 	Lose            int               `bun:"lose"`

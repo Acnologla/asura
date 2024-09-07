@@ -65,7 +65,7 @@ func InitFighter(user *entities.User, noItems bool) *Fighter {
 			}
 		}
 	}
-	life += user.Attributes[0] * 2
+	life += int(float64(user.Attributes[0]) * 1.5)
 	var itemEffect int
 	var payload float64
 	if !noItems {

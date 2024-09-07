@@ -1,0 +1,108 @@
+[
+  {
+    "name": "Soco branco",
+    "damage": [24, 36],
+    "level": 1
+  },
+  {
+    "name": "Asas da virtude",
+    "damage": [29, 37],
+    "level": 2
+  },
+  {
+    "name": "Golpe de redenção",
+    "damage": [36, 41],
+    "level": 3
+  },
+  {
+    "name": "Fogo branco",
+    "damage": [20, 35],
+    "effect": [1, 108],
+    "level": 4
+  },
+  {
+    "name": "Cântico Sagrado",
+    "damage": [40, 46],
+    "level": 5
+  },
+  {
+    "name": "Luz Celestial",
+    "damage": [20, 30],
+    "self": true,
+    "level": 7,
+    "effect": [1, 109]
+  },
+  {
+    "name": "Espada de luz",
+    "damage": [40, 45],
+    "level": 9,
+    "effect": [1, 7]
+  },
+  {
+    "name": "Golpe de Redenção aprimorado",
+    "damage": [45, 60],
+    "level": 10
+  },
+  {
+    "name": "Aura Imaculada",
+    "damage": [30, 40],
+    "level": 12,
+    "self": true,
+    "effect": [1, 110]
+  },
+  {
+    "name": "Chama Pura",
+    "damage": [40, 55],
+    "level": 13,
+    "effect": [1, 111]
+  },
+  {
+    "name": "Clarão da Verdade",
+    "damage": [50, 75],
+    "level": 15
+  },
+  {
+    "name": "Raio Celeste",
+    "damage": [65, 90],
+    "level": 17
+  },
+  {
+    "name": "Bênção do Paraíso",
+    "damage": [45, 50],
+    "effect": [1, 112],
+    "level": 19,
+    "self": true
+  },
+  {
+    "name": "Toque Purificador",
+    "damage": [40, 60],
+    "effect": [1, 113],
+    "level": 21
+  },
+  {
+    "name": "Véu da Santidade",
+    "damage": [60, 80],
+    "level": 22,
+    "self": true,
+    "effect": [1, 114]
+  },
+  {
+    "name": "Flecha Brilhante",
+    "damage": [150, 250],
+    "level": 25
+  },
+  {
+    "name": "Cura dos Céus",
+    "damage": [100, 150],
+    "level": 30,
+    "effect": [1, 116],
+    "self": true
+  },
+  {
+    "name": "Pureza Ancestral",
+    "damage": [200, 300],
+    "level": 30,
+    "effect": [1, 115],
+    "evolved": true
+  }
+]

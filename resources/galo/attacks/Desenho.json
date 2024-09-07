@@ -21,7 +21,7 @@
     "effect": [1, 60]
   },
   {
-    "damage": [1, 5],
+    "damage": [5, 10],
     "level": 7,
     "name": "Careta",
     "effect": [1, 61]
@@ -34,12 +34,12 @@
     "effect": [1, 3]
   },
   {
-    "damage": [30, 45],
+    "damage": [30, 50],
     "level": 13,
     "name": "Censura",
     "effect": [1, 62]
   },
-  { "damage": [50, 65], "level": 15, "name": "Manipular realidade" },
+  { "damage": [55, 65], "level": 15, "name": "Manipular realidade" },
   { "damage": [65, 75], "level": 16, "name": "Pincelada monocromática" },
   {
     "damage": [70, 80],
@@ -48,19 +48,19 @@
   },
   { "damage": [80, 90], "level": 20, "name": "Sopra dentro das garras" },
   {
-    "damage": [40, 75],
+    "damage": [43, 77],
     "level": 22,
     "name": "Túnel de mentira",
     "effect": [1, 63]
   },
   {
-    "damage": [40, 80],
+    "damage": [45, 80],
     "level": 23,
     "name": "Pacto",
     "effect": [1, 64]
   },
   {
-    "damage": [35, 60],
+    "damage": [45, 60],
     "level": 25,
     "name": "Protagonismo",
     "self": true,

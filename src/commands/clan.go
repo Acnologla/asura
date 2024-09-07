@@ -161,7 +161,7 @@ func getBattleEmbed(users []*disgord.User) *disgord.Embed {
 		Description: msg,
 		Color:       65535,
 		Footer: &disgord.EmbedFooter{
-			Text: "Em dois minutos a batalha ira começar (maximo de 7 jogadores)",
+			Text: "Em dois minutos a batalha ira começar (maximo de 8 jogadores)",
 		},
 	}
 }
@@ -545,7 +545,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}, 120)
 		var usersDb []*entities.User
 		for _, user := range users {
-			u := database.User.GetUser(ctx, user.ID, "Galos")
+			u := database.User.GetUser(ctx, user.ID, "Galos", "Trials")
 			usersDb = append(usersDb, &u)
 		}
 		var highestRarity rinha.Rarity = 0
@@ -563,15 +563,15 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			sumOfAttributes += user.Attributes[0] + user.Attributes[1]
 		}
 		galoAdv := entities.Rooster{
-			Xp:      sumOfXp * (5 + (len(usersDb) / 3) + (sumOfResets / 2)),
+			Xp:      sumOfXp * (5 + (len(usersDb) / 3) + (sumOfResets / 5)),
 			Type:    rinha.GetRandByType(highestRarity),
 			Equip:   true,
 			Evolved: true,
-			Resets:  5 + (len(usersDb) / 2) + sumOfResets,
+			Resets:  5 + (len(usersDb) / 3) + sumOfResets,
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [5]int{sumOfAttributes + 80, 60 + (sumOfAttributes / 3), 0, 20 + (sumOfAttributes / 2), sumOfAttributes},
+			Attributes: [5]int{sumOfAttributes + 60, 40 + (sumOfAttributes / 3), 0, (sumOfAttributes / 2), sumOfAttributes / 5},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {
@@ -592,16 +592,16 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		if winner == 0 {
 			for _, user := range users {
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
-					u.Money += 400
+					u.Money += 450
 					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-						r.Xp += 750
+						r.Xp += 900
 						return r
 					})
 					return u
 				}, "Galos")
 			}
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **400**\nXp: **750**",
+				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **450**\nXp: **900**",
 			})
 		} else {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{

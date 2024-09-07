@@ -41,10 +41,10 @@ func GenerateLootPrices() (text string) {
 
 func MessageRandomLootbox() (Rarity, int) {
 	rand := utils.RandInt(100)
-	if rand < 17 {
+	if rand < 22 {
 		return Epic, 2
 	}
-	if rand < 41 {
+	if rand < 48 {
 		return Rare, 1
 	}
 	return Common, 0
@@ -145,7 +145,7 @@ func OpenCommon(pity int) (int, bool) {
 
 func OpenLegendary(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 1.8)
+	pitVal := int(CalcPity(pity) * 1.5)
 	if 2+pitVal >= value {
 		return GetRandByType(Mythic), true
 	} else if 90 >= value {
@@ -156,8 +156,8 @@ func OpenLegendary(pity int) (int, bool) {
 
 func OpenMythic(pity int) (int, bool) {
 	value := utils.RandInt(1001)
-	pitVal := int(CalcPity(pity) * 40)
-	if 40+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 30)
+	if 30+pitVal >= value {
 		return GetRandByType(Mythic), true
 	}
 	return GetRandByType(Legendary), false
@@ -174,8 +174,8 @@ func OpenItems(pity int) (int, bool) {
 
 func OpenItemsMythic(pity int) (int, bool) {
 	value := utils.RandInt(101)
-	pitVal := int(CalcPity(pity) * 2)
-	if 2+pitVal >= value {
+	pitVal := int(CalcPity(pity) * 1)
+	if 1+pitVal >= value {
 		return GetItemByLevel(6), true
 	}
 	return GetItemByLevel(4), false
@@ -242,4 +242,40 @@ func GetLbID(items []*entities.Item, lootType int) (id uuid.UUID, exists bool) {
 		}
 	}
 	return
+}
+
+func GetTrialLootbox(rarity Rarity) int {
+
+	if rarity == Epic {
+		rand := utils.RandInt(100)
+		if 33 >= rand {
+			return 3
+		}
+		return 2
+	}
+
+	if rarity == Legendary {
+		rand := utils.RandInt(100)
+		if 12 >= rand {
+			return 4
+		}
+		return 3
+	}
+
+	if rarity == Mythic {
+		rand := utils.RandInt(100)
+		if rand == 0 {
+			return 8
+		} else if 2 >= rand {
+			return 7
+		}
+		return 4
+	}
+
+	rand := utils.RandInt(100)
+	if 38 >= rand {
+		return 2
+	}
+	return 1
+
 }

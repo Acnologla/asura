@@ -213,7 +213,9 @@ func GetEquippedGalo(user *entities.User) *entities.Rooster {
 			return galo
 		}
 	}
-	log.Println("excuse me wtf")
+	if os.Getenv("PRODUCTION") != "" {
+		log.Println("excuse me wtf")
+	}
 	return user.Galos[0]
 }
 
@@ -296,6 +298,9 @@ func Between(damage [2]int) int {
 }
 
 func CalcXP(level int) int {
+	if 0 >= level {
+		return 1
+	}
 	return int(math.Pow(float64(level-1), 2)) * 30
 }
 
@@ -347,6 +352,16 @@ func GetGaloByID(galos []*entities.Rooster, id uuid.UUID) *entities.Rooster {
 }
 func GetRand() int {
 	return utils.RandInt(len(Classes)-1) + 1
+}
+
+func GetTrialsMultiplier(user *entities.User) float64 {
+	rooster := GetEquippedGalo(user)
+	for _, trial := range user.Trials {
+		if trial.Rooster == rooster.Type {
+			return 1 + (float64(trial.Win) * 0.04)
+		}
+	}
+	return 1
 }
 
 func GetItemByID(items []*entities.Item, id uuid.UUID) *entities.Item {

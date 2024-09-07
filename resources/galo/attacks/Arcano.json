@@ -34,7 +34,7 @@
   },
   {
     "name": "Metal",
-    "damage": [10, 15],
+    "damage": [5, 15],
     "level": 8,
     "effect": [1, 4]
   },
@@ -46,7 +46,7 @@
   },
   {
     "name": "Agua",
-    "damage": [15, 25],
+    "damage": [15, 20],
     "level": 11,
     "effect": [1, 14],
     "self": true
@@ -70,7 +70,7 @@
   },
   {
     "name": "Escuridao",
-    "damage": [25, 40],
+    "damage": [25, 35],
     "level": 19,
     "effect": [0.6, 21]
   },
@@ -83,7 +83,7 @@
   },
   {
     "name": "Gravidade",
-    "damage": [20, 30],
+    "damage": [20, 25],
     "effect": [1, 28],
     "level": 23
   },

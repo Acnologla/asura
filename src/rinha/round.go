@@ -78,10 +78,11 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 	}
 
 	if round.Attacker.IsBlack {
-		attack_damage = int(float64(attack_damage) * 1.25)
+		attack_damage = int(float64(attack_damage) * 1.3)
 	}
 
-	attack_damage += int(float32(user.Attributes[1]) * 0.6)
+	attack_damage = int(float64(attack_damage) * GetTrialsMultiplier(user))
+	attack_damage += int(float32(user.Attributes[1]) * 0.5)
 	if HasUpgrade(user.Upgrades, 1, 0) {
 		attack_damage += 10
 		if HasUpgrade(user.Upgrades, 1, 0, 0) {
@@ -172,11 +173,16 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 	if isNegative {
 		effect_damage = effect_damage * -1
 	}
+
+	if receiver.Galo.Type == 51 && effect.Type > 2 {
+		return 0
+	}
+
 	switch effect.Type {
 	case 1:
 		{
 			if ataccker.IsBlack {
-				effect_damage = int(float64(effect_damage) * 1.25)
+				effect_damage = int(float64(effect_damage) * 1.3)
 			}
 			if ataccker.ItemEffect == 6 {
 				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
@@ -201,6 +207,10 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 			if ataccker.Galo.Type == 33 {
 				lvl := CalcLevel(ataccker.Galo.Xp)
 				ataccker.Life += int(float64(effect_damage) * (1 + (0.16 * float64(lvl/10))))
+			}
+
+			if receiver.Galo.Type == 51 {
+				return 0
 			}
 
 			receiver.Life -= effect_damage

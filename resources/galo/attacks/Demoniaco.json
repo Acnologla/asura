@@ -48,7 +48,7 @@
   },
   {
     "name": "Furia demoniaca",
-    "damage": [53, 72],
+    "damage": [65, 78],
     "level": 13
   },
   {
@@ -58,39 +58,39 @@
   },
   {
     "name": "Escuridão densa",
-    "damage": [58, 87],
+    "damage": [61, 90],
     "level": 17
   },
   {
     "name": "Prisão infernal",
-    "damage": [48, 77],
-    "effect": [0.5, 3],
+    "damage": [53, 70],
+    "effect": [0.65, 3],
     "level": 19
   },
   {
     "name": "Fragilidade demoniaca",
-    "damage": [40, 60],
+    "damage": [40, 70],
     "effect": [1, 32],
     "level": 21
   },
   {
     "name": "Inferno na terra",
-    "damage": [78, 102],
+    "damage": [80, 103],
     "level": 22
   },
   {
     "name": "Espada de lucifer",
-    "damage": [98, 132],
+    "damage": [100, 130],
     "level": 25
   },
   {
     "name": "Destruiçao em massa",
-    "damage": [80, 200],
+    "damage": [100, 200],
     "level": 30
   },
   {
     "name": "Fragilidade destrutiva",
-    "damage": [100, 110],
+    "damage": [100, 150],
     "effect": [1, 32],
     "evolved": true,
     "level": 30

@@ -189,6 +189,12 @@ func (adapter UserAdapterPsql) UpdateMissions(ctx context.Context, id disgord.Sn
 	}
 }
 
+func (adapter UserAdapterPsql) AddTrialWin(ctx context.Context, trial *entities.Trial) error {
+	trial.Win++
+	_, err := adapter.Db.NewUpdate().Model(trial).WherePK().Exec(ctx)
+	return err
+}
+
 func (adapter UserAdapterPsql) UpdateRooster(ctx context.Context, user *entities.User, id uuid.UUID, callback func(entities.Rooster) entities.Rooster) error {
 	var galo *entities.Rooster
 	for _, gal := range user.Galos {
@@ -203,6 +209,12 @@ func (adapter UserAdapterPsql) UpdateRooster(ctx context.Context, user *entities
 	cb := callback(*galo)
 	galo = &cb
 	_, err := adapter.Db.NewUpdate().Model(galo).Where("id = ?", galo.ID).Exec(ctx)
+	return err
+}
+
+func (adapter UserAdapterPsql) InsertTrial(ctx context.Context, id disgord.Snowflake, trial *entities.Trial) error {
+	trial.UserID = id
+	_, err := adapter.Db.NewInsert().Model(trial).Exec(ctx)
 	return err
 }
 

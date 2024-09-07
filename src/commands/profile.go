@@ -249,7 +249,10 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		} else {
 			img = cache.GetImageFromCache(ctx, "profile", userGaloImg)
 			if img == nil {
-				imgD, _ := utils.DownloadImage(userGaloImg)
+				imgD, err3 := utils.DownloadImage(userGaloImg)
+				if err3 != nil {
+					return nil
+				}
 				imgD = resize.Resize(55, 55, imgD, resize.Lanczos3)
 				img = &imgD
 				cache.CacheProfileImage(ctx, img, userGaloImg)

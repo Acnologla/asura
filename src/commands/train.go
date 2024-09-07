@@ -145,7 +145,7 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 
 func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	discordUser := itc.Member.User
-	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items")
+	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items", "Trials")
 	galo := rinha.GetEquippedGalo(&user)
 	//text := translation.T("TrainMessage", translation.GetLocale(itc), discordUser.Username)
 	//utils.Confirm(ctx, text, itc, discordUser.ID, func() {
@@ -159,13 +159,33 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	galoAdv := entities.Rooster{
 		Xp:    galo.Xp,
-		Type:  rinha.GetRand(),
+		Type:  rinha.GetRandByType(rinha.Legendary),
 		Equip: true,
 	}
+
 	if rinha.CalcLevel(galo.Xp) > 1 {
 		galoAdv.Xp = rinha.CalcXP(rinha.CalcLevel(galo.Xp) - 1)
 	}
-	lockEvent(ctx, discordUser.ID, "Clone de "+rinha.Classes[galoAdv.Type].Name)
+
+	advClass := rinha.Classes[galoAdv.Type]
+	authorClass := rinha.Classes[galo.Type]
+	if rinha.Epic >= authorClass.Rarity {
+		sub := 0
+		if rinha.Epic == authorClass.Rarity {
+			sub = 1
+		}
+		if advClass.Rarity == rinha.Legendary {
+			galoAdv.Xp = rinha.CalcXP(rinha.CalcLevel(galo.Xp) - 3 - sub)
+		}
+		if advClass.Rarity == rinha.Mythic {
+			galoAdv.Xp = rinha.CalcXP(rinha.CalcLevel(galo.Xp) - 4 - sub)
+		}
+	}
+
+	if galoAdv.Xp < 0 {
+		galoAdv.Xp = 5
+	}
+	lockEvent(ctx, discordUser.ID, "Clone de "+advClass.Name)
 	defer unlockEvent(ctx, discordUser.ID)
 	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -227,7 +247,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			calc++
 		}
 		if calc < 0 {
-			if rinha.Classes[galo.Type].Rarity == rinha.Legendary {
+			if rinha.Classes[galo.Type].Rarity >= rinha.Legendary {
 				calc -= 2
 			}
 		}
@@ -326,7 +346,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		galo.Xp += xpOb
 		sendLevelUpEmbed(ctx, itc, galo, discordUser, xpOb)
 	} else {
-		xpO := utils.RandInt(7) + 2
+		xpO := utils.RandInt(13) + 3
 		moneyO := utils.RandInt(3) + 1
 		if galo.Resets > 0 {
 			for i := 0; i < galo.Resets; i++ {
