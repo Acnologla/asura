@@ -563,7 +563,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			sumOfAttributes += user.Attributes[0] + user.Attributes[1]
 		}
 		galoAdv := entities.Rooster{
-			Xp:      sumOfXp * (5 + (len(usersDb) / 3) + (sumOfResets / 5)),
+			Xp:      sumOfXp * (5 + (len(usersDb) / 4) + (sumOfResets / 5)),
 			Type:    rinha.GetRandByType(highestRarity),
 			Equip:   true,
 			Evolved: true,
@@ -571,7 +571,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [5]int{sumOfAttributes + 60, 40 + (sumOfAttributes / 3), 0, (sumOfAttributes / 2), sumOfAttributes / 5},
+			Attributes: [5]int{sumOfAttributes + 60, 40 + (sumOfAttributes / 5), 0, (sumOfAttributes / 2), sumOfAttributes / 5},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {

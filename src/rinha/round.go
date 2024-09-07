@@ -245,6 +245,9 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 		}
 	case 5:
 		{
+			if ataccker.Galo.Type == 51 {
+				return 0
+			}
 			round.Reflex = true
 		}
 	case 6:

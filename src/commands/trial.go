@@ -126,15 +126,11 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 
 		if class.Rarity > rinha.Epic {
-			atbMultiplier := 1
-			galoAdv.Resets += 5
-			if class.Rarity > rinha.Legendary {
-				atbMultiplier = 2
-				galoAdv.Resets += 5
-
+			atbs := (user.UserXp / 100) * ((trial.Win / 2) + 1)
+			if class.Rarity == rinha.Legendary {
+				atbs = atbs / 2
 			}
-			atbs := (user.UserXp / 100) * atbMultiplier * ((trial.Win / 3) + 1)
-			userAdv.Attributes = [5]int{atbs, atbs, atbs, atbs, atbs}
+			userAdv.Attributes = [5]int{atbs * 2, atbs / 5, atbs, atbs / 5, atbs / 5}
 		}
 
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
