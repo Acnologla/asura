@@ -567,7 +567,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Type:    rinha.GetRandByType(highestRarity),
 			Equip:   true,
 			Evolved: true,
-			Resets:  5 + (len(usersDb) / 3) + sumOfResets,
+			Resets:  8 + (len(usersDb) / 4) + (sumOfResets / 2),
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},

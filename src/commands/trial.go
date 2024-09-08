@@ -118,7 +118,7 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			Type:    rinha.GetRandByType(class.Rarity),
 			Xp:      xp,
 			Evolved: class.Rarity > rinha.Epic || level >= 40,
-			Resets:  rooster.Resets * (int(class.Rarity) + trial.Win),
+			Resets:  rooster.Resets * (1 + trial.Win),
 		}
 
 		userAdv := entities.User{
@@ -130,7 +130,8 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if class.Rarity == rinha.Legendary {
 				atbs = atbs / 2
 			}
-			userAdv.Attributes = [5]int{atbs + 700, atbs / 6, atbs, atbs / 4, atbs / 4}
+			healthAtb := float64(atbs) * 0.8
+			userAdv.Attributes = [5]int{int(healthAtb) + 720, atbs / 6, atbs, atbs / 5, atbs / 4}
 		}
 
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
