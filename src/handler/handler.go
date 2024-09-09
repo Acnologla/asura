@@ -8,7 +8,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -34,7 +33,7 @@ const (
 	Games
 )
 
-const apiURL = "https://discord.com/api/v8"
+const apiURL = "https://discord.com/api/v10"
 
 var Client *disgord.Client
 var client = &http.Client{}
@@ -61,6 +60,7 @@ func ExecuteInteraction(ctx context.Context, interaction *disgord.InteractionCre
 	if interaction.Type == disgord.InteractionApplicationCommand {
 		return Run(ctx, interaction)
 	}
+
 	return nil
 }
 
@@ -79,21 +79,28 @@ func GetCommand(name string) Command {
 	return command
 }
 
-func Run(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	cacheCommand := cache.GetCachedCommand(ctx, itc)
-	if cacheCommand != nil {
+func Run(ctx context.Context, interaction *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
+	cached := cache.GetCachedCommand(ctx, interaction)
+
+	if cached != nil {
 		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: cacheCommand,
+			Data: cached,
 		}
 	}
-	command := GetCommand(itc.Data.Name)
+
+	command := GetCommand(interaction.Data.Name)
+
 	if command.Run == nil {
 		return nil
 	}
-	locale := translation.GetLocale(itc)
-	if cooldown, ok := GetCooldown(ctx, itc.Member.User.ID, command); ok {
-		needTime := command.Cooldown - int(time.Since(cooldown).Seconds())
+
+	locale := translation.GetLocale(interaction)
+
+	if cooldown, ok := GetCooldown(ctx, interaction.Member.User.ID, command); ok {
+		since := int(time.Since(cooldown).Seconds())
+		needTime := command.Cooldown - since
+
 		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
@@ -101,144 +108,168 @@ func Run(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInt
 			},
 		}
 	}
-	SetCooldown(ctx, itc.Member.User.ID, command)
-	res := command.Run(ctx, itc)
-	if command.Cache != 0 && res != nil {
-		cache.CacheCommand(ctx, itc, res, command.Cache)
-	}
-	return res
-}
 
-func findCommand(command string, commands []*disgord.ApplicationCommand) *disgord.ApplicationCommand {
-	for _, c := range commands {
-		if c.Name == command {
-			return c
-		}
+	SetCooldown(ctx, interaction.Member.User.ID, command)
+
+	resp := command.Run(ctx, interaction)
+
+	if command.Cache != 0 && resp != nil {
+		cache.CacheCommand(ctx, interaction, resp, command.Cache)
 	}
-	return nil
+
+	return resp
 }
 
 func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
-	if command.Description != realCommand.Description {
+	if command.Description != realCommand.Description || len(command.Options) != len(realCommand.Options) {
 		return true
 	}
-	if len(command.Options) != len(realCommand.Options) {
-		return true
-	}
+
 	for i, option := range command.Options {
-		if option.Name != realCommand.Options[i].Name {
+		realOption := realCommand.Options[i]
+		if option.Name != realOption.Name || option.Type != realOption.Type ||
+			option.Description != realOption.Description || option.Required != realOption.Required ||
+			option.MaxValue != realOption.MaxValue || option.MinValue != realOption.MinValue ||
+			option.Autocomplete != realOption.Autocomplete {
 			return true
 		}
-		if option.Type != realCommand.Options[i].Type {
-			return true
-		}
-		if option.Description != realCommand.Options[i].Description {
-			return true
-		}
-		if option.Required != realCommand.Options[i].Required {
-			return true
-		}
-
-		if option.MaxValue != realCommand.Options[i].MaxValue {
-			return true
-		}
-		if option.MinValue != realCommand.Options[i].MinValue {
-
-			return true
-		}
-
-		if option.Autocomplete != realCommand.Options[i].Autocomplete {
-			return true
-		}
-
 	}
+
 	return false
 }
 
-func Init(appID, token string, session *disgord.Client) {
+func createDiscordCommand(name string, command Command) disgord.ApplicationCommand {
+	return disgord.ApplicationCommand{
+		Name:              name,
+		DefaultPermission: true,
+		Type:              disgord.ApplicationCommandChatInput,
+		Options:           command.Options,
+		Description:       command.Description,
+	}
+}
+
+func getExistingCommands(endpoint, token string) []*disgord.ApplicationCommand {
 	var commands []*disgord.ApplicationCommand
-	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
 	request, err := http.NewRequest("GET", endpoint, nil)
+
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	request.Header.Set("authorization", "Bot "+token)
 	resp, err := client.Do(request)
 	json.NewDecoder(resp.Body).Decode(&commands)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	for name, command := range Commands {
-		commandR := findCommand(name, commands)
-		request := func(method string, name string) {
-			var newCommand disgord.ApplicationCommand
-			newCommand.Name = name
-			newCommand.DefaultPermission = true
-			newCommand.Type = disgord.ApplicationCommandChatInput
-			newCommand.Options = command.Options
-			newCommand.Description = command.Description
-			val, _ := json.Marshal(newCommand)
-			reader := bytes.NewBuffer(val)
-			_endpoint := endpoint
-			if method == "PATCH" {
-				_endpoint += fmt.Sprintf("/%d", commandR.ID)
-			}
-			req, _ := http.NewRequest(method, _endpoint, reader)
-			req.Header.Add("Authorization", "Bot "+token)
-			req.Header.Add("Content-Type", "application/json")
-			res, err := client.Do(req)
-			if err != nil {
-				log.Fatal(err)
-			}
-			x, _ := ioutil.ReadAll(res.Body)
-			fmt.Println(string(x))
-		}
-		if commandR == nil {
-			fmt.Println("criando")
 
-			request("POST", command.Name)
-			for _, alias := range command.Aliases {
-				request("POST", alias)
+	return commands
+}
+
+func uploadCommands(endpoint, token string, commands []disgord.ApplicationCommand) {
+	cmds, _ := json.Marshal(commands)
+	reader := bytes.NewBuffer(cmds)
+	req, _ := http.NewRequest("PUT", endpoint, reader)
+
+	req.Header.Add("Authorization", "Bot "+token)
+	req.Header.Add("Content-Type", "application/json")
+
+	_, err := client.Do(req)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func clone[K comparable, V any](og map[K]V) map[K]V {
+	cloned := make(map[K]V)
+
+	for key, value := range og {
+		cloned[key] = value
+	}
+
+	return cloned
+}
+
+func Init(appID, token string, session *disgord.Client) {
+	var newCommands []disgord.ApplicationCommand
+
+	endpoint := fmt.Sprintf("%s/applications/%s/commands", apiURL, appID)
+	commands := getExistingCommands(endpoint, token)
+	cached := clone(Commands)
+	needUpload := false
+
+	for _, command := range commands {
+		realCommand, hasCommand := Commands[command.Name]
+
+		if hasCommand {
+			if HasChanged(command, realCommand) {
+				needUpload = true
+
+				newCommands = append(newCommands, createDiscordCommand(command.Name, realCommand))
 			}
-		} else if HasChanged(commandR, command) {
-			fmt.Println("atualizando")
-			request("PATCH", command.Name)
+
+			delete(cached, command.Name)
 		}
 	}
+
+	if len(cached) != 0 {
+		needUpload = true
+
+		for name, command := range Commands {
+			newCommands = append(newCommands, createDiscordCommand(name, command))
+		}
+	}
+
+	if needUpload {
+		fmt.Println("Upando comandos novos!")
+		uploadCommands(endpoint, token, newCommands)
+	}
+
 	Client = session
 }
 
-func HandleInteraction(itc *disgord.InteractionCreate) {
-	if itc.Member == nil {
+func HandleInteraction(interaction *disgord.InteractionCreate) {
+	if interaction.Member == nil {
 		return
 	}
-	if itc.Type == disgord.InteractionApplicationCommand {
+
+	if interaction.Type == disgord.InteractionApplicationCommand {
 		ctx := context.Background()
-		response := ExecuteInteraction(ctx, itc)
-		if response != nil {
-			err := Client.SendInteractionResponse(ctx, itc, response)
+		resp := ExecuteInteraction(ctx, interaction)
+
+		if resp != nil {
+			err := Client.SendInteractionResponse(ctx, interaction, resp)
+
 			if err != nil {
 				fmt.Println(err)
 			}
 		}
-		author := itc.Member.User
-		tag := author.Username + "#" + author.Discriminator.String()
-		name := GetCommand(itc.Data.Name).Name
-		telemetry.Info(fmt.Sprintf("Command %s used by %s", name, tag), map[string]string{
-			"guild":   strconv.FormatUint(uint64(itc.GuildID), 10),
+
+		author := interaction.Member.User
+		command := GetCommand(interaction.Data.Name)
+
+		tag := fmt.Sprintf("%s#%s", author.Username, author.Discriminator.String())
+		message := fmt.Sprintf("Command %s used by %s", command.Name, tag)
+
+		telemetry.Info(message, map[string]string{
+			"guild":   strconv.FormatUint(uint64(interaction.GuildID), 10),
+			"channel": strconv.FormatUint(uint64(interaction.ChannelID), 10),
 			"user":    strconv.FormatUint(uint64(author.ID), 10),
-			"command": name,
-			"channel": strconv.FormatUint(uint64(itc.ChannelID), 10),
+			"command": command.Name,
 		})
-	} else if itc.Type == disgord.InteractionMessageComponent {
-		ComponentInteraction(Client, itc)
+	} else if interaction.Type == disgord.InteractionMessageComponent {
+		ComponentInteraction(Client, interaction)
 	}
 }
 
 func Worker(id int) {
 	for interaction := range InteractionChannel {
 		WorkersArray[id] = true
+
 		HandleInteraction(interaction)
+
 		WorkersArray[id] = false
 	}
 }
@@ -251,10 +282,12 @@ func init() {
 
 func GetFreeWorkers() int {
 	freeWorkers := 0
+
 	for _, worker := range WorkersArray {
 		if !worker {
 			freeWorkers++
 		}
 	}
+
 	return freeWorkers
 }
