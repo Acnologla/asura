@@ -53,6 +53,9 @@ func CheckItem(user *entities.User) (int, float64) {
 
 func InitFighter(user *entities.User, noItems bool) *Fighter {
 	life := 100 + (CalcLevel(GetEquippedGalo(user).Xp) * 5)
+	if GetEquippedGalo(user).Evolved {
+		life += 100
+	}
 	if HasUpgrade(user.Upgrades, 1) {
 		life += 25
 		if HasUpgrade(user.Upgrades, 1, 1) {

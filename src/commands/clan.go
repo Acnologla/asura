@@ -161,7 +161,7 @@ func getBattleEmbed(users []*disgord.User) *disgord.Embed {
 		Description: msg,
 		Color:       65535,
 		Footer: &disgord.EmbedFooter{
-			Text: "Em dois minutos a batalha ira começar (maximo de 8 jogadores)",
+			Text: "Em dois minutos a batalha ira começar (maximo de 10 jogadores)",
 		},
 	}
 }
@@ -512,11 +512,11 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				})
 				return
 			}
-			if len(users) >= 8 {
+			if len(users) >= 10 {
 				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
-						Content: "A batalha ja chegou ao maximo (8)",
+						Content: "A batalha ja chegou ao maximo (10)",
 					},
 				})
 				return
@@ -563,15 +563,15 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			sumOfAttributes += user.Attributes[0] + user.Attributes[1]
 		}
 		galoAdv := entities.Rooster{
-			Xp:      sumOfXp * (5 + (len(usersDb) / 4) + (sumOfResets / 5)),
+			Xp:      sumOfXp * (5 + (sumOfResets / 5)),
 			Type:    rinha.GetRandByType(highestRarity),
 			Equip:   true,
 			Evolved: true,
-			Resets:  8 + (len(usersDb) / 4) + (sumOfResets / 2),
+			Resets:  8 + (sumOfResets / 2),
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [5]int{sumOfAttributes + 60, 40 + (sumOfAttributes / 5), 0, (sumOfAttributes / 2), sumOfAttributes / 5},
+			Attributes: [5]int{sumOfAttributes + 110, 60 + (sumOfAttributes / 7), 0, (sumOfAttributes / 2), sumOfAttributes / 5},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {

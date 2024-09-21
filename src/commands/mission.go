@@ -119,7 +119,7 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		need := uint64(time.Now().Unix()) - galo.LastMission
 		embed.Footer = &disgord.EmbedFooter{
 			Text: translation.T("MissionTime", translation.GetLocale(itc), map[string]interface{}{
-				"hours":   23 - (need / 60 / 60),
+				"hours":   11 - (need / 60 / 60),
 				"minutes": 59 - (need / 60 % 60),
 			}),
 		}

@@ -886,17 +886,18 @@
     "phrase": "%s está curando! (+%d)"
   },
   {
-    "range": [110, 160],
+    "range": [150, 180],
     "name": "Pureza Ancestral",
     "turns": 2,
     "type": 1,
     "phrase": "%s está sendo purificado! (-%d)"
   },
   {
-    "range": [200, 350],
+    "range": [250, 400],
     "name": "Cura dos Céus",
     "turns": 2,
-    "type": 1,
-    "phrase": "%s está sendo purificado! (-%d)"
+    "type": 2,
+    "self": true,
+    "phrase": "%s está sendo curando! (+%d)"
   }
 ]

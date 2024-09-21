@@ -83,6 +83,10 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 
 	attack_damage = int(float64(attack_damage) * GetTrialsMultiplier(user))
 	attack_damage += int(float32(user.Attributes[1]) * 0.5)
+
+	if reflected {
+		attack_damage = int(float64(attack_damage) * 0.5)
+	}
 	if HasUpgrade(user.Upgrades, 1, 0) {
 		attack_damage += 10
 		if HasUpgrade(user.Upgrades, 1, 0, 0) {

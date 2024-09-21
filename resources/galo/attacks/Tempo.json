@@ -68,7 +68,7 @@
   },
   {
     "name": "Voltar horas",
-    "damage": [60, 80],
+    "damage": [75, 90],
     "effect": [1, 47],
     "level": 19,
     "self": true
@@ -81,13 +81,13 @@
   },
   {
     "name": "Envelhecer infinitamente",
-    "damage": [60, 80],
+    "damage": [60, 90],
     "level": 22,
     "effect": [1, 46]
   },
   {
     "name": "Viajar para o futuro",
-    "damage": [60, 80],
+    "damage": [65, 110],
     "level": 25,
     "effect": [1, 48]
   },
@@ -98,7 +98,7 @@
   },
   {
     "name": "Voltar ao inicio",
-    "damage": [200, 300],
+    "damage": [250, 300],
     "level": 30,
     "evolved": true,
     "effect": [1, 47],

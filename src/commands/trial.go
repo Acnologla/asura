@@ -130,8 +130,8 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if class.Rarity == rinha.Legendary {
 				atbs = atbs / 2
 			}
-			healthAtb := float64(atbs) * 0.8
-			userAdv.Attributes = [5]int{int(healthAtb) + 720, atbs / 6, atbs, atbs / 5, atbs / 4}
+			healthAtb := float64(atbs) * 0.65
+			userAdv.Attributes = [5]int{int(healthAtb) + 600, atbs / 10, atbs, atbs / 6, atbs / 6}
 		}
 
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{

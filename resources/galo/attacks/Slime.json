@@ -16,7 +16,7 @@
   },
   {
     "name": "Empoderamento slime",
-    "damage": [5, 25],
+    "damage": [10, 25],
     "level": 4,
     "effect": [1, 67]
   },
@@ -27,7 +27,7 @@
   },
   {
     "name": "Regeneração",
-    "damage": [15, 35],
+    "damage": [20, 35],
     "level": 7,
     "effect": [1, 2],
     "self": true
@@ -44,14 +44,14 @@
   },
   {
     "name": "Regeneração poderosa",
-    "damage": [15, 30],
+    "damage": [20, 30],
     "level": 12,
     "self": true,
     "effect": [1, 14]
   },
   {
     "name": "Escudo slime",
-    "damage": [25, 45],
+    "damage": [30, 45],
     "level": 13,
     "effect": [1, 4]
   },
@@ -67,7 +67,7 @@
   },
   {
     "name": "Esfera slime",
-    "damage": [35, 40],
+    "damage": [35, 45],
     "level": 19,
     "effect": [1, 14],
     "self": true
@@ -79,15 +79,15 @@
   },
   {
     "name": "Armadura viscosa",
-    "damage": [30, 50],
+    "damage": [40, 50],
     "level": 22,
     "effect": [1, 4]
   },
   {
     "name": "Reflexão",
-    "damage": [15, 25],
+    "damage": [20, 25],
     "level": 25,
-    "effect": [0.25, 30]
+    "effect": [0.4, 30]
   },
   {
     "name": "Mundo slime",
