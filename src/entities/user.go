@@ -13,6 +13,7 @@ const (
 	LootboxType
 	NormalType
 	CosmeticType
+	KeyType
 )
 
 type MissionType int
@@ -53,7 +54,19 @@ type Item struct {
 	ItemID   int               `bun:"itemid"`
 	Equip    bool              `bun:"equip"`
 	Type     ItemType          `bun:"type"`
+	Extra    int               `bun:"extra"`
 }
+
+type Transaction struct {
+	bun.BaseModel `bun:"table:transactions,alias:transactions"`
+
+	ID        uuid.UUID         `bun:"id,pk"`
+	UserID    disgord.Snowflake `bun:"userid"`
+	AuthorID  disgord.Snowflake `bun:"authorid"`
+	Amount    int               `bun:"amount"`
+	CreatedAt int64             `bun:"createdat"`
+}
+
 type Rooster struct {
 	bun.BaseModel `bun:"table:rooster,alias:galo"`
 
@@ -76,6 +89,7 @@ type User struct {
 	Galos           []*Rooster        `bun:"rel:has-many,join:id=userid"`
 	Items           []*Item           `bun:"rel:has-many,join:id=userid"`
 	Trials          []*Trial          `bun:"rel:has-many,join:id=userid"`
+	Transactions    []*Transaction    `bun:"rel:has-many,join:id=userid"`
 	Upgrades        []int             `bun:"upgrades,array"`
 	Win             int               `bun:"win"`
 	Lose            int               `bun:"lose"`

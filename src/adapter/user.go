@@ -16,6 +16,7 @@ type UserAdapter interface {
 	UpdateUser(ctx context.Context, id disgord.Snowflake, callback func(entities.User) entities.User, relations ...string) error
 	UpdateMissions(ctx context.Context, id disgord.Snowflake, mission *entities.Mission, done bool)
 	InsertMission(ctx context.Context, id disgord.Snowflake, mission *entities.Mission)
+	InsertTransaction(ctx context.Context, id disgord.Snowflake, transaction *entities.Transaction) error
 	InsertItemQuantity(ctx context.Context, id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType, quantity int) error
 	InsertItem(ctx context.Context, id disgord.Snowflake, items []*entities.Item, itemID int, itemType entities.ItemType) error
 	InsertTrial(ctx context.Context, id disgord.Snowflake, trial *entities.Trial) error

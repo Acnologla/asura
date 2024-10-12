@@ -39,6 +39,32 @@ func GenerateLootPrices() (text string) {
 	return
 }
 
+func RaidLootbox(rarity Rarity) int {
+	rand := utils.RandInt(101)
+	switch rarity {
+	case Common:
+		return 1
+	case Rare:
+		return 2
+	case Epic:
+		if 35 >= rand {
+			return 3
+		}
+		return 2
+	case Legendary:
+		if 5 >= rand {
+			return 4
+		}
+		return 3
+	case Mythic:
+		if 3 > rand {
+			return 7
+		}
+		return 4
+	}
+	return -1
+}
+
 func MessageRandomLootbox() (Rarity, int) {
 	rand := utils.RandInt(100)
 	if rand < 22 {
@@ -264,9 +290,9 @@ func GetTrialLootbox(rarity Rarity) int {
 
 	if rarity == Mythic {
 		rand := utils.RandInt(100)
-		if rand == 0 {
+		if rand >= 2 {
 			return 8
-		} else if 2 >= rand {
+		} else if 4 >= rand {
 			return 7
 		}
 		return 4

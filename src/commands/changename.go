@@ -39,7 +39,7 @@ func runChangeName(ctx context.Context, itc *disgord.InteractionCreate) *disgord
 			},
 		}
 	}
-	price := 100
+	price := 250
 	var msg string
 	database.User.UpdateUser(ctx, itc.Member.UserID, func(u entities.User) entities.User {
 		if rinha.IsVip(&u) {

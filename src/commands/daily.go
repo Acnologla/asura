@@ -43,8 +43,8 @@ func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				xp += 40
 			}
 			if rinha.IsVip(&u) {
-				money += int(float64(money) * 0.2)
-				xp += int(float64(xp) * 0.2)
+				money += int(float64(money) * 0.3)
+				xp += int(float64(xp) * 0.3)
 			}
 			u.DailyStrikes++
 			u.Money += money

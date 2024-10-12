@@ -53,7 +53,7 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 		round.Skill = Skills[round.Attacker.Galo.Type-1][round.SkillId]
 		galo = round.Attacker.Galo
 		user = round.Attacker.User
-		round.Attacker.Life += int(0.4 * float64(user.Attributes[4]))
+		round.Attacker.Life += int(0.3 * float64(user.Attributes[4]))
 		if HasUpgrade(user.Upgrades, 1, 1, 0) {
 			if HasUpgrade(user.Upgrades, 1, 1, 0, 1) {
 				round.Target.Life -= 40
@@ -82,7 +82,7 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 	}
 
 	attack_damage = int(float64(attack_damage) * GetTrialsMultiplier(user))
-	attack_damage += int(float32(user.Attributes[1]) * 0.5)
+	attack_damage = int(float32(attack_damage) * (1 + (0.001 * (float32(user.Attributes[1])))))
 
 	if reflected {
 		attack_damage = int(float64(attack_damage) * 0.5)

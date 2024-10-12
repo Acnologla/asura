@@ -232,7 +232,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		return nil
 	}
 	if winner == 0 {
-		xpOb := utils.RandInt(14) + 11
+		xpOb := utils.RandInt(10) + 9
 		if rinha.HasUpgrade(user.Upgrades, 0) {
 			xpOb += 3
 			if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
@@ -252,13 +252,8 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			}
 		}
 		xpOb += calc
-		money := 8
+		money := 6
 
-		if galo.Resets > 0 {
-			for i := 0; i < galo.Resets; i++ {
-				xpOb = int(float64(xpOb) * 0.75)
-			}
-		}
 		if rinha.HasUpgrade(user.Upgrades, 0, 1, 0) {
 			money += 3
 		}
@@ -273,11 +268,9 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			})
 		}
 		bpXP := 0
+		dropKey := -1
 		database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
-			if rinha.IsVip(&u) {
-				xpOb += 10
-				money += 2
-			}
+
 			item := rinha.GetItem(&u)
 			if item != nil {
 				if item.Effect == 8 {
@@ -288,6 +281,18 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 					money++
 				}
 			}
+
+			if galo.Resets > 0 {
+				for i := 0; i < galo.Resets; i++ {
+					xpOb = int(float64(xpOb) * 0.75)
+				}
+			}
+
+			if rinha.IsVip(&u) {
+				xpOb += 10
+				money += 2
+			}
+
 			u.UserXp++
 			u.TrainLimit++
 			clanUser := database.Clan.GetUserClan(ctx, discordUser.ID, "Members")
@@ -326,23 +331,49 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				return r
 			})
 			u.Money += money
+
+			if rinha.DropKey() {
+				key := rinha.GetKeyRarity()
+				dropKey = int(key)
+				database.User.InsertItem(ctx, u.ID, u.Items, int(key), entities.KeyType)
+			}
+
 			return u
 		}, "Galos", "Items")
-		ch.CreateMessage(&disgord.CreateMessage{
-			Embeds: []*disgord.Embed{
-				{
-					Color: 16776960,
-					Title: "Train",
-					Description: translation.T("TrainWin", translation.GetLocale(itc), map[string]interface{}{
-						"username": discordUser.Username,
-						"xp":       xpOb,
-						"money":    money,
-						"clanMsg":  clanMsg,
-						"bpXP":     bpXP,
-					}),
+		if dropKey != -1 {
+			ch.CreateMessage(&disgord.CreateMessage{
+				Embeds: []*disgord.Embed{
+					{
+						Color: 65535,
+						Title: "Train",
+						Description: translation.T("TrainWinKey", translation.GetLocale(itc), map[string]interface{}{
+							"username":  discordUser.Username,
+							"xp":        xpOb,
+							"money":     money,
+							"clanMsg":   clanMsg,
+							"bpXP":      bpXP,
+							"keyRarity": rinha.Rarity(dropKey).String(),
+						}),
+					},
 				},
-			},
-		})
+			})
+		} else {
+			ch.CreateMessage(&disgord.CreateMessage{
+				Embeds: []*disgord.Embed{
+					{
+						Color: 16776960,
+						Title: "Train",
+						Description: translation.T("TrainWin", translation.GetLocale(itc), map[string]interface{}{
+							"username": discordUser.Username,
+							"xp":       xpOb,
+							"money":    money,
+							"clanMsg":  clanMsg,
+							"bpXP":     bpXP,
+						}),
+					},
+				},
+			})
+		}
 		galo.Xp += xpOb
 		sendLevelUpEmbed(ctx, itc, galo, discordUser, xpOb)
 	} else {

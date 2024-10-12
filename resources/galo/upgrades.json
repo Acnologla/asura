@@ -75,7 +75,7 @@
   },
   {
     "name": "Buff de vida",
-    "value": "Seu galo começa com 25 de vida extra nas batalhas",
+    "value": "Seu galo começa com 35 de vida extra nas batalhas",
     "childs": [
       {
         "name": "Buff de dano",
@@ -105,7 +105,7 @@
       },
       {
         "name": "Buff de vida",
-        "value": "Seu galo começa com 55 de vida extra nas batalhas",
+        "value": "Seu galo começa com 70 de vida extra nas batalhas",
         "childs": [
           {
             "name": "Regeneração",
@@ -123,11 +123,11 @@
           },
           {
             "name": "Mais vida",
-            "value": "Seu galo começa com 90 de vida extra nas batalhas",
+            "value": "Seu galo começa com 115 de vida extra nas batalhas",
             "childs": [
               {
                 "name": "Intankavel",
-                "value": "Seu galo começa com 150 de vida extra nas batalhas"
+                "value": "Seu galo começa com 200 de vida extra nas batalhas"
               }
             ]
           }

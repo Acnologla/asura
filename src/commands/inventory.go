@@ -50,11 +50,21 @@ func cosmeticsToString(itens []*entities.Item) (str string) {
 	return
 }
 
+func keysToString(itens []*entities.Item) (str string) {
+	for _, item := range itens {
+		if item.Type == entities.KeyType {
+			str += fmt.Sprintf("[%d] Chave (%s) \n", item.Quantity, rinha.Rarity(item.ItemID).String())
+		}
+	}
+	return
+}
+
 func runInventory(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := database.User.GetUser(ctx, itc.Member.UserID, "Items", "Galos")
 	galos := roostersToString(user.Galos)
 	items := itensToString(user.Items)
 	cosmetics := cosmeticsToString(user.Items)
+	keys := keysToString(user.Items)
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
@@ -76,6 +86,11 @@ func runInventory(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 						{
 							Name:   "Cosmeticos",
 							Value:  cosmetics,
+							Inline: false,
+						},
+						{
+							Name:   "Chaves",
+							Value:  keys,
 							Inline: false,
 						},
 					},

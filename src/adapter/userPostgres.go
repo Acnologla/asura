@@ -212,6 +212,12 @@ func (adapter UserAdapterPsql) UpdateRooster(ctx context.Context, user *entities
 	return err
 }
 
+func (adapter UserAdapterPsql) InsertTransaction(ctx context.Context, id disgord.Snowflake, transaction *entities.Transaction) error {
+	transaction.UserID = id
+	_, err := adapter.Db.NewInsert().Model(transaction).Exec(ctx)
+	return err
+}
+
 func (adapter UserAdapterPsql) InsertTrial(ctx context.Context, id disgord.Snowflake, trial *entities.Trial) error {
 	trial.UserID = id
 	_, err := adapter.Db.NewInsert().Model(trial).Exec(ctx)
@@ -242,10 +248,10 @@ func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User
 		return 0
 	}
 
-	xpOb := utils.RandInt(7) + 2
+	xpOb := utils.RandInt(6) + 2
 
 	if isVip {
-		xpOb += 4
+		xpOb += 3
 	}
 
 	user.BattlePass += xpOb

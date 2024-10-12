@@ -204,6 +204,9 @@ func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 					price = money
 					if price == 0 {
 						price = asuraCoins
+						if rinha.IsVip(&u) {
+							price++
+						}
 						isAsuraCoins = true
 					}
 				}

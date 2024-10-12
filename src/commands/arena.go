@@ -17,7 +17,7 @@ func init() {
 		Name:        "arena",
 		Description: "Arena de galos",
 		Run:         runArena,
-		Cooldown:    5,
+		Cooldown:    4,
 		Category:    handler.Rinha,
 		Options: []*disgord.ApplicationCommandOption{
 			{

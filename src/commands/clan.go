@@ -151,19 +151,28 @@ func generateUpgradesOptions() (opts []*disgord.SelectMenuOption) {
 	return
 }
 
-func getBattleEmbed(users []*disgord.User) *disgord.Embed {
+func getBattleEmbed(users []*disgord.User, title string) *disgord.Embed {
 	msg := "Membros que iram participar da batalha: \n\n"
 	for _, user := range users {
 		msg += fmt.Sprintf("%s\n", user.Mention())
 	}
 	return &disgord.Embed{
-		Title:       "Clan Battle",
+		Title:       title,
 		Description: msg,
 		Color:       65535,
 		Footer: &disgord.EmbedFooter{
-			Text: "Em dois minutos a batalha ira começar (maximo de 10 jogadores)",
+			Text: "Em dois minutos a batalha ira começar",
 		},
 	}
+}
+
+func isInUsers(users []*disgord.User, user *disgord.User) bool {
+	for _, u := range users {
+		if u.ID == user.ID {
+			return true
+		}
+	}
+	return false
 }
 
 func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
@@ -471,7 +480,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		err := handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
-				Embeds: []*disgord.Embed{getBattleEmbed(users)},
+				Embeds: []*disgord.Embed{getBattleEmbed(users, "Clan Battle")},
 				Components: []*disgord.MessageComponent{
 					{
 						Type: disgord.MessageComponentActionRow,
@@ -491,19 +500,12 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			fmt.Println(err)
 			return nil
 		}
-		isInUsers := func(user *disgord.User) bool {
-			for _, u := range users {
-				if u.ID == user.ID {
-					return true
-				}
-			}
-			return false
-		}
+
 		mutex := sync.Mutex{}
 		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
 			mutex.Lock()
 			defer mutex.Unlock()
-			if isInUsers(ic.Member.User) {
+			if isInUsers(users, ic.Member.User) {
 				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
@@ -534,7 +536,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			}
 			users = append(users, ic.Member.User)
 			handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
-				Embeds: &([]*disgord.Embed{getBattleEmbed(users)}),
+				Embeds: &([]*disgord.Embed{getBattleEmbed(users, "Clan Battle")}),
 			})
 			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -567,11 +569,11 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Type:    rinha.GetRandByType(highestRarity),
 			Equip:   true,
 			Evolved: true,
-			Resets:  8 + (sumOfResets / 2),
+			Resets:  8 + (sumOfResets / 4),
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [5]int{sumOfAttributes + 110, 60 + (sumOfAttributes / 7), 0, (sumOfAttributes / 2), sumOfAttributes / 5},
+			Attributes: [5]int{sumOfAttributes + 100, 60 + (sumOfAttributes / 10), 0, (sumOfAttributes / 10), sumOfAttributes / 10},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {
@@ -592,9 +594,9 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		if winner == 0 {
 			for _, user := range users {
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
-					u.Money += 450
+					u.Money += 500
 					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-						r.Xp += 900
+						r.Xp += 1000
 						return r
 					})
 					return u

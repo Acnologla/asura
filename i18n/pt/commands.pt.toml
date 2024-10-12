@@ -147,6 +147,9 @@ other="Comprou a lootbox {{.}} com sucesso"
 [NoMoney]
 other="Dinheiro insuficiente use **/lootbox** para ver seu dinheiro"
 
+[MaxTransactions]
+other="Esse usuário ja recebeu o maximo de dinheiro permitido em 24 horas (20000)"
+
 [LootboxOpen]
 other="Voce abriu uma lootbox {{.lootbox}} e ganhou um {{.type}} {{.name}}\n{{.extraMsg}}"
 
@@ -375,6 +378,10 @@ other="Infelizmente {{.username}}, você perdeu. Mas por bondade, você ganhou *
 [TrainWin]
 other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhou **{{.bpXP}}** de XP para o passe de batalha"
 
+[TrainWinKey]
+other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhouMaxTransactions **{{.bpXP}}** de XP para o passe de batalha\n\nEssa batalha te dropou uma chave de raridade **{{.keyRarity}}** use **/raid** para utilizar quando estiver preparado"
+
+
 [TrainLimit]
 other="Voce excedeu seu limite de trains ganhos por dia. Faltam {{.hours}} horas e {{.minutes}} minutos para voce poder usar mais"
 
@@ -527,6 +534,9 @@ other="Id da carta"
 
 [UnoBuyHelp]
 other="Compre uma carta"
+
+[RunRaid]
+other="Use suas chaves em batalhas contra chefe"
 
 [UnoUnoHelp]
 other="Diga que esta no uno"

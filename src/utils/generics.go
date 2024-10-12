@@ -43,3 +43,19 @@ func GetIndex[T any](arr []T, b func(T) bool) int {
 
 	return -1
 }
+
+func Chunk[T any](slice []T, size int) (chunks [][]T) {
+	if size < 1 {
+		panic("chunk size cannot be less than 1")
+	}
+	for i := 0; ; i++ {
+		next := i * size
+		if len(slice[next:]) > size {
+			end := next + size
+			chunks = append(chunks, slice[next:end:end])
+		} else {
+			chunks = append(chunks, slice[i*size:])
+			return
+		}
+	}
+}

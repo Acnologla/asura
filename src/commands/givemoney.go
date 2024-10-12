@@ -6,11 +6,14 @@ import (
 	"asura/src/handler"
 	"asura/src/utils"
 	"context"
+	"time"
 
 	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
 )
+
+const MAX_TRANSACTIONS = 20000
 
 func init() {
 	handler.RegisterCommand(handler.Command{
@@ -29,12 +32,28 @@ func init() {
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeNumber,
 				Required:    true,
-				MinValue:    0,
-				MaxValue:    20000,
+				MinValue:    120,
+				MaxValue:    MAX_TRANSACTIONS,
 				Name:        "money",
 				Description: "money to give",
 			}),
 	})
+}
+
+func get24HoursTransactions(arr []*entities.Transaction) (transactions []*entities.Transaction) {
+	for _, transaction := range arr {
+		if time.Now().Unix()-transaction.CreatedAt < int64(time.Hour*24) {
+			transactions = append(transactions, transaction)
+		}
+	}
+	return
+}
+
+func sumTransactions(arr []*entities.Transaction) (sum int) {
+	for _, transaction := range arr {
+		sum += transaction.Amount
+	}
+	return
 }
 
 func runGiveMoney(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
@@ -57,18 +76,31 @@ func runGiveMoney(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 		}
 	}
 	var msg string
-	database.User.UpdateUser(ctx, itc.Member.UserID, func(u entities.User) entities.User {
-		if money > u.Money {
+	database.User.UpdateUser(ctx, itc.Member.UserID, func(uAuthor entities.User) entities.User {
+		if money > uAuthor.Money {
 			msg = "NoMoney"
-			return u
+			return uAuthor
 		}
+
 		msg = "GiveMoney"
-		u.Money -= money
 		database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
+			todayTransactions := get24HoursTransactions(u.Transactions)
+			if sumTransactions(todayTransactions)+money >= MAX_TRANSACTIONS {
+				msg = "MaxTransactions"
+				return u
+			}
+
+			uAuthor.Money -= money
 			u.Money += money
+			database.User.InsertTransaction(ctx, u.ID, &entities.Transaction{
+				Amount:    money,
+				AuthorID:  itc.Member.UserID,
+				CreatedAt: time.Now().Unix(),
+			})
+
 			return u
-		})
-		return u
+		}, "Transactions")
+		return uAuthor
 	})
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
