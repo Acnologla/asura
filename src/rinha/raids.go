@@ -2,7 +2,7 @@ package rinha
 
 import "asura/src/utils"
 
-const KEY_CHANCE = 120
+const KEY_CHANCE = 9
 
 func DropKey() bool {
 	rand := utils.RandInt(1000)
