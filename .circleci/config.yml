@@ -13,8 +13,7 @@ jobs:
       - image: jdrouet/docker-with-buildx:stable
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 18.09.3
+      - setup_remote_docker
       - run: docker run --privileged --rm tonistiigi/binfmt --install all
       - run:
           name: Docker build and deploy
