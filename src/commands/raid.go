@@ -135,7 +135,7 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 				Content: fmt.Sprintf("%s Entrou na batalha", ic.Member.User.Mention()),
 			},
 		})
-	}, 10)
+	}, 120)
 	var usersDb []*entities.User
 	for _, user := range users {
 		u := database.User.GetUser(ctx, user.ID, "Galos", "Trials")
@@ -225,6 +225,14 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 func runRaid(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	galo := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items", "Trials")
 	opts := generateKeyOpts(&galo)
+	if len(opts) == 0 {
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Content: "Voce ainda não tem nenhuma chave, consiga chaves ganhando treinos!",
+			},
+		}
+	}
 	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{

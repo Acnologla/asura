@@ -269,6 +269,12 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 		bpXP := 0
 		dropKey := -1
+		if galo.Resets > 0 {
+			for i := 0; i < galo.Resets; i++ {
+				xpOb = int(float64(xpOb) * 0.75)
+			}
+		}
+
 		database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 
 			item := rinha.GetItem(&u)
@@ -279,12 +285,6 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				if item.Effect == 9 {
 					xpOb += 2
 					money++
-				}
-			}
-
-			if galo.Resets > 0 {
-				for i := 0; i < galo.Resets; i++ {
-					xpOb = int(float64(xpOb) * 0.75)
 				}
 			}
 
