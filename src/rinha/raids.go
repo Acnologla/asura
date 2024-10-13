@@ -2,10 +2,10 @@ package rinha
 
 import "asura/src/utils"
 
-const KEY_CHANCE = 9
+const KEY_CHANCE = 6
 
 func DropKey() bool {
-	rand := utils.RandInt(1000)
+	rand := utils.RandInt(1001)
 	return rand < KEY_CHANCE
 }
 
@@ -30,17 +30,17 @@ func GetMultipliers(rarity Rarity) (int, int) {
 		return 3, 2
 	}
 	if rarity == Legendary {
-		return 5, 4
+		return 6, 5
 	}
 	if rarity == Mythic {
-		return 10, 7
+		return 11, 8
 	}
 	return 1, 1
 }
 
 // xp money
 func CalcRaidBattleWinPrize(rarity Rarity) (int, int) {
-	xp := 60
+	xp := 70
 	money := 30
 	multiplier, _ := GetMultipliers(rarity)
 	return xp * multiplier, money * multiplier

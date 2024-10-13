@@ -455,12 +455,13 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	case "battle":
-		lastTime := cache.Client.Get(ctx, fmt.Sprintf("clanBattle:%s", clan.Name))
+		redisKey := fmt.Sprintf("clanBattle:%s", clan.Name)
+		lastTime := cache.Client.Get(ctx, redisKey)
 		if lastTime.Val() != "" {
 			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
-					Content: "O chefe só estará disponível daqui a quatro horas. Por favor, aguarde um pouco",
+					Content: "O chefe só estará disponível daqui a seis horas. Por favor, aguarde um pouco",
 				},
 			}
 		}
@@ -472,8 +473,9 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			}
 		}
-		duration := time.Hour * 4
-		cache.Client.Set(ctx, fmt.Sprintf("clanBattle:%s", clan.Name), "1", duration)
+		duration := time.Hour * 6
+
+		cache.Client.Set(ctx, redisKey, "1", duration)
 		users := []*disgord.User{
 			itc.Member.User,
 		}
@@ -545,6 +547,13 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			})
 		}, 120)
+		if 5 > len(users) {
+			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+				Content: "É necessario no minimo 5 pessoas para começar a batalha",
+			})
+			cache.Client.Del(ctx, redisKey)
+			return nil
+		}
 		var usersDb []*entities.User
 		for _, user := range users {
 			u := database.User.GetUser(ctx, user.ID, "Galos", "Trials")
@@ -573,7 +582,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [5]int{sumOfAttributes + 100, 60 + (sumOfAttributes / 10), 0, (sumOfAttributes / 10), sumOfAttributes / 10},
+			Attributes: [5]int{(sumOfAttributes / 2) + 100, 30 + (sumOfAttributes / 10), 0, (sumOfAttributes / 10), 0},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {
@@ -603,7 +612,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				}, "Galos")
 			}
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **450**\nXp: **900**",
+				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **500**\nXp: **1000**",
 			})
 		} else {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{

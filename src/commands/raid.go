@@ -50,39 +50,21 @@ func generateKeyOpts(user *entities.User) (opts []*disgord.SelectMenuOption) {
 }
 
 func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *entities.User, key *entities.Item) {
+	authorRinha := isInRinha(ctx, itc.Member.User)
+	if authorRinha != "" {
+		handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+			Content: rinhaMessage(itc.Member.User.Username, authorRinha).Data.Content,
+		})
+		return
+	}
+
+	lockEvent(ctx, user.ID, "Raid")
+	keyRarity := rinha.Rarity(key.ItemID)
+
 	users := []*disgord.User{
 		itc.Member.User,
 	}
-	keyRarity := rinha.Rarity(key.ItemID)
 	raidTitle := fmt.Sprintf("Raid %s", keyRarity.String())
-	/*
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
-			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.CreateInteractionResponseData{
-				Content: fmt.Sprintf("A raid %s foi iniciada, reaja com o botão para entrar na batalha", keyRarity.String()),
-			},
-		})
-		/*
-			err := handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.CreateInteractionResponseData{
-					Embeds: []*disgord.Embed{getBattleEmbed(users, raidTitle)},
-					Components: []*disgord.MessageComponent{
-						{
-							Type: disgord.MessageComponentActionRow,
-							Components: []*disgord.MessageComponent{
-								{
-									Type:     disgord.MessageComponentButton,
-									Label:    "Entrar",
-									CustomID: "joinBattle",
-									Style:    disgord.Primary,
-								},
-							},
-						},
-					},
-				},
-			})
-	*/
 	msg, err := handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
 		Embeds: []*disgord.Embed{getBattleEmbed(users, raidTitle)},
 		Components: []*disgord.MessageComponent{
@@ -125,10 +107,18 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 			})
 			return
 		}
+		isRinha := isInRinha(ctx, ic.Member.User)
+		if isRinha != "" {
+			handler.Client.Channel(ic.ChannelID).CreateMessage(&disgord.CreateMessage{
+				Content: rinhaMessage(ic.Member.User.Username, isRinha).Data.Content,
+			})
+			return
+		}
 		users = append(users, ic.Member.User)
-		handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+		handler.Client.Channel(msg.ChannelID).Message(msg.ID).Update(&disgord.UpdateMessage{
 			Embeds: &([]*disgord.Embed{getBattleEmbed(users, raidTitle)}),
 		})
+		lockEvent(ctx, ic.Member.User.ID, "Raid")
 		handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
@@ -174,6 +164,11 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 		Usernames:   usernames,
 	}, false)
 	lb := -1
+
+	for _, user := range users {
+		unlockEvent(ctx, user.ID)
+	}
+
 	if winner == 0 {
 		xp, money := rinha.CalcRaidBattleWinPrize(keyRarity)
 		for _, user := range users {
@@ -186,7 +181,7 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 						database.User.InsertItem(ctx, user.ID, u.Items, lb, entities.LootboxType)
 					} else {
 						database.User.UpdateItem(ctx, &u, key.ID, func(i entities.Item) entities.Item {
-							i.Extra++
+							i.Extra = key.Extra + 1
 							return i
 						})
 					}

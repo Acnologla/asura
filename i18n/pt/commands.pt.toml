@@ -379,7 +379,7 @@ other="Infelizmente {{.username}}, você perdeu. Mas por bondade, você ganhou *
 other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhou **{{.bpXP}}** de XP para o passe de batalha"
 
 [TrainWinKey]
-other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhouMaxTransactions **{{.bpXP}}** de XP para o passe de batalha\n\nEssa batalha te dropou uma chave de raridade **{{.keyRarity}}** use **/raid** para utilizar quando estiver preparado"
+other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhou **{{.bpXP}}** de XP para o passe de batalha\n\nEssa batalha te dropou uma chave de raridade **{{.keyRarity}}** use **/raid** para utilizar quando estiver preparado"
 
 
 [TrainLimit]

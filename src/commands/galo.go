@@ -39,7 +39,7 @@ func init() {
 	})
 }
 
-var evolvedPrice = 10
+var evolvedPrice = 8
 
 func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
@@ -209,7 +209,7 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	}
-	if !galo.Evolved && galo.Resets > 4 && u.AsuraCoin > evolvedPrice {
+	if !galo.Evolved && galo.Resets > 4 && u.AsuraCoin >= evolvedPrice {
 		component := &disgord.MessageComponent{
 			Type:     disgord.MessageComponentButton,
 			Label:    "Evoluir",

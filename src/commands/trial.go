@@ -126,7 +126,7 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 
 		if class.Rarity > rinha.Epic {
-			atbs := (user.UserXp / 100) * ((trial.Win / 2) + 1)
+			atbs := (user.UserXp / 150) * ((trial.Win / 2) + 1)
 			if class.Rarity == rinha.Legendary {
 				atbs = atbs / 2
 			}
