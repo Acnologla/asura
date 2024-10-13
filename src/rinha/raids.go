@@ -33,7 +33,7 @@ func GetMultipliers(rarity Rarity) (int, int) {
 		return 6, 5
 	}
 	if rarity == Mythic {
-		return 11, 8
+		return 11, 10
 	}
 	return 1, 1
 }
