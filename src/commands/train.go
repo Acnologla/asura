@@ -10,6 +10,7 @@ import (
 	"asura/src/utils"
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"asura/src/translation"
@@ -284,7 +285,6 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 				if item.Effect == 9 {
 					xpOb += 2
-					money++
 				}
 			}
 
@@ -332,10 +332,14 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			})
 			u.Money += money
 
-			if rinha.DropKey() {
+			if rinha.DropKey(u.UserXp) {
 				key := rinha.GetKeyRarity()
 				dropKey = int(key)
 				database.User.InsertItem(ctx, u.ID, u.Items, int(key), entities.KeyType)
+				telemetry.Debug(fmt.Sprintf("%s get key %s", discordUser.Username, key.String()), map[string]string{
+					"user":      strconv.FormatUint(uint64(u.ID), 10),
+					"keyRarity": key.String(),
+				})
 			}
 
 			return u
@@ -384,18 +388,23 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				xpO = int(float64(xpO) * 0.75)
 			}
 		}
-		database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
-			u.Lose++
-			u.Money += moneyO
+		if user.TrainLimit >= 170 {
+			xpO = 0
+			moneyO = 0
+		} else {
+			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
+				u.Lose++
+				u.Money += moneyO
 
-			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-				r.Xp += xpO
-				return r
-			})
+				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+					r.Xp += xpO
+					return r
+				})
 
-			return u
-		}, "Galos", "Items")
+				return u
+			}, "Galos", "Items")
 
+		}
 		ch.CreateMessage(&disgord.CreateMessage{
 			Embeds: []*disgord.Embed{
 				{

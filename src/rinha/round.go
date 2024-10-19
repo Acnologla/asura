@@ -82,7 +82,7 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 	}
 
 	attack_damage = int(float64(attack_damage) * GetTrialsMultiplier(user))
-	attack_damage = int(float32(attack_damage) * (1 + (0.0015 * (float32(user.Attributes[1])))))
+	attack_damage = int(float32(attack_damage) * (1 + (0.002 * (float32(user.Attributes[1])))))
 
 	if reflected {
 		attack_damage = int(float64(attack_damage) * 0.5)
@@ -191,8 +191,9 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 			if ataccker.ItemEffect == 6 {
 				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
 			}
+
 			if HasUpgrade(receiver.User.Upgrades, 2, 0, 0, 1) {
-				if 9 >= utils.RandInt(101) {
+				if 8 >= utils.RandInt(101) {
 					effect_damage = 0
 				}
 			}
@@ -215,6 +216,11 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 
 			if receiver.Galo.Type == 51 {
 				return 0
+			}
+
+			// shields
+			if receiver.ItemEffect == 12 {
+				effect_damage = int(math.Round(float64(effect_damage) * round.Target.ItemPayload))
 			}
 
 			receiver.Life -= effect_damage
@@ -376,7 +382,7 @@ func (battle *Battle) Play(skill int) []*Result {
 			battle.ReflexType = 1
 		}
 		if HasUpgrade(round.Target.User.Upgrades, 2) {
-			num := 3
+			num := 2
 			if HasUpgrade(round.Target.User.Upgrades, 2, 0) {
 				num += 2
 			}
@@ -384,7 +390,7 @@ func (battle *Battle) Play(skill int) []*Result {
 				num += 3
 			}
 			if HasUpgrade(round.Target.User.Upgrades, 2, 0, 0, 0) {
-				num += 3
+				num += 2
 			}
 			if num >= utils.RandInt(101) {
 				round.Results = append(round.Results, &Result{Dodge: true})

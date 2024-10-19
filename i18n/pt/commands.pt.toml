@@ -148,7 +148,7 @@ other="Comprou a lootbox {{.}} com sucesso"
 other="Dinheiro insuficiente use **/lootbox** para ver seu dinheiro"
 
 [MaxTransactions]
-other="Esse usuário ja recebeu o maximo de dinheiro permitido em 24 horas (20000)"
+other="Esse usuário ja recebeu o maximo de dinheiro permitido em 24 horas (10000)"
 
 [LootboxOpen]
 other="Voce abriu uma lootbox {{.lootbox}} e ganhou um {{.type}} {{.name}}\n{{.extraMsg}}"

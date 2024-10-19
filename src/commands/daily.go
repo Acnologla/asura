@@ -35,11 +35,11 @@ func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if topGGCalc >= 2 {
 				u.DailyStrikes = 0
 			}
-			money = 45 + u.DailyStrikes/3
+			money = 40 + u.DailyStrikes/3
 			xp = 60 + int((float64(u.DailyStrikes) * 1.25))
 			member, err := handler.Client.Guild(710179373860519997).Member(itc.Member.UserID).Get()
 			if err == nil && member != nil {
-				money += 20
+				money += 15
 				xp += 40
 			}
 			if rinha.IsVip(&u) {

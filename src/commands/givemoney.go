@@ -13,7 +13,7 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
-const MAX_TRANSACTIONS = 20000
+const MAX_TRANSACTIONS = 10000
 
 func init() {
 	handler.RegisterCommand(handler.Command{
@@ -42,7 +42,7 @@ func init() {
 
 func get24HoursTransactions(arr []*entities.Transaction) (transactions []*entities.Transaction) {
 	for _, transaction := range arr {
-		if time.Now().Unix()-transaction.CreatedAt < int64(time.Hour*24) {
+		if time.Now().Unix()-transaction.CreatedAt < 60*60*24 {
 			transactions = append(transactions, transaction)
 		}
 	}

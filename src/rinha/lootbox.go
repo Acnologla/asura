@@ -22,7 +22,7 @@ type Lootboxes struct {
 	ItemsMythic int
 }
 
-var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2200, 0}, {0, 3}, {0, 2}, {500, 0}, {-1, 10}, {-1, 20}}
+var Prices = [...][]int{{100, 0}, {400, 0}, {800, 0}, {2500, 0}, {0, 3}, {0, 2}, {500, 0}, {-1, 10}, {-1, 20}}
 var LootNames = [...]string{"comum", "normal", "rara", "epica", "lendaria", "items", "cosmetica", "mistica", "items mistica"}
 
 func GenerateLootPrices() (text string) {
@@ -52,7 +52,7 @@ func RaidLootbox(rarity Rarity) int {
 		}
 		return 2
 	case Legendary:
-		if 5 >= rand {
+		if 4 > rand {
 			return 4
 		}
 		return 3
@@ -252,6 +252,9 @@ func Open(lootType int, user *entities.User) (int, int) {
 		return gal, 0
 	}
 	price, asuraCoins := GetPrice(lootType)
+	if lootType == 3 {
+		price = 2000
+	}
 	money := price
 	if asuraCoins > 0 {
 		money = asuraCoins * 1900
@@ -289,7 +292,7 @@ func GetTrialLootbox(rarity Rarity) int {
 	}
 
 	if rarity == Mythic {
-		rand := utils.RandInt(100)
+		rand := utils.RandInt(101)
 		if rand >= 2 {
 			return 8
 		} else if 4 >= rand {

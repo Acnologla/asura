@@ -103,7 +103,7 @@ func ItemToString(item *Item) string {
 		return fmt.Sprintf("Voce ganha %d%% de xp adicional por train", int(item.Payload*100))
 	}
 	if item.Effect == 9 {
-		return "Voce ganha 1 de ouro extra e 3 de xp adicional por train"
+		return "Voce ganha 2 de xp adicional por train"
 	}
 	if item.Effect == 10 {
 		return "Tem chance de ganhar 1 de xp extra para seu clan nos treinos"
@@ -111,6 +111,9 @@ func ItemToString(item *Item) string {
 	if item.Effect == 11 {
 		effect := int(math.Round((item.Payload - 1) * 100))
 		return fmt.Sprintf("Aumenta sua cura em %d%% e diminui a do oponente em %d%%", effect, effect)
+	}
+	if item.Effect == 12 {
+		return fmt.Sprintf("Bloqueia %d%% de dano de efeitos", int(math.Round((1-item.Payload)*100)))
 	}
 	return ""
 }

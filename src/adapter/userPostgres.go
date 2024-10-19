@@ -251,7 +251,7 @@ func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User
 	xpOb := utils.RandInt(6) + 2
 
 	if isVip {
-		xpOb += 3
+		xpOb += 2
 	}
 
 	user.BattlePass += xpOb

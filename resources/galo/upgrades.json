@@ -137,19 +137,19 @@
   },
   {
     "name": "Esquiva",
-    "value": "Seu galo tem 4% de chance de se esquivar de dano de ataques",
+    "value": "Seu galo tem 3% de chance de se esquivar de dano de ataques",
     "childs": [
       {
         "name": "Esquiva melhorada",
-        "value": "Chance de esquiva aumenta para 6%",
+        "value": "Chance de esquiva aumenta para 5%",
         "childs": [
           {
             "name": "Chance adicional",
-            "value": "Chance de esquiva aumenta para 9%",
+            "value": "Chance de esquiva aumenta para 8%",
             "childs": [
               {
                 "name": "Esquiva suprema",
-                "value": "Chance de esquiva aumenta para 12%"
+                "value": "Chance de esquiva aumenta para 10%"
               },
               {
                 "name": "Esquiva em efeitos",

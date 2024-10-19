@@ -77,6 +77,12 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 						CustomID: "joinBattle",
 						Style:    disgord.Primary,
 					},
+					{
+						Type:     disgord.MessageComponentButton,
+						Label:    "Iniciar antes",
+						CustomID: "init",
+						Style:    disgord.Primary,
+					},
 				},
 			},
 		}})
@@ -89,6 +95,26 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 	handler.RegisterHandler(msg.ID, func(ic *disgord.InteractionCreate) {
 		mutex.Lock()
 		defer mutex.Unlock()
+
+		if ic.Data.CustomID == "init" {
+			if ic.Member.User.ID != itc.Member.UserID {
+				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
+					Type: disgord.InteractionCallbackChannelMessageWithSource,
+					Data: &disgord.CreateInteractionResponseData{
+						Content: "Só o dono pode iniciar",
+					},
+				})
+				return
+			}
+			handler.DeleteHandler(msg.ID)
+			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Raid iniciada antecipadamente",
+				},
+			})
+		}
+
 		if isInUsers(users, ic.Member.User) {
 			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -181,7 +207,7 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 						database.User.InsertItem(ctx, user.ID, u.Items, lb, entities.LootboxType)
 					} else {
 						database.User.UpdateItem(ctx, &u, key.ID, func(i entities.Item) entities.Item {
-							i.Extra = key.Extra + 1
+							i.Extra = i.Extra + 1
 							return i
 						})
 					}
