@@ -96,7 +96,7 @@
   },
   {
     "name": "Iluminação suprema",
-    "damage": [50, 80],
+    "damage": [60, 85],
     "level": 30,
     "evolved": true,
     "effect": [1, 17],

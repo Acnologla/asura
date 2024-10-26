@@ -91,7 +91,7 @@
   },
   {
     "name": "Destruição divina",
-    "damage": [150, 230],
+    "damage": [180, 240],
     "level": 30,
     "evolved": true
   }

@@ -92,7 +92,7 @@
   },
   {
     "name": "Buraco negro super-massivo",
-    "damage": [100, 125],
+    "damage": [105, 135],
     "evolved": true,
     "level": 30
   }

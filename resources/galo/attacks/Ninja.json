@@ -93,7 +93,7 @@
   },
   {
     "name": "Katana divina",
-    "damage": [40, 90],
+    "damage": [60, 100],
     "level": 30,
     "evolved": true,
     "effect": [1, 36]

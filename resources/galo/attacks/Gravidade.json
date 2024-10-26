@@ -92,7 +92,7 @@
   },
   {
     "name": "Destruição planteria",
-    "damage": [100, 180],
+    "damage": [100, 210],
     "level": 30,
     "evolved": true
   }

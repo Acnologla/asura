@@ -98,7 +98,7 @@
   },
   {
     "name": "Dragão deus",
-    "damage": [90, 130],
+    "damage": [100, 135],
     "level": 30,
     "evolved": true
   }

@@ -92,7 +92,7 @@
   },
   { "damage": [100, 1000], "level": 50, "name": "Destruição do Multiverso" },
   {
-    "damage": [230, 300],
+    "damage": [250, 350],
     "level": 50,
     "name": "Destruição completa",
     "evolved": true,

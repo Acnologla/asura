@@ -5,6 +5,7 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
+	"asura/src/utils"
 	"context"
 	"fmt"
 
@@ -40,6 +41,35 @@ func genSkinOptions(skins []*rinha.Cosmetic, items []*entities.Item) []*disgord.
 	return opts
 }
 
+const SKINS_CHUNK = 25
+
+func genSkinRows(skins []*rinha.Cosmetic, items []*entities.Item) []*disgord.MessageComponent {
+	chunkedSkins := utils.Chunk(skins, SKINS_CHUNK)
+	chunkedItems := utils.Chunk(items, SKINS_CHUNK)
+	rows := []*disgord.MessageComponent{}
+
+	if len(chunkedItems) > 5 {
+		chunkedItems = chunkedItems[:5]
+	}
+
+	for i, chunk := range chunkedItems {
+		opts := genSkinOptions(chunkedSkins[i], chunk)
+		rows = append(rows, &disgord.MessageComponent{
+			Type: disgord.MessageComponentActionRow,
+			Components: []*disgord.MessageComponent{
+				{
+					MaxValues:   1,
+					Type:        disgord.MessageComponentSelectMenu,
+					Options:     opts,
+					CustomID:    fmt.Sprintf("skins_%d", i),
+					Placeholder: "Selecione a skin",
+				},
+			},
+		})
+	}
+	return rows
+}
+
 func skinsToText(skins []*rinha.Cosmetic, items []*entities.Item) string {
 	text := ""
 	for i, cosmetic := range items {
@@ -63,20 +93,7 @@ func runSkins(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			},
 		}
 	}
-	components := []*disgord.MessageComponent{
-		{
-			Type: disgord.MessageComponentActionRow,
-			Components: []*disgord.MessageComponent{
-				{
-					MaxValues:   1,
-					Type:        disgord.MessageComponentSelectMenu,
-					Options:     genSkinOptions(skins, items),
-					CustomID:    "skins",
-					Placeholder: "Selecione a skin",
-				},
-			},
-		},
-	}
+	components := genSkinRows(skins, items)
 	itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{

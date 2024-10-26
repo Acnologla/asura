@@ -97,7 +97,7 @@
   },
   {
     "name": "Sugar tudo",
-    "damage": [80, 135],
+    "damage": [95, 135],
     "level": 30,
     "evolved": true
   }

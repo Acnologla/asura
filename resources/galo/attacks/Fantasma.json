@@ -95,7 +95,7 @@
   },
   {
     "name": "Fantasma divino",
-    "damage": [75, 125],
+    "damage": [85, 135],
     "level": 30,
     "evolved": true
   }

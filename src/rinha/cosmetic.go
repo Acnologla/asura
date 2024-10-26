@@ -58,7 +58,7 @@ func (cosmetic Cosmetic) String() string {
 
 func GetRandCosmeticType() CosmeticType {
 	val := utils.RandInt(101)
-	if val > 70 {
+	if val > 65 {
 		return Background
 	}
 	return Skin

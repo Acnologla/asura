@@ -97,7 +97,7 @@
   },
   {
     "name": "Explosão solar",
-    "damage": [20, 35],
+    "damage": [35, 50],
     "level": 30,
     "evolved": true,
     "effect": [1, 31]

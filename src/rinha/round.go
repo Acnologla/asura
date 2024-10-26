@@ -204,14 +204,17 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 				}
 			}
 
-			effect_damage += int(float32(ataccker.User.Attributes[3]) * 0.5)
+			effect_damage = int(float32(effect_damage) * (1 + (0.002 * (float32(ataccker.User.Attributes[3])))))
+
 			if effect_damage >= receiver.Life {
 				effect_damage = receiver.Life - 1
 			}
 
 			if ataccker.Galo.Type == 33 {
 				lvl := CalcLevel(ataccker.Galo.Xp)
-				ataccker.Life += int(float64(effect_damage) * (1 + (0.16 * float64(lvl/10))))
+				n := float64(effect_damage) * (1 + (0.16 * float64(lvl/10)))
+
+				ataccker.Life += int(n * (1 + (float64(ataccker.Galo.Resets) / 5)))
 			}
 
 			if receiver.Galo.Type == 51 {
@@ -407,10 +410,11 @@ func (battle *Battle) Play(skill int) []*Result {
 		}
 		round.Target.Life -= main_damage
 	}
-	reset := func() {
+	reset := func(f *Fighter) {
 		if !battle.Reseted {
 			round.Attacker.Life = round.Attacker.MaxLife
 			round.Target.Life = round.Target.MaxLife
+			f.Life += 100 + (30 * f.Galo.Resets)
 			round.Results = append(round.Results, &Result{Reset: true})
 			battle.FirstRound = true
 			battle.Reseted = true
@@ -422,14 +426,14 @@ func (battle *Battle) Play(skill int) []*Result {
 	if round.Attacker.Life <= 0 {
 		round.Attacker.Life = 0
 		if round.Attacker.Galo.Type == 32 {
-			reset()
+			reset(round.Attacker)
 		}
 	}
 
 	if round.Target.Life <= 0 {
 		round.Target.Life = 0
 		if round.Target.Galo.Type == 32 {
-			reset()
+			reset(round.Target)
 		}
 	}
 	return round.Results

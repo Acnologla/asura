@@ -68,25 +68,25 @@
   },
   {
     "name": "Espada da fenix",
-    "damage": [60, 75],
+    "damage": [65, 75],
     "effect": [1, 10],
     "level": 19
   },
   {
     "name": "Repouso da fenix",
-    "damage": [60, 75],
+    "damage": [70, 75],
     "effect": [1, 8],
     "level": 21
   },
   {
     "name": "Fenix eterna",
-    "damage": [75, 90],
+    "damage": [80, 90],
     "level": 22,
     "effect": [1, 31]
   },
   {
     "name": "Fenix da cremação",
-    "damage": [95, 105],
+    "damage": [100, 105],
     "level": 25,
     "effect": [1, 13]
   },
@@ -100,7 +100,7 @@
     "name": "Fenix suprema",
     "damage": [200, 250],
     "level": 30,
-    "effect": [1, 13],
+    "effect": [1, 49],
     "evolved": true
   }
 ]

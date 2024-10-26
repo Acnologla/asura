@@ -17,9 +17,9 @@ func DropKey(userXP int) bool {
 
 func GetKeyRarity() Rarity {
 	rand := utils.RandInt(1001)
-	if 8 > rand {
+	if 5 > rand {
 		return Mythic
-	} else if 48 > rand {
+	} else if 42 > rand {
 		return Legendary
 	} else if 195 > rand {
 		return Epic
@@ -41,7 +41,7 @@ func GetMultipliers(rarity Rarity) (int, int) {
 	}
 
 	if rarity == Mythic {
-		return 11, 12 
+		return 11, 12
 	}
 
 	return 1, 1

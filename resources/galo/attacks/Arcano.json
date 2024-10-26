@@ -100,7 +100,7 @@
   },
   {
     "name": "Cataclisma supremo",
-    "damage": [70, 105],
+    "damage": [80, 120],
     "level": 30,
     "evolved": true
   }

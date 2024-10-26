@@ -72,25 +72,25 @@
   },
   {
     "name": "Bola solar",
-    "damage": [20, 60],
+    "damage": [35, 60],
     "effect": [1, 31],
     "level": 19
   },
   {
     "name": "Frio interminavel",
-    "damage": [40, 75],
+    "damage": [40, 80],
     "effect": [1, 41],
     "level": 21
   },
   {
     "name": "Prisão magica aprimorada",
-    "damage": [30, 65],
-    "effect": [0.75, 3],
+    "damage": [40, 65],
+    "effect": [0.85, 3],
     "level": 22
   },
   {
     "name": "Benção mitica",
-    "damage": [65, 75],
+    "damage": [65, 90],
     "level": 25,
     "self": true,
     "effect": [1, 17]
@@ -102,7 +102,7 @@
   },
   {
     "name": "Magia do vazio",
-    "damage": [160, 250],
+    "damage": [190, 270],
     "level": 30,
     "evolved": true
   }

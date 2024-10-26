@@ -98,7 +98,7 @@
   },
   {
     "name": "Ataque slime",
-    "damage": [65, 145],
+    "damage": [95, 145],
     "level": 30,
     "evolved": true
   }

@@ -102,7 +102,7 @@
   },
   {
     "name": "Mundo zumbi",
-    "damage": [85, 105],
+    "damage": [105, 150],
     "effect": [1, 53],
     "level": 30,
     "evolved": true

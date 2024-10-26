@@ -23,7 +23,7 @@ func init() {
 		Name:        "train",
 		Description: translation.T("TrainHelp", "pt"),
 		Run:         runTrain,
-		Cooldown:    7,
+		Cooldown:    6,
 		Category:    handler.Rinha,
 	})
 }
@@ -281,7 +281,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			item := rinha.GetItem(&u)
 			if item != nil {
 				if item.Effect == 8 {
-					xpOb += xpOb * int(item.Payload)
+					xpOb += int(float64(xpOb) * item.Payload)
 				}
 				if item.Effect == 9 {
 					xpOb += 2
