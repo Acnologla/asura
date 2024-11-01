@@ -19,7 +19,7 @@ func GetKeyRarity() Rarity {
 	rand := utils.RandInt(1001)
 	if 5 > rand {
 		return Mythic
-	} else if 42 > rand {
+	} else if 41 > rand {
 		return Legendary
 	} else if 195 > rand {
 		return Epic
