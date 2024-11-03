@@ -16,7 +16,7 @@ func init() {
 		Name:        "inventory",
 		Description: "Veja seu inventario",
 		Run:         runInventory,
-		Cooldown:    8,
+		Cooldown:    7,
 		Category:    handler.Profile,
 		Aliases:     []string{"inventario"},
 	})
@@ -40,11 +40,25 @@ func itensToString(itens []*entities.Item) (str string) {
 	return
 }
 
+func skinsToString(itens []*entities.Item) (str string) {
+	for _, item := range itens {
+		if item.Type == entities.CosmeticType {
+			i := rinha.Cosmetics[item.ItemID]
+			if i.Type == rinha.Skin {
+				str += fmt.Sprintf("[%d] %s (%s)\n", item.Quantity, i.Name, i.Rarity.String())
+			}
+		}
+	}
+	return
+}
+
 func cosmeticsToString(itens []*entities.Item) (str string) {
 	for _, item := range itens {
 		if item.Type == entities.CosmeticType {
 			i := rinha.Cosmetics[item.ItemID]
-			str += fmt.Sprintf("[%d] %s (%s)\n", item.Quantity, i.Name, i.Rarity.String())
+			if i.Type != rinha.Skin {
+				str += fmt.Sprintf("[%d] %s (%s)\n", item.Quantity, i.Name, i.Rarity.String())
+			}
 		}
 	}
 	return
@@ -63,6 +77,7 @@ func runInventory(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 	user := database.User.GetUser(ctx, itc.Member.UserID, "Items", "Galos")
 	galos := roostersToString(user.Galos)
 	items := itensToString(user.Items)
+	skins := skinsToString(user.Items)
 	cosmetics := cosmeticsToString(user.Items)
 	keys := keysToString(user.Items)
 	return &disgord.CreateInteractionResponse{
@@ -81,6 +96,11 @@ func runInventory(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 						{
 							Name:   "Itens",
 							Value:  items,
+							Inline: false,
+						},
+						{
+							Name:   "Skins",
+							Value:  skins,
 							Inline: false,
 						},
 						{

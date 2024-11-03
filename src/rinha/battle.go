@@ -182,7 +182,7 @@ func initEquips(fighter *Fighter, adv *Fighter) {
 		if adv.Galo.Type != 50 {
 			fighter.Galo.Type = adv.Galo.Type
 		} else {
-			fighter.Galo.Type = 1
+			fighter.Galo.Type = GetRandMythic()
 		}
 	}
 	fighter.Equipped = GetEquipedSkills(fighter.Galo)

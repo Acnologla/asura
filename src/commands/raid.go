@@ -202,9 +202,20 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 				u.Money += money / len(users)
 				if user.ID == users[0].ID {
 					if key.Extra+1 == rinha.CalcMaxRaidBattles(keyRarity) {
+						i := rinha.GetItemByID(u.Items, key.ID)
+
+						if i.Quantity > 1 {
+							i.Extra = 0
+						}
+
 						database.User.RemoveItem(ctx, u.Items, key.ID)
 						lb = rinha.RaidLootbox(keyRarity)
 						database.User.InsertItem(ctx, user.ID, u.Items, lb, entities.LootboxType)
+
+						if keyRarity > rinha.Common {
+							database.User.InsertItem(ctx, user.ID, u.Items, int(keyRarity), entities.ShardType)
+						}
+
 					} else {
 						database.User.UpdateItem(ctx, &u, key.ID, func(i entities.Item) entities.Item {
 							i.Extra = i.Extra + 1

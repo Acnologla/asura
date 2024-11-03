@@ -225,7 +225,8 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			val = 65
 			x -= 5 * 75
 		}
-		if rinha.Classes[galo.Galos[i].Type].Rarity == rinha.Mythic {
+		rarity := rinha.GetRarity(galo.Galos[i])
+		if rarity == rinha.Mythic {
 			grad := gg.NewLinearGradient(float64(218+x), 233+val, float64(218+x)+59, 233+val+59)
 			grad.AddColorStop(0, color.RGBA{255, 0, 0, 255})
 			grad.AddColorStop(0.2, color.RGBA{0, 255, 0, 255})
@@ -238,7 +239,7 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			if galo.Galos[i].Evolved {
 				dc.SetHexColor(fmt.Sprintf("%06x", 0))
 			} else {
-				colorE := rinha.Classes[galo.Galos[i].Type].Rarity.Color()
+				colorE := rarity.Color()
 				dc.SetHexColor(fmt.Sprintf("%06x", colorE))
 			}
 		}

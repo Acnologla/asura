@@ -46,7 +46,6 @@ type ItemTrade struct {
 	Name string
 }
 
-// is in ItemTrade array
 func isInItemTrade(id string, arr []*ItemTrade) bool {
 	for _, item := range arr {
 		if item.ID == id {

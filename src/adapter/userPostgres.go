@@ -92,6 +92,22 @@ func (adapter UserAdapterPsql) InsertItem(ctx context.Context, id disgord.Snowfl
 	return adapter.InsertItemQuantity(ctx, id, items, itemID, itemType, 1)
 }
 
+func (adapter UserAdapterPsql) RemoveItemQuantity(ctx context.Context, items []*entities.Item, itemUUID uuid.UUID, quantity int) error {
+	for _, item := range items {
+		if item.ID == itemUUID {
+			if item.Quantity > quantity {
+				item.Quantity -= quantity
+				_, err := adapter.Db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(ctx)
+				return err
+			} else {
+				_, err := adapter.Db.NewDelete().Model(item).Where("id = ?", item.ID).Exec(ctx)
+				return err
+			}
+		}
+	}
+	return errors.New("item not found")
+}
+
 func (adapter UserAdapterPsql) RemoveItem(ctx context.Context, items []*entities.Item, itemUUID uuid.UUID) error {
 	for _, item := range items {
 		if item.ID == itemUUID {

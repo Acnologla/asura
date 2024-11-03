@@ -17,9 +17,9 @@ func DropKey(userXP int) bool {
 
 func GetKeyRarity() Rarity {
 	rand := utils.RandInt(1001)
-	if 5 > rand {
+	if 4 > rand {
 		return Mythic
-	} else if 41 > rand {
+	} else if 40 > rand {
 		return Legendary
 	} else if 195 > rand {
 		return Epic

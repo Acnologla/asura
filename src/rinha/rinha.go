@@ -160,6 +160,24 @@ func findClassIndex(class string) int {
 	}
 	return -1
 }
+
+func GetRandMythic() int {
+	classTypeArr := []*Class{}
+	for i, class := range Classes {
+		if class.Rarity == Mythic && i != 50 {
+			classTypeArr = append(classTypeArr, class)
+		}
+	}
+
+	selected := classTypeArr[utils.RandInt(len(classTypeArr))]
+	for i, class := range Classes {
+		if class.Name == selected.Name {
+			return i
+		}
+	}
+	return -1
+}
+
 func GetRandByType(classType Rarity) int {
 	classTypeArr := []*Class{}
 	for _, class := range Classes {
@@ -233,6 +251,22 @@ func GetName(username string, galo entities.Rooster) string {
 	return prefix + galo.Name
 }
 
+func GetRoosterByID(galos []*entities.Rooster, id uuid.UUID) *entities.Rooster {
+	for _, galo := range galos {
+		if galo.ID == id {
+			return galo
+		}
+	}
+	return nil
+}
+
+func GetRarity(galo *entities.Rooster) Rarity {
+	if galo.EvolvedRarity != 0 {
+		return Rarity(galo.EvolvedRarity)
+	}
+	return Classes[galo.Type].Rarity
+}
+
 func IsIntInList(a int, arry []int) bool {
 	for _, b := range arry {
 		if b == a {
@@ -271,11 +305,39 @@ func SkillToStringFormated(skill *Skill, galo *entities.Rooster) (text string) {
 	}
 	return
 }
+
+func calcEvolvedRarityMultiplier(galo *entities.Rooster) (multiplier float64) {
+	class := Classes[galo.Type]
+	for i := class.Rarity; i < Rarity(galo.EvolvedRarity); i++ {
+		if i == Common {
+			multiplier += 0.15
+		}
+		if i == Rare {
+			multiplier += 0.2
+		}
+		if i == Epic {
+			multiplier += 0.35
+		}
+		if i == Legendary {
+			multiplier += 0.6
+		}
+	}
+
+	return
+}
+
 func calcDamage(min, max int, galo *entities.Rooster) (int, int) {
 	if galo.Resets > 0 {
 		min += int(float64(min) * 0.15 * float64(galo.Resets))
 		max += int(float64(max) * 0.15 * float64(galo.Resets))
 	}
+
+	if galo.EvolvedRarity > 0 {
+		multiplier := calcEvolvedRarityMultiplier(galo)
+		min += int(float64(min) * multiplier)
+		max += int(float64(max) * multiplier)
+	}
+
 	return min, max
 }
 

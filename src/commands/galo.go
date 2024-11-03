@@ -98,7 +98,8 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 
 	dc.DrawCircle(160, 70, radius+3)
 	//	dc.SetRGB(1, 1, 1)
-	if rinha.Classes[galo.Type].Rarity == rinha.Mythic {
+	rarity := rinha.GetRarity(galo)
+	if rarity == rinha.Mythic {
 		grad := gg.NewConicGradient(160, 70, radius+3)
 		grad.AddColorStop(0, color.RGBA{255, 0, 0, 255})
 		grad.AddColorStop(0.2, color.RGBA{0, 255, 0, 255})
@@ -110,7 +111,7 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	} else if galo.Evolved {
 		dc.SetHexColor(fmt.Sprintf("%06x", 0))
 	} else {
-		color := rinha.Classes[galo.Type].Rarity.Color()
+		color := rarity.Color()
 		dc.SetHexColor(fmt.Sprintf("%06x", color))
 	}
 

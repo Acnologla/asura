@@ -14,6 +14,7 @@ const (
 	NormalType
 	CosmeticType
 	KeyType
+	ShardType
 )
 
 type MissionType int
@@ -70,15 +71,16 @@ type Transaction struct {
 type Rooster struct {
 	bun.BaseModel `bun:"table:rooster,alias:galo"`
 
-	ID       uuid.UUID         `bun:"id,pk"`
-	UserID   disgord.Snowflake `bun:"userid"`
-	Name     string            `bun:"name"`
-	Resets   int               `bun:"resets"`
-	Equip    bool              `bun:"equip"`
-	Xp       int               `bun:"xp"`
-	Type     int               `bun:"type"`
-	Equipped []int             `bun:"equipped,array"`
-	Evolved  bool              `bun:"evolved"`
+	ID            uuid.UUID         `bun:"id,pk"`
+	UserID        disgord.Snowflake `bun:"userid"`
+	Name          string            `bun:"name"`
+	Resets        int               `bun:"resets"`
+	Equip         bool              `bun:"equip"`
+	Xp            int               `bun:"xp"`
+	Type          int               `bun:"type"`
+	Equipped      []int             `bun:"equipped,array"`
+	Evolved       bool              `bun:"evolved"`
+	EvolvedRarity int               `bun:"evolvedrarity"`
 }
 
 type User struct {
