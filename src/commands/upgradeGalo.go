@@ -22,7 +22,7 @@ func init() {
 	})
 }
 
-const SHARDS_TO_UPGRADE = 10
+const SHARDS_TO_UPGRADE = 8
 
 func getShardsByRarity(items []*entities.Item, rarity rinha.Rarity) *entities.Item {
 

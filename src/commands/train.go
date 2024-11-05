@@ -233,7 +233,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		return nil
 	}
 	if winner == 0 {
-		xpOb := utils.RandInt(11) + 10
+		xpOb := utils.RandInt(12) + 12
 		if rinha.HasUpgrade(user.Upgrades, 0) {
 			xpOb += 3
 			if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
@@ -253,7 +253,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			}
 		}
 		xpOb += calc
-		money := 6
+		money := 7 + utils.RandInt(1)
 
 		if rinha.HasUpgrade(user.Upgrades, 0, 1, 0) {
 			money += 3
@@ -289,8 +289,8 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			}
 
 			if rinha.IsVip(&u) {
-				xpOb += 10
-				money += 2
+				xpOb += 12
+				money += 3
 			}
 
 			u.UserXp++
@@ -388,7 +388,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				xpO = int(float64(xpO) * 0.75)
 			}
 		}
-		if user.TrainLimit >= 170 {
+		if user.TrainLimit >= 100 {
 			xpO = 0
 			moneyO = 0
 		} else {

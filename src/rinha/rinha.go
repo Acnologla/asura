@@ -19,7 +19,7 @@ import (
 
 type Rarity int
 
-const BASE_LIMIT = 270
+const BASE_LIMIT = 200
 
 var client = &http.Client{}
 var TopToken string
