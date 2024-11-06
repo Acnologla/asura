@@ -133,15 +133,16 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 				"id":       user.ID,
 			}),
 		})
+		database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
+			u.Money += money
+			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+				r.Xp += xp
+				return r
+			})
+			return u
+		}, "Galos")
 	}
-	database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
-		u.Money += money
-		database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-			r.Xp += xp
-			return r
-		})
-		return u
-	}, "Galos")
+
 }
 
 func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
@@ -233,7 +234,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		return nil
 	}
 	if winner == 0 {
-		xpOb := utils.RandInt(12) + 12
+		xpOb := utils.RandInt(13) + 12
 		if rinha.HasUpgrade(user.Upgrades, 0) {
 			xpOb += 3
 			if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
@@ -253,7 +254,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			}
 		}
 		xpOb += calc
-		money := 7 + utils.RandInt(1)
+		money := 7 + utils.RandInt(2)
 
 		if rinha.HasUpgrade(user.Upgrades, 0, 1, 0) {
 			money += 3
