@@ -42,7 +42,7 @@ func init() {
 const arenaPrice = 300
 
 func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	user := database.User.GetUser(ctx, itc.Member.User.ID, "Galos")
+	user := database.User.GetUser(ctx, itc.Member.User.ID, "Galos", "Items", "Trials")
 	command := itc.Data.Options[0].Name
 	if command == "ingresso" {
 		database.User.UpdateUser(ctx, itc.Member.User.ID, func(u entities.User) entities.User {
@@ -98,41 +98,48 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	lockEvent(ctx, itc.Member.User.ID, "Arena")
 	defer unlockEvent(ctx, itc.Member.User.ID)
+	galoAuthor := rinha.GetEquippedGalo(&user)
+	rarity := rinha.GetRarity(galoAuthor)
+	discordUser := itc.Member.User
+	ngaloAdv := &entities.Rooster{
+		Xp:      rinha.CalcXP(rinha.CalcLevel(galoAuthor.Xp) + 1),
+		Type:    rinha.GetRandByType(rarity),
+		Equip:   true,
+		Evolved: rarity >= rinha.Legendary || user.ArenaWin >= 9,
+		Resets:  galoAuthor.Resets * 3,
+	}
+
 	itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
-			Content: "Voce entrou em uma fila de espera para a arena",
+			Content: "A batalha esta iniciando",
 		},
 	})
-	message, err := ch.CreateMessage(&disgord.CreateMessage{
-		Embeds: []*disgord.Embed{
-			{
-				Title: "Procurando oponente...",
-				Color: 65535,
-			},
-		},
-	})
-	if err != nil {
+
+	advUser := &entities.User{
+		Galos:      []*entities.Rooster{ngaloAdv},
+		Attributes: user.Attributes,
+		Items:      user.Items,
+		Upgrades:   user.Upgrades,
+	}
+
+	advUser.Attributes[0] += advUser.Attributes[0]
+
+	winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
+		GaloAuthor:  &user,
+		GaloAdv:     advUser,
+		AuthorName:  rinha.GetName(discordUser.Username, *galoAuthor),
+		AdvName:     "Arena",
+		AuthorLevel: rinha.CalcLevel(galoAuthor.Xp),
+		AdvLevel:    rinha.CalcLevel(ngaloAdv.Xp),
+		NoItems:     false,
+	}, false)
+
+	if winner == -1 {
 		return nil
 	}
 
-	c := engine.AddToMatchMaking(itc.Member.User, user.ArenaLastFight, message, engine.ArenaNormal, 0)
-	result := <-c
-	if result.Type == engine.TimeExceeded {
-		handler.Client.Channel(message.ChannelID).Message(message.ID).Update(&disgord.UpdateMessage{
-			Embeds: &([]*disgord.Embed{
-				{
-					Title: "Nao consegui achar um oponente para voce",
-					Color: 65535,
-				},
-			}),
-		})
-		return nil
-	}
-	if result.Type == engine.ArenaTie {
-		return nil
-	}
-	if result.Type == engine.ArenaWin {
+	if winner == 0 {
 		database.User.UpdateUser(ctx, itc.Member.User.ID, func(u entities.User) entities.User {
 			u.ArenaWin++
 			if u.ArenaWin >= 12 {
@@ -163,13 +170,13 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			}
 			return u
 		}, "Galos")
-	} else if result.Type == engine.ArenaLose {
+	} else {
 		database.User.UpdateUser(ctx, itc.Member.User.ID, func(u entities.User) entities.User {
 			u.ArenaLose++
 			if u.ArenaLose >= 3 {
 				xp, money := rinha.CalcArena(&u)
 				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-					r.Xp += xp
+					r.Xp += xp / (r.Resets + 1)
 					return r
 				})
 				ch.CreateMessage(&disgord.CreateMessage{

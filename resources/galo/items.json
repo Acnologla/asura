@@ -75,7 +75,7 @@
     "name": "Armadura de diamante",
     "effect": 5,
     "level": 1,
-    "payload": 0.7
+    "payload": 0.65
   },
   {
     "name": "Machado divino",
@@ -105,7 +105,7 @@
     "name": "Armadura de obisidiana",
     "effect": 5,
     "level": 2,
-    "payload": 0.6
+    "payload": 0.55
   },
   {
     "name": "Escalibur",
@@ -129,7 +129,7 @@
     "name": "Armadura da divindade",
     "effect": 5,
     "level": 3,
-    "payload": 0.55
+    "payload": 0.5
   },
   {
     "name": "Amplificador divino",
@@ -213,7 +213,7 @@
     "name": "Beta Armor",
     "effect": 5,
     "level": 4,
-    "payload": 0.5
+    "payload": 0.45
   },
   {
     "name": "Beta imortalidade",
@@ -333,7 +333,7 @@
     "name": "Armadura mitica",
     "effect": 5,
     "level": 6,
-    "payload": 0.35
+    "payload": 0.3
   },
   {
     "name": "Imortalidade mitica",
@@ -357,36 +357,36 @@
     "name": "Escudo",
     "effect": 12,
     "level": 0,
-    "payload": 0.7
+    "payload": 0.65
   },
   {
     "name": "Escudo melhorado",
     "effect": 12,
     "level": 1,
-    "payload": 0.6
+    "payload": 0.5
   },
   {
     "name": "Escudo de aço",
     "effect": 12,
     "level": 2,
-    "payload": 0.55
+    "payload": 0.45
   },
   {
     "name": "Escudo de diamante",
     "effect": 12,
     "level": 3,
-    "payload": 0.5
+    "payload": 0.4
   },
   {
     "name": "Beta escudo",
     "effect": 12,
     "level": 4,
-    "payload": 0.4
+    "payload": 0.3
   },
   {
     "name": "Escudo mitico",
     "effect": 12,
     "level": 6,
-    "payload": 0.2
+    "payload": 0.1
   }
 ]

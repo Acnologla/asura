@@ -2,7 +2,7 @@ package rinha
 
 import "asura/src/utils"
 
-const KEY_CHANCE = 5
+const KEY_CHANCE = 6
 const NEWBIE_ADD = 3
 
 func DropKey(userXP int) bool {
