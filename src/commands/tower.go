@@ -81,7 +81,7 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		})
 		var rank string
 		for i, tower := range towers {
-			u, err := handler.Client.User(user.ID).Get()
+			u, err := handler.Client.User(tower.UserID).Get()
 			if err == nil {
 				rank += fmt.Sprintf("[**%d**] %s - **%d**\n", i+1, u.Username, tower.Floor)
 			}
