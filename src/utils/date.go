@@ -12,7 +12,9 @@ func FormatDate(ts int64) string {
 func TimeUntilNextSunday() string {
 	now := time.Now()
 	daysUntilSunday := (7 - int(now.Weekday())) % 7
-
+	if daysUntilSunday == 0 {
+		daysUntilSunday = 7
+	}
 	nextSunday := time.Date(
 		now.Year(), now.Month(), now.Day()+daysUntilSunday,
 		0, 0, 0, 0, time.Local,
