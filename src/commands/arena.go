@@ -106,7 +106,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		Type:    rinha.GetRandByType(rarity),
 		Equip:   true,
 		Evolved: rarity >= rinha.Legendary || user.ArenaWin >= 9,
-		Resets:  galoAuthor.Resets * 3,
+		Resets:  galoAuthor.Resets,
 	}
 
 	itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
@@ -119,7 +119,6 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	advUser := &entities.User{
 		Galos:      []*entities.Rooster{ngaloAdv},
 		Attributes: user.Attributes,
-		Items:      user.Items,
 		Upgrades:   user.Upgrades,
 	}
 

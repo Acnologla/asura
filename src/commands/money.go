@@ -30,7 +30,7 @@ func runMoney(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				{
 					Title:       "Money",
 					Color:       65535,
-					Description: fmt.Sprintf("Dinheiro: **%d**\nUserXP: **%d**\nTreinos: **%d/%d**\n\nUse `/lootbox view` para visualizar ou comprar lootboxes\nUse `/givemoney` para doar dinheiro\nUse `/daily` para pegar o bonus diario\nUse `/trial status` para fortificar seu galo\n\n**Entre no meu [Servidor](https://discord.gg/tdVWQGV) para ganhar um bonus no daily**", user.Money, user.UserXp, user.TrainLimit, rinha.CalcLimit(&user)),
+					Description: fmt.Sprintf("Dinheiro: **%d**\nUserXP: **%d**\nTreinos: **%d/%d**\n\nUse `/lootbox view` para visualizar ou comprar lootboxes\nUse `/givemoney` para doar dinheiro\nUse `/daily` para pegar o bonus diario\nUse `/trial status` para fortificar seu galo\n\n**Entre no meu [Servidor](https://discord.gg/tdVWQGV) para ganhar um bonus no daily**\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**", user.Money, user.UserXp, user.TrainLimit, rinha.CalcLimit(&user)),
 				},
 			},
 		},

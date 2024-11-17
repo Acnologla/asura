@@ -153,6 +153,34 @@ other="Esse usuário ja recebeu o maximo de dinheiro permitido em 24 horas (1000
 [LootboxOpen]
 other="Voce abriu uma lootbox {{.lootbox}} e ganhou um {{.type}} {{.name}}\n{{.extraMsg}}"
 
+
+[TowerInfo]
+other="Você está no andar **{{.floor}}**\nTempo para a torre resetar: **{{.timeUntilReset}}**\n\nUse **/tower battle** para batalhar\nUse **/tower rank** para ver o ranking da torre\n\nCuidado, caso perca, você só poderá batalhar novamente quando a torre resetar!"
+
+[TowerFinish]
+other="Você chegou ao andar máximo da torre, espere pelo próximo reset para jogar na torre novamente."
+
+[TowerHelp]
+other="Jogue em uma torre de sobrevivência."
+
+[TowerRankHelp]
+other="Veja os rankings dos jogadores com maior andar na torre."
+
+[TowerWin]
+other="Parabéns! Você avançou para o andar **{{.}}**."
+
+[TowerWinBonus]
+other="Você ganhou **{{.xp}}** de XP e **{{.money}}** de dinheiro."
+
+[TowerLose]
+other="Parabens! Você perdeu na torre e só poderá jogar novamente quando a torre resetar (veja o tempo em /tower info)."
+
+[TowerLoseWait]
+other="Você perdeu na torre e só poderá jogar novamente em **{{.}}**."
+
+[TowerWinReward]
+other="Você ganhou uma lootbox **{{.}}**."
+
 [upgradeGaloDescription]
 other="Melhore a raridade do seu galo, com shards raros voce evolui um comum pra raro, com shards épicos um raro pra épico e assim por diante\n\n[🔵] Shards raros: **{{.rareShards}}**\n[🟣] Shards épicos: **{{.epicShards}}**\n[🟠] Shards lendarios: **{{.legendaryShards}}**\n[⚪] Shards miticos: **{{.mythicShards}}**\n\nVoce precisa de **{{.maxShards}}** shards da mesma raridade pra aumentar a raridade do seu galo\nGanhe shards nas raids\n\nSelecione o galo abaixo que voce quer aumentar a raridade"
 
@@ -168,6 +196,12 @@ other="Você evoluiu com sucesso seu galo para a raridade **{{.shard}}**"
 
 [SellRepeated]
 other="Como voce ja tinha esse galo, ele foi automaticamente vendido por **{{.}}** de dinheiro"
+
+[TowerInfoHelp]
+other="Veja seu status na torre"
+
+[TowerBattleHelp]
+other="Batalhe na torre"
 
 [RinhaHelp]
 other="Batalhe contra um jogador"

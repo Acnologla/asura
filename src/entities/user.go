@@ -83,6 +83,14 @@ type Rooster struct {
 	EvolvedRarity int               `bun:"evolvedrarity"`
 }
 
+type Tower struct {
+	bun.BaseModel `bun:"table:tower,alias:tower"`
+	ID            uuid.UUID         `bun:"id,pk"`
+	UserID        disgord.Snowflake `bun:"userid"`
+	Floor         int               `bun:"floor"`
+	Lose          bool              `bun:"lose"`
+}
+
 type User struct {
 	bun.BaseModel `bun:"table:users,alias:u"`
 

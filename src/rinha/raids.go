@@ -4,12 +4,17 @@ import "asura/src/utils"
 
 const KEY_CHANCE = 6
 const NEWBIE_ADD = 3
+const VIP_ADD = 1
 
-func DropKey(userXP int) bool {
+func DropKey(userXP int, vip bool) bool {
 	rand := utils.RandInt(1001)
 
 	if 280 > userXP {
 		return rand < (KEY_CHANCE + NEWBIE_ADD)
+	}
+
+	if vip {
+		return rand < (KEY_CHANCE + VIP_ADD)
 	}
 
 	return rand < KEY_CHANCE

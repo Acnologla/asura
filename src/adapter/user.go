@@ -34,4 +34,8 @@ type UserAdapter interface {
 	GetPos(ctx context.Context, user entities.User, property string, data func(u *entities.User) int) int
 	GetPosMultiple(ctx context.Context, user entities.User, p1, p2 string, v1, v2 int) int
 	GetRoosterPosMultiple(ctx context.Context, user entities.User, p1, p2 string, v1, v2 int) int
+	GetTower(ctx context.Context, userID disgord.Snowflake) entities.Tower
+	UpdateTower(ctx context.Context, tower entities.Tower) error
+	SortTowers(ctx context.Context, limit int) []*entities.Tower
+	DeleteTowers(ctx context.Context) error
 }

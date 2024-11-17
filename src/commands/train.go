@@ -333,7 +333,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			})
 			u.Money += money
 
-			if rinha.DropKey(u.UserXp) {
+			if rinha.DropKey(u.UserXp, rinha.IsVip(&u)) {
 				key := rinha.GetKeyRarity()
 				dropKey = int(key)
 				database.User.InsertItem(ctx, u.ID, u.Items, int(key), entities.KeyType)

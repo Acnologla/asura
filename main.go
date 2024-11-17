@@ -9,6 +9,7 @@ import (
 	"asura/src/handler"
 	"asura/src/rinha"
 	"asura/src/telemetry"
+	"context"
 	"fmt"
 	"log"
 	"math/rand"
@@ -17,6 +18,7 @@ import (
 
 	"github.com/andersfylling/disgord"
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron"
 )
 
 func initBot() {
@@ -37,6 +39,11 @@ func initBot() {
 	client.Gateway().MessageCreate(events.HandleMessage)
 	client.Gateway().InteractionCreate(func(s disgord.Session, h *disgord.InteractionCreate) {
 		handler.InteractionChannel <- h
+	})
+
+	c := cron.New()
+	c.AddFunc("0 0 0 * * 0", func() {
+		database.User.DeleteTowers(context.Background())
 	})
 }
 

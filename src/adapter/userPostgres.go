@@ -294,3 +294,34 @@ func (adapter UserAdapterPsql) UpdateBp(ctx context.Context, user *entities.User
 	}
 	return xpOb
 }
+
+func (adapter UserAdapterPsql) GetTower(ctx context.Context, userID disgord.Snowflake) (tower entities.Tower) {
+	adapter.Db.NewSelect().Model(&tower).Where("userID = ?", userID).Scan(ctx)
+
+	if tower.UserID == 0 {
+		tower.UserID = userID
+		tower.ID = uuid.New()
+		adapter.SetTower(ctx, tower)
+	}
+	return
+}
+
+func (adapter UserAdapterPsql) SetTower(ctx context.Context, tower entities.Tower) error {
+	_, err := adapter.Db.NewInsert().Model(&tower).Exec(ctx)
+	return err
+}
+
+func (adapter UserAdapterPsql) UpdateTower(ctx context.Context, tower entities.Tower) error {
+	_, err := adapter.Db.NewUpdate().Model(&tower).Where("id = ?", tower.ID).Exec(ctx)
+	return err
+}
+
+func (adapter UserAdapterPsql) SortTowers(ctx context.Context, limit int) (towers []*entities.Tower) {
+	adapter.Db.NewSelect().Model(&towers).Order("floor DESC").Limit(limit).Scan(ctx)
+	return
+}
+
+func (adapter UserAdapterPsql) DeleteTowers(ctx context.Context) error {
+	_, err := adapter.Db.NewDelete().Model(&entities.Tower{}).Exec(ctx)
+	return err
+}
