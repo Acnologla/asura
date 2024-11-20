@@ -56,11 +56,9 @@
     "effect": [1, 86]
   },
   {
-    "damage": [25, 40],
+    "damage": [80, 110],
     "level": 22,
-    "name": "Refletir Existência de Ataques",
-    "self": true,
-    "effect": [0.8, 87]
+    "name": "Anular Existência de Ataques"
   },
   {
     "damage": [25, 30],
@@ -71,7 +69,7 @@
   { "damage": [100, 280], "level": 30, "name": "Destruição do Universo" },
   { "damage": [160, 500], "level": 34, "name": "Anti-Matéria" },
   {
-    "damage": [85, 100],
+    "damage": [100, 105],
     "level": 38,
     "name": "Englobar Universos Paralelos",
     "self": true,
@@ -83,16 +81,18 @@
     "name": "Decaimento do Universo",
     "effect": [1, 90]
   },
+
   {
-    "damage": [60, 90],
+    "damage": [70, 110],
     "level": 46,
     "name": "Refletir Existência de Ataques",
     "self": true,
     "effect": [1, 91]
   },
-  { "damage": [100, 1000], "level": 50, "name": "Destruição do Multiverso" },
+
+  { "damage": [200, 1000], "level": 50, "name": "Destruição do Multiverso" },
   {
-    "damage": [250, 350],
+    "damage": [270, 400],
     "level": 50,
     "name": "Destruição completa",
     "evolved": true,

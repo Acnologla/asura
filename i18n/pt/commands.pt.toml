@@ -423,7 +423,7 @@ other="**{{.}}** gostaria de treinar seu galo?"
 other="Infelizmente {{.username}}, você perdeu. Mas por bondade, você ganhou **{{.money}}** de dinheiro e **{{.xp}}** de xp. Use /train para treinar novamente"
 
 [TrainWin]
-other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhou **{{.bpXP}}** de XP para o passe de batalha"
+other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp (**{{.totalXp}}/{{.xpToLevel}}**)  {{.clanMsg}}\nGanhou **{{.bpXP}}** de XP para o passe de batalha"
 
 [TrainWinKey]
 other="Parabens {{.username}}, você venceu\nGanhou **{{.money}}** de dinheiro e **{{.xp}}** de xp{{.clanMsg}}\nGanhou **{{.bpXP}}** de XP para o passe de batalha\n\nEssa batalha te dropou uma chave de raridade **{{.keyRarity}}** use **/raid** para utilizar quando estiver preparado"

@@ -9,6 +9,7 @@ import (
 	"asura/src/utils"
 	"context"
 	"fmt"
+	"math"
 	"strconv"
 
 	"asura/src/translation"
@@ -72,7 +73,7 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			},
 		}
 	case "rank":
-		towers := database.User.SortTowers(ctx, 12)
+		towers := database.User.SortTowers(ctx, 16)
 		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
@@ -131,22 +132,23 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			Xp:     rinha.CalcXP(level) + 1,
 			Type:   rinha.GetRandByType(rinha.GetFloorRarity(tower.Floor)),
 			Equip:  true,
-			Resets: tower.Floor / 15,
+			Resets: tower.Floor / 20,
 		}
 		userAdv := &entities.User{
 			Galos: []*entities.Rooster{galoAdv},
 		}
 
 		if tower.Floor >= 60 {
-			galoAdv.Evolved = true
+			userAdv.Items = user.Items
 		}
 
 		if tower.Floor >= 90 {
-			userAdv.Attributes = user.Attributes
+			galoAdv.Evolved = true
+
 		}
 
 		if tower.Floor >= 120 {
-			userAdv.Items = user.Items
+			userAdv.Attributes = user.Attributes
 		}
 
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
@@ -183,7 +185,8 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 
 				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-					xp = xp / (r.Resets + 1)
+					resets := int(math.Min(float64(r.Resets), 6))
+					xp = xp / (resets + 1)
 					r.Xp += xp
 					return r
 				})

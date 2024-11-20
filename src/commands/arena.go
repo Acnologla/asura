@@ -120,6 +120,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		Galos:      []*entities.Rooster{ngaloAdv},
 		Attributes: user.Attributes,
 		Upgrades:   user.Upgrades,
+		Items:      user.Items,
 	}
 
 	advUser.Attributes[0] += advUser.Attributes[0]

@@ -276,6 +276,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				xpOb = int(float64(xpOb) * 0.75)
 			}
 		}
+		xpTotal := 0
 
 		database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 
@@ -329,6 +330,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 				bpXP = database.User.UpdateBp(ctx, &u, &r)
 				r.Xp += xpOb
+				xpTotal = r.Xp
 				return r
 			})
 			u.Money += money
@@ -363,17 +365,22 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				},
 			})
 		} else {
+			level := rinha.CalcLevel(xpTotal)
+			curLevelXP := rinha.CalcXP(level)
+			nextLevelXp := rinha.CalcXP(level + 1)
 			ch.CreateMessage(&disgord.CreateMessage{
 				Embeds: []*disgord.Embed{
 					{
 						Color: 16776960,
 						Title: "Train",
 						Description: translation.T("TrainWin", translation.GetLocale(itc), map[string]interface{}{
-							"username": discordUser.Username,
-							"xp":       xpOb,
-							"money":    money,
-							"clanMsg":  clanMsg,
-							"bpXP":     bpXP,
+							"username":  discordUser.Username,
+							"xp":        xpOb,
+							"money":     money,
+							"clanMsg":   clanMsg,
+							"bpXP":      bpXP,
+							"totalXp":   xpTotal - curLevelXP,
+							"xpToLevel": nextLevelXp - curLevelXP,
 						}),
 					},
 				},

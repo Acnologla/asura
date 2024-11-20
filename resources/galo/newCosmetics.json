@@ -436,5 +436,13 @@
     "type": 0,
     "name": "WW2 Map",
     "value": "https://iili.io/JGSRie2.png"
+  },
+  {
+    "name": "Skin Existência Dourada",
+    "rarity": 3,
+    "reverseValue": "https://iili.io/25bwa3J.png",
+    "value": "https://iili.io/25bwlvR.png",
+    "type": 2,
+    "extra": 46
   }
 ]
