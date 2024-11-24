@@ -3,13 +3,13 @@ package rinha
 import "asura/src/utils"
 
 const KEY_CHANCE = 6
-const NEWBIE_ADD = 3
+const NEWBIE_ADD = 5
 const VIP_ADD = 1
 
 func DropKey(userXP int, vip bool) bool {
 	rand := utils.RandInt(1001)
 
-	if 280 > userXP {
+	if 650 > userXP {
 		return rand < (KEY_CHANCE + NEWBIE_ADD)
 	}
 

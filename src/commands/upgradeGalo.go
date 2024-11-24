@@ -42,7 +42,7 @@ func genUpgradeRoosterOptions(user *entities.User) (opts []*disgord.SelectMenuOp
 	for _, galo := range user.Galos {
 		class := rinha.Classes[galo.Type]
 		rarity := rinha.GetRarity(galo)
-		if rarity != rinha.Mythic {
+		if rarity != rinha.Mythic && rarity != rinha.Special {
 			opts = append(opts, &disgord.SelectMenuOption{
 				Label:       class.Name,
 				Value:       galo.ID.String(),

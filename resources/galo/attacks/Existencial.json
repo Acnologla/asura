@@ -70,30 +70,30 @@
   { "damage": [160, 500], "level": 34, "name": "Anti-Matéria" },
   {
     "damage": [100, 105],
-    "level": 38,
+    "level": 37,
     "name": "Englobar Universos Paralelos",
     "self": true,
     "effect": [1, 89]
   },
   {
     "damage": [100, 150],
-    "level": 42,
+    "level": 41,
     "name": "Decaimento do Universo",
     "effect": [1, 90]
   },
 
   {
     "damage": [70, 110],
-    "level": 46,
+    "level": 43,
     "name": "Refletir Existência de Ataques",
     "self": true,
     "effect": [1, 91]
   },
 
-  { "damage": [200, 1000], "level": 50, "name": "Destruição do Multiverso" },
+  { "damage": [200, 1000], "level": 45, "name": "Destruição do Multiverso" },
   {
     "damage": [270, 400],
-    "level": 50,
+    "level": 45,
     "name": "Destruição completa",
     "evolved": true,
     "effect": [1, 90]

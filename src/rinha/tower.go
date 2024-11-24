@@ -1,9 +1,9 @@
 package rinha
 
-const BASE_TOWER_XP = 60
+const BASE_TOWER_XP = 65
 const BASE_TOWER_MONEY = 30
 const FLOOR_XP_BONUS = 18
-const FLOOR_MONEY_BONUS = 8
+const FLOOR_MONEY_BONUS = 9
 const MAXIMUM_FLOOR = 150
 const REWARD_FLOOR_DIVIDER = 5
 

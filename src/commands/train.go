@@ -235,6 +235,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	if winner == 0 {
 		xpOb := utils.RandInt(13) + 12
+		eggXpOb := 5 + utils.RandInt(5)
 		if rinha.HasUpgrade(user.Upgrades, 0) {
 			xpOb += 3
 			if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
@@ -299,6 +300,10 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			u.TrainLimit++
 			clanUser := database.Clan.GetUserClan(ctx, discordUser.ID, "Members")
 			clan := clanUser.Clan
+
+			if rinha.HasEgg(&user) {
+				u.Egg += eggXpOb
+			}
 
 			if clan.Name != "" {
 				xpOb++

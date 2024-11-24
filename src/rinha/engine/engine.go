@@ -85,6 +85,16 @@ func GetImageTile(options *RinhaOptions, turn int) string {
 
 var RinhaEmojis = [2]string{"<:sverde:744682222644363296>", "<:svermelha:744682249408217118>"}
 
+var effectsEmoji = map[int]string{
+	1: "<:dano:1310385120804339712>",        // damage
+	2: "<:cura:1310371814190612552>",        // heal
+	3: "",                                   // stun
+	4: "<:protecao:1310371845416947765>",    // shield
+	5: "",                                   // reflex
+	6: "<:fragilidade:1310385186445463692>", // fragility
+
+}
+
 func CheckDead(battle rinha.Battle) bool {
 	return 0 >= battle.Fighters[0].Life || 0 >= battle.Fighters[1].Life
 }
@@ -109,10 +119,11 @@ func EffectToStr(effect *rinha.Result, affected string, author string, battle *r
 		return fmt.Sprintf("%s **%s** Usou **%s** causando **%d** de dano\n", RinhaEmojis[battle.GetReverseTurn()], author, effect.Skill.Name, effect.Damage)
 	} else if effect.Effect == rinha.Effected {
 		effectLiteral := rinha.Effects[effect.EffectID]
+		effectEmoji := effectsEmoji[effectLiteral.Type]
 		if effect.Self {
-			return fmt.Sprintf(effectLiteral.Phrase+"\n", author, effect.Damage)
+			return fmt.Sprintf("%s "+effectLiteral.Phrase+"\n", effectEmoji, author, effect.Damage)
 		}
-		return fmt.Sprintf(effectLiteral.Phrase+"\n", affected, effect.Damage)
+		return fmt.Sprintf("%s "+effectLiteral.Phrase+"\n", effectEmoji, affected, effect.Damage)
 	} else if effect.Effect == rinha.NotEffective {
 		return "**reduzido**\n"
 	}

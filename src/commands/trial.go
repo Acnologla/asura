@@ -126,12 +126,12 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 
 		if class.Rarity > rinha.Epic {
-			atbs := (user.UserXp / 150) * ((trial.Win / 2) + 1)
+			atbs := (user.UserXp / 200) * ((trial.Win / 2) + 1)
 			if class.Rarity == rinha.Legendary {
 				atbs = atbs / 2
 			}
 			healthAtb := float64(atbs) * 0.65
-			userAdv.Attributes = [5]int{int(healthAtb) + 600, atbs / 10, atbs, atbs / 6, atbs / 6}
+			userAdv.Attributes = [5]int{int(healthAtb) + 400, atbs / 10, atbs, atbs / 8, atbs / 8}
 		}
 
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{

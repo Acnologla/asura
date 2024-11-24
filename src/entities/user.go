@@ -127,4 +127,5 @@ type User struct {
 	BattlePass      int               `bun:"battlepass"`
 	Attributes      [5]int            `bun:"attributes,array"`
 	LastRank        int               `bun:"lastrank"`
+	Egg             int               `bun:"egg"`
 }

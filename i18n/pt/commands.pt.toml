@@ -413,6 +413,54 @@ other="Veja os clans com maior xp"
 [RankClanMoneyHelp]
 other="Veja os clans com o maior dinheiro"
 
+[EggHatchDesc]
+other="Parabens você destruiu seu ovo e ganhou o galo **{{.rooster}}** (**{{.rarity}}**)"
+
+[EggHelp]
+other="Veja como esta o seu ovo!"
+
+[EggHatchConfirm]
+other="Certeza que deseja destruir seu ovo? voce tera que comprar outro"
+
+[EggNotHave]
+other="Você destruiu seu ovo, para comprar outro clique no botão a baixo (custa **1** asura coin)"
+
+[EggBought]
+other="Parabens voce comprou um ovo novo!"
+
+[InvalidFeedEgg]
+other="Shards insuficientes"
+
+[FeedEgg]
+other="Você sacrificou o shard com sucesso e ganhou **{{.xp}}** para o seu ovo!"
+
+[EggNoMoney]
+other="Voce não tem dinheiro para comprar um ovo!"
+
+[EggNoShards]
+other="Voce não tem nenhuma shard para sacrificar, para conseguir shards consiga chaves durante os treinos e depois a complete!"
+
+[EggSelectShard]
+other="Selecione um shard para sacrificar"
+
+[EggFeed]
+other="Selecione no menu a baixo qual shard voce gostaria de sacrificar para alimentar seu galo, as shards são sacrificadas individualmente"
+
+[EggViewHelp]
+other="Veja o xp e como esta seu ovo"
+
+[EggFeedHelp]
+other="Aumente o xp do seu ovo sacrificando shards"
+
+[EggHatchHelp]
+other="Destrua seu ovo, e ganhe um galo de acordo com a raridade dele"
+
+[EggView]
+other="Seu ovo esta no nivel **{{.level}}** (**{{.curXp}}/{{.nextLevelXp}}**)\n\nUse **/egg feed** para sacrificar shards e ganhar xp no seu ovo de acordo com a raridade do shard sacrificado\n\nUse **/egg hatch** para quebrar seu ovo e ganhar um galo aleatorio de acordo com o nivel do seu ovo (cuidado é bom quebrar só quando estiver nivel alto!)"
+
+[EggBuy]
+other="Comprar ovo"
+
 [TrainHelp]
 other="Treine seu galo ganhando dinheiro e xp"
 

@@ -43,6 +43,7 @@ func initBot() {
 
 	c := cron.New()
 	c.AddFunc("0 0 0 * * 0", func() {
+		fmt.Println("Reseting the tower")
 		database.User.DeleteTowers(context.Background())
 	})
 }
