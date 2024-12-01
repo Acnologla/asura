@@ -54,10 +54,10 @@
     "effect": [1, 63]
   },
   {
-    "damage": [45, 80],
+    "damage": [50, 80],
     "level": 23,
     "name": "Pacto",
-    "effect": [1, 59]
+    "effect": [1, 64]
   },
   {
     "damage": [45, 60],

@@ -57,14 +57,14 @@ func runNatal(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 
 	u := database.User.GetUser(ctx, userID, "Items", "Galos", "Trials")
 	rooster := rinha.GetEquippedGalo(&u)
-	duration := time.Hour * 4
+	duration := time.Hour * 3
 	cache.Client.Set(ctx, redisKey, "1", duration)
 	rarity := rinha.GetRarity(rooster)
 	gAdv := &entities.Rooster{
 		Type:    bossN,
 		Xp:      rinha.CalcXP(65),
 		Evolved: rarity > rinha.Epic,
-		Resets:  rooster.Resets * 2,
+		Resets:  1 + rooster.Resets,
 	}
 
 	uAdv := entities.User{
