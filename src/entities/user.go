@@ -128,4 +128,5 @@ type User struct {
 	Attributes      [5]int            `bun:"attributes,array"`
 	LastRank        int               `bun:"lastrank"`
 	Egg             int               `bun:"egg"`
+	EventStatus     int               `bun:"eventstatus"`
 }

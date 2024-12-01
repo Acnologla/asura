@@ -247,5 +247,9 @@
   {
     "name": "White",
     "rarity": 5
+  },
+  {
+    "name": "Natal",
+    "rarity": 4
   }
 ]

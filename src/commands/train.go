@@ -235,7 +235,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	if winner == 0 {
 		xpOb := utils.RandInt(13) + 12
-		eggXpOb := 5 + utils.RandInt(5)
+		eggXpOb := 6 + utils.RandInt(7)
 		if rinha.HasUpgrade(user.Upgrades, 0) {
 			xpOb += 3
 			if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {
@@ -294,6 +294,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if rinha.IsVip(&u) {
 				xpOb += 12
 				money += 3
+				eggXpOb += 4
 			}
 
 			u.UserXp++

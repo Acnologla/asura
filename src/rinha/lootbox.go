@@ -291,7 +291,7 @@ func GetTrialLootbox(rarity Rarity) int {
 		return 3
 	}
 
-	if rarity == Mythic {
+	if rarity == Mythic || rarity == Special {
 		rand := utils.RandInt(101)
 		if rand >= 2 {
 			return 8

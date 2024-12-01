@@ -150,6 +150,9 @@ func HasChanged(command *disgord.ApplicationCommand, realCommand Command) bool {
 		if option.Autocomplete != realCommand.Options[i].Autocomplete {
 			return true
 		}
+		if len(option.Options) != len(realCommand.Options[i].Options) {
+			return true
+		}
 
 	}
 	return false

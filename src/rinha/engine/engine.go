@@ -83,14 +83,15 @@ func GetImageTile(options *RinhaOptions, turn int) string {
 	return options.Images[0]
 }
 
-var RinhaEmojis = [2]string{"<:sverde:744682222644363296>", "<:svermelha:744682249408217118>"}
+// var RinhaEmojis = [2]string{"<:sverde:744682222644363296>", "<:svermelha:744682249408217118>"}
+var RinhaEmojis = [2]string{"<a:sverde2:1310653483145236490>", "<a:svermelha2:1310653611667230812>"}
 
 var effectsEmoji = map[int]string{
 	1: "<:dano:1310385120804339712>",        // damage
 	2: "<:cura:1310371814190612552>",        // heal
-	3: "",                                   // stun
-	4: "<:protecao:1310371845416947765>",    // shield
-	5: "",                                   // reflex
+	3: "<:stun:1310653316916842547>",        // stun
+	4: "<:protecao2:1310627493539221565>",   // shield
+	5: "<:reflexao:1310657265833082890>",    // reflex
 	6: "<:fragilidade:1310385186445463692>", // fragility
 
 }

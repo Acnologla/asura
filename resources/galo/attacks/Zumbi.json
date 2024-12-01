@@ -47,7 +47,7 @@
   },
   {
     "name": "Soco degenerador",
-    "damage": [27, 40],
+    "damage": [30, 40],
     "level": 12,
     "effect": [1, 52]
   },
@@ -65,7 +65,7 @@
   },
   {
     "name": "Degeneração potente",
-    "damage": [25, 40],
+    "damage": [27, 40],
     "level": 17,
     "effect": [1, 54]
   },
@@ -77,14 +77,14 @@
   },
   {
     "name": "Escudo de carne divino",
-    "damage": [40, 55],
+    "damage": [45, 55],
     "effect": [1, 17],
     "self": true,
     "level": 21
   },
   {
     "name": "Bicada degenerativa",
-    "damage": [70, 85],
+    "damage": [72, 85],
     "effect": [1, 52],
     "level": 22
   },
@@ -95,14 +95,14 @@
   },
   {
     "name": "Escudo de carne infinto",
-    "damage": [30, 45],
+    "damage": [30, 50],
     "level": 30,
     "self": true,
     "effect": [1, 55]
   },
   {
     "name": "Mundo zumbi",
-    "damage": [105, 150],
+    "damage": [110, 150],
     "effect": [1, 53],
     "level": 30,
     "evolved": true

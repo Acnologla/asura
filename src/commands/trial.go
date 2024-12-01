@@ -49,6 +49,13 @@ func getTrial(trials []*entities.Trial, rooster int) *entities.Trial {
 	return nil
 }
 
+func resMultiplier(resets int) int {
+	if resets == 0 {
+		return 0
+	}
+	return 1
+}
+
 func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := database.User.GetUser(ctx, itc.Member.UserID, "Items", "Galos", "Trials")
 	command := itc.Data.Options[0].Name
@@ -118,7 +125,7 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			Type:    rinha.GetRandByType(class.Rarity),
 			Xp:      xp,
 			Evolved: class.Rarity > rinha.Epic || level >= 40,
-			Resets:  rooster.Resets * (1 + trial.Win),
+			Resets:  rooster.Resets + resMultiplier(rooster.Resets)*(trial.Win*2),
 		}
 
 		userAdv := entities.User{
@@ -126,12 +133,12 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 
 		if class.Rarity > rinha.Epic {
-			atbs := (user.UserXp / 200) * ((trial.Win / 2) + 1)
+			atbs := (user.UserXp / 210) * ((trial.Win / 2) + 1)
 			if class.Rarity == rinha.Legendary {
 				atbs = atbs / 2
 			}
-			healthAtb := float64(atbs) * 0.65
-			userAdv.Attributes = [5]int{int(healthAtb) + 400, atbs / 10, atbs, atbs / 8, atbs / 8}
+			healthAtb := float64(atbs) * 0.55
+			userAdv.Attributes = [5]int{int(healthAtb) + 500, atbs / 10, atbs, atbs / 9, atbs / 8}
 		}
 
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{

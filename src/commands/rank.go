@@ -47,6 +47,11 @@ func init() {
 					},
 					&disgord.ApplicationCommandOption{
 						Type:        disgord.OptionTypeSubCommand,
+						Name:        "egg",
+						Description: translation.T("RankUserEggHelp", "pt"),
+					},
+					&disgord.ApplicationCommandOption{
+						Type:        disgord.OptionTypeSubCommand,
 						Name:        "vitorias",
 						Description: translation.T("RankUserWinsHelp", "pt"),
 					},
@@ -83,6 +88,7 @@ var rankNameToType = map[string]string{
 	"level":    "Nível",
 	"vitorias": "Vitórias",
 	"derrotas": "Derrotas",
+	"egg":      "Nível ovo",
 }
 
 func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
@@ -113,6 +119,12 @@ func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				return u.Money
 			}
 			uRank = database.User.GetPos(ctx, user, "money", data)
+		case "egg":
+			users = database.User.SortUsers(ctx, DEFAULT_RANK_LIMIT, "egg")
+			data = func(u *entities.User) int {
+				return rinha.CalcLevel(u.Egg)
+			}
+			uRank = database.User.GetPos(ctx, user, "egg", data)
 		case "level":
 			users = database.User.SortUsersByRooster(ctx, DEFAULT_RANK_LIMIT, "resets", "xp")
 			data = func(u *entities.User) int {

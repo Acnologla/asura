@@ -38,7 +38,7 @@ func (rarity Rarity) String() string {
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 160, 500, 1200, 500, 3000}[rarity]
+	return [...]int{30, 160, 500, 1200, 1500, 3000}[rarity]
 }
 
 func (rarity Rarity) Color() int {

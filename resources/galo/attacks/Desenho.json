@@ -57,7 +57,7 @@
     "damage": [45, 80],
     "level": 23,
     "name": "Pacto",
-    "effect": [1, 64]
+    "effect": [1, 59]
   },
   {
     "damage": [45, 60],
@@ -73,7 +73,7 @@
     "effect": [1, 66]
   },
   {
-    "damage": [100, 110],
+    "damage": [100, 120],
     "level": 30,
     "name": "Pacto Supremo",
     "effect": [1, 64],

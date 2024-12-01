@@ -253,7 +253,7 @@
     "turns": 4,
     "type": 6,
     "phrase": "%s esta fragilizado! (%d)",
-    "range": [50, 50]
+    "range": [80, 80]
   },
   {
     "name": "Possessão",
@@ -907,5 +907,64 @@
     "type": 2,
     "self": true,
     "phrase": "%s está sendo curando! (+%d)"
+  },
+  {
+    "range": [15, 23],
+    "name": "Campo gravitacional",
+    "turns": 2,
+    "type": 1,
+    "phrase": "%s está sob gravidade forte! (+%d)"
+  },
+  {
+    "range": [50, 50],
+    "turns": 10,
+    "name": "Proteção Polar",
+    "type": 4,
+    "self": true,
+    "phrase": "%s está protegido por um campo polar! (%d)"
+  },
+  {
+    "range": [10, 20],
+    "name": "Hipotermia",
+    "turns": 2,
+    "type": 1,
+    "phrase": "%s está congelando! (-%d)"
+  },
+  {
+    "range": [10, 20],
+    "turns": 7,
+    "type": 1,
+    "name": "Susto Explosivo",
+    "phrase": "%s esta assustado! (-%d)"
+  },
+  {
+    "range": [75, 75],
+    "type": 4,
+    "turns": 7,
+    "name": "Proteção Natalina",
+    "self": true,
+    "phrase": "%s está protegido por um campo natalino! (%d)"
+  },
+  {
+    "range": [65, 85],
+    "name": "Efeito Aleatório",
+    "turns": 3,
+    "type": 1,
+    "phrase": "%s está sob efeito aleatório! (-%d)"
+  },
+  {
+    "range": [190, 380],
+    "type": 2,
+    "name": "Benção Natalina",
+    "turns": 1,
+    "self": true,
+    "phrase": "%s está curando! (+%d)"
+  },
+  {
+    "range": [110, 125],
+    "name": "Arvore natalina",
+    "turns": 3,
+    "type": 1,
+    "phrase": "%s está sob arvore natálina! (-%d)"
   }
 ]
