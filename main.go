@@ -46,6 +46,7 @@ func initBot() {
 		fmt.Println("Reseting the tower")
 		database.User.DeleteTowers(context.Background())
 	})
+	c.Start()
 }
 
 func main() {

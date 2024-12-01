@@ -63,7 +63,7 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, 
 			Xp:       rinha.CalcXP(firstLvl),
 			Type:     firstClass,
 			Equipped: []int{},
-			//	Evolved:  true,
+			Evolved:  true,
 		}
 
 		sec := &entities.Rooster{
@@ -71,7 +71,7 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, 
 			Xp:       rinha.CalcXP(secLvl),
 			Type:     secClass,
 			Equipped: []int{},
-			//	Evolved:  true,
+			Evolved:  true,
 		}
 
 		user1 := &entities.User{
