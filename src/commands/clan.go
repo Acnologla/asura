@@ -547,9 +547,9 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			})
 		}, 120)
-		if 5 > len(users) {
+		if 3 > len(users) {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: "É necessario no minimo 5 pessoas para começar a batalha",
+				Content: "É necessario no minimo 3 pessoas para começar a batalha",
 			})
 			cache.Client.Del(ctx, redisKey)
 			return nil
@@ -582,7 +582,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [5]int{(sumOfAttributes / 2) + 100, 30 + (sumOfAttributes / 10), 0, (sumOfAttributes / 10), 0},
+			Attributes: [6]int{sumOfAttributes + 100, 30 + (sumOfAttributes / 10), 0, (sumOfAttributes / 10), 0, 20},
 		}
 		usernames := make([]string, len(usersDb))
 		for i, user := range users {

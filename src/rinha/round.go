@@ -143,6 +143,8 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 		real_damage = int(math.Round(float64(real_damage) * round.Target.ItemPayload))
 	}
 
+	real_damage = int(float32(real_damage) * (1 + (0.001 * (float32(round.Attacker.User.Attributes[5])))))
+
 	if not_effective_damage != 0 {
 		real_not_effective := int(math.Round(float64(not_effective_damage) * round.Target.ItemPayload))
 		round.Results = append([]*Result{
@@ -191,6 +193,8 @@ func (round *Round) applyEffectDamage(receiver *Fighter, effect *Effect, ataccke
 			if ataccker.ItemEffect == 6 {
 				effect_damage = int(ataccker.ItemPayload * float64(effect_damage))
 			}
+
+			effect_damage = int(float64(effect_damage) * GetTrialsMultiplier(ataccker.User))
 
 			if HasUpgrade(receiver.User.Upgrades, 2, 0, 0, 1) {
 				if 8 >= utils.RandInt(101) {

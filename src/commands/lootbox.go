@@ -274,12 +274,12 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				} else if lb == "items" || lb == "items mistica" {
 					database.User.InsertItem(ctx, itc.Member.UserID, u.Items, newVal, entities.NormalType)
 				} else {
-					if !rinha.HaveRooster(u.Galos, newVal) {
+					if !rinha.HaveRooster(u.Galos, newVal) || rinha.Classes[newVal].Rarity == rinha.Mythic {
 						database.User.InsertRooster(ctx, &entities.Rooster{
 							UserID: itc.Member.UserID,
 							Type:   newVal,
 						})
-					} else if rinha.Classes[newVal].Rarity != rinha.Mythic {
+					} else {
 						gal := rinha.Classes[newVal]
 						money, _ := rinha.Sell(gal.Rarity, 0, 0)
 						u.Money += money
@@ -350,7 +350,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				if err != nil {
 					return
 				}
-				for i := 0; i < 4; i++ {
+				for i := 0; i < 3; i++ {
 					time.Sleep(3 * time.Second)
 					rand := rinha.GetRand()
 					openEmbed.Color = rinha.Classes[rand].Rarity.Color()

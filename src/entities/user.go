@@ -24,6 +24,10 @@ const (
 	Fight
 	WinGalo
 	FightGalo
+	PlayTrial
+	WinRaid
+	FightTower
+	WinDungeon
 )
 
 type Mission struct {
@@ -125,7 +129,7 @@ type User struct {
 	DailyStrikes    int               `bun:"dailystrikes"`
 	Pity            int               `bun:"pity"`
 	BattlePass      int               `bun:"battlepass"`
-	Attributes      [5]int            `bun:"attributes,array"`
+	Attributes      [6]int            `bun:"attributes,array"`
 	LastRank        int               `bun:"lastrank"`
 	Egg             int               `bun:"egg"`
 	EventStatus     int               `bun:"eventstatus"`

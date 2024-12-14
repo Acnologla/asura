@@ -65,6 +65,12 @@ func GetBenefits(xp int) (text string) {
 	if level >= 8 {
 		text += "1 de xp de upgrade a mais por rinha ganha\n"
 	}
+	if level >= 10 {
+		text += "10% de xp adicional para o ovo"
+	}
+	if level >= 15 {
+		text += "Chance adicional de dropar chaves"
+	}
 	return
 }
 

@@ -42,7 +42,7 @@ func runNatal(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
-				Content: "O chefe só estara disponivel daqui 4 horas",
+				Content: "O chefe só estara disponivel daqui 3 horas",
 			},
 		}
 	}

@@ -695,9 +695,9 @@
     "phrase": "%s está regenerando com matéria exótica! (+%d)"
   },
   {
-    "range": [170, 170],
+    "range": [150, 150],
     "name": "Existência Fragilizada",
-    "turns": 4,
+    "turns": 2,
     "type": 6,
     "phrase": "%s está com suas molécuas em decaimento profundo... (-%d)"
   },

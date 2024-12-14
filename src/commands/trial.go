@@ -138,7 +138,7 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				atbs = atbs / 2
 			}
 			healthAtb := float64(atbs) * 0.55
-			userAdv.Attributes = [5]int{int(healthAtb) + 500, atbs / 10, atbs, atbs / 9, atbs / 8}
+			userAdv.Attributes = [6]int{int(healthAtb) + 500, atbs / 10, atbs, atbs / 9, atbs / 8, 50}
 		}
 
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
@@ -166,6 +166,7 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 
 		ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
 
+		go completeMission(ctx, &user, galoAdv, winner == 0, itc, "trial")
 		if winner == 0 {
 			database.User.AddTrialWin(ctx, trial)
 			if trial.Win >= MAX_TRIALS {

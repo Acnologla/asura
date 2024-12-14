@@ -77,6 +77,12 @@ var attributeButtons = []*disgord.MessageComponent{
 		CustomID: "5",
 		Style:    disgord.Primary,
 	},
+	{
+		Type:     disgord.MessageComponentButton,
+		Label:    "Defesa",
+		CustomID: "6",
+		Style:    disgord.Primary,
+	},
 }
 
 func calcPoints(userDb entities.User) int {
@@ -84,7 +90,7 @@ func calcPoints(userDb entities.User) int {
 }
 
 func calcAvailPoints(userDb entities.User) int {
-	return calcPoints(userDb) - (userDb.Attributes[0] + userDb.Attributes[1] + userDb.Attributes[2] + userDb.Attributes[3] + userDb.Attributes[4])
+	return calcPoints(userDb) - (userDb.Attributes[0] + userDb.Attributes[1] + userDb.Attributes[2] + userDb.Attributes[3] + userDb.Attributes[4] + userDb.Attributes[5])
 }
 
 func generateDesc(userDb entities.User, selectPoints int) (desc string) {
@@ -94,8 +100,9 @@ func generateDesc(userDb entities.User, selectPoints int) (desc string) {
 	luckyPoints := userDb.Attributes[2]
 	effectDamagePoints := userDb.Attributes[3]
 	regenPoints := userDb.Attributes[4]
-	desc += fmt.Sprintf("Vida extra: **%d**\nDano extra: **%d**\nSorte: **%d**\nDano em efeitos: **%d**\nRegeneração: **%d**", healthPoints, attackPoints, luckyPoints, effectDamagePoints, regenPoints)
-	desc += "\n\nVoce ganha um ponto a cada 100 rinhas\nUm ponto em vida te da 1,5 de vida\nUm ponto em dano te da 0.2% de dano extra em cada ataque\nUm ponto em dano de efeito adiciona 0.2% de dano extra em efeitos\nUm ponto em regeneração faz voce regenerar 0,3 por turno"
+	defensePoints := userDb.Attributes[5]
+	desc += fmt.Sprintf("Vida extra: **%d**\nDano extra: **%d**\nSorte: **%d**\nDano em efeitos: **%d**\nRegeneração: **%d**\nDefesa: **%d**", healthPoints, attackPoints, luckyPoints, effectDamagePoints, regenPoints, defensePoints)
+	desc += "\n\nVoce ganha um ponto a cada 100 rinhas\nUm ponto em vida te da 1,5 de vida\nUm ponto em dano te da 0.2% de dano extra em cada ataque\nUm ponto em dano de efeito adiciona 0.2% de dano extra em efeitos\nUm ponto em regeneração faz voce regenerar 0,3 por turno\nUm ponto em defesa faz voce negar 0.1% de dano"
 	desc += fmt.Sprintf("\n\nVoce tem **%d** pontos para gastar\nVoce esta colocando atualmente **%d** pontos", points, selectPoints)
 	return
 }
@@ -129,7 +136,11 @@ func runAttributes(ctx context.Context, itc *disgord.InteractionCreate) *disgord
 		},
 			&disgord.MessageComponent{
 				Type:       disgord.MessageComponentActionRow,
-				Components: attributeButtons,
+				Components: attributeButtons[0:3],
+			},
+			&disgord.MessageComponent{
+				Type:       disgord.MessageComponentActionRow,
+				Components: attributeButtons[3:6],
 			})
 		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -164,7 +175,7 @@ func runAttributes(ctx context.Context, itc *disgord.InteractionCreate) *disgord
 					}
 					selectPoints = newPoints
 				}
-				if ic.Data.CustomID == "1" || ic.Data.CustomID == "2" || ic.Data.CustomID == "3" || ic.Data.CustomID == "4" || ic.Data.CustomID == "5" {
+				if ic.Data.CustomID == "1" || ic.Data.CustomID == "2" || ic.Data.CustomID == "3" || ic.Data.CustomID == "4" || ic.Data.CustomID == "5" || ic.Data.CustomID == "6" {
 					n, err := strconv.Atoi(ic.Data.CustomID)
 					if err != nil {
 						return

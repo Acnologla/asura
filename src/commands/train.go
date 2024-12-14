@@ -44,7 +44,7 @@ func getMissions(ctx context.Context, user *entities.User) []*entities.Mission {
 	return user.Missions
 }
 
-func completeMission(ctx context.Context, user *entities.User, galoAdv *entities.Rooster, winner bool, itc *disgord.InteractionCreate) {
+func completeMission(ctx context.Context, user *entities.User, galoAdv *entities.Rooster, winner bool, itc *disgord.InteractionCreate, battleType string) {
 	tempUser := database.User.GetUser(ctx, user.ID, "Missions")
 	user.Missions = tempUser.Missions
 	user.LastMission = tempUser.LastMission
@@ -96,7 +96,38 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 					done = true
 				}
 			}
+		case entities.PlayTrial:
+			if battleType == "trial" {
+				xp += 100
+				money += 50
+			}
+		case entities.WinRaid:
+			if battleType == "raid" {
+				xp += 285
+				money += 125
+			}
+		case entities.FightTower:
+			if battleType == "tower" {
+				mission.Progress++
+				if mission.Progress == (mission.Level+1)*6 {
+					xp += 60 * (mission.Level + 1)
+					money += 50 + (5 * mission.Level)
+					done = true
+				}
+			}
+		case entities.WinDungeon:
+			if battleType == "dungeon" {
+				if winner {
+					mission.Progress++
+					if mission.Progress == (mission.Level+1)*3 {
+						xp += 60 * (mission.Level + 1)
+						money += 55 + (5 * mission.Level)
+						done = true
+					}
+				}
+			}
 		}
+
 		if mission.Progress != old {
 			database.User.UpdateMissions(ctx, user.ID, mission, done)
 			if done {
@@ -212,7 +243,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	ch := handler.Client.Channel(itc.ChannelID)
 
-	completeMission(ctx, &user, &galoAdv, winner == 0, itc)
+	completeMission(ctx, &user, &galoAdv, winner == 0, itc, "train")
 	isLimit := rinha.IsInLimit(&user)
 	resetLimit := user.TrainLimit == 0 || 1 <= ((uint64(time.Now().Unix())-user.TrainLimitReset)/60/60/24)
 	if isLimit && !resetLimit {
@@ -294,7 +325,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			if rinha.IsVip(&u) {
 				xpOb += 12
 				money += 3
-				eggXpOb += 4
+				eggXpOb += 6
 			}
 
 			u.UserXp++
@@ -321,6 +352,9 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				if level >= 8 {
 					u.UserXp++
 				}
+				if level >= 10 {
+					eggXpOb++
+				}
 				clanXpOb := 2
 				if item != nil {
 					if item.Effect == 10 {
@@ -331,6 +365,15 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 				go database.Clan.CompleteClanMission(ctx, clan, discordUser.ID, clanXpOb)
 				clanMsg = fmt.Sprintf("\nGanhou **%d** de xp para seu clan", clanXpOb)
+				if rinha.DropKey(u.UserXp, rinha.IsVip(&u), level) {
+					key := rinha.GetKeyRarity()
+					dropKey = int(key)
+					database.User.InsertItem(ctx, u.ID, u.Items, int(key), entities.KeyType)
+					telemetry.Debug(fmt.Sprintf("%s get key %s", discordUser.Username, key.String()), map[string]string{
+						"user":      strconv.FormatUint(uint64(u.ID), 10),
+						"keyRarity": key.String(),
+					})
+				}
 			}
 			u.Win++
 			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
@@ -340,16 +383,6 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				return r
 			})
 			u.Money += money
-
-			if rinha.DropKey(u.UserXp, rinha.IsVip(&u)) {
-				key := rinha.GetKeyRarity()
-				dropKey = int(key)
-				database.User.InsertItem(ctx, u.ID, u.Items, int(key), entities.KeyType)
-				telemetry.Debug(fmt.Sprintf("%s get key %s", discordUser.Username, key.String()), map[string]string{
-					"user":      strconv.FormatUint(uint64(u.ID), 10),
-					"keyRarity": key.String(),
-				})
-			}
 
 			return u
 		}, "Galos", "Items")

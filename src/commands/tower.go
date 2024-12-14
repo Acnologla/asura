@@ -175,7 +175,7 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			return nil
 		}
 		ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
-
+		go completeMission(ctx, &user, galoAdv, winner == 0, itc, "tower")
 		if winner == 0 {
 			xp, money := rinha.CalcTowerReward(tower.Floor)
 			lootbox := rinha.CalcFloorReward(tower.Floor)

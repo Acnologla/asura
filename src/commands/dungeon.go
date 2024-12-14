@@ -93,9 +93,10 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		AdvLVL := rinha.CalcLevel(galoAdv.Xp) * multiplier
 
 		ngaloAdv := &entities.Rooster{
-			Xp:    rinha.CalcXP(AdvLVL) + 1,
-			Type:  galoAdv.Type,
-			Equip: true,
+			Xp:      rinha.CalcXP(AdvLVL) + 1,
+			Type:    galoAdv.Type,
+			Equip:   true,
+			Evolved: user.DungeonReset > 15,
 		}
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -121,6 +122,7 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		}
 		ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
 
+		go completeMission(ctx, &user, ngaloAdv, winner == 0, itc, "dungeon")
 		if winner == 0 {
 
 			if user.DungeonReset != 0 && user.Dungeon+1 != len(rinha.Dungeon) {

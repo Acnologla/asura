@@ -322,6 +322,6 @@ func (adapter UserAdapterPsql) SortTowers(ctx context.Context, limit int) (tower
 }
 
 func (adapter UserAdapterPsql) DeleteTowers(ctx context.Context) error {
-	_, err := adapter.Db.NewDelete().Model(&entities.Tower{}).Exec(ctx)
+	_, err := adapter.Db.NewTruncateTable().Model((*entities.Tower)(nil)).Exec(ctx)
 	return err
 }

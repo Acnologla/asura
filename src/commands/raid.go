@@ -154,7 +154,7 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 	}, 120)
 	var usersDb []*entities.User
 	for _, user := range users {
-		u := database.User.GetUser(ctx, user.ID, "Galos", "Trials")
+		u := database.User.GetUser(ctx, user.ID, "Galos", "Trials", "Items")
 		usersDb = append(usersDb, &u)
 	}
 
@@ -175,7 +175,7 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 	}
 	userAdv := entities.User{
 		Galos:      []*entities.Rooster{galoAdv},
-		Attributes: [5]int{galoAttrs, galoOthersAttr, galoOthersAttr, galoOthersAttr, galoOthersAttr},
+		Attributes: [6]int{galoAttrs, galoOthersAttr, galoOthersAttr, galoOthersAttr, galoOthersAttr, galoOthersAttr},
 	}
 
 	winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
@@ -198,7 +198,9 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 	if winner == 0 {
 		xp, money := rinha.CalcRaidBattleWinPrize(keyRarity)
 		for _, user := range users {
+
 			database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
+				go completeMission(ctx, &u, galoAdv, true, itc, "raid")
 				u.Money += money / len(users)
 				if user.ID == users[0].ID {
 					if key.Extra+1 == rinha.CalcMaxRaidBattles(keyRarity) {

@@ -2,22 +2,26 @@ package rinha
 
 import "asura/src/utils"
 
-const KEY_CHANCE = 6
-const NEWBIE_ADD = 5
+const KEY_CHANCE = 7
+const NEWBIE_ADD = 6
 const VIP_ADD = 1
 
-func DropKey(userXP int, vip bool) bool {
+func DropKey(userXP int, vip bool, clanLevel int) bool {
 	rand := utils.RandInt(1001)
-
+	add := 0
 	if 650 > userXP {
-		return rand < (KEY_CHANCE + NEWBIE_ADD)
+		add += NEWBIE_ADD
 	}
 
 	if vip {
-		return rand < (KEY_CHANCE + VIP_ADD)
+		add += VIP_ADD
 	}
 
-	return rand < KEY_CHANCE
+	if clanLevel >= 15 {
+		add++
+	}
+
+	return rand < (KEY_CHANCE + add)
 }
 
 func GetKeyRarity() Rarity {

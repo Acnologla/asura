@@ -123,7 +123,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		Items:      user.Items,
 	}
 
-	advUser.Attributes[0] += advUser.Attributes[0]
+	advUser.Attributes[0] += advUser.Attributes[0] / 2
 
 	winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
 		GaloAuthor:  &user,

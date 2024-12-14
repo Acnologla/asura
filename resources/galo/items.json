@@ -27,7 +27,7 @@
     "name": "Armadura",
     "effect": 5,
     "level": 0,
-    "payload": 0.8
+    "payload": 0.75
   },
   {
     "name": "Poção de cura",
@@ -75,7 +75,7 @@
     "name": "Armadura de diamante",
     "effect": 5,
     "level": 1,
-    "payload": 0.65
+    "payload": 0.6
   },
   {
     "name": "Machado divino",
@@ -105,7 +105,7 @@
     "name": "Armadura de obisidiana",
     "effect": 5,
     "level": 2,
-    "payload": 0.55
+    "payload": 0.5
   },
   {
     "name": "Escalibur",
@@ -129,7 +129,7 @@
     "name": "Armadura da divindade",
     "effect": 5,
     "level": 3,
-    "payload": 0.5
+    "payload": 0.45
   },
   {
     "name": "Amplificador divino",
@@ -171,19 +171,19 @@
     "name": "Refletidor potente",
     "effect": 7,
     "level": 1,
-    "payload": 0.3
+    "payload": 0.35
   },
   {
     "name": "Refletidor espiritual",
     "effect": 7,
     "level": 2,
-    "payload": 0.35
+    "payload": 0.4
   },
   {
     "name": "Refletidor divino",
     "effect": 7,
     "level": 3,
-    "payload": 0.45
+    "payload": 0.5
   },
   {
     "name": "Beta Escalibur",
@@ -201,7 +201,7 @@
     "name": "Beta refletidor",
     "effect": 7,
     "level": 4,
-    "payload": 0.55
+    "payload": 0.65
   },
   {
     "name": "Beta Amplificador",
@@ -213,7 +213,7 @@
     "name": "Beta Armor",
     "effect": 5,
     "level": 4,
-    "payload": 0.45
+    "payload": 0.4
   },
   {
     "name": "Beta imortalidade",
@@ -231,31 +231,31 @@
     "name": "Farmador",
     "effect": 8,
     "level": 0,
-    "payload": 0.15
+    "payload": 0.2
   },
   {
     "name": "Farmador melhorado",
     "effect": 8,
     "level": 1,
-    "payload": 0.2
+    "payload": 0.25
   },
   {
     "name": "Farmador duplo",
     "effect": 8,
     "level": 2,
-    "payload": 0.25
+    "payload": 0.3
   },
   {
     "name": "Farmador divino",
     "effect": 8,
     "level": 3,
-    "payload": 0.3
+    "payload": 0.35
   },
   {
     "name": "Beta Farmador",
     "effect": 8,
     "level": 4,
-    "payload": 0.4
+    "payload": 0.45
   },
   {
     "name": "Arvore de natal",
@@ -321,7 +321,7 @@
     "name": "Refletidor mitico",
     "effect": 7,
     "level": 6,
-    "payload": 0.85
+    "payload": 0.9
   },
   {
     "name": "Amplificador mitico",
@@ -333,7 +333,7 @@
     "name": "Armadura mitica",
     "effect": 5,
     "level": 6,
-    "payload": 0.3
+    "payload": 0.25
   },
   {
     "name": "Imortalidade mitica",
@@ -357,36 +357,36 @@
     "name": "Escudo",
     "effect": 12,
     "level": 0,
-    "payload": 0.65
+    "payload": 0.6
   },
   {
     "name": "Escudo melhorado",
     "effect": 12,
     "level": 1,
-    "payload": 0.5
+    "payload": 0.45
   },
   {
     "name": "Escudo de aço",
     "effect": 12,
     "level": 2,
-    "payload": 0.45
+    "payload": 0.4
   },
   {
     "name": "Escudo de diamante",
     "effect": 12,
     "level": 3,
-    "payload": 0.4
+    "payload": 0.35
   },
   {
     "name": "Beta escudo",
     "effect": 12,
     "level": 4,
-    "payload": 0.3
+    "payload": 0.25
   },
   {
     "name": "Escudo mitico",
     "effect": 12,
     "level": 6,
-    "payload": 0.1
+    "payload": 0.05
   }
 ]
