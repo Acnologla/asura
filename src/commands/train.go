@@ -337,9 +337,11 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				u.Egg += eggXpOb
 			}
 
+			var clanLevel = 0
 			if clan.Name != "" {
 				xpOb++
 				level := rinha.ClanXpToLevel(clan.Xp)
+				clanLevel = level
 				if level >= 2 {
 					xpOb++
 				}
@@ -365,15 +367,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				}
 				go database.Clan.CompleteClanMission(ctx, clan, discordUser.ID, clanXpOb)
 				clanMsg = fmt.Sprintf("\nGanhou **%d** de xp para seu clan", clanXpOb)
-				if rinha.DropKey(u.UserXp, rinha.IsVip(&u), level) {
-					key := rinha.GetKeyRarity()
-					dropKey = int(key)
-					database.User.InsertItem(ctx, u.ID, u.Items, int(key), entities.KeyType)
-					telemetry.Debug(fmt.Sprintf("%s get key %s", discordUser.Username, key.String()), map[string]string{
-						"user":      strconv.FormatUint(uint64(u.ID), 10),
-						"keyRarity": key.String(),
-					})
-				}
+
 			}
 			u.Win++
 			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
@@ -383,9 +377,18 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				return r
 			})
 			u.Money += money
-
+			if rinha.DropKey(u.UserXp, rinha.IsVip(&u), clanLevel) {
+				key := rinha.GetKeyRarity()
+				dropKey = int(key)
+				database.User.InsertItem(ctx, u.ID, u.Items, int(key), entities.KeyType)
+				telemetry.Debug(fmt.Sprintf("%s get key %s", discordUser.Username, key.String()), map[string]string{
+					"user":      strconv.FormatUint(uint64(u.ID), 10),
+					"keyRarity": key.String(),
+				})
+			}
 			return u
 		}, "Galos", "Items")
+
 		if dropKey != -1 {
 			ch.CreateMessage(&disgord.CreateMessage{
 				Embeds: []*disgord.Embed{

@@ -39,7 +39,7 @@ func MissionsToString(id disgord.Snowflake, user *entities.User) (arr []string) 
 }
 
 func CreateMission() entities.Mission {
-	missionType := entities.MissionType(utils.RandInt(7))
+	missionType := entities.MissionType(utils.RandInt(8))
 	level := utils.RandInt(5)
 	galoAdv := 0
 	if missionType == entities.FightGalo || missionType == entities.WinGalo {
