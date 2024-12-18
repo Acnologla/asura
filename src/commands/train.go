@@ -98,13 +98,17 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 			}
 		case entities.PlayTrial:
 			if battleType == "trial" {
+				mission.Progress++
 				xp += 100
 				money += 50
+				done = true
 			}
 		case entities.WinRaid:
 			if battleType == "raid" {
+				mission.Progress++
 				xp += 285
 				money += 125
+				done = true
 			}
 		case entities.FightTower:
 			if battleType == "tower" {

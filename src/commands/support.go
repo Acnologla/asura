@@ -18,5 +18,5 @@ func init() {
 }
 
 func runSupport(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	return entities.CreateMsg().Content("https://discord.gg/tdVWQGV").Res()
+	return entities.CreateMsg().Content("https://discord.gg/CfkBZyVsd7").Res()
 }

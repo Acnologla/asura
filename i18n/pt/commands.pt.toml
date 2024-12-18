@@ -601,7 +601,7 @@ other="Voce ganhou uma lootbox {{.}}"
 other="Pegue seu bonus diario"
 
 [DailyMessage]
-other="Voce ganhou **{{.money}}** de dinheiro, **{{.xp}}** de xp\nStrike: **{{.strikes}}**\n\nSabia que, se você estiver no meu [**Servidor**](https://discord.gg/tdVWQGV), você ganhará um bônus?"
+other="Voce ganhou **{{.money}}** de dinheiro, **{{.xp}}** de xp\nStrike: **{{.strikes}}**\n\nSabia que, se você estiver no meu [**Servidor**](https://discord.gg/CfkBZyVsd7), você ganhará um bônus?"
 
 [VoteMessage]
 other="Para pegar o bonus diario voce precisa votar em mim.\n Voce pode pegar o bonus diario a cada 12 horas\nLink para votar:\nhttps://top.gg/bot/470684281102925844"

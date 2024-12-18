@@ -105,7 +105,7 @@ func runBotInfo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					Url: "https://acnologla.github.io/asura-site/",
 				}).
 				Button(disgord.Link, "Support", "", &disgord.MessageComponent{
-					Url: "https://discord.gg/tdVWQGV",
+					Url: "https://discord.gg/CfkBZyVsd7",
 				}).
 				Button(disgord.Link, "Vote", "", &disgord.MessageComponent{
 					Url: "https://top.gg/bot/470684281102925844",
