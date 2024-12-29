@@ -697,7 +697,7 @@
   {
     "range": [150, 150],
     "name": "Existência Fragilizada",
-    "turns": 2,
+    "turns": 3,
     "type": 6,
     "phrase": "%s está com suas molécuas em decaimento profundo... (-%d)"
   },

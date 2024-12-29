@@ -143,7 +143,7 @@ func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
 					break
 				}
 			}
-			//RecieveLootbox(msg)
+			RecieveLootbox(msg)
 		}
 	}
 }
