@@ -82,11 +82,21 @@ func runUpgrades(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 		}
 	}
 	var newUpgrades rinha.Upgrade
+	var lenUpgrades int
 	database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 		u.Upgrades = append(u.Upgrades, i)
 		newUpgrades = rinha.GetCurrentUpgrade(&u)
+		lenUpgrades = len(u.Upgrades)
 		return u
 	})
+
+	if lenUpgrades == 1 {
+		completeAchievement(ctx, itc, 13)
+	}
+
+	if lenUpgrades == 2 {
+		completeAchievement(ctx, itc, 14)
+	}
 
 	if len(newUpgrades.Childs) == 0 {
 		completeAchievement(ctx, itc, 6)

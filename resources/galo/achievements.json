@@ -32,8 +32,7 @@
   {
     "name": "O upado",
     "description": "Consiga todos os upgrades",
-    "money": 10000,
-    "asuraCoin": 2
+    "asuraCoin": 5
   },
   {
     "name": "Amigos",
@@ -64,5 +63,15 @@
     "name": "Um dos melhores",
     "description": "Entre no rank de jogadores na dungeon",
     "asuraCoin": 8
+  },
+  {
+    "name": "Começando a upar",
+    "description": "Consiga seu primeiro upgrade",
+    "money": 7500
+  },
+  {
+    "name": "A evolução continua",
+    "description": "Consiga seu segundo upgrade",
+    "asuraCoin": 2
   }
 ]
