@@ -75,6 +75,13 @@ type Skill struct {
 	Evolved bool       `json:"evolved"`
 }
 
+type Achievement struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Money       int    `json:"money"`
+	AsuraCoin   int    `json:"asuraCoin"`
+}
+
 var Dungeon []*Room
 var Items []*Item
 var Effects []*Effect
@@ -85,6 +92,7 @@ var Cosmetics []*Cosmetic
 var Upgrades []Upgrade
 var BattlePass []BattlePassLevel
 var Ranks []*Rank
+var Achievements []*Achievement
 
 func SetTopToken(token string) {
 	TopToken = token
@@ -136,6 +144,8 @@ func init() {
 	json.Unmarshal([]byte(byteValueBattlePass), &BattlePass)
 	byteValueRanks, _ := ioutil.ReadFile("./resources/galo/ranks.json")
 	json.Unmarshal([]byte(byteValueRanks), &Ranks)
+	byteValueAchievements, _ := ioutil.ReadFile("./resources/galo/achievements.json")
+	json.Unmarshal([]byte(byteValueAchievements), &Achievements)
 }
 
 const PityMultiplier = 1
@@ -176,6 +186,16 @@ func GetRandMythic() int {
 		}
 	}
 	return -1
+}
+
+func GetFromType(classType Rarity) []int {
+	classTypeArr := []int{}
+	for i, class := range Classes {
+		if class.Rarity == classType {
+			classTypeArr = append(classTypeArr, i)
+		}
+	}
+	return classTypeArr
 }
 
 func GetRandByType(classType Rarity) int {
@@ -243,6 +263,16 @@ func GetName(username string, galo entities.Rooster) string {
 	if galo.Evolved {
 		prefix = "[⭐] "
 	}
+
+	if galo.Name == "" {
+		return prefix + username
+	}
+
+	return prefix + galo.Name
+}
+
+func GetNameVanilla(username string, galo entities.Rooster) string {
+	prefix := ""
 
 	if galo.Name == "" {
 		return prefix + username
@@ -468,6 +498,15 @@ func HasVoted(id disgord.Snowflake) bool {
 		var vote Vote
 		json.NewDecoder(resp.Body).Decode(&vote)
 		return vote.Voted == 1
+	}
+	return false
+}
+
+func HasAchievement(user *entities.User, id int) bool {
+	for _, item := range user.Items {
+		if item.Type == entities.AchievementType && item.ItemID == id {
+			return true
+		}
 	}
 	return false
 }

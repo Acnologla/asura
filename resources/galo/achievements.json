@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Rinheiro iniciante",
+    "description": "Consiga 100 vitorias",
+    "money": 5000
+  },
+  {
+    "name": "Rinheiro treinado",
+    "description": "Consiga 1000 vitorias",
+    "money": 15000
+  },
+  {
+    "name": "Rinheiro avançado",
+    "description": "Consiga 10000 vitorias",
+    "asuraCoin": 3
+  },
+  {
+    "name": "Rinheiro mestre",
+    "description": "Consiga 100000 vitorias",
+    "asuraCoin": 10
+  },
+  {
+    "name": "Rinheiro Falido",
+    "description": "Consiga 1000 derrotas",
+    "money": 5000
+  },
+  {
+    "name": "Rinheiro Derrotado",
+    "description": "Consiga 10000 derrotas",
+    "money": 15000
+  },
+  {
+    "name": "O upado",
+    "description": "Consiga todos os upgrades",
+    "money": 10000,
+    "asuraCoin": 2
+  },
+  {
+    "name": "Amigos",
+    "description": "Entre em um clan",
+    "money": 1500
+  },
+  {
+    "name": "O mitico",
+    "description": "Consiga um galo de raridade mitica",
+    "asuraCoin": 3
+  },
+  {
+    "name": "Todo mitico",
+    "description": "Consiga todos os galo de raridade mitica",
+    "asuraCoin": 12
+  },
+  {
+    "name": "Detentor de meio passe",
+    "description": "Complete a versão gratuita do passe de batalha",
+    "asuraCoin": 2
+  },
+  {
+    "name": "Detentor do passe",
+    "description": "Complete todo o passe de batalha",
+    "asuraCoin": 6
+  },
+  {
+    "name": "Um dos melhores",
+    "description": "Entre no rank de jogadores na dungeon",
+    "asuraCoin": 8
+  }
+]

@@ -580,7 +580,7 @@ other="Veja informaçoes da dungeon"
 other="Batalhe na dungeon"
 
 [DungeonFloor]
-other="Você está no andar **{{.}}**\nUse /dungeon battle para batalhar contra o chefe"
+other="Você está no andar **{{.floor}}** (**{{.resets}}** Resets)\nUse /dungeon battle para batalhar contra o chefe"
 
 [DungeonFinish]
 other="Parabens, você terminou a dungeon e agora pode recomeçar (cuidado)!"
@@ -599,6 +599,9 @@ other="Voce ganhou uma lootbox {{.}}"
 
 [DailyHelp]
 other="Pegue seu bonus diario"
+
+[AcvComplete]
+other="Você consegiu a conquista **{{.name}}** e ganhou {{.msg}}"
 
 [DailyMessage]
 other="Voce ganhou **{{.money}}** de dinheiro, **{{.xp}}** de xp\nStrike: **{{.strikes}}**\n\nSabia que, se você estiver no meu [**Servidor**](https://discord.gg/CfkBZyVsd7), você ganhará um bônus?"

@@ -57,8 +57,11 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 							Text:    discordUser.Username,
 							IconURL: authorAvatar,
 						},
-						Color:       65535,
-						Description: translation.T("DungeonFloor", translation.GetLocale(itc), user.Dungeon),
+						Color: 65535,
+						Description: translation.T("DungeonFloor", translation.GetLocale(itc), map[string]int{
+							"floor":  user.Dungeon,
+							"resets": user.DungeonReset,
+						}),
 					},
 				},
 			},
@@ -185,6 +188,15 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					}),
 				}},
 			})
+			if user.DungeonReset >= 15 && !rinha.HasAchievement(&user, 12) {
+				users := database.User.SortUsers(ctx, DEFAULT_RANK_LIMIT, "dungeonreset", "dungeon")
+				for _, user := range users {
+					if user.ID == itc.Member.User.ID {
+						completeAchievement(ctx, itc, 12)
+						break
+					}
+				}
+			}
 		} else {
 			ch.CreateMessage(&disgord.CreateMessage{
 				Embeds: []*disgord.Embed{{

@@ -44,6 +44,29 @@ func getMissions(ctx context.Context, user *entities.User) []*entities.Mission {
 	return user.Missions
 }
 
+func completeAchievement(ctx context.Context, itc *disgord.InteractionCreate, achievementID int) {
+	database.User.UpdateUser(ctx, itc.Member.User.ID, func(u entities.User) entities.User {
+		if rinha.HasAchievement(&u, achievementID) {
+			return u
+		}
+		ach := rinha.Achievements[achievementID]
+		database.User.InsertItem(ctx, u.ID, u.Items, achievementID, entities.AchievementType)
+		u.Money += ach.Money
+		u.AsuraCoin += ach.AsuraCoin
+		msg := fmt.Sprintf("**%d** Money", ach.Money)
+		if ach.AsuraCoin > 0 {
+			msg = fmt.Sprintf("**%d** AsuraCoin", ach.AsuraCoin)
+		}
+		go handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+			Content: translation.T("AcvComplete", translation.GetLocale(itc), map[string]interface{}{
+				"name": ach.Name,
+				"msg":  msg,
+			}),
+		})
+		return u
+	}, "Items")
+}
+
 func completeMission(ctx context.Context, user *entities.User, galoAdv *entities.Rooster, winner bool, itc *disgord.InteractionCreate, battleType string) {
 	tempUser := database.User.GetUser(ctx, user.ID, "Missions")
 	user.Missions = tempUser.Missions
@@ -374,12 +397,14 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 
 			}
 			u.Win++
+
 			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 				bpXP = database.User.UpdateBp(ctx, &u, &r)
 				r.Xp += xpOb
 				xpTotal = r.Xp
 				return r
 			})
+
 			u.Money += money
 			if rinha.DropKey(u.UserXp, rinha.IsVip(&u), clanLevel) {
 				key := rinha.GetKeyRarity()
@@ -392,7 +417,26 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			}
 			return u
 		}, "Galos", "Items")
-
+		bpLevel := rinha.CalcBPLevel(user.BattlePass + bpXP)
+		w := user.Win + 1
+		if w >= 100 {
+			completeAchievement(ctx, itc, 0)
+			if w >= 1000 {
+				completeAchievement(ctx, itc, 1)
+				if w >= 10000 {
+					completeAchievement(ctx, itc, 2)
+				}
+				if w >= 100000 {
+					completeAchievement(ctx, itc, 3)
+				}
+			}
+		}
+		if bpLevel >= len(rinha.BattlePass)/2 {
+			completeAchievement(ctx, itc, 10)
+			if bpLevel >= len(rinha.BattlePass) {
+				completeAchievement(ctx, itc, 11)
+			}
+		}
 		if dropKey != -1 {
 			ch.CreateMessage(&disgord.CreateMessage{
 				Embeds: []*disgord.Embed{
@@ -458,6 +502,12 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				return u
 			}, "Galos", "Items")
 
+		}
+		if user.Lose+1 >= 1000 {
+			completeAchievement(ctx, itc, 4)
+			if user.Lose+1 >= 10000 {
+				completeAchievement(ctx, itc, 5)
+			}
 		}
 		ch.CreateMessage(&disgord.CreateMessage{
 			Embeds: []*disgord.Embed{

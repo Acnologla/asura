@@ -5,13 +5,21 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
+	"asura/src/utils"
+	"bytes"
 	"context"
 	"fmt"
+	"image/color"
+	"image/png"
+	"io"
+	"math"
 
 	"asura/src/translation"
 
 	"github.com/andersfylling/disgord"
+	"github.com/fogleman/gg"
 	"github.com/google/uuid"
+	"github.com/nfnt/resize"
 )
 
 func init() {
@@ -47,19 +55,114 @@ func genEquipOptions(user *entities.User) (opts []*disgord.SelectMenuOption) {
 }
 
 func runEquip(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
-	galo := database.User.GetUser(ctx, itc.Member.UserID, "Galos")
+	galo := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items")
 	optsGalos := genEquipOptions(&galo)
+	mythics := rinha.GetFromType(rinha.Mythic)
+	hasAllMythics := len(galo.Galos) > 0
+	for _, mythic := range mythics {
+		if !rinha.HaveRooster(galo.Galos, mythic) {
+			hasAllMythics = false
+			break
+		}
+	}
+	if hasAllMythics {
+		completeAchievement(ctx, itc, 9)
+	}
+
+	width, height := 630, 119*math.Round(float64(len(galo.Galos))/2)+12
+	dc := gg.NewContext(width, int(height))
+	dc.SetRGB(1, 1, 1)
+	dc.DrawRectangle(0, 0, float64(width), float64(height))
+	dc.Fill()
+	radius := 50
+	imageSize := radius * 2
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: &disgord.CreateInteractionResponseData{
+			Content: "Carregando...",
+		},
+	})
+	for i, g := range galo.Galos {
+		image := rinha.GetGaloImage(g, galo.Items)
+		imageD, err := utils.DownloadImage(image)
+		if err != nil {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Tente novamente",
+				},
+			}
+		}
+		ga := rinha.Classes[g.Type]
+		img := resize.Resize(uint(imageSize), uint(imageSize), imageD, resize.Lanczos3)
+		y := i / 2
+		x := i%2*330 + 20
+		imageVerticalMargin := 20 + y*imageSize + 15*y
+		rarity := rinha.GetRarity(galo.Galos[i])
+		if rarity == rinha.Mythic {
+			grad := gg.NewConicGradient(float64(x+radius), float64(imageVerticalMargin+radius), float64(radius+3))
+			grad.AddColorStop(0, color.RGBA{255, 0, 0, 255})
+			grad.AddColorStop(0.2, color.RGBA{0, 255, 0, 255})
+			grad.AddColorStop(0.4, color.RGBA{0, 0, 255, 255})
+			grad.AddColorStop(0.6, color.RGBA{255, 255, 0, 255})
+			grad.AddColorStop(0.8, color.RGBA{255, 0, 255, 255})
+			grad.AddColorStop(1, color.RGBA{0, 255, 255, 255})
+			dc.SetFillStyle(grad)
+		} else if g.Evolved {
+			dc.SetHexColor(fmt.Sprintf("%06x", 0))
+		} else {
+			color := rarity.Color()
+			dc.SetHexColor(fmt.Sprintf("%06x", color))
+		}
+		dc.DrawCircle(float64(x+radius), float64(imageVerticalMargin+radius), float64(radius+3))
+		dc.Fill()
+		dc.SetRGB(0, 0, 0)
+		//radius := float64(imageSize) / (math.Sqrt(math.Pi))
+		dc.DrawCircle(float64(x+radius), float64(imageVerticalMargin+radius), float64(radius))
+		dc.Clip()
+		dc.Fill()
+		dc.DrawImage(img, x, imageVerticalMargin)
+		dc.ResetClip()
+		dc.SetRGB(0, 0, 0)
+		textMargin := float64(imageSize+20) + float64(x)
+		verticalMargin := float64(imageVerticalMargin) + 40
+		dc.LoadFontFace("./resources/Raleway-Bold.ttf", 18)
+		dc.DrawString(rinha.GetNameVanilla(ga.Name, *g), textMargin, verticalMargin)
+		dc.LoadFontFace("./resources/Raleway-Light.ttf", 19)
+		xp := fmt.Sprintf("Level: %d", rinha.CalcLevel(g.Xp))
+		dc.DrawString(xp, textMargin, verticalMargin+20)
+
+	}
+
+	var b bytes.Buffer
+	pw := io.Writer(&b)
+	png.Encode(pw, dc.Image())
+	embed := &disgord.Embed{
+		Color: 65535,
+		Title: "Equip",
+		Image: &disgord.EmbedImage{
+			URL: "attachment://equip.png",
+		},
+	}
 	r := entities.CreateMsg().
-		Embed(&disgord.Embed{
-			Title: "Equip",
-			Color: 65535,
-		}).
+		Embed(embed).
 		Component(entities.CreateComponent().
 			Select(
 				translation.T("EquipGaloPlaceholder", translation.GetLocale(itc)),
 				"galoEquip",
 				optsGalos))
-	handler.Client.SendInteractionResponse(ctx, itc, r.Res())
+	str := ""
+	handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+		File: &disgord.CreateMessageFile{
+			Reader:     bytes.NewReader(b.Bytes()),
+			FileName:   "profile.jpg",
+			SpoilerTag: false,
+		},
+
+		Components: &r.Data.Components,
+		Content:    &str,
+	})
+
 	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
 		userIC := ic.Member.User
 		name := ic.Data.CustomID

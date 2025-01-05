@@ -15,6 +15,7 @@ const (
 	CosmeticType
 	KeyType
 	ShardType
+	AchievementType
 )
 
 type MissionType int

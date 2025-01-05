@@ -132,7 +132,7 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			Xp:     rinha.CalcXP(level) + 1,
 			Type:   rinha.GetRandByType(rinha.GetFloorRarity(tower.Floor)),
 			Equip:  true,
-			Resets: tower.Floor / 33,
+			Resets: tower.Floor / 50,
 		}
 		userAdv := &entities.User{
 			Galos: []*entities.Rooster{galoAdv},

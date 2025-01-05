@@ -5,6 +5,7 @@ import (
 	"asura/src/entities"
 	"asura/src/handler"
 	"asura/src/rinha"
+	"asura/src/utils"
 	"context"
 	"fmt"
 
@@ -22,6 +23,15 @@ func init() {
 		Cooldown:    8,
 		Category:    handler.Profile,
 	})
+}
+
+func findItemNameInOptions(options []*disgord.SelectMenuOption, id uuid.UUID) string {
+	for _, option := range options {
+		if option.Value == id.String() {
+			return option.Label
+		}
+	}
+	return ""
 }
 
 func genSellOptions(user *entities.User, isRooster bool, isCosmetic bool) (opts []*disgord.SelectMenuOption) {
@@ -84,81 +94,88 @@ func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	optsGalos := genSellOptions(&galo, true, false)
 	optsItems := genSellOptions(&galo, false, false)
 	optCosmetics := genSellOptions(&galo, false, true)
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Embeds: []*disgord.Embed{
-				{
-					Title: translation.T("SellTitle", translation.GetLocale(itc)),
-					Color: 65535,
+	data := &disgord.CreateInteractionResponseData{
+		Embeds: []*disgord.Embed{
+			{
+				Title: translation.T("SellTitle", translation.GetLocale(itc)),
+				Color: 65535,
+			},
+		},
+		Components: []*disgord.MessageComponent{
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:     disgord.MessageComponentButton,
+						Style:    disgord.Primary,
+						Label:    "Galos",
+						CustomID: "GalosDisabled",
+						Disabled: true,
+					},
 				},
 			},
-			Components: []*disgord.MessageComponent{
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:     disgord.MessageComponentButton,
-							Style:    disgord.Primary,
-							Label:    "Galos",
-							CustomID: "GalosDisabled",
-							Disabled: true,
-						},
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:        disgord.MessageComponentButton + 1,
+						Style:       disgord.Primary,
+						Placeholder: translation.T("SellGaloPlaceholder", translation.GetLocale(itc)),
+						CustomID:    "galoSell",
+						Options:     optsGalos,
+						MaxValues:   1,
 					},
 				},
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:        disgord.MessageComponentButton + 1,
-							Style:       disgord.Primary,
-							Placeholder: translation.T("SellGaloPlaceholder", translation.GetLocale(itc)),
-							CustomID:    "galoSell",
-							Options:     optsGalos,
-							MaxValues:   1,
-						},
+			},
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:     disgord.MessageComponentButton,
+						Style:    disgord.Primary,
+						Label:    "Items",
+						CustomID: "ItemsDisabled",
+						Disabled: true,
 					},
 				},
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:     disgord.MessageComponentButton,
-							Style:    disgord.Primary,
-							Label:    "Items",
-							CustomID: "ItemsDisabled",
-							Disabled: true,
-						},
+			},
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:        disgord.MessageComponentButton + 1,
+						Style:       disgord.Primary,
+						Placeholder: translation.T("SellItemPlaceholder", translation.GetLocale(itc)),
+						CustomID:    "itemSell",
+						Options:     optsItems,
+						MaxValues:   1,
 					},
 				},
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:        disgord.MessageComponentButton + 1,
-							Style:       disgord.Primary,
-							Placeholder: translation.T("SellItemPlaceholder", translation.GetLocale(itc)),
-							CustomID:    "itemSell",
-							Options:     optsItems,
-							MaxValues:   1,
-						},
-					},
-				},
-				{
-					Type: disgord.MessageComponentActionRow,
-					Components: []*disgord.MessageComponent{
-						{
-							Type:        disgord.MessageComponentButton + 1,
-							Style:       disgord.Primary,
-							Placeholder: "Selecione os cosmeticos para vender",
-							CustomID:    "cosmeticSell",
-							Options:     optCosmetics,
-							MaxValues:   1,
-						},
+			},
+			{
+				Type: disgord.MessageComponentActionRow,
+				Components: []*disgord.MessageComponent{
+					{
+						Type:        disgord.MessageComponentButton + 1,
+						Style:       disgord.Primary,
+						Placeholder: "Selecione os cosmeticos para vender",
+						CustomID:    "cosmeticSell",
+						Options:     optCosmetics,
+						MaxValues:   1,
 					},
 				},
 			},
 		},
+	}
+	optsMap := map[string][]*disgord.SelectMenuOption{
+		"itemSell":     optsItems,
+		"cosmeticSell": optCosmetics,
+		"galoSell":     optsGalos,
+	}
+
+	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		Type: disgord.InteractionCallbackChannelMessageWithSource,
+		Data: data,
 	})
 	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
 		userIC := ic.Member.User
@@ -177,56 +194,63 @@ func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		msg := ""
 		price := 0
 		isAsuraCoins := false
-		database.User.UpdateUser(ctx, userIC.ID, func(u entities.User) entities.User {
-			if isInRinha(ctx, userIC) != "" {
-				msg = "IsInRinha"
-				return u
-			}
-			if name == "itemSell" || name == "cosmeticSell" {
-				item := rinha.GetItemByID(u.Items, itemID)
-				if item != nil {
-					database.User.RemoveItem(ctx, u.Items, itemID)
-					msg = "SellItem"
-					if item.Type == entities.NormalType {
-						price = rinha.SellItem(*rinha.Items[item.ItemID])
-					} else {
-						price = rinha.SellCosmetic(*rinha.Cosmetics[item.ItemID])
-					}
-				}
-			}
-			if name == "galoSell" {
-				galo := rinha.GetGaloByID(u.Galos, itemID)
-				if galo != nil && !galo.Equip {
-					class := rinha.Classes[galo.Type]
-					database.User.RemoveRooster(ctx, itemID)
-					msg = "SellGalo"
-					money, asuraCoins := rinha.Sell(class.Rarity, galo.Xp, galo.Resets)
-					price = money
-					if price == 0 {
-						price = asuraCoins
-						if rinha.IsVip(&u) {
-							price++
-						}
-						isAsuraCoins = true
-					}
+		handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackUpdateMessage,
+			Data: data,
+		})
+		opts := optsMap[name]
+		itemName := findItemNameInOptions(opts, itemID)
+		utils.ConfirmMessage(ctx, fmt.Sprintf("Deseja mesmo vender?\n\n%s", itemName), itc, itc.Member.UserID, func() {
+			database.User.UpdateUser(ctx, userIC.ID, func(u entities.User) entities.User {
+				if isInRinha(ctx, userIC) != "" {
+					msg = "IsInRinha"
+					return u
 				}
 
-			}
-			if isAsuraCoins {
-				msg = "SellGaloAc"
-				u.AsuraCoin += price
-			} else {
-				u.Money += price
-			}
-			return u
-		}, "Items", "Galos")
+				if name == "itemSell" || name == "cosmeticSell" {
+					item := rinha.GetItemByID(u.Items, itemID)
+					if item != nil {
+						database.User.RemoveItem(ctx, u.Items, itemID)
+						msg = "SellItem"
+						if item.Type == entities.NormalType {
+							price = rinha.SellItem(*rinha.Items[item.ItemID])
+						} else {
+							price = rinha.SellCosmetic(*rinha.Cosmetics[item.ItemID])
+						}
+					}
+				}
+				if name == "galoSell" {
+					galo := rinha.GetGaloByID(u.Galos, itemID)
+					if galo != nil && !galo.Equip {
+						class := rinha.Classes[galo.Type]
+						database.User.RemoveRooster(ctx, itemID)
+						msg = "SellGalo"
+						money, asuraCoins := rinha.Sell(class.Rarity, galo.Xp, galo.Resets)
+						price = money
+						if price == 0 {
+							price = asuraCoins
+							if rinha.IsVip(&u) {
+								price++
+							}
+							isAsuraCoins = true
+						}
+					}
+
+				}
+				if isAsuraCoins {
+					msg = "SellGaloAc"
+					u.AsuraCoin += price
+				} else {
+					u.Money += price
+				}
+				return u
+			}, "Items", "Galos")
+		})
 		if msg != "" {
-			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.CreateInteractionResponseData{
-					Content: translation.T(msg, translation.GetLocale(ic), price),
-				},
+			handler.Client.Channel(ic.ChannelID).CreateMessage(&disgord.CreateMessage{
+				Content: translation.T(msg, translation.GetLocale(ic), price),
 			})
+
 		}
 	}, 120)
 	return nil

@@ -375,6 +375,8 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 							ID: user.ID,
 						})
 						msg = "SucessInvite"
+						itc.Member.User.ID = user.ID
+						completeAchievement(ctx, itc, 7)
 					}
 				}
 				return c

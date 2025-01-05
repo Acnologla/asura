@@ -81,10 +81,17 @@ func runUpgrades(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 			},
 		}
 	}
+	var newUpgrades rinha.Upgrade
 	database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 		u.Upgrades = append(u.Upgrades, i)
+		newUpgrades = rinha.GetCurrentUpgrade(&u)
 		return u
 	})
+
+	if len(newUpgrades.Childs) == 0 {
+		completeAchievement(ctx, itc, 6)
+	}
+
 	return &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
