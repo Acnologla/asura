@@ -180,6 +180,15 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 						Description: fmt.Sprintf("Parabens voce chegou no nivel maximo de trial para o galo **%s**, e ganhou uma lootbox **%s**", class.Name, lootboxName),
 					}},
 				})
+				n := 0
+				for _, t := range user.Trials {
+					if t.Win >= MAX_TRIALS {
+						n++
+					}
+				}
+				if n >= 3 {
+					completeAchievement(ctx, itc, 15)
+				}
 			} else {
 				ch.CreateMessage(&disgord.CreateMessage{
 					Embeds: []*disgord.Embed{{

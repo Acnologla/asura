@@ -270,12 +270,12 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				newVal, pity = rinha.Open(i, &u)
 				u.Pity = pity
 
-				rarity := rinha.Classes[newVal].Rarity
 				if lb == "cosmetica" {
 					database.User.InsertItem(ctx, itc.Member.UserID, u.Items, newVal, entities.CosmeticType)
 				} else if lb == "items" || lb == "items mistica" {
 					database.User.InsertItem(ctx, itc.Member.UserID, u.Items, newVal, entities.NormalType)
 				} else {
+					rarity := rinha.Classes[newVal].Rarity
 
 					if !rinha.HaveRooster(u.Galos, newVal) || rarity == rinha.Mythic {
 						database.User.InsertRooster(ctx, &entities.Rooster{
@@ -312,14 +312,14 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				winType = "item"
 				name = item.Name
 			} else {
-				if rarity == rinha.Mythic {
-					completeAchievement(ctx, itc, 8)
-				}
 				galo := rinha.Classes[newVal]
 				image = rinha.Sprites[0][newVal-1]
 				name = galo.Name
 				rarity = galo.Rarity
 				winType = "galo"
+				if rarity == rinha.Mythic {
+					completeAchievement(ctx, itc, 8)
+				}
 			}
 
 			embed := disgord.Embed{

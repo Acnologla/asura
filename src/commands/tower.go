@@ -177,8 +177,12 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
 		go completeMission(ctx, &user, galoAdv, winner == 0, itc, "tower")
 		if winner == 0 {
+
 			xp, money := rinha.CalcTowerReward(tower.Floor)
 			lootbox := rinha.CalcFloorReward(tower.Floor)
+			if tower.Floor >= 150 {
+				completeAchievement(ctx, itc, 17)
+			}
 			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 
 				if rinha.IsVip(&u) {

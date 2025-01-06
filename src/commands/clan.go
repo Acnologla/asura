@@ -348,6 +348,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	case "invite":
+		completeAchievement(ctx, itc, 7)
 		user := utils.GetOptionsUser(itc.Data.Options[0].Options, itc, 0)
 		if user == nil {
 			return &disgord.CreateInteractionResponse{

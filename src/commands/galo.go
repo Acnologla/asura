@@ -264,6 +264,7 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				}, "Galos")
 				if done {
 					if isEvolved {
+						completeAchievement(ctx, itc, 16)
 						ic.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackChannelMessageWithSource,
 							Data: &disgord.CreateInteractionResponseData{

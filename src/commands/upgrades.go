@@ -64,6 +64,17 @@ func runUpgrades(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 	}
 	i := int(itc.Data.Options[0].Value.(float64))
 
+	if len(galo.Upgrades) > 0 {
+		completeAchievement(ctx, itc, 13)
+
+		if len(galo.Upgrades) > 1 {
+			completeAchievement(ctx, itc, 14)
+		}
+		if len(galo.Upgrades) >= 4 {
+			completeAchievement(ctx, itc, 6)
+		}
+	}
+
 	if !rinha.HavePoint(&galo) {
 		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,

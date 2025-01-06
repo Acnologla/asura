@@ -73,5 +73,20 @@
     "name": "A evolução continua",
     "description": "Consiga seu segundo upgrade",
     "asuraCoin": 2
+  },
+  {
+    "name": "O tentador",
+    "description": "Complete 3 trials",
+    "asuraCoin": 2
+  },
+  {
+    "name": "O evoluido",
+    "description": "Evolua um galo",
+    "asuraCoin": 1
+  },
+  {
+    "name": "No topo da torre",
+    "description": "Chegue ao andar maximo da torre",
+    "asuraCoin": 9
   }
 ]
