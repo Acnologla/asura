@@ -293,7 +293,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	if winner == 0 {
 		xpOb := utils.RandInt(13) + 12
-		eggXpOb := 6 + utils.RandInt(7)
+		eggXpOb := 10 + utils.RandInt(11)
 		if rinha.HasUpgrade(user.Upgrades, 0) {
 			xpOb += 3
 			if rinha.HasUpgrade(user.Upgrades, 0, 1, 1) {

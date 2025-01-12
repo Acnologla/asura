@@ -9,6 +9,15 @@ func Find[T any](arr []T, b func(T) bool) T {
 	return GetDefault[T]()
 }
 
+func Has[T comparable](arr []T, b T) bool {
+	for _, elem := range arr {
+		if elem == b {
+			return true
+		}
+	}
+	return false
+}
+
 func Map[T, G any](arr []T, b func(T) G) []G {
 	result := []G{}
 	for _, elem := range arr {

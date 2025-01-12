@@ -12,13 +12,13 @@ func HasEgg(u *entities.User) bool {
 func ShardToPrice(rarity Rarity) int {
 	switch rarity {
 	case Rare:
-		return 250
+		return 500
 	case Epic:
-		return 600
+		return 1200
 	case Legendary:
-		return 1500
+		return 3000
 	case Mythic:
-		return 3400
+		return 6800
 	}
 	return 0
 }

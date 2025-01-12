@@ -102,7 +102,7 @@ func (adapter ClanAdapterPsql) GetClanPos(ctx context.Context, clan *entities.Cl
 	return count
 }
 
-//TODO move this function to another file
+// TODO move this function to another file
 func (adapter ClanAdapterPsql) CompleteClanMission(ctx context.Context, clan *entities.Clan, id disgord.Snowflake, xp int) {
 	adapter.UpdateClan(ctx, clan, func(clan entities.Clan) entities.Clan {
 		clan = *rinha.PopulateClanMissions(&clan)

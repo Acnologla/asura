@@ -101,3 +101,8 @@ func PopulateClanMissions(clan *entities.Clan) *entities.Clan {
 func CalcClanUpgrade(x, price int) int {
 	return int(math.Pow(2, float64(x)) * (float64(price * 500)))
 }
+
+func CalcBossLife(clan *entities.Clan) int {
+	level := ClanXpToLevel(clan.Xp)
+	return level * 280 * len(clan.Members)
+}

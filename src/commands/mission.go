@@ -33,6 +33,8 @@ func init() {
 	})
 }
 
+const MISSION_TIME = 8
+
 func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := itc.Member.User
 	galo := database.User.GetUser(ctx, user.ID, "Missions")
@@ -125,7 +127,7 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 		}
 	}
 	components := []*disgord.MessageComponent{}
-	if (time.Now().Unix()-int64(galo.TradeMission))/60/60/12 >= 1 {
+	if (time.Now().Unix()-int64(galo.TradeMission))/60/60/MISSION_TIME >= 1 {
 		for i := range galo.Missions {
 			components = append(components, &disgord.MessageComponent{
 				Type:     disgord.MessageComponentButton,
@@ -159,7 +161,7 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			if event.Member.User.ID == user.ID {
 				i, _ := strconv.Atoi(event.Data.CustomID)
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
-					if 0 > i || i >= len(u.Missions) || (time.Now().Unix()-int64(u.TradeMission))/60/60/12 < 1 {
+					if 0 > i || i >= len(u.Missions) || (time.Now().Unix()-int64(u.TradeMission))/60/60/MISSION_TIME < 1 {
 						return u
 					}
 					newMission := rinha.CreateMission()

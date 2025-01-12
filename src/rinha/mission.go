@@ -55,7 +55,7 @@ func CreateMission() entities.Mission {
 func PopulateMissions(user *entities.User) []*entities.Mission {
 	missions := []*entities.Mission{}
 	need := 4 - len(user.Missions)
-	for i := 0; need > i && uint64(i) < uint64((uint64(time.Now().Unix())-user.LastMission)/60/60/12); i++ {
+	for i := 0; need > i && uint64(i) < uint64((uint64(time.Now().Unix())-user.LastMission)/60/60/8); i++ {
 		mission := CreateMission()
 		missions = append(missions, &mission)
 	}

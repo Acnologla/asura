@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"math"
 	"net/http"
 	"os"
@@ -251,9 +250,7 @@ func GetEquippedGalo(user *entities.User) *entities.Rooster {
 			return galo
 		}
 	}
-	if os.Getenv("PRODUCTION") != "" {
-		log.Println("excuse me wtf")
-	}
+
 	return user.Galos[0]
 }
 

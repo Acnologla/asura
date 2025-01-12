@@ -117,13 +117,13 @@ func main() {
 			})
 		}
 	}
-	/*arr = []*stats{&stats{
-		Type: 50,
+	arr = []*stats{&stats{
+		Type: 53,
 	}}
-	*/
+
 	for i := 20; i < 35; i += 1 {
 		for _, class := range arr {
-			result := measure(class.Type, 19, i, i, 3500, false)
+			result := measure(class.Type, 32, i, i, 3500, false)
 			class.TotalWins += result
 			class.Wins = append(class.Wins, result)
 			class.Level = append(class.Level, i)

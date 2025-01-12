@@ -966,5 +966,28 @@
     "turns": 3,
     "type": 1,
     "phrase": "%s está sob arvore natálina! (-%d)"
+  },
+  {
+    "range": [50, 75],
+    "type": 2,
+    "name": "Ciclo Gélido",
+    "turns": 2,
+    "self": true,
+    "phrase": "%s está curando! (+%d)"
+  },
+  {
+    "range": [70, 80],
+    "name": "Fusão Elemental",
+    "turns": 3,
+    "type": 1,
+    "phrase": "%s está sob fusão elemental! (-%d)"
+  },
+  {
+    "name": "Barreira Térmica",
+    "turns": 10,
+    "type": 4,
+    "self": true,
+    "phrase": "%s está com %d%% de proteção!",
+    "range": [100, 100]
   }
 ]

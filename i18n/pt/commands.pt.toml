@@ -271,7 +271,7 @@ other="Use /clan invite <user> para convidar | /clan remove <user> para remover 
 other="Retirar um usuario do seu clan"
 
 [ClanDescription]
-other="Level: **{{.level}}** ({{.xp}}/{{.needXp}})\nMembros: **{{.members}}/{{.maxMembers}}**\n\nVantagens do clan:\n {{.benefits}} {{.membersText}}\nUse **/clan membros** para ver os membros do clan\nUse **/clan battle** para batalhar contra o chefe do clan\nUse **/clan missao** para ver a missão mensal do clan\nUse **/clan banco** para ver o banco do clan"
+other="Level: **{{.level}}** ({{.xp}}/{{.needXp}})\nMembros: **{{.members}}/{{.maxMembers}}**\nVida do chefe do clan: **{{.bossHP}}**\n\nVantagens do clan:\n {{.benefits}} {{.membersText}}\nUse **/clan membros** para ver os membros do clan\nUse **/clan battle** para batalhar contra o chefe do clan\nUse **/clan missao** para ver a missão mensal do clan\nUse **/clan banco** para ver o banco do clan"
 
 
 [UserArleadyInClan]

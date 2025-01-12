@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"asura/src/cache"
 	"asura/src/database"
 	"asura/src/entities"
 	"asura/src/handler"
@@ -13,7 +12,6 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/andersfylling/disgord"
@@ -136,6 +134,40 @@ func init() {
 				}),
 			},
 		),
+	})
+
+}
+
+const PRIZE_XP = 2000
+const PRIZE_MONEY = 2500
+
+func completeClanBoss(ctx context.Context, clan *entities.Clan, channel disgord.Snowflake) {
+	var xpPrize, moneyPrize int
+	database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
+		originalHp := rinha.CalcBossLife(&c)
+		percentange := float64(originalHp-c.BossLife) / float64(originalHp)
+		xpPrize = int(float64(PRIZE_XP) * percentange)
+		moneyPrize = int(float64(PRIZE_MONEY) * percentange)
+		for _, member := range c.Members {
+			database.User.UpdateUser(ctx, member.ID, func(u entities.User) entities.User {
+				u.Money += moneyPrize
+				database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
+					r.Xp += xpPrize
+					return r
+				})
+				return u
+			}, "Galos")
+		}
+		return c
+	}, "Members")
+	handler.Client.Channel(channel).CreateMessage(&disgord.CreateMessage{
+		Embeds: []*disgord.Embed{
+			{
+				Title:       "Clan boss",
+				Color:       65535,
+				Description: fmt.Sprintf("O boss foi derrotado, todos os membros receberam **%d** de xp e **%d** de dinheiro", xpPrize, moneyPrize),
+			},
+		},
 	})
 
 }
@@ -314,6 +346,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				"members":     len(clan.Members),
 				"maxMembers":  maxMembers,
 				"membersText": "",
+				"bossHP":      clan.BossLife,
 			}),
 		}
 		if bg != "" {
@@ -458,165 +491,93 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	case "battle":
-		redisKey := fmt.Sprintf("clanBattle:%s", clan.Name)
-		lastTime := cache.Client.Get(ctx, redisKey)
-		if lastTime.Val() != "" {
+		daysPassed := (uint64(time.Now().Unix()) - clan.BossDate) / 60 / 60 / 24
+		if daysPassed >= 3 && clan.BossDate != 0 {
+			database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
+				c.BossDate = 0
+				return c
+			})
+			completeClanBoss(ctx, clan, itc.ChannelID)
 			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
-					Content: "O chefe só estará disponível daqui a seis horas. Por favor, aguarde um pouco",
+					Content: "Use o comando novamente para iniciar a batalha",
 				},
 			}
 		}
-		if 8 > len(clan.Members) || rinha.ClanXpToLevel(clan.Xp) < 3 {
-			return &disgord.CreateInteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.CreateInteractionResponseData{
-					Content: "O clan precisa de no minimo 8 pessoas para batalhar e ser level 3",
-				},
-			}
-		}
-		duration := time.Hour * 6
 
-		cache.Client.Set(ctx, redisKey, "1", duration)
-		users := []*disgord.User{
-			itc.Member.User,
+		if clan.BossDate == 0 {
+			database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
+				c.BossDate = uint64(time.Now().Unix())
+				c.BossLife = rinha.CalcBossLife(&c)
+				c.BossBattles = []disgord.Snowflake{}
+				return c
+			}, "Members")
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "O chefe chegou, vocês tem 3 dias para derrota-lo",
+				},
+			}
 		}
-		err := handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+
+		if 0 >= clan.BossLife {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Aguarde 3 dias para lutar com o chefe novamente",
+				},
+			}
+		}
+
+		if utils.Has(clan.BossBattles, itc.Member.User.ID) {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Você ja batalhou com o chefe",
+				},
+			}
+		}
+
+		database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
+			c.BossBattles = append(c.BossBattles, itc.Member.User.ID)
+			return c
+		})
+		user := database.User.GetUser(ctx, itc.Member.UserID, "Galos", "Items", "Trials")
+		userGalo := rinha.GetEquippedGalo(&user)
+
+		gAdv := &entities.Rooster{
+			Xp:     rinha.CalcXP(utils.Max((clan.BossLife-100)/5, 7)) + 1,
+			Type:   53,
+			Equip:  true,
+			Resets: userGalo.Resets / 3,
+		}
+
+		userAdv := entities.User{
+			Galos:      []*entities.Rooster{gAdv},
+			Attributes: [6]int{0, user.Attributes[1], 0, 0, 50, 400},
+		}
+		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
-				Embeds: []*disgord.Embed{getBattleEmbed(users, "Clan Battle")},
-				Components: []*disgord.MessageComponent{
-					{
-						Type: disgord.MessageComponentActionRow,
-						Components: []*disgord.MessageComponent{
-							{
-								Type:     disgord.MessageComponentButton,
-								Label:    "Entrar",
-								CustomID: "joinBattle",
-								Style:    disgord.Primary,
-							},
-						},
-					},
-				},
+				Content: "A batalha esta iniciando",
 			},
 		})
-		if err != nil {
-			fmt.Println(err)
-			return nil
-		}
-
-		mutex := sync.Mutex{}
-		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
-			mutex.Lock()
-			defer mutex.Unlock()
-			if isInUsers(users, ic.Member.User) {
-				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
-					Type: disgord.InteractionCallbackChannelMessageWithSource,
-					Data: &disgord.CreateInteractionResponseData{
-						Content: "Voce ja esta na batalha",
-					},
-				})
-				return
-			}
-			if len(users) >= 10 {
-				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
-					Type: disgord.InteractionCallbackChannelMessageWithSource,
-					Data: &disgord.CreateInteractionResponseData{
-						Content: "A batalha ja chegou ao maximo (10)",
-					},
-				})
-				return
-			}
-			user := database.User.GetUser(ctx, ic.Member.User.ID)
-			newuserClan := database.Clan.GetUserClan(ctx, user.ID, "Members")
-			if newuserClan.Clan.Name != clan.Name {
-				handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
-					Type: disgord.InteractionCallbackChannelMessageWithSource,
-					Data: &disgord.CreateInteractionResponseData{
-						Content: fmt.Sprintf("%s Voces não são do mesmo clan", ic.Member.User.Mention()),
-					},
-				})
-				return
-			}
-			users = append(users, ic.Member.User)
-			handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
-				Embeds: &([]*disgord.Embed{getBattleEmbed(users, "Clan Battle")}),
-			})
-			handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{
-				Type: disgord.InteractionCallbackChannelMessageWithSource,
-				Data: &disgord.CreateInteractionResponseData{
-					Content: fmt.Sprintf("%s Entrou na batalha", ic.Member.User.Mention()),
-				},
-			})
-		}, 120)
-		if 3 > len(users) {
-			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: "É necessario no minimo 3 pessoas para começar a batalha",
-			})
-			cache.Client.Del(ctx, redisKey)
-			return nil
-		}
-		var usersDb []*entities.User
-		for _, user := range users {
-			u := database.User.GetUser(ctx, user.ID, "Galos", "Trials")
-			usersDb = append(usersDb, &u)
-		}
-		var highestRarity rinha.Rarity = 0
-		sumOfXp := 0
-		sumOfAttributes := 0
-		sumOfResets := 0
-		for _, user := range usersDb {
-			galo := rinha.GetEquippedGalo(user)
-			class := rinha.Classes[galo.Type]
-			if class.Rarity > highestRarity {
-				highestRarity = class.Rarity
-			}
-			sumOfXp += galo.Xp
-			sumOfResets += galo.Resets
-			sumOfAttributes += user.Attributes[0] + user.Attributes[1]
-		}
-		galoAdv := entities.Rooster{
-			Xp:      sumOfXp * (5 + (sumOfResets / 5)),
-			Type:    rinha.GetRandByType(highestRarity),
-			Equip:   true,
-			Evolved: true,
-			Resets:  8 + (sumOfResets / 4),
-		}
-		userAdv := entities.User{
-			Galos:      []*entities.Rooster{&galoAdv},
-			Attributes: [6]int{sumOfAttributes + 100, 30 + (sumOfAttributes / 10), 0, (sumOfAttributes / 10), 0, 20},
-		}
-		usernames := make([]string, len(usersDb))
-		for i, user := range users {
-			usernames[i] = user.Username
-		}
-		galo := rinha.GetEquippedGalo(usersDb[0])
-		winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
-			GaloAuthor:  usersDb[0],
+		winner, battle := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
+			GaloAuthor:  &user,
 			GaloAdv:     &userAdv,
-			IDs:         [2]disgord.Snowflake{users[0].ID},
-			AuthorName:  rinha.GetName(users[0].Username, *galo),
+			IDs:         [2]disgord.Snowflake{itc.Member.UserID},
+			AuthorName:  rinha.GetName(itc.Member.User.Username, *userGalo),
 			AdvName:     "Chefe do clan",
-			AuthorLevel: rinha.CalcLevel(galo.Xp),
-			AdvLevel:    rinha.CalcLevel(galoAdv.Xp),
-			Waiting:     usersDb,
-			Usernames:   usernames,
+			AuthorLevel: rinha.CalcLevel(userGalo.Xp),
+			AdvLevel:    rinha.CalcLevel(gAdv.Xp),
 		}, false)
+		database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
+			c.BossLife = battle.Fighters[1].Life
+			return c
+		})
 		if winner == 0 {
-			for _, user := range users {
-				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
-					u.Money += 500
-					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-						r.Xp += 1000
-						return r
-					})
-					return u
-				}, "Galos")
-			}
-			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **500**\nXp: **1000**",
-			})
+			completeClanBoss(ctx, clan, itc.ChannelID)
 		} else {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
 				Content: "O boss venceu",

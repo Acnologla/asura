@@ -31,6 +31,11 @@ func init() {
 				Name:        "battle",
 				Description: "Va para o proximo desafio",
 			},
+			&disgord.ApplicationCommandOption{
+				Type:        disgord.OptionTypeSubCommand,
+				Name:        "all",
+				Description: "Veja todos seus desafios completados",
+			},
 		),
 	})
 }
@@ -82,6 +87,32 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 							URL: galoSprite,
 						},
 						Color: 65535,
+					},
+				},
+			},
+		}
+	case "all":
+		text := ""
+		for _, trial := range user.Trials {
+			rooster := rinha.Classes[trial.Rooster]
+			text += fmt.Sprintf("**%s** - %d/%d\n", rooster.Name, trial.Win, MAX_TRIALS)
+		}
+		avatar, _ := itc.Member.User.AvatarURL(1024, true)
+		if text == "" {
+			text = "Nenhuma trial completa"
+		}
+		return &disgord.CreateInteractionResponse{
+			Type: disgord.InteractionCallbackChannelMessageWithSource,
+			Data: &disgord.CreateInteractionResponseData{
+				Embeds: []*disgord.Embed{
+					{
+						Title:       "Trials",
+						Description: text,
+						Color:       65535,
+						Footer: &disgord.EmbedFooter{
+							Text:    "Use /trial battle para batalhar",
+							IconURL: avatar,
+						},
 					},
 				},
 			},
