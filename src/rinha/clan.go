@@ -104,5 +104,5 @@ func CalcClanUpgrade(x, price int) int {
 
 func CalcBossLife(clan *entities.Clan) int {
 	level := ClanXpToLevel(clan.Xp)
-	return level * 280 * len(clan.Members)
+	return level * 235 * len(clan.Members)
 }

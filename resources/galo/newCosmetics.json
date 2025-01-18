@@ -460,5 +460,37 @@
     "value": "https://iili.io/2XjUXUX.png",
     "type": 2,
     "extra": 33
+  },
+  {
+    "name": "Skin Sakura",
+    "rarity": 4,
+    "reverseValue": "https://iili.io/2PwWoEN.png",
+    "value": "https://iili.io/2PwWYQ4.png",
+    "type": 2,
+    "extra": 46
+  },
+  {
+    "name": "Skin Blue Flame",
+    "rarity": 4,
+    "reverseValue": "https://iili.io/2PwWcCl.png",
+    "value": "https://iili.io/2PwWnBp.png",
+    "type": 2,
+    "extra": 33
+  },
+  {
+    "name": "Skin Blue Time",
+    "rarity": 4,
+    "reverseValue": "https://iili.io/2PwWI2t.png",
+    "value": "https://iili.io/2PwWx4I.png",
+    "type": 2,
+    "extra": 32
+  },
+  {
+    "name": "Skin Curto Circuito",
+    "rarity": 4,
+    "reverseValue": "https://iili.io/2PwOM8B.png",
+    "value": "https://iili.io/2PwOGaV.png",
+    "type": 2,
+    "extra": 33
   }
 ]

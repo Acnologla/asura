@@ -968,7 +968,7 @@
     "phrase": "%s está sob arvore natálina! (-%d)"
   },
   {
-    "range": [50, 75],
+    "range": [50, 70],
     "type": 2,
     "name": "Ciclo Gélido",
     "turns": 2,
@@ -976,7 +976,7 @@
     "phrase": "%s está curando! (+%d)"
   },
   {
-    "range": [70, 80],
+    "range": [50, 60],
     "name": "Fusão Elemental",
     "turns": 3,
     "type": 1,

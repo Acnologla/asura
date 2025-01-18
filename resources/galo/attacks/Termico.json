@@ -6,33 +6,33 @@
   },
   {
     "name": "Ciclo Gélido",
-    "damage": [73, 90],
+    "damage": [45, 60],
     "effect": [1, 126],
     "level": 2,
     "self": true
   },
   {
     "name": "Geada Fulminante",
-    "damage": [65, 75],
+    "damage": [50, 60],
     "effect": [1, 3],
     "level": 3
   },
   {
     "name": "Fusão Elemental",
-    "damage": [65, 90],
+    "damage": [55, 65],
     "level": 4,
     "effect": [1, 127]
   },
   {
     "name": "Barreira Térmica",
-    "damage": [75, 90],
+    "damage": [55, 65],
     "level": 5,
     "effect": [1, 128],
     "self": true
   },
   {
     "name": "Impacto Bipolar",
-    "damage": [100, 130],
+    "damage": [60, 90],
     "level": 6
   }
 ]

@@ -145,7 +145,10 @@ func completeClanBoss(ctx context.Context, clan *entities.Clan, channel disgord.
 	var xpPrize, moneyPrize int
 	database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
 		originalHp := rinha.CalcBossLife(&c)
-		percentange := float64(originalHp-c.BossLife) / float64(originalHp)
+		percentange := utils.Min(float64(originalHp-c.BossLife)/float64(originalHp), 1)
+		if c.BossLife > originalHp {
+			percentange = 0
+		}
 		xpPrize = int(float64(PRIZE_XP) * percentange)
 		moneyPrize = int(float64(PRIZE_MONEY) * percentange)
 		for _, member := range c.Members {
@@ -215,6 +218,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	maxMembers := rinha.GetMaxMembers(clan)
 	member := userClan.Member
 	ch := handler.Client.Channel(disgord.Snowflake(itc.ChannelID))
+	clanLevel := rinha.ClanXpToLevel(clan.Xp)
 	var msg string
 	if command != "create" && clan.Name == "" {
 		return &disgord.CreateInteractionResponse{
@@ -347,6 +351,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				"maxMembers":  maxMembers,
 				"membersText": "",
 				"bossHP":      clan.BossLife,
+				"bossHPMax":   rinha.CalcBossLife(clan),
 			}),
 		}
 		if bg != "" {
@@ -491,6 +496,14 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	case "battle":
+		if len(clan.Members) < 9 || clanLevel < 4 {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: "Seu clan precisa de pelo menos 9 membros para batalhar e ser level 4",
+				},
+			}
+		}
 		daysPassed := (uint64(time.Now().Unix()) - clan.BossDate) / 60 / 60 / 24
 		if daysPassed >= 3 && clan.BossDate != 0 {
 			database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
@@ -550,12 +563,12 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Xp:     rinha.CalcXP(utils.Max((clan.BossLife-100)/5, 7)) + 1,
 			Type:   53,
 			Equip:  true,
-			Resets: userGalo.Resets / 3,
+			Resets: userGalo.Resets / 2,
 		}
 
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{gAdv},
-			Attributes: [6]int{0, user.Attributes[1], 0, 0, 50, 400},
+			Attributes: [6]int{0, user.Attributes[1], 0, 0, 50, 350},
 		}
 		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
@@ -573,7 +586,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			AdvLevel:    rinha.CalcLevel(gAdv.Xp),
 		}, false)
 		database.Clan.UpdateClan(ctx, clan, func(c entities.Clan) entities.Clan {
-			c.BossLife = battle.Fighters[1].Life
+			c.BossLife = utils.Max(battle.Fighters[1].Life, 0)
 			return c
 		})
 		if winner == 0 {
