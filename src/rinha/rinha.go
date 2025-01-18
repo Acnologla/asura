@@ -442,19 +442,12 @@ func GetGaloByID(galos []*entities.Rooster, id uuid.UUID) *entities.Rooster {
 
 // get any rarity besides special
 func GetRand() int {
-	classTypeArr := []*Class{}
-	for _, class := range Classes {
-		if class.Rarity != Special {
-			classTypeArr = append(classTypeArr, class)
-		}
+	selected := utils.RandInt(len(Classes)-1) + 1
+	class := Classes[selected]
+	if class.Rarity == Special {
+		return GetRand()
 	}
-	selected := classTypeArr[utils.RandInt(len(classTypeArr))]
-	for i, class := range Classes {
-		if class.Name == selected.Name {
-			return i
-		}
-	}
-	return -1
+	return selected
 }
 
 func GetTrialsMultiplier(user *entities.User) float64 {
