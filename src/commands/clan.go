@@ -563,7 +563,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Xp:     rinha.CalcXP(utils.Max((clan.BossLife-100)/5, 7)) + 1,
 			Type:   53,
 			Equip:  true,
-			Resets: userGalo.Resets / 2,
+			Resets: userGalo.Resets,
 		}
 
 		userAdv := entities.User{

@@ -347,6 +347,9 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				if item.Effect == 9 {
 					xpOb += 2
 				}
+				if item.Effect == 13 {
+					money += int(item.Payload)
+				}
 			}
 
 			if rinha.IsVip(&u) {
@@ -360,10 +363,6 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			clanUser := database.Clan.GetUserClan(ctx, discordUser.ID, "Members")
 			clan := clanUser.Clan
 
-			if rinha.HasEgg(&user) {
-				u.Egg += eggXpOb
-			}
-
 			var clanLevel = 0
 			if clan.Name != "" {
 				xpOb++
@@ -376,7 +375,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 					money++
 				}
 				if level >= 6 {
-					money++
+					eggXpOb++
 				}
 				if level >= 8 {
 					u.UserXp++
@@ -392,11 +391,16 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 						}
 					}
 				}
+
 				go database.Clan.CompleteClanMission(ctx, clan, discordUser.ID, clanXpOb)
 				clanMsg = fmt.Sprintf("\nGanhou **%d** de xp para seu clan", clanXpOb)
 
 			}
+
 			u.Win++
+			if rinha.HasEgg(&user) {
+				u.Egg += eggXpOb
+			}
 
 			database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
 				bpXP = database.User.UpdateBp(ctx, &u, &r)

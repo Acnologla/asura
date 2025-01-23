@@ -388,5 +388,35 @@
     "effect": 12,
     "level": 6,
     "payload": 0.05
+  },
+  {
+    "name": "Minerador",
+    "effect": 13,
+    "level": 1,
+    "payload": 1
+  },
+  {
+    "name": "Minerador aprimorado",
+    "effect": 13,
+    "level": 2,
+    "payload": 2
+  },
+  {
+    "name": "Minerador de diamante",
+    "effect": 13,
+    "level": 3,
+    "payload": 3
+  },
+  {
+    "name": "Beta Minerador",
+    "effect": 13,
+    "level": 4,
+    "payload": 4
+  },
+  {
+    "name": "Minerador mitico",
+    "effect": 13,
+    "level": 6,
+    "payload": 5
   }
 ]

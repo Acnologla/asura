@@ -18,6 +18,13 @@ func Has[T comparable](arr []T, b T) bool {
 	return false
 }
 
+func Ternary[T any](condition bool, a T, b T) T {
+	if condition {
+		return a
+	}
+	return b
+}
+
 func Map[T, G any](arr []T, b func(T) G) []G {
 	result := []G{}
 	for _, elem := range arr {
