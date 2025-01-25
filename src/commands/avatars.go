@@ -77,7 +77,7 @@ func runAvatars(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			},
 		},
 	}
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
@@ -92,7 +92,10 @@ func runAvatars(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			Components: components,
 		},
 	})
-	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+	if err != nil {
+		return nil
+	}
+	handler.RegisterHandler(itcID, func(interaction *disgord.InteractionCreate) {
 		if itc.Member.User.ID == interaction.Member.User.ID {
 			if interaction.Data.CustomID == "back" {
 				if count == 0 {

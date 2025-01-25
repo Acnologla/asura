@@ -59,7 +59,7 @@ func runRanked(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cre
 		}
 
 	} else if command == "rank" {
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		msgID, _ := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Carregando...",
@@ -80,7 +80,7 @@ func runRanked(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cre
 			Color:       65535,
 			Description: description,
 		}
-		handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+		handler.EditInteractionResponse(ctx, msgID, itc, &disgord.UpdateMessage{
 			Embeds:  &([]*disgord.Embed{embed}),
 			Content: nil,
 		})
@@ -104,7 +104,7 @@ func runRanked(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cre
 	user = database.User.GetUser(ctx, itc.Member.User.ID, "Galos")
 
 	userRank := rinha.GetRank(&user)
-	itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+	handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content: "Voce entrou em uma fila de espera para a rinha rankeada",

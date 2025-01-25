@@ -136,13 +136,16 @@ func run2048(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	}
 	lastPlay := time.Now()
 	points := 0
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content:    ":zero:\n\n" + draw2048Board(board),
 			Components: generate2048Buttons(),
 		},
 	})
+	if err != nil {
+		return nil
+	}
 	go func() {
 		for {
 			time.Sleep(time.Second)
@@ -159,7 +162,7 @@ func run2048(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		}
 	}()
 
-	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+	handler.RegisterHandler(itcID, func(interaction *disgord.InteractionCreate) {
 		u := interaction.Member.UserID
 		if u == itc.Member.UserID {
 			oldBoard := utils.DeepClone(board)

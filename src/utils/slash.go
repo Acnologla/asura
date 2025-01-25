@@ -16,7 +16,7 @@ func GetOptionsUser(options []*disgord.ApplicationCommandDataOption, itc *disgor
 	opt := options[i]
 	idStr := opt.Value.(string)
 	id, _ := strconv.ParseUint(idStr, 10, 64)
-	if opt.Type == disgord.OptionTypeString {
+	if itc.Data.Resolved == nil || opt.Type == disgord.OptionTypeString {
 		u, _ := handler.Client.User(disgord.Snowflake(id)).Get()
 		return u
 	}
@@ -27,7 +27,7 @@ func GetUser(itc *disgord.InteractionCreate, i int) *disgord.User {
 	opt := itc.Data.Options[i]
 	idStr := opt.Value.(string)
 	id, _ := strconv.ParseUint(idStr, 10, 64)
-	if opt.Type == disgord.OptionTypeString {
+	if itc.Data.Resolved == nil || opt.Type == disgord.OptionTypeString {
 		u, err := handler.Client.User(disgord.Snowflake(id)).Get()
 		if err != nil {
 			return itc.Member.User
@@ -102,9 +102,9 @@ func ConfirmMessage(ctx context.Context, title string, itc *disgord.InteractionC
 }
 
 func Confirm(ctx context.Context, title string, itc *disgord.InteractionCreate, id disgord.Snowflake, callback func()) {
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	msgID, _ := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: createConfirmMessage(title),
 	})
-	confirmHandler(id, itc.ID, callback)
+	confirmHandler(id, msgID, callback)
 }

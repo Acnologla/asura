@@ -141,14 +141,17 @@ func runMinifield(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 	board := makeMinifieldBoard(5, 5)
 	total := totalCells(board)
 	data := generateMinifieldBoard(board)
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content:    translation.T("MinifieldPlay", "pt"),
 			Components: data,
 		},
 	})
-	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+	if err != nil {
+		return nil
+	}
+	handler.RegisterHandler(itcID, func(interaction *disgord.InteractionCreate) {
 		if interaction.Member.User.ID != itc.Member.UserID {
 			return
 		}

@@ -247,7 +247,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	lockEvent(ctx, discordUser.ID, "Clone de "+advClass.Name)
 	defer unlockEvent(ctx, discordUser.ID)
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content: "A batalha esta iniciando...",

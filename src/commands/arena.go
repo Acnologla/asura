@@ -47,7 +47,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	if command == "ingresso" {
 		database.User.UpdateUser(ctx, itc.Member.User.ID, func(u entities.User) entities.User {
 			if u.ArenaActive {
-				itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+				handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
 						Content: "Use /arena status para ver o status da arena",
@@ -56,7 +56,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				return u
 			}
 			if arenaPrice > user.Money {
-				itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+				handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 					Type: disgord.InteractionCallbackChannelMessageWithSource,
 					Data: &disgord.CreateInteractionResponseData{
 						Content: fmt.Sprintf("Você precisa ter **%d** de dinheiro para comprar um ingresso na arena", arenaPrice),
@@ -69,7 +69,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			u.ArenaWin = 0
 			u.ArenaLose = 0
 			u.ArenaLastFight = 0
-			itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+			handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
 					Content: "Você comprou um ingresso para a arena use /arena batalhar para batalhar",
@@ -109,7 +109,7 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		Resets:  galoAuthor.Resets,
 	}
 
-	itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+	handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content: "A batalha esta iniciando",

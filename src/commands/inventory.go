@@ -152,12 +152,11 @@ func runInventory(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 			},
 		},
 	}
-	err := handler.Client.SendInteractionResponse(ctx, itc, r)
+	itcID, err := handler.SendInteractionResponse(ctx, itc, r)
 	if err != nil {
-		fmt.Println(err)
 		return nil
 	}
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 		if ic.Member.UserID == user.ID {
 			customID := ic.Data.CustomID
 			if button, ok := buttons[customID]; ok {

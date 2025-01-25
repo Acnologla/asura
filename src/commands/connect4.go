@@ -131,15 +131,18 @@ func runConnect4(ctx context.Context, itc *disgord.InteractionCreate) *disgord.C
 		}
 	}
 
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content:    connect4Emojis[1] + "\n\n" + drawConnect4Board(board),
 			Components: generateConnect4(),
 		},
 	})
+	if err != nil {
+		return nil
+	}
 	turn := 1
-	handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+	handler.RegisterHandler(itcID, func(interaction *disgord.InteractionCreate) {
 		turnUser := user
 		num := 2
 		u := interaction.Member.UserID

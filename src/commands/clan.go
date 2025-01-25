@@ -292,7 +292,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	case "membros":
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		msgID, _ := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Carregando...",
@@ -326,7 +326,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Description: fmt.Sprintf("Membros (**%d/%d**):\n\n%s", len(clan.Members), maxMembers, memberMsg),
 		}
 		str := ""
-		handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+		handler.EditInteractionResponse(ctx, msgID, itc, &disgord.UpdateMessage{
 			Embeds:  &([]*disgord.Embed{embed}),
 			Content: &str,
 		})
@@ -360,7 +360,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			}
 		}
 
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: ([]*disgord.Embed{embed}),
@@ -570,7 +570,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Galos:      []*entities.Rooster{gAdv},
 			Attributes: [6]int{0, user.Attributes[1], 0, 0, 50, 350},
 		}
-		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "A batalha esta iniciando",
@@ -635,7 +635,7 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	case "upgrade":
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		msgID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
@@ -665,7 +665,10 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 				},
 			},
 		})
-		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+		if err != nil {
+			return nil
+		}
+		handler.RegisterHandler(msgID, func(ic *disgord.InteractionCreate) {
 			if len(ic.Data.Values) == 0 {
 				return
 			}

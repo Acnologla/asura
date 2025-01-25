@@ -295,7 +295,7 @@ func getCards(ctx context.Context, itc *disgord.InteractionCreate, session disgo
 	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo nessa guilda, use /uno create para criar um",
@@ -326,7 +326,7 @@ func getCards(ctx context.Context, itc *disgord.InteractionCreate, session disgo
 			}
 		} else {
 			gameMutex.RUnlock()
-			go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+			go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
 					Content: "Você não está no jogo",
@@ -362,7 +362,7 @@ func sendEmbed(ctx context.Context, itc *disgord.InteractionCreate, session disg
 			},
 		})
 	} else {
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Files: []disgord.CreateMessageFile{
@@ -401,7 +401,7 @@ func create(ctx context.Context, itc *disgord.InteractionCreate, session disgord
 		}
 		currentGames[itc.GuildID].newPlayer(itc.Member.User)
 		gameMutex.Unlock()
-		itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
@@ -493,7 +493,7 @@ func create(ctx context.Context, itc *disgord.InteractionCreate, session disgord
 		}()
 	} else if game.status == "p" {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "O jogo em sua guilda esta em preparação, caso queira entrar use /uno join",
@@ -501,7 +501,7 @@ func create(ctx context.Context, itc *disgord.InteractionCreate, session disgord
 		})
 	} else {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "O jogo da sua guilda ja começou, espere ele terminar",
@@ -524,7 +524,7 @@ func leave(ctx context.Context, itc *disgord.InteractionCreate, session disgord.
 	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo na sua guilda",
@@ -534,7 +534,7 @@ func leave(ctx context.Context, itc *disgord.InteractionCreate, session disgord.
 	}
 	if game.status != "n" {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo na sua guilda",
@@ -545,7 +545,7 @@ func leave(ctx context.Context, itc *disgord.InteractionCreate, session disgord.
 	var isInGame = isInGame(itc, game)
 	if !isInGame {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: " Voce não ta no jogo",
@@ -559,7 +559,7 @@ func leave(ctx context.Context, itc *disgord.InteractionCreate, session disgord.
 	game = currentGames[itc.GuildID]
 	gameMutex.Unlock()
 	if 1 >= len(game.players) {
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Como todos os jogadores sairam ou só sobrou 1 o jogo foi encerrado",
@@ -570,7 +570,7 @@ func leave(ctx context.Context, itc *disgord.InteractionCreate, session disgord.
 		gameMutex.Unlock()
 		return
 	}
-	itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+	handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content: "Voce saiu do jogo agora é o turno do " + game.players[0].username,
@@ -583,7 +583,7 @@ func buy(ctx context.Context, itc *disgord.InteractionCreate, session disgord.Se
 	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo na sua guilda",
@@ -593,7 +593,7 @@ func buy(ctx context.Context, itc *disgord.InteractionCreate, session disgord.Se
 	}
 	if game.status != "n" {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo na sua guilda",
@@ -604,7 +604,7 @@ func buy(ctx context.Context, itc *disgord.InteractionCreate, session disgord.Se
 	var isInGame = isInGame(itc, game)
 	if !isInGame {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Voce nao ta no jogo",
@@ -623,7 +623,7 @@ func buy(ctx context.Context, itc *disgord.InteractionCreate, session disgord.Se
 	}
 	if p.id != game.players[0].id {
 		gameMutex.Unlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não é seu turno",
@@ -644,7 +644,7 @@ func play(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo na sua guilda",
@@ -654,7 +654,7 @@ func play(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	}
 	if game.status != "n" {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo na sua guilda",
@@ -664,7 +664,7 @@ func play(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	}
 	if len(args) == 0 {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Diga uma carta para jogar",
@@ -675,7 +675,7 @@ func play(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	var isInGame = isInGame(itc, game)
 	if !isInGame {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Voce nao ta no jogo",
@@ -685,7 +685,7 @@ func play(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	}
 	if strings.HasPrefix(args[0], "WILD") && 2 > len(args) {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Essa é uma carta preta usa  então voce tem que definir a cor apos a carta exemplo:\n/uno play wild <Y (Amarelo) | G (Verde) | B (Azul) | R (Vermelho) >",
@@ -705,7 +705,7 @@ func play(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	}
 	if p.id != game.players[0].id {
 		gameMutex.Unlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não é seu turno",
@@ -716,7 +716,7 @@ func play(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	play := game.play(p, args)
 	if play != "" {
 		gameMutex.Unlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: play,
@@ -760,7 +760,7 @@ func uno(ctx context.Context, itc *disgord.InteractionCreate, session disgord.Se
 	defer gameMutex.RUnlock()
 	game := currentGames[itc.GuildID]
 	if game == nil {
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo na sua guilda",
@@ -769,7 +769,7 @@ func uno(ctx context.Context, itc *disgord.InteractionCreate, session disgord.Se
 		return
 	}
 	if game.status != "n" {
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo na sua guilda",
@@ -779,7 +779,7 @@ func uno(ctx context.Context, itc *disgord.InteractionCreate, session disgord.Se
 	}
 	var isInGame = isInGame(itc, game)
 	if !isInGame {
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Voce nao ta no jogo",
@@ -795,7 +795,7 @@ func uno(ctx context.Context, itc *disgord.InteractionCreate, session disgord.Se
 		}
 	}
 	if len(p.cards) == 1 {
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: fmt.Sprintf("O %s ta no uno", itc.Member.User.Username),
@@ -803,7 +803,7 @@ func uno(ctx context.Context, itc *disgord.InteractionCreate, session disgord.Se
 		})
 		p.uno = true
 	} else {
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Voce nao ta no uno nao",
@@ -816,7 +816,7 @@ func join(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	game := currentGames[itc.GuildID]
 	if game == nil {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Não tem nenhum jogo em preparação nesse servidor, use /uno create para iniciar um",
@@ -826,7 +826,7 @@ func join(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	}
 	if game.status == "n" {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "O jogo ja começou",
@@ -836,7 +836,7 @@ func join(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	}
 	if len(game.players) >= 8 {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Este jogo ja encheu! maximo 8 pessoas",
@@ -847,7 +847,7 @@ func join(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 	var isInGame = isInGame(itc, game)
 	if isInGame {
 		gameMutex.RUnlock()
-		go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+		go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Voce ja ta no jogo",
@@ -866,7 +866,7 @@ func join(ctx context.Context, itc *disgord.InteractionCreate, session disgord.S
 		text += player.username + "\n"
 	}
 	gameMutex.RUnlock()
-	go itc.Reply(ctx, session, &disgord.CreateInteractionResponse{
+	go handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{

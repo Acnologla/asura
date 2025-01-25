@@ -211,6 +211,40 @@ func Init(appID, token string, session *disgord.Client) {
 	Client = session
 }
 
+func EditInteractionResponse(ctx context.Context, messageID disgord.Snowflake, itc *disgord.InteractionCreate, response *disgord.UpdateMessage) error {
+	if itc.Token == INTERACTION_FAKE_TOKEN {
+		_, err := Client.Channel(itc.ChannelID).Message(messageID).Update(response)
+		return err
+	} else {
+		return Client.EditInteractionResponse(ctx, itc, response)
+	}
+}
+
+func SendInteractionResponse(ctx context.Context, itc *disgord.InteractionCreate, response *disgord.CreateInteractionResponse) (disgord.Snowflake, error) {
+	if itc.Token == INTERACTION_FAKE_TOKEN {
+		data := response.Data
+		msg, err := Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
+			Content:    data.Content,
+			Embeds:     data.Embeds,
+			Components: data.Components,
+			Files:      data.Files,
+		})
+
+		if err != nil {
+			return 0, err
+		}
+
+		return msg.ID, nil
+
+	} else {
+		err := Client.SendInteractionResponse(ctx, itc, response)
+		if err != nil {
+			fmt.Println(err)
+		}
+		return itc.ID, err
+	}
+}
+
 func HandleInteraction(itc *disgord.InteractionCreate) {
 	if itc.Member == nil {
 		return
@@ -219,10 +253,7 @@ func HandleInteraction(itc *disgord.InteractionCreate) {
 		ctx := context.Background()
 		response := ExecuteInteraction(ctx, itc)
 		if response != nil {
-			err := Client.SendInteractionResponse(ctx, itc, response)
-			if err != nil {
-				fmt.Println(err)
-			}
+			SendInteractionResponse(ctx, itc, response)
 		}
 		author := itc.Member.User
 		tag := author.Username + "#" + author.Discriminator.String()

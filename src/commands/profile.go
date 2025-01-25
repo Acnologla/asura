@@ -84,7 +84,7 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	// Resize the images
 
 	galo := database.User.GetUser(ctx, user.ID, "Items", "Galos")
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	msgID, _ := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content: "Carregando...",
@@ -270,7 +270,7 @@ func runProfile(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	png.Encode(pw, dc.Image())
 	str := ""
 
-	handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+	handler.EditInteractionResponse(ctx, msgID, itc, &disgord.UpdateMessage{
 		File: &disgord.CreateMessageFile{
 			Reader:     bytes.NewReader(b.Bytes()),
 			FileName:   "profile.jpg",

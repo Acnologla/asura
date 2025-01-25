@@ -173,11 +173,14 @@ func runSell(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		"galoSell":     optsGalos,
 	}
 
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: data,
 	})
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	if err != nil {
+		return nil
+	}
+	handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 		userIC := ic.Member.User
 		name := ic.Data.CustomID
 		if userIC.ID != itc.Member.UserID {

@@ -83,7 +83,7 @@ func runEquipItem(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 	optsItems := genEquipItemsOptions(&galo, entities.NormalType)
 	optsBackground := genEquipItemsOptions(&galo, entities.CosmeticType)
 
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
@@ -122,7 +122,10 @@ func runEquipItem(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 			},
 		},
 	})
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	if err != nil {
+		return nil
+	}
+	handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 		userIC := ic.Member.User
 		name := ic.Data.CustomID
 		if userIC.ID != itc.Member.UserID {

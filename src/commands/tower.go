@@ -74,7 +74,7 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 	case "rank":
 		towers := database.User.SortTowers(ctx, 16)
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		msgID, _ := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "Carregando...",
@@ -96,7 +96,7 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				Description: rank,
 			},
 		}
-		handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+		handler.EditInteractionResponse(ctx, msgID, itc, &disgord.UpdateMessage{
 			Embeds:  &embeds,
 			Content: &str,
 		})
@@ -153,7 +153,7 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			userAdv.Attributes = user.Attributes
 		}
 
-		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+		handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "A batalha esta iniciando",

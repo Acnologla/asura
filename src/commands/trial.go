@@ -172,7 +172,7 @@ func runTrial(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			userAdv.Attributes = [6]int{int(healthAtb) + 500, atbs / 10, atbs, atbs / 9, atbs / 8, 50}
 		}
 
-		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+		handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "A batalha esta iniciando",

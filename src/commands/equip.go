@@ -76,12 +76,15 @@ func runEquip(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	dc.Fill()
 	radius := 50
 	imageSize := radius * 2
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	msgID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content: "Carregando...",
 		},
 	})
+	if err != nil {
+		return nil
+	}
 	for i, g := range galo.Galos {
 		image := rinha.GetGaloImage(g, galo.Items)
 		imageD, err := utils.DownloadImage(image)
@@ -152,7 +155,7 @@ func runEquip(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 				"galoEquip",
 				optsGalos))
 	str := ""
-	handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+	handler.EditInteractionResponse(ctx, msgID, itc, &disgord.UpdateMessage{
 		File: &disgord.CreateMessageFile{
 			Reader:     bytes.NewReader(b.Bytes()),
 			FileName:   "profile.jpg",
@@ -163,7 +166,7 @@ func runEquip(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		Content:    &str,
 	})
 
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	handler.RegisterHandler(msgID, func(ic *disgord.InteractionCreate) {
 		userIC := ic.Member.User
 		name := ic.Data.CustomID
 		if userIC.ID != itc.Member.UserID {

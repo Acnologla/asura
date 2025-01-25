@@ -114,7 +114,7 @@ func runShop(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		})
 	}
 
-	err := handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds:     []*disgord.Embed{defaultEmbed},
@@ -123,12 +123,10 @@ func runShop(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	})
 
 	if err != nil {
-		fmt.Println(err)
-
 		return nil
 	}
 
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 		if ic.Member.UserID == user.ID {
 			customID := ic.Data.CustomID
 			if customID == "buy" {

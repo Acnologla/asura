@@ -94,7 +94,7 @@ func runSkins(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 	}
 	components := genSkinRows(skins, items)
-	itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{{
@@ -105,7 +105,10 @@ func runSkins(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			Components: components,
 		},
 	})
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	if err != nil {
+		return nil
+	}
+	handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 		u := ic.Member.User.ID
 		if u != itc.Member.UserID {
 			return

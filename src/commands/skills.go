@@ -107,14 +107,17 @@ func runSkills(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cre
 			},
 		},
 	}
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds:     genEmbed(),
 			Components: components,
 		},
 	})
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	if err != nil {
+		return nil
+	}
+	handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 		if ic.Member.UserID != itc.Member.UserID {
 			return
 		}

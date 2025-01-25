@@ -101,11 +101,16 @@ func runTTT(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Create
 	}
 	tiles := [9]int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 	turn := 1
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: board(tiles),
 	})
-	defer handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+
+	if err != nil {
+		return nil
+	}
+
+	defer handler.RegisterHandler(itcID, func(interaction *disgord.InteractionCreate) {
 		turnUser := user
 		letter := ":x:"
 		if turn == 1 {

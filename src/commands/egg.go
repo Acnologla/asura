@@ -80,12 +80,12 @@ func runEgg(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Create
 				}},
 			},
 		}
-		err := handler.Client.SendInteractionResponse(ctx, itc, r)
+		itcID, err := handler.SendInteractionResponse(ctx, itc, r)
 		if err != nil {
 			return nil
 		}
 		done := false
-		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+		handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 			if ic.Member.UserID == user.ID && !done {
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 					if u.AsuraCoin >= EGG_PRICE {
@@ -145,7 +145,7 @@ func runEgg(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Create
 				},
 			}
 		}
-		err := handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
@@ -174,7 +174,7 @@ func runEgg(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Create
 			return nil
 		}
 		lastValue := ""
-		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+		handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 			userIC := ic.Member.User
 			if userIC.ID != itc.Member.UserID {
 				return

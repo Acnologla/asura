@@ -267,7 +267,7 @@ func runRaid(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	}
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds: []*disgord.Embed{
@@ -294,8 +294,11 @@ func runRaid(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		},
 	})
+	if err != nil {
+		return nil
+	}
 	done := false
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 		if done {
 			return
 		}

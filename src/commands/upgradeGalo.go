@@ -96,13 +96,13 @@ func runUpgradeGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgor
 				"galoUpgradeRarity",
 				opts))
 
-	err := handler.Client.SendInteractionResponse(ctx, itc, r.Res())
+	itcID, err := handler.SendInteractionResponse(ctx, itc, r.Res())
 
 	if err != nil {
 		return nil
 	}
 
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 		userIC := ic.Member.User
 		if userIC.ID != itc.Member.UserID {
 			return

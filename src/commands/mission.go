@@ -152,12 +152,15 @@ func runMission(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	if len(components) > 0 {
 		params.Components = component
 	}
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: params,
 	})
+	if err != nil {
+		return nil
+	}
 	if len(components) > 0 {
-		handler.RegisterHandler(itc.ID, func(event *disgord.InteractionCreate) {
+		handler.RegisterHandler(itcID, func(event *disgord.InteractionCreate) {
 			if event.Member.User.ID == user.ID {
 				i, _ := strconv.Atoi(event.Data.CustomID)
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {

@@ -91,7 +91,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			},
 		}
 	case "buy":
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
@@ -129,9 +129,12 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				},
 			},
 		})
+		if err != nil {
+			return nil
+		}
 		quantity := 1
 		lastValue := ""
-		handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+		handler.RegisterHandler(itcID, func(interaction *disgord.InteractionCreate) {
 			if interaction.Member.UserID != itc.Member.UserID {
 				return
 			}
@@ -199,7 +202,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				},
 			}
 		}
-		err := handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{
@@ -229,7 +232,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			return nil
 		}
 		lastValue := ""
-		handler.RegisterHandler(itc.ID, func(interaction *disgord.InteractionCreate) {
+		handler.RegisterHandler(itcID, func(interaction *disgord.InteractionCreate) {
 			if interaction.Member.UserID != itc.Member.UserID {
 				return
 			}

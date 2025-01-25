@@ -142,10 +142,13 @@ func runAttributes(ctx context.Context, itc *disgord.InteractionCreate) *disgord
 				Type:       disgord.MessageComponentActionRow,
 				Components: attributeButtons[3:6],
 			})
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: response,
 		})
+		if err != nil {
+			return nil
+		}
 		updateMessage := func(itc *disgord.InteractionCreate) {
 			r := &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{{
@@ -162,7 +165,7 @@ func runAttributes(ctx context.Context, itc *disgord.InteractionCreate) *disgord
 			})
 		}
 
-		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+		handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 			if ic.Member.UserID == user.ID {
 				if ic.Data.CustomID == "points-select" {
 					if len(ic.Data.Values) == 0 {

@@ -139,11 +139,12 @@ func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
 		if msg.GuildID != 0 {
 			for _, user := range msg.Mentions {
 				if user.ID.String() == appID {
-					msg.Reply(context.Background(), s, "Use **/help** para ver meus comandos\nUse **/rinhahelp** para ver o **tutorial de rinha**")
+					msg.Reply(context.Background(), s, "Meu prefix é **j!**\n Use **/help** ou **j!help** para ver meus comandos\nUse **/rinhahelp** para ver o **tutorial de rinha**")
 					break
 				}
 			}
-			RecieveLootbox(msg)
+			handler.ProcessMessage(msg)
+			//RecieveLootbox(msg)
 		}
 	}
 }

@@ -101,7 +101,7 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			Equip:   true,
 			Evolved: user.DungeonReset > 15,
 		}
-		itc.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
+		handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Content: "A batalha esta iniciando",

@@ -3,7 +3,6 @@ package commands
 import (
 	"asura/src/handler"
 	"context"
-	"fmt"
 
 	"github.com/andersfylling/disgord"
 )
@@ -76,7 +75,7 @@ func runRinhaHelp(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 			Components: generateComponents(),
 		},
 	}
-	err := handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Embeds:     []*disgord.Embed{&embed},
@@ -84,12 +83,11 @@ func runRinhaHelp(ctx context.Context, itc *disgord.InteractionCreate) *disgord.
 		},
 	})
 	if err != nil {
-		fmt.Println(err)
 		return nil
 	}
 	user := itc.Member.User
 
-	handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+	handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 		if ic.Member.UserID == user.ID {
 			if len(ic.Data.Values) == 0 {
 				return

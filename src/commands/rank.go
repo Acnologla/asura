@@ -97,7 +97,7 @@ func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	var text string
 	uRank := -1
 	user := database.User.GetUser(ctx, itc.Member.UserID, "Galos")
-	handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+	msgID, _ := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 		Type: disgord.InteractionCallbackChannelMessageWithSource,
 		Data: &disgord.CreateInteractionResponseData{
 			Content: "Carregando...",
@@ -194,7 +194,7 @@ func runRank(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	}
 
 	str := ""
-	handler.Client.EditInteractionResponse(ctx, itc, &disgord.UpdateMessage{
+	handler.EditInteractionResponse(ctx, msgID, itc, &disgord.UpdateMessage{
 		Embeds:  &response.Embeds,
 		Content: &str,
 	})

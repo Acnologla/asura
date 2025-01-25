@@ -115,5 +115,8 @@ func ItemToString(item *Item) string {
 	if item.Effect == 12 {
 		return fmt.Sprintf("Bloqueia %d%% de dano de efeitos", int(math.Round((1-item.Payload)*100)))
 	}
+	if item.Effect == 13 {
+		return fmt.Sprintf("Voce ganha %d de dinheiro adicional por train", int(item.Payload))
+	}
 	return ""
 }

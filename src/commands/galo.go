@@ -233,11 +233,14 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 
 	}
 	if len(data.Components) > 0 {
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
+		itcID, err := handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: data,
 		})
-		handler.RegisterHandler(itc.ID, func(ic *disgord.InteractionCreate) {
+		if err != nil {
+			return nil
+		}
+		handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 			done := false
 			isEvolved := ic.Data.CustomID == "Evolve"
 			if ic.Member.UserID == user.ID {

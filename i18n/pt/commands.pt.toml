@@ -1,3 +1,24 @@
+[missingrequiredoption]
+other="Voce não colocou o argumento {{.option}}"
+
+[invaliduser]
+other="Usuário invalido"
+
+[invalidsubcommand]
+other="A opção {{.option}} não é valida para este comando, opçoes validas: {{.options}}"
+
+[invalidnumber]
+other="Número invalido na opção {{.option}}"
+
+[numberoutofrange]
+other="Número fora de range na opção {{.option}}"
+
+[invalidchannel]
+other="Canal invalido"
+
+[ExampleUsage]
+other="Exemplo de uso: **{{.prefix}}{{.commandName}} {{.options}}**"
+
 [Ping]
 other="{{.}} em pt"
 
