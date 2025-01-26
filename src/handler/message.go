@@ -96,7 +96,7 @@ func GetOptionsFromMessage(m *disgord.Message, opts []*disgord.ApplicationComman
 	options := []*disgord.ApplicationCommandDataOption{}
 	isSub := false
 	i := 0
-	for _, option := range opts {
+	for optNumber, option := range opts {
 		required := option.Required
 		isSub = option.Type == disgord.OptionTypeSubCommand || option.Type == disgord.OptionTypeSubCommandGroup
 		if required && len(args) <= i {
@@ -104,6 +104,9 @@ func GetOptionsFromMessage(m *disgord.Message, opts []*disgord.ApplicationComman
 		}
 		if len(args) > i {
 			arg := args[i]
+			if optNumber == len(opts)-1 && option.Type == disgord.OptionTypeString {
+				arg = strings.Join(args[i:], " ")
+			}
 			value, err := parseOptionMessage(option, arg)
 			if err != nil && required {
 				return nil, GetOptionError(option, err)
@@ -133,7 +136,7 @@ func GetOptionsFromMessage(m *disgord.Message, opts []*disgord.ApplicationComman
 		}
 	}
 	if isSub && len(options) == 0 {
-		return nil, GetOptionError(opts[0], errors.New("invalid subcommand"))
+		return nil, GetOptionError(&disgord.ApplicationCommandOption{Name: "x"}, errors.New("invalid subcommand"))
 	}
 	return options, nil
 }
@@ -192,15 +195,27 @@ func optionsToString(options []*disgord.ApplicationCommandOption) string {
 	return result
 }
 
+func findOptionByName(options []*disgord.ApplicationCommandOption, name string) disgord.ApplicationCommandOption {
+	for _, option := range options {
+		if option.Name == name {
+			return *option
+		}
+	}
+	return disgord.ApplicationCommandOption{}
+}
+
 func SendErrorMessage(m *disgord.Message, command Command, err error) {
 	errorStr := err.Error()
 	splited := strings.Split(errorStr, "|")
 	optionName := splited[0]
 	errorStr = strings.ReplaceAll(splited[1], " ", "")
 	options := optionsToString(command.Options)
-	msg := translation.T(errorStr, "pt", map[string]string{
-		"option":  optionName,
-		"options": options,
+	option := findOptionByName(command.Options, optionName)
+	msg := translation.T(errorStr, "pt", map[string]interface{}{
+		"option":   optionName,
+		"options":  options,
+		"minValue": option.MinValue,
+		"maxValue": option.MaxValue,
 	})
 	usageExample := translation.T("ExampleUsage", "pt", map[string]string{
 		"commandName": command.Name,
@@ -213,21 +228,20 @@ func SendErrorMessage(m *disgord.Message, command Command, err error) {
 }
 
 func ProcessMessage(m *disgord.Message) {
-	if m.GuildID == 597089324114116635 || m.GuildID == 710179373860519997 {
-		commandName, args := getCommandNameAndArgs(m)
-		if commandName == "" {
-			return
-		}
-		command := GetCommand(commandName)
-		if command.Run == nil {
-			return
-		}
-		interaction, err := createInteractionFromMessage(m, command, commandName, args)
-		if err != nil {
-			SendErrorMessage(m, command, err)
-			return
-		}
-
-		InteractionChannel <- interaction
+	commandName, args := getCommandNameAndArgs(m)
+	if commandName == "" {
+		return
 	}
+	command := GetCommand(commandName)
+	if command.Run == nil {
+		return
+	}
+	interaction, err := createInteractionFromMessage(m, command, commandName, args)
+	if err != nil {
+		SendErrorMessage(m, command, err)
+		return
+	}
+
+	InteractionChannel <- interaction
+
 }

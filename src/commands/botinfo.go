@@ -94,7 +94,7 @@ func runBotInfo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			Footer: &disgord.EmbedFooter{
 				Text: guildUsageText,
 			},
-			Description: description,
+			Description: description + "\nPrefix: **j!**",
 		}).
 		Component(
 			entities.CreateComponent().

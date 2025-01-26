@@ -5,13 +5,13 @@ other="Voce não colocou o argumento {{.option}}"
 other="Usuário invalido"
 
 [invalidsubcommand]
-other="A opção {{.option}} não é valida para este comando, opçoes validas: {{.options}}"
+other="A opção não é valida para este comando, opçoes validas: {{.options}}"
 
 [invalidnumber]
 other="Número invalido na opção {{.option}}"
 
 [numberoutofrange]
-other="Número fora de range na opção {{.option}}"
+other="Número fora de range na opção {{.option}} (Máximo: {{.maxValue}}, Minimo: {{.minValue}})"
 
 [invalidchannel]
 other="Canal invalido"

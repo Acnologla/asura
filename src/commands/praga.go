@@ -19,7 +19,7 @@ import (
 
 func init() {
 	handler.RegisterCommand(handler.Command{
-		Name:        "pragra",
+		Name:        "praga",
 		Description: translation.T("PragaHelp", "pt"),
 		Run:         runPraga,
 		Cooldown:    10,
