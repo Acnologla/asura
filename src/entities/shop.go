@@ -30,33 +30,37 @@ type ShopItem struct {
 func (item *ShopItem) price() (int, int) {
 	switch item.Type {
 	case Shards:
-		if item.Value == 5 {
+		if item.Rarity == 5 {
 			return 0, 2
+		} else if item.Rarity == 3 {
+			return 12500, 0
+		} else if item.Rarity == 2 {
+			return 4300, 0
 		}
-		return (item.Rarity * item.Rarity * item.Rarity) * 450, 0
+		return 800, 0
 	case Cosmetics:
 		if item.Rarity == 3 {
 			return 0, 2
 		}
-		return (item.Rarity + 1) * 5550, 0
+		return (item.Rarity + 1) * 5100, 0
 	case Roosters:
 		if item.Rarity == 3 {
 			return 0, 3
 		}
 		if item.Rarity == 2 {
-			return 6500, 0
+			return 6200, 0
 		}
 		if item.Rarity == 1 {
-			return 900, 0
+			return 800, 0
 		}
-		return 250, 0
+		return 200, 0
 	case Items:
 		if item.Rarity == 4 {
 			return 0, 4
 		}
 		return ((item.Rarity * item.Rarity * 2) + 1) * 420, 0
 	case AsuraCoin:
-		return 20000 * item.Value, 0
+		return 18000 * item.Value, 0
 	case Xp:
 		return item.Value * 2, 0
 	}

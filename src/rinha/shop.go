@@ -109,14 +109,13 @@ func GetShopCosmetic() int {
 
 func GetShopShard() int {
 	rand := utils.RandInt(100)
-	if 45 > rand {
-		return 2
-	} else if 20 > rand {
-		return 3
-	} else if 5 > rand {
+	if 5 >= rand {
 		return 5
+	} else if 20 >= rand {
+		return 3
+	} else if 45 > rand {
+		return 2
 	}
-
 	return 1
 }
 
@@ -130,7 +129,7 @@ var shopItemValueGenerator = map[entities.ShopItemType]func() int{
 }
 
 func GenerateShopItem() *entities.ShopItem {
-	rand := utils.RandInt(5)
+	rand := utils.RandInt(6)
 	randDiscount := utils.RandInt(100)
 	discount := 1.0
 	if randDiscount < 9 {

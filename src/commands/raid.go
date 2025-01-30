@@ -66,7 +66,7 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 	}
 	raidTitle := fmt.Sprintf("Raid %s", keyRarity.String())
 	msg, err := handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-		Embeds: []*disgord.Embed{getBattleEmbed(users, raidTitle)},
+		Embeds: []*disgord.Embed{getBattleEmbed(users, raidTitle, 2)},
 		Components: []*disgord.MessageComponent{
 			{
 				Type: disgord.MessageComponentActionRow,
@@ -142,7 +142,7 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 		}
 		users = append(users, ic.Member.User)
 		handler.Client.Channel(msg.ChannelID).Message(msg.ID).Update(&disgord.UpdateMessage{
-			Embeds: &([]*disgord.Embed{getBattleEmbed(users, raidTitle)}),
+			Embeds: &([]*disgord.Embed{getBattleEmbed(users, raidTitle, 2)}),
 		})
 		lockEvent(ctx, ic.Member.User.ID, "Raid")
 		handler.Client.SendInteractionResponse(ctx, ic, &disgord.CreateInteractionResponse{

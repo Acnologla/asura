@@ -186,7 +186,7 @@ func generateUpgradesOptions() (opts []*disgord.SelectMenuOption) {
 	return
 }
 
-func getBattleEmbed(users []*disgord.User, title string) *disgord.Embed {
+func getBattleEmbed(users []*disgord.User, title string, minutes int) *disgord.Embed {
 	msg := "Membros que iram participar da batalha: \n\n"
 	for _, user := range users {
 		msg += fmt.Sprintf("%s\n", user.Mention())
@@ -196,7 +196,7 @@ func getBattleEmbed(users []*disgord.User, title string) *disgord.Embed {
 		Description: msg,
 		Color:       65535,
 		Footer: &disgord.EmbedFooter{
-			Text: "Em dois minutos a batalha ira começar",
+			Text: fmt.Sprintf("Em %d minutos a batalha ira começar", minutes),
 		},
 	}
 }
