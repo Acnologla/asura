@@ -368,7 +368,7 @@ func runTrade(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 										item := rinha.GetItemByID(u.Items, itemID)
 										if item != nil {
 											database.User.RemoveItem(ctx, u.Items, itemID)
-											database.User.InsertItem(ctx, u.ID, a.Items, item.ItemID, item.Type)
+											database.User.InsertItem(ctx, a.ID, a.Items, item.ItemID, item.Type)
 										}
 									}
 								}

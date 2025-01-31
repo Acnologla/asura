@@ -67,10 +67,13 @@ func RaidLootbox(rarity Rarity) int {
 
 func MessageRandomLootbox() (Rarity, int) {
 	rand := utils.RandInt(100)
-	if rand < 22 {
+	if rand < 10 {
+		return Legendary, 3
+	}
+	if rand < 26 {
 		return Epic, 2
 	}
-	if rand < 48 {
+	if rand < 50 {
 		return Rare, 1
 	}
 	return Common, 0

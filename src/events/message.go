@@ -4,6 +4,7 @@ import (
 	"asura/src/commands"
 	"asura/src/database"
 	"asura/src/handler"
+	"asura/src/utils"
 	"context"
 	"math/rand"
 	"os"
@@ -37,11 +38,8 @@ func IsFlood(msg *disgord.Message, cache *GuildInfo) bool {
 }
 
 func setNewLootboxTime(cache *GuildInfo, now int64) {
-	/*
-		randomMinutes := utils.RandInt(1000)
-		cache.NewLootBoxTime = now + 60*60*24 + int64(randomMinutes)*60
-	*/
-	cache.NewLootBoxTime = now + 60*60*1
+	randomMinutes := utils.RandInt(500)
+	cache.NewLootBoxTime = now + 60*60*10 + int64(randomMinutes)*60
 }
 
 const MIN_MEMBERS = 15
@@ -80,9 +78,7 @@ func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
 				}
 			}
 
-			if msg.GuildID == 597089324114116635 || msg.GuildID == 710179373860519997 {
-				RecieveLootbox(msg)
-			}
+			RecieveLootbox(msg)
 
 			handler.ProcessMessage(msg)
 

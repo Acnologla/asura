@@ -20,22 +20,22 @@ func init() {
 		Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 			Type:        disgord.OptionTypeSubCommand,
 			Name:        "disable",
-			Description: "Desabilita as lootbox no seu servidor",
+			Description: "Desabilita as batalhas de chefe no seu servidor",
 		},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
 				Name:        "enable",
-				Description: "Habilita as lootbox no seu servidor",
+				Description: "Habilita as batalhas de chefe no seu servidor",
 			},
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,
 				Name:        "channel",
-				Description: "Seta um canal para as lootboxes",
+				Description: "Seta um canal para as batalhas de chefe",
 				Options: utils.GenerateOptions(&disgord.ApplicationCommandOption{
 					Type:        disgord.OptionTypeChannel,
 					Required:    true,
 					Name:        "canal",
-					Description: "Canal para lootboxes",
+					Description: "Canal para batalhas de chefe",
 				}),
 			},
 			&disgord.ApplicationCommandOption{

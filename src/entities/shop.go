@@ -2,6 +2,7 @@ package entities
 
 import (
 	"asura/src/utils"
+	"math"
 	"sync"
 
 	"github.com/andersfylling/disgord"
@@ -35,9 +36,9 @@ func (item *ShopItem) price() (int, int) {
 		} else if item.Rarity == 3 {
 			return 12500, 0
 		} else if item.Rarity == 2 {
-			return 4300, 0
+			return 4500, 0
 		}
-		return 800, 0
+		return 850, 0
 	case Cosmetics:
 		if item.Rarity == 3 {
 			return 0, 2
@@ -75,7 +76,7 @@ func (item *ShopItem) OriginalPrice() (int, int) {
 
 func (item *ShopItem) Price() (int, int) {
 	moneyPrice, asuraCoinPrice := item.price()
-	return int(float64(moneyPrice) * item.Discount), int(float64(asuraCoinPrice) * item.Discount)
+	return int(math.Round(float64(moneyPrice) * item.Discount)), int(math.Round((float64(asuraCoinPrice) * item.Discount)))
 }
 
 func (item *ShopItem) CanBuy(user disgord.Snowflake) bool {

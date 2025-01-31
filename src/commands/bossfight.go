@@ -134,16 +134,16 @@ func SendLootbox(msg *disgord.Message) {
 		if winner == 0 {
 			for _, user := range users {
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
-					u.Money += 300
+					u.Money += 400
 					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
-						r.Xp += 150 / (r.Resets + 1)
+						r.Xp += 180 / (r.Resets + 1)
 						return r
 					})
 					return u
 				}, "Galos")
 			}
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **300**\nXp: **150**",
+				Content: "O boss foi derrotado\nRecompensas:\nDinheiro: **400**\nXp: **180**",
 			})
 		} else {
 			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
