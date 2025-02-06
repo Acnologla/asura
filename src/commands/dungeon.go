@@ -24,6 +24,7 @@ func init() {
 		Run:         runDungeon,
 		Cooldown:    6,
 		Category:    handler.Rinha,
+		AliasesMsg:  []string{"dg"},
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,

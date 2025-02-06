@@ -16,7 +16,9 @@ import (
 
 func init() {
 	handler.RegisterCommand(handler.Command{
-		Name:        "botinfo",
+		Name:       "botinfo",
+		AliasesMsg: []string{"bi"},
+
 		Description: translation.T("BotInfoHelp", "pt"),
 		Run:         runBotInfo,
 		Cooldown:    15,

@@ -37,7 +37,7 @@ func (rarity Rarity) String() string {
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 160, 500, 1200, 1500, 3000}[rarity]
+	return [...]int{30, 160, 500, 1200, 2250, 3000}[rarity]
 }
 
 func (rarity Rarity) Color() int {
@@ -229,6 +229,9 @@ func Sell(rarity Rarity, xp int, reset int) (int, int) {
 	level := float64(CalcLevel(xp)+(reset*30)) - 1
 	price := float64(rarity.Price())
 	if reset == 0 {
+		if rarity == Mythic {
+			return 0, 5
+		}
 		return int(price * (level/5 + 1)), 0
 	}
 	asuraCoins := reset + 1
@@ -239,7 +242,7 @@ func Sell(rarity Rarity, xp int, reset int) (int, int) {
 		asuraCoins += 2
 	}
 	if rarity == Mythic {
-		asuraCoins += 4
+		asuraCoins += 7
 	}
 	return 0, asuraCoins
 }

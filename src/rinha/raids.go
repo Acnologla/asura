@@ -58,7 +58,7 @@ func GetMultipliers(rarity Rarity) (int, int) {
 
 // xp money
 func CalcRaidBattleWinPrize(rarity Rarity) (int, int) {
-	xp := 70
+	xp := 75
 	money := 25
 	multiplier, _ := GetMultipliers(rarity)
 	return xp * multiplier, money * multiplier

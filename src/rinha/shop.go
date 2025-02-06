@@ -109,11 +109,11 @@ func GetShopCosmetic() int {
 
 func GetShopShard() int {
 	rand := utils.RandInt(100)
-	if 5 >= rand {
+	if 4 >= rand {
 		return 5
-	} else if 20 >= rand {
+	} else if 17 >= rand {
 		return 3
-	} else if 45 > rand {
+	} else if 42 > rand {
 		return 2
 	}
 	return 1

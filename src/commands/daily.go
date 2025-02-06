@@ -15,7 +15,9 @@ import (
 
 func init() {
 	handler.RegisterCommand(handler.Command{
-		Name:        "daily",
+		Name:       "daily",
+		AliasesMsg: []string{"dy"},
+
 		Description: translation.T("DailyHelp", "pt"),
 		Run:         runDaily,
 		Cooldown:    9,
@@ -55,6 +57,12 @@ func runDaily(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			strike = u.DailyStrikes
 			return u
 		}, "Galos")
+		if galo.DailyStrikes >= 20 {
+			completeAchievement(ctx, itc, 19)
+			if galo.DailyStrikes >= 150 {
+				completeAchievement(ctx, itc, 20)
+			}
+		}
 		return &disgord.CreateInteractionResponse{
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{

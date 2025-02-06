@@ -48,6 +48,7 @@ type Command struct {
 	Category    CommandCategory
 	Dev         bool
 	Aliases     []string
+	AliasesMsg  []string // only work for message commands instead of interactions
 	Cache       int
 }
 
@@ -69,6 +70,12 @@ func GetCommand(name string) Command {
 	if command.Name == "" {
 		for _, cmd := range Commands {
 			for _, alias := range cmd.Aliases {
+				if alias == name {
+					command = cmd
+					break
+				}
+			}
+			for _, alias := range cmd.AliasesMsg {
 				if alias == name {
 					command = cmd
 					break

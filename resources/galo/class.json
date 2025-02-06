@@ -255,5 +255,9 @@
   {
     "name": "Termico",
     "rarity": 4
+  },
+  {
+    "name": "Panda",
+    "rarity": 3
   }
 ]

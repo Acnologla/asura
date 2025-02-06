@@ -88,5 +88,20 @@
     "name": "No topo da torre",
     "description": "Chegue ao andar maximo da torre",
     "asuraCoin": 9
+  },
+  {
+    "name": "Primeiro reset",
+    "description": "Reset um galo pela primeira vez",
+    "asuraCoin": 1
+  },
+  {
+    "name": "O diarista",
+    "description": "Consiga 20 strikes no daily",
+    "money": 10000
+  },
+  {
+    "name": "O diarista 2",
+    "description": "Consiga 150 strikes no daily",
+    "asuraCoin": 5
   }
 ]

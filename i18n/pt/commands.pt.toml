@@ -641,11 +641,14 @@ other="Voce ganhou o item {{.name}} ({{.rarity}})"
 [DungeonWinLootbox]
 other="Voce ganhou uma lootbox {{.}}"
 
+[ClanArleadyIn]
+other="Saia do seu clan, para criar outro!"
+
 [DailyHelp]
 other="Pegue seu bonus diario"
 
 [AcvComplete]
-other="Você consegiu a conquista **{{.name}}** e ganhou {{.msg}}"
+other="<@{{.id}}> consegiu a conquista **{{.name}}** e ganhou {{.msg}}"
 
 [DailyMessage]
 other="Voce ganhou **{{.money}}** de dinheiro, **{{.xp}}** de xp\nStrike: **{{.strikes}}**\n\nSabia que, se você estiver no meu [**Servidor**](https://discord.gg/CfkBZyVsd7), você ganhará um bônus?"

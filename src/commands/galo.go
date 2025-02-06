@@ -275,6 +275,7 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 							},
 						})
 					} else {
+						completeAchievement(ctx, itc, 18)
 						ic.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackChannelMessageWithSource,
 							Data: &disgord.CreateInteractionResponseData{

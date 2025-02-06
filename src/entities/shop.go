@@ -34,22 +34,22 @@ func (item *ShopItem) price() (int, int) {
 		if item.Rarity == 5 {
 			return 0, 2
 		} else if item.Rarity == 3 {
-			return 12500, 0
+			return 14500, 0
 		} else if item.Rarity == 2 {
-			return 4500, 0
+			return 4600, 0
 		}
-		return 850, 0
+		return 950, 0
 	case Cosmetics:
 		if item.Rarity == 3 {
 			return 0, 2
 		}
-		return (item.Rarity + 1) * 5100, 0
+		return (item.Rarity + 1) * 4200, 0
 	case Roosters:
 		if item.Rarity == 3 {
 			return 0, 3
 		}
 		if item.Rarity == 2 {
-			return 6200, 0
+			return 5900, 0
 		}
 		if item.Rarity == 1 {
 			return 800, 0
@@ -58,6 +58,9 @@ func (item *ShopItem) price() (int, int) {
 	case Items:
 		if item.Rarity == 4 {
 			return 0, 4
+		}
+		if item.Rarity == 3 {
+			return 10500, 0
 		}
 		return ((item.Rarity * item.Rarity * 2) + 1) * 420, 0
 	case AsuraCoin:

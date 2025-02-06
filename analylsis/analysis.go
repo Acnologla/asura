@@ -111,19 +111,20 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	arr := []*stats{}
 	for i := 1; i < len(rinha.Classes); i++ {
-		if rinha.Classes[i].Rarity == 3 || rinha.Classes[i].Rarity == 4 {
+		if rinha.Classes[i].Rarity == 3 {
 			arr = append(arr, &stats{
 				Type: i,
 			})
 		}
 	}
-	arr = []*stats{&stats{
-		Type: 53,
-	}}
-
+	/*
+		arr = []*stats{&stats{
+			Type: 54,
+		}}
+	*/
 	for i := 20; i < 35; i += 1 {
 		for _, class := range arr {
-			result := measure(class.Type, 32, i, i, 3500, false)
+			result := measure(class.Type, 19, i, i, 3500, false)
 			class.TotalWins += result
 			class.Wins = append(class.Wins, result)
 			class.Level = append(class.Level, i)

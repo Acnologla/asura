@@ -138,8 +138,8 @@ func init() {
 
 }
 
-const PRIZE_XP = 2000
-const PRIZE_MONEY = 2500
+const PRIZE_XP = 2500
+const PRIZE_MONEY = 3200
 
 func completeClanBoss(ctx context.Context, clan *entities.Clan, channel disgord.Snowflake) {
 	var xpPrize, moneyPrize int
@@ -239,6 +239,14 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 	}
 	switch command {
 	case "create":
+		if clan.Name != "" {
+			return &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: translation.T("ClanArleadyIn", translation.GetLocale(itc)),
+				},
+			}
+		}
 		name := itc.Data.Options[0].Options[0].Value.(string)
 		name = rinha.Format(name)
 		if name == "_test" {
@@ -496,11 +504,11 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			},
 		}
 	case "battle":
-		if len(clan.Members) < 9 || clanLevel < 4 {
+		if len(clan.Members) < 7 || clanLevel < 3 {
 			return &disgord.CreateInteractionResponse{
 				Type: disgord.InteractionCallbackChannelMessageWithSource,
 				Data: &disgord.CreateInteractionResponseData{
-					Content: "Seu clan precisa de pelo menos 9 membros para batalhar e ser level 4",
+					Content: "Seu clan precisa de pelo menos 7 membros para batalhar e ser level 3",
 				},
 			}
 		}

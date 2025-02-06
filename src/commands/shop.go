@@ -17,6 +17,7 @@ import (
 
 var shop = rinha.GenerateShop()
 var lastTime = time.Now()
+var hoursReset = 10
 
 func init() {
 	handler.RegisterCommand(handler.Command{
@@ -27,7 +28,7 @@ func init() {
 		Category:    handler.Profile,
 	})
 	go func() {
-		for range time.NewTicker(time.Hour * 8).C {
+		for range time.NewTicker(time.Hour * time.Duration(hoursReset)).C {
 			shop = rinha.GenerateShop()
 			lastTime = time.Now()
 		}
@@ -76,7 +77,7 @@ func getEmbedFromShopItem(item *entities.ShopItem, itc *disgord.InteractionCreat
 
 func runShop(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
 	user := database.User.GetUser(ctx, itc.Member.UserID)
-	targetTime := lastTime.Add(8 * time.Hour)
+	targetTime := lastTime.Add(time.Duration(hoursReset) * time.Hour)
 
 	now := time.Now()
 	remaining := targetTime.Sub(now)

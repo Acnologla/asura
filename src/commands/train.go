@@ -22,6 +22,7 @@ func init() {
 	handler.RegisterCommand(handler.Command{
 		Name:        "train",
 		Description: translation.T("TrainHelp", "pt"),
+		AliasesMsg:  []string{"tn"},
 		Run:         runTrain,
 		Cooldown:    6,
 		Category:    handler.Rinha,
@@ -61,6 +62,7 @@ func completeAchievement(ctx context.Context, itc *disgord.InteractionCreate, ac
 			Content: translation.T("AcvComplete", translation.GetLocale(itc), map[string]interface{}{
 				"name": ach.Name,
 				"msg":  msg,
+				"id":   u.ID,
 			}),
 		})
 		return u

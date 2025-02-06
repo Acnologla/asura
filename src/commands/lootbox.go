@@ -24,6 +24,7 @@ func init() {
 		Run:         runLootbox,
 		Cooldown:    3,
 		Category:    handler.Profile,
+		AliasesMsg:  []string{"lb"},
 		Options: utils.GenerateOptions(
 			&disgord.ApplicationCommandOption{
 				Type:        disgord.OptionTypeSubCommand,

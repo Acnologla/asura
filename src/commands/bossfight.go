@@ -26,6 +26,9 @@ func SendLootbox(msg *disgord.Message) {
 			Title:       fmt.Sprintf("Um galo enfurecido **%s** caiu no servidor", rinha.Classes[rand].Name),
 			Description: "Clique no botão abaixo para participar desta batalha!",
 			Color:       65535,
+			Image: &disgord.EmbedImage{
+				URL: rinha.Sprites[0][rand-1],
+			},
 		},
 	}
 	embeds[0].Footer = &disgord.EmbedFooter{
