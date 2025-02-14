@@ -81,15 +81,16 @@ func measure(firstClass int, secClass int, firstLvl int, secLvl int, times int, 
 			Galos: []*entities.Rooster{sec},
 		}
 		battle := rinha.CreateBattle(user1, user2, false, 0, 0, []*entities.User{}, []string{})
-
+		rounds := 0
 		for battle.Fighters[0].Life != 0 && battle.Fighters[1].Life != 0 {
 			if log {
-				effects := battle.Play(-1)
+				effects := battle.Play(-1, rounds)
 				fmt.Println(effects)
 				fmt.Printf("%d vs %d\n", battle.Fighters[0].Life, battle.Fighters[1].Life)
 			} else {
-				battle.Play(-1)
+				battle.Play(-1, rounds)
 			}
+			rounds++
 		}
 
 		if battle.Fighters[1].Life == 0 && battle.Fighters[0].Life == 0 {
@@ -111,20 +112,22 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	arr := []*stats{}
 	for i := 1; i < len(rinha.Classes); i++ {
-		if rinha.Classes[i].Rarity == 3 {
+		if rinha.Classes[i].Rarity == 5 {
 			arr = append(arr, &stats{
 				Type: i,
 			})
 		}
 	}
 	/*
+
 		arr = []*stats{&stats{
-			Type: 54,
+			Type: 55,
 		}}
+
 	*/
-	for i := 20; i < 35; i += 1 {
+	for i := 30; i < 35; i += 1 {
 		for _, class := range arr {
-			result := measure(class.Type, 19, i, i, 3500, false)
+			result := measure(class.Type, 55, i, i, 3500, false)
 			class.TotalWins += result
 			class.Wins = append(class.Wins, result)
 			class.Level = append(class.Level, i)

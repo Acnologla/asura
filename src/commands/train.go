@@ -138,7 +138,7 @@ func completeMission(ctx context.Context, user *entities.User, galoAdv *entities
 		case entities.FightTower:
 			if battleType == "tower" {
 				mission.Progress++
-				if mission.Progress >= (mission.Level+1)*4 {
+				if mission.Progress >= (mission.Level+1)*3 {
 					xp += 60 * (mission.Level + 1)
 					money += 50 + (5 * mission.Level)
 					done = true

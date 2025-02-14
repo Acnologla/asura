@@ -38,6 +38,7 @@ type Round struct {
 	Fragility     float32
 	Stun          bool
 	Reflex        bool
+	RoundNumber   int
 }
 
 func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
@@ -84,6 +85,9 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 	attack_damage = int(float64(attack_damage) * GetTrialsMultiplier(user))
 	attack_damage = int(float32(attack_damage) * (1 + (0.002 * (float32(user.Attributes[1])))))
 
+	if round.Attacker.Galo.Type == 55 {
+		attack_damage = int(float64(attack_damage) * (1 + float64(round.RoundNumber)*0.05))
+	}
 	if reflected {
 		attack_damage = int(float64(attack_damage) * 0.5)
 	}
@@ -122,6 +126,11 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 	if IsIntInList(round.Target.Galo.Type, Classes[round.Attacker.Galo.Type].Disadvantages) && rand.Float64() <= 0.72 && difference < 4 {
 		not_effective_damage = int(float64(attack_damage) * 0.4)
 	}
+
+	if round.Target.Galo.Type == 55 {
+		not_effective_damage = int(float64(attack_damage) * 0.4)
+	}
+
 	if round.FragilityUser != nil && round.Fragility != 0 {
 		if round.FragilityUser == round.Target {
 			attack_damage = int(float32(attack_damage) * (1 + round.Fragility))
@@ -332,7 +341,7 @@ func (round *Round) applyEffects() {
 	}
 }
 
-func (battle *Battle) Play(skill int) []*Result {
+func (battle *Battle) Play(skill int, number int) []*Result {
 	if battle.Stun {
 		battle.Turn = !battle.Turn
 		battle.Stun = false
@@ -350,8 +359,9 @@ func (battle *Battle) Play(skill int) []*Result {
 		}
 	}
 	round := Round{
-		Results:   []*Result{},
-		Integrity: 1,
+		Results:     []*Result{},
+		Integrity:   1,
+		RoundNumber: number,
 	}
 
 	if battle.ReflexType == 2 {

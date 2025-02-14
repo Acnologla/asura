@@ -30,18 +30,19 @@ const (
 	Legendary
 	Special
 	Mythic
+	God
 )
 
 func (rarity Rarity) String() string {
-	return [...]string{"Comum", "Raro", "Epico", "Lendario", "Especial", "Mitico"}[rarity]
+	return [...]string{"Comum", "Raro", "Epico", "Lendario", "Especial", "Mitico", "Deus"}[rarity]
 }
 
 func (rarity Rarity) Price() int {
-	return [...]int{30, 160, 500, 1200, 2250, 3000}[rarity]
+	return [...]int{30, 160, 500, 1200, 2250, 3000, 5000}[rarity]
 }
 
 func (rarity Rarity) Color() int {
-	return [...]int{13493247, 255, 9699539, 16748544, 16728128, 16777201}[rarity]
+	return [...]int{13493247, 255, 9699539, 16748544, 16728128, 16777201, 16711935}[rarity]
 }
 
 type Vote struct {
@@ -242,7 +243,7 @@ func Sell(rarity Rarity, xp int, reset int) (int, int) {
 		asuraCoins += 2
 	}
 	if rarity == Mythic {
-		asuraCoins += 7
+		asuraCoins += 5
 	}
 	return 0, asuraCoins
 }
@@ -351,6 +352,9 @@ func calcEvolvedRarityMultiplier(galo *entities.Rooster) (multiplier float64) {
 		if i == Legendary {
 			multiplier += 0.6
 		}
+		if i == Mythic {
+			multiplier += 0.5
+		}
 	}
 
 	return
@@ -443,11 +447,11 @@ func GetGaloByID(galos []*entities.Rooster, id uuid.UUID) *entities.Rooster {
 	return nil
 }
 
-// get any rarity besides special
+// get any rarity besides special and god
 func GetRand() int {
 	selected := utils.RandInt(len(Classes)-1) + 1
 	class := Classes[selected]
-	if class.Rarity == Special {
+	if class.Rarity == Special || class.Rarity == God {
 		return GetRand()
 	}
 	return selected

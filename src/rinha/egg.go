@@ -16,9 +16,11 @@ func ShardToPrice(rarity Rarity) int {
 	case Epic:
 		return 1600
 	case Legendary:
-		return 4000
+		return 5600
 	case Mythic:
-		return 9000
+		return 13000
+	case God:
+		return 32000
 	}
 	return 0
 }

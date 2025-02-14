@@ -21,6 +21,7 @@ func init() {
 		Cooldown:    5,
 		Category:    handler.Rinha,
 		Aliases:     []string{"passe"},
+		AliasesMsg:  []string{"bp"},
 	})
 }
 

@@ -492,5 +492,29 @@
     "value": "https://iili.io/2PwOGaV.png",
     "type": 2,
     "extra": 33
+  },
+  {
+    "name": "Skin Curtindo o verão",
+    "rarity": 3,
+    "reverseValue": "https://iili.io/2pBTgzQ.png",
+    "value": "https://iili.io/2pBTSmx.png",
+    "type": 2,
+    "extra": 54
+  },
+  {
+    "name": "Skin Crimson Knight",
+    "rarity": 2,
+    "reverseValue": "https://iili.io/2pneK0B.png",
+    "value": "https://iili.io/2pne2iQ.png",
+    "type": 2,
+    "extra": 55
+  },
+  {
+    "name": "Skin Arcanjo",
+    "rarity": 2,
+    "reverseValue": "https://iili.io/2pneFfV.png",
+    "value": "https://iili.io/2pnefUP.png",
+    "type": 3,
+    "extra": 55
   }
 ]

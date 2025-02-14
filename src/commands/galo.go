@@ -243,6 +243,8 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 		handler.RegisterHandler(itcID, func(ic *disgord.InteractionCreate) {
 			done := false
 			isEvolved := ic.Data.CustomID == "Evolve"
+
+			resets := 0
 			if ic.Member.UserID == user.ID {
 				database.User.UpdateUser(ctx, user.ID, func(u entities.User) entities.User {
 					database.User.UpdateEquippedRooster(ctx, u, func(r entities.Rooster) entities.Rooster {
@@ -259,6 +261,7 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 								r.Equipped = []int{}
 								r.Xp = 0
 								r.Resets++
+								resets = r.Resets
 							}
 						}
 						return r
@@ -276,6 +279,12 @@ func runGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 						})
 					} else {
 						completeAchievement(ctx, itc, 18)
+						if resets >= 3 {
+							completeAchievement(ctx, itc, 21)
+							if resets >= 10 {
+								completeAchievement(ctx, itc, 22)
+							}
+						}
 						ic.Reply(ctx, handler.Client, &disgord.CreateInteractionResponse{
 							Type: disgord.InteractionCallbackChannelMessageWithSource,
 							Data: &disgord.CreateInteractionResponseData{

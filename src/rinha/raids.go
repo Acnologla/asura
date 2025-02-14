@@ -2,14 +2,14 @@ package rinha
 
 import "asura/src/utils"
 
-const KEY_CHANCE = 7
+const KEY_CHANCE = 8
 const NEWBIE_ADD = 6
 const VIP_ADD = 1
 
 func DropKey(userXP int, vip bool, clanLevel int) bool {
 	rand := utils.RandInt(1001)
 	add := 0
-	if 650 > userXP {
+	if 900 > userXP {
 		add += NEWBIE_ADD
 	}
 
@@ -26,13 +26,15 @@ func DropKey(userXP int, vip bool, clanLevel int) bool {
 
 func GetKeyRarity() Rarity {
 	rand := utils.RandInt(1001)
-	if 4 > rand {
+	if rand == 0 {
+		return God
+	} else if 5 > rand {
 		return Mythic
-	} else if 40 > rand {
+	} else if 42 > rand {
 		return Legendary
-	} else if 195 > rand {
+	} else if 197 > rand {
 		return Epic
-	} else if 400 > rand {
+	} else if 445 > rand {
 		return Rare
 	}
 	return Common
@@ -51,6 +53,10 @@ func GetMultipliers(rarity Rarity) (int, int) {
 
 	if rarity == Mythic {
 		return 11, 12
+	}
+
+	if rarity == God {
+		return 23, 22
 	}
 
 	return 1, 1

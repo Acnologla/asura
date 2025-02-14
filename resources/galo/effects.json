@@ -1004,5 +1004,35 @@
     "turns": 3,
     "type": 1,
     "phrase": "%s está sob miragem infinita! (-%d)"
+  },
+  {
+    "range": [40, 45],
+    "type": 2,
+    "name": "Ascenção aos Céus",
+    "turns": 2,
+    "self": true,
+    "phrase": "%s está sob Ascenção aos Céus! (+%d)"
+  },
+  {
+    "range": [45, 60],
+    "name": "Provação Divina",
+    "turns": 1,
+    "type": 1,
+    "phrase": "%s está sob provação divina! (-%d)"
+  },
+  {
+    "range": [65, 90],
+    "type": 3,
+    "name": "Aura da Salvação",
+    "turns": 2,
+    "self": true,
+    "phrase": "%s está sob Aura da Salvação! (+%d)"
+  },
+  {
+    "range": [60, 80],
+    "name": "Mordida infernal",
+    "turns": 2,
+    "type": 1,
+    "phrase": "%s está sob mordida infernal! (-%d)"
   }
 ]

@@ -308,7 +308,9 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				rarity = cosmetic.Rarity
 			} else if lb == "items" || lb == "items mistica" {
 				item := rinha.Items[newVal]
-				if item.Level >= 4 {
+				if item.Level == 6 {
+					rarity = rinha.God
+				} else if item.Level >= 4 {
 					rarity = rinha.Mythic
 				} else {
 					rarity = rinha.Legendary
@@ -361,7 +363,7 @@ func runLootbox(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 				if err != nil {
 					return
 				}
-				for i := 0; i < 3; i++ {
+				for i := 0; i < 2; i++ {
 					time.Sleep(3 * time.Second)
 					rand := rinha.GetRand()
 					openEmbed.Color = rinha.Classes[rand].Rarity.Color()

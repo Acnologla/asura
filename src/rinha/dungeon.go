@@ -52,7 +52,7 @@ var DungeonsPercentages = [][]DungeonWin{
 	{
 		{Percentage: 2, PrizeType: entities.LootboxType, PrizeRarity: 8},
 		{Percentage: 4, PrizeType: entities.LootboxType, PrizeRarity: 7},
-		{Percentage: 55, PrizeType: entities.NormalType, PrizeRarity: 4},
+		{Percentage: 56, PrizeType: entities.NormalType, PrizeRarity: 4},
 		{PrizeType: entities.LootboxType, PrizeRarity: 4},
 	},
 }

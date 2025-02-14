@@ -22,7 +22,7 @@ func init() {
 	})
 }
 
-const SHARDS_TO_UPGRADE = 8
+const SHARDS_TO_UPGRADE = 9
 
 func getShardsByRarity(items []*entities.Item, rarity rinha.Rarity) *entities.Item {
 
@@ -42,7 +42,7 @@ func genUpgradeRoosterOptions(user *entities.User) (opts []*disgord.SelectMenuOp
 	for _, galo := range user.Galos {
 		class := rinha.Classes[galo.Type]
 		rarity := rinha.GetRarity(galo)
-		if rarity != rinha.Mythic && rarity != rinha.Special {
+		if rarity != rinha.God && rarity != rinha.Special {
 			opts = append(opts, &disgord.SelectMenuOption{
 				Label:       class.Name,
 				Value:       galo.ID.String(),

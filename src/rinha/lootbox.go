@@ -61,6 +61,11 @@ func RaidLootbox(rarity Rarity) int {
 			return 7
 		}
 		return 4
+	case God:
+		if 49 > rand {
+			return 8
+		}
+		return 7
 	}
 	return -1
 }

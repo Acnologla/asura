@@ -20,6 +20,7 @@ func init() {
 		Cooldown:    7,
 		Category:    handler.Profile,
 		Aliases:     []string{"inventario"},
+		AliasesMsg:  []string{"inv"},
 	})
 }
 

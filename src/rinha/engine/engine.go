@@ -209,7 +209,7 @@ func RinhaEngineNew(battle *rinha.Battle, options *RinhaOptions, message *disgor
 			skill, ic = getSkill(battle, options, message, newMsg, round)
 			battle.Fighters[battle.GetTurn()].Equipped[skill].Cooldown = round
 		}
-		effects := battle.Play(skill)
+		effects := battle.Play(skill, round)
 		var text string
 		authorName := options.AuthorName
 		affectedName := options.AdvName
@@ -304,7 +304,7 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, msg *disgord.Messa
 	var lastEffects string
 	round := 0
 	for {
-		effects := battle.Play(-1)
+		effects := battle.Play(-1, round)
 		var text string
 		options.Images[0] = rinha.GetGaloImage(battle.Fighters[0].Galo, battle.Fighters[0].User.Items)
 		authorName := GetUsername(battle.Fighters[0].Username, options.AuthorName)

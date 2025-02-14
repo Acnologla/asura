@@ -302,7 +302,7 @@ other="Level: **{{.level}}** ({{.xp}}/{{.needXp}})\nMembros: **{{.members}}/{{.m
 
 
 [ShopDefaultMessage]
-other="A cada **8 horas**, cinco novos itens chegam ao shop para você comprar!\n  Faltam **{{.hours}} horas** e **{{.minutes}} minutos** para a próxima atualização.\n\nUse os botões abaixo para navegar, e depois use o botão de comprar para comprar o item atual do shop."
+other="A cada **10 horas**, cinco novos itens chegam ao shop para você comprar!\n  Faltam **{{.hours}} horas** e **{{.minutes}} minutos** para a próxima atualização.\n\nUse os botões abaixo para navegar, e depois use o botão de comprar para comprar o item atual do shop."
 
 [ShopItemDescription]
 other="Preço: **{{.price}}**\nRaridade: **{{.rarity}}**"

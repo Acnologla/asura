@@ -103,5 +103,20 @@
     "name": "O diarista 2",
     "description": "Consiga 150 strikes no daily",
     "asuraCoin": 5
+  },
+  {
+    "name": "O resetadinho",
+    "description": "Reseta o mesmo galo 3 vezes",
+    "asuraCoin": 3
+  },
+  {
+    "name": "O resetado",
+    "description": "Reseta o mesmo galo 10 vezes",
+    "asuraCoin": 14
+  },
+  {
+    "name": "Quase na torre",
+    "description": "Chegue ao andar 100 da torre",
+    "asuraCoin": 3
   }
 ]

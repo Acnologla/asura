@@ -127,7 +127,7 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		}
 		lockEvent(ctx, discordUser.ID, "Tower")
 		defer unlockEvent(ctx, discordUser.ID)
-		level := 5 + tower.Floor
+		level := 3 + tower.Floor
 		galoAdv := &entities.Rooster{
 			Xp:     rinha.CalcXP(level) + 1,
 			Type:   rinha.GetRandByType(rinha.GetFloorRarity(tower.Floor)),
@@ -180,9 +180,13 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 
 			xp, money := rinha.CalcTowerReward(tower.Floor)
 			lootbox := rinha.CalcFloorReward(tower.Floor)
-			if tower.Floor >= 150 {
-				completeAchievement(ctx, itc, 17)
+			if tower.Floor >= 100 {
+				completeAchievement(ctx, itc, 23)
+				if tower.Floor >= 150 {
+					completeAchievement(ctx, itc, 17)
+				}
 			}
+
 			database.User.UpdateUser(ctx, discordUser.ID, func(u entities.User) entities.User {
 
 				if rinha.IsVip(&u) {

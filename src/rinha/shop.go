@@ -8,9 +8,17 @@ import (
 
 func GetShopRooster() int {
 	classTypeArr := []*Class{}
+	rand := utils.RandInt(1001)
+	isGod := rand < 65
 	for _, class := range Classes {
-		if class.Rarity < Special && class.Rarity != -1 {
-			classTypeArr = append(classTypeArr, class)
+		if !isGod {
+			if class.Rarity < Special && class.Rarity != -1 {
+				classTypeArr = append(classTypeArr, class)
+			}
+		} else {
+			if class.Rarity == God {
+				classTypeArr = append(classTypeArr, class)
+			}
 		}
 	}
 	selected := classTypeArr[utils.RandInt(len(classTypeArr))]

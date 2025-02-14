@@ -259,5 +259,9 @@
   {
     "name": "Panda",
     "rarity": 3
+  },
+  {
+    "name": "Nephilim",
+    "rarity": 6
   }
 ]
