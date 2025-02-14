@@ -1014,17 +1014,17 @@
     "phrase": "%s está sob Ascenção aos Céus! (+%d)"
   },
   {
-    "range": [45, 60],
+    "range": [45, 65],
     "name": "Provação Divina",
     "turns": 1,
     "type": 1,
     "phrase": "%s está sob provação divina! (-%d)"
   },
   {
-    "range": [65, 90],
-    "type": 3,
+    "range": [85, 135],
+    "type": 2,
     "name": "Aura da Salvação",
-    "turns": 2,
+    "turns": 3,
     "self": true,
     "phrase": "%s está sob Aura da Salvação! (+%d)"
   },

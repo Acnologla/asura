@@ -16,40 +16,40 @@
     "self": true,
     "effect": [1, 131]
   },
-  { "damage": [40, 55], "name": "Chama Celestial", "level": 9 },
-  { "damage": [45, 58], "name": "Lança Carmesim", "level": 10 },
-  { "damage": [42, 63], "name": "Vôo das Trevas", "level": 12 },
-  { "damage": [50, 70], "name": "Espada Astral", "level": 13 },
+  { "damage": [40, 50], "name": "Chama Celestial", "level": 9 },
+  { "damage": [41, 52], "name": "Lança Carmesim", "level": 10 },
+  { "damage": [42, 60], "name": "Vôo das Trevas", "level": 12 },
   {
-    "damage": [35, 50],
+    "damage": [35, 40],
     "name": "Toque Transcendental",
-    "level": 15,
+    "level": 13,
     "effect": [1, 132]
   },
+  { "damage": [47, 63], "name": "Espada Astral", "level": 15 },
   {
-    "damage": [50, 60],
+    "damage": [45, 55],
     "name": "Mordida Infernal",
     "level": 17,
     "effect": [1, 134]
   },
-  { "damage": [65, 90], "name": "Flechas Astrais", "level": 19 },
+  { "damage": [80, 110], "name": "Flechas Astrais", "level": 19 },
   {
-    "damage": [60, 75],
+    "damage": [70, 90],
     "name": "Santo Berço",
     "level": 21,
     "self": true,
     "effect": [1, 133]
   },
   {
-    "damage": [50, 70],
+    "damage": [65, 75],
     "name": "Lâmina da Luz Solar",
     "level": 22,
     "effect": [1, 3]
   },
-  { "damage": [100, 130], "name": "Olhar de Tenebris", "level": 25 },
-  { "damage": [220, 380], "name": "Santo Graal", "level": 30 },
+  { "damage": [125, 165], "name": "Olhar de Tenebris", "level": 25 },
+  { "damage": [230, 400], "name": "Santo Graal", "level": 30 },
   {
-    "damage": [300, 400],
+    "damage": [320, 450],
     "name": "Santo Graal Evoluido",
     "level": 30,
     "evolved": true
