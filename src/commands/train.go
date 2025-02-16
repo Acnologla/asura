@@ -249,12 +249,7 @@ func runTrain(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 	}
 	lockEvent(ctx, discordUser.ID, "Clone de "+advClass.Name)
 	defer unlockEvent(ctx, discordUser.ID)
-	handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Content: "A batalha esta iniciando...",
-		},
-	})
+
 	userAdv := entities.User{
 		Galos: []*entities.Rooster{&galoAdv},
 	}

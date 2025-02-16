@@ -36,7 +36,9 @@ func initBot() {
 		go telemetry.MetricUpdate(client)
 		fmt.Println("Logged in")
 	})
-	client.Gateway().MessageCreate(events.HandleMessage)
+	client.Gateway().MessageCreate(func(s disgord.Session, h *disgord.MessageCreate) {
+		events.MessageChannel <- h
+	})
 	client.Gateway().InteractionCreate(func(s disgord.Session, h *disgord.InteractionCreate) {
 		handler.InteractionChannel <- h
 	})

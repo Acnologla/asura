@@ -481,6 +481,9 @@ func CalcLimit(user *entities.User) int {
 	if HasUpgrade(user.Upgrades, 0, 1, 0, 0) {
 		limit += 40
 	}
+	if IsVip(user) {
+		limit += 35
+	}
 	return limit
 }
 

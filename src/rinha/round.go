@@ -86,7 +86,7 @@ func (round *Round) applySkillDamage(firstTurn bool, skill int) int {
 	attack_damage = int(float32(attack_damage) * (1 + (0.002 * (float32(user.Attributes[1])))))
 
 	if round.Attacker.Galo.Type == 55 {
-		attack_damage = int(float64(attack_damage) * (1 + float64(round.RoundNumber)*0.07))
+		attack_damage = int(float64(attack_damage) * (1 + float64(round.RoundNumber)*0.1))
 	}
 	if reflected {
 		attack_damage = int(float64(attack_damage) * 0.5)

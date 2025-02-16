@@ -177,7 +177,7 @@ func createFight(ctx context.Context, itc *disgord.InteractionCreate, user *enti
 		Galos:      []*entities.Rooster{galoAdv},
 		Attributes: [6]int{galoAttrs, galoOthersAttr, galoOthersAttr, galoOthersAttr, galoOthersAttr, galoOthersAttr},
 	}
-
+	itc.Token = "m"
 	winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
 		GaloAuthor:  usersDb[0],
 		GaloAdv:     &userAdv,

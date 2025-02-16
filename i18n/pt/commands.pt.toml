@@ -160,7 +160,7 @@ other="Abra uma lootbox"
 other="Compre uma lootbox"
 
 [LootboxView]
-other="\nUse `/rinhahelp` para ver o tutorial de rinha\nUse `/lootbox buy` para comprar lootbox\nUse `/lootbox open` para abrir lootbox\n{{.}}\n**[Comprar Moedas e XP](https://acnologla.github.io/asura-site/donate)**"
+other="\nUse `/rinhahelp` para ver o tutorial de rinha\nUse `/lootbox buy` para comprar lootbox\nUse `/lootbox open` para abrir lootbox\n{{.}}\n**[Comprar Moedas e XP](https://asurabot.com.br/donate)**"
 
 [LootboxBuyDone]
 other="Comprou a lootbox {{.}} com sucesso"
@@ -203,13 +203,13 @@ other="Você perdeu na torre e só poderá jogar novamente em **{{.}}**."
 other="Você ganhou uma lootbox **{{.}}**."
 
 [upgradeGaloDescription]
-other="Melhore a raridade do seu galo, com shards raros voce evolui um comum pra raro, com shards épicos um raro pra épico e assim por diante\n\n[🔵] Shards raros: **{{.rareShards}}**\n[🟣] Shards épicos: **{{.epicShards}}**\n[🟠] Shards lendarios: **{{.legendaryShards}}**\n[⚪] Shards miticos: **{{.mythicShards}}**\n\nVoce precisa de **{{.maxShards}}** shards da mesma raridade pra aumentar a raridade do seu galo\nGanhe shards nas raids\n\nSelecione o galo abaixo que voce quer aumentar a raridade"
+other="Melhore a raridade do seu galo, com shards raros voce evolui um comum pra raro, com shards épicos um raro pra épico e assim por diante\n\n[🔵] Shards raros: **{{.rareShards}}**\n[🟣] Shards épicos: **{{.epicShards}}**\n[🟠] Shards lendarios: **{{.legendaryShards}}**\n[⚪] Shards miticos: **{{.mythicShards}}**\n[🔴] Shards Deuses: **{{.godShards}}**\n\nVoce precisa de **{{.maxShards}}** shards da mesma raridade pra aumentar a raridade do seu galo\nGanhe shards nas raids\n\nSelecione o galo abaixo que voce quer aumentar a raridade"
 
 [upgradeGaloWarning]
 other="Esse comando é para usuários avançados do bot, se voce for um iniciante esse comando não é recomendado pra você"
 
 [notEnoughShards]
-other="Você precisa de **{{.maxShards}}** shards **{{.shard}}s** para upar a raridade do seu galo"
+other="Você precisa de **{{.maxShards}}** shards da raridade **{{.shard}}** para upar a raridade do seu galo"
 
 
 [upgradeGaloSuccess]

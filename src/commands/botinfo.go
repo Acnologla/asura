@@ -104,7 +104,7 @@ func runBotInfo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 					Url: "https://discordapp.com/oauth2/authorize?client_id=470684281102925844&scope=applications.commands%20bot&permissions=8",
 				}).
 				Button(disgord.Link, "Website", "", &disgord.MessageComponent{
-					Url: "https://acnologla.github.io/asura-site/",
+					Url: "https://asurabot.com.br/",
 				}).
 				Button(disgord.Link, "Support", "", &disgord.MessageComponent{
 					Url: "https://discord.gg/CfkBZyVsd7",

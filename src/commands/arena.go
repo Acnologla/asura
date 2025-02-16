@@ -109,13 +109,6 @@ func runArena(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 		Resets:  galoAuthor.Resets,
 	}
 
-	handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
-		Type: disgord.InteractionCallbackChannelMessageWithSource,
-		Data: &disgord.CreateInteractionResponseData{
-			Content: "A batalha esta iniciando",
-		},
-	})
-
 	advUser := &entities.User{
 		Galos:      []*entities.Rooster{ngaloAdv},
 		Attributes: user.Attributes,

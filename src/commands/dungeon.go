@@ -70,9 +70,6 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 	case "battle":
 		authorRinha := isInRinha(ctx, discordUser)
 		if authorRinha != "" {
-			handler.Client.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-				Content: rinhaMessage(discordUser.Username, authorRinha).Data.Content,
-			})
 			return rinhaMessage(discordUser.Username, authorRinha)
 		}
 		if len(rinha.Dungeon) == user.Dungeon {
@@ -102,12 +99,7 @@ func runDungeon(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Cr
 			Equip:   true,
 			Evolved: user.DungeonReset > 15,
 		}
-		handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
-			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.CreateInteractionResponseData{
-				Content: "A batalha esta iniciando",
-			},
-		})
+
 		winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
 			GaloAuthor: &user,
 			GaloAdv: &entities.User{

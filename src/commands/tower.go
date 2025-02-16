@@ -153,13 +153,6 @@ func runTower(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Crea
 			userAdv.Attributes = user.Attributes
 		}
 
-		handler.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
-			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.CreateInteractionResponseData{
-				Content: "A batalha esta iniciando",
-			},
-		})
-
 		winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
 			GaloAuthor: &user,
 			GaloAdv:    userAdv,

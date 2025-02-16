@@ -123,6 +123,7 @@ func SendLootbox(msg *disgord.Message) {
 			usernames[i] = user.Username
 		}
 		galo := rinha.GetEquippedGalo(usersDb[0])
+		itc.Token = handler.INTERACTION_FAKE_TOKEN
 		winner, _ := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
 			GaloAuthor:  usersDb[0],
 			GaloAdv:     &userAdv,

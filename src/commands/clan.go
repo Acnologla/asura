@@ -576,14 +576,9 @@ func runClan(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 
 		userAdv := entities.User{
 			Galos:      []*entities.Rooster{gAdv},
-			Attributes: [6]int{0, user.Attributes[1], 0, 0, 50, 350},
+			Attributes: [6]int{0, user.Attributes[1], 0, 0, 0, 350},
 		}
-		handler.Client.SendInteractionResponse(ctx, itc, &disgord.CreateInteractionResponse{
-			Type: disgord.InteractionCallbackChannelMessageWithSource,
-			Data: &disgord.CreateInteractionResponseData{
-				Content: "A batalha esta iniciando",
-			},
-		})
+
 		winner, battle := engine.ExecuteRinha(itc, handler.Client, engine.RinhaOptions{
 			GaloAuthor:  &user,
 			GaloAdv:     &userAdv,

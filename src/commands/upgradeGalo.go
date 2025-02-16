@@ -17,6 +17,7 @@ func init() {
 		Name:        "upgradegalo",
 		Description: "Melhore a raridade dos seus galos",
 		Run:         runUpgradeGalo,
+		AliasesMsg:  []string{"ug"},
 		Cooldown:    10,
 		Category:    handler.Rinha,
 	})
@@ -65,6 +66,7 @@ var rarityToShard = map[rinha.Rarity]rinha.Rarity{
 	rinha.Rare:      rinha.Epic,
 	rinha.Epic:      rinha.Legendary,
 	rinha.Legendary: rinha.Mythic,
+	rinha.Mythic:    rinha.God,
 }
 
 func runUpgradeGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgord.CreateInteractionResponse {
@@ -73,6 +75,7 @@ func runUpgradeGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgor
 	epicShard := getShardsByRarity(user.Items, rinha.Epic)
 	legendaryShard := getShardsByRarity(user.Items, rinha.Legendary)
 	mythicShard := getShardsByRarity(user.Items, rinha.Mythic)
+	godShard := getShardsByRarity(user.Items, rinha.God)
 	opts := genUpgradeRoosterOptions(&user)
 
 	r := entities.CreateMsg().
@@ -87,6 +90,7 @@ func runUpgradeGalo(ctx context.Context, itc *disgord.InteractionCreate) *disgor
 				"epicShards":      epicShard.Quantity,
 				"legendaryShards": legendaryShard.Quantity,
 				"mythicShards":    mythicShard.Quantity,
+				"godShards":       godShard.Quantity,
 				"maxShards":       SHARDS_TO_UPGRADE,
 			}),
 		}).

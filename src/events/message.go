@@ -14,6 +14,10 @@ import (
 	"github.com/andersfylling/disgord"
 )
 
+var MessageChannel = make(chan *disgord.MessageCreate)
+
+const NUMBER_OF_PROCESSING_MESSAGE_WORKERS = 1024
+
 type GuildInfo struct {
 	sync.Mutex
 	NewLootBoxTime int64
@@ -66,14 +70,14 @@ func RecieveLootbox(msg *disgord.Message) {
 	}
 }
 
-func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
+func HandleMessage(h *disgord.MessageCreate) {
 	msg := h.Message
 	appID := os.Getenv("APP_ID")
 	if !msg.Author.Bot {
 		if msg.GuildID != 0 {
 			for _, user := range msg.Mentions {
 				if user.ID.String() == appID {
-					msg.Reply(context.Background(), s, "Meu prefix é **j!**\n Use **/help** ou **j!help** para ver meus comandos\nUse **/rinhahelp** para ver o **tutorial de rinha**")
+					msg.Reply(context.Background(), handler.Client, "Meu prefix é **j!**\n Use **/help** ou **j!help** para ver meus comandos\nUse **/rinhahelp** para ver o **tutorial de rinha**")
 					break
 				}
 			}
@@ -83,5 +87,17 @@ func HandleMessage(s disgord.Session, h *disgord.MessageCreate) {
 			handler.ProcessMessage(msg)
 
 		}
+	}
+}
+
+func Worker(id int) {
+	for message := range MessageChannel {
+		HandleMessage(message)
+	}
+}
+
+func init() {
+	for i := 0; i < NUMBER_OF_PROCESSING_MESSAGE_WORKERS; i++ {
+		go Worker(i)
 	}
 }

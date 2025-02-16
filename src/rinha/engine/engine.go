@@ -54,26 +54,44 @@ func EditRinhaComponents(message *disgord.Message, newMessage *disgord.CreateMes
 		})
 
 		return err
-	}, 5)
+	}, 4)
 }
-
-func editRinhaEmbed(msg *disgord.Message, embed *disgord.Embed) {
+func editRinhaEmbedMessage(msg *disgord.Message, embed *disgord.Embed) {
 	utils.Try(func() error {
 		_, err := handler.Client.Channel(msg.ChannelID).Message(msg.ID).Update(&disgord.UpdateMessage{
 			Embeds: &([]*disgord.Embed{embed}),
 		})
 		return err
-	}, 5)
+	}, 4)
 }
 
-func EditRinhaEmbed(msg *disgord.Message, embed *disgord.Embed, msgs [2]*disgord.Message) {
+func editRinhaEmbed(itc *disgord.InteractionCreate, msg disgord.Snowflake, embed *disgord.Embed) {
+	utils.Try(func() error {
+		err := handler.EditInteractionResponse(context.Background(), msg, itc, &disgord.UpdateMessage{
+			Embeds: &([]*disgord.Embed{embed}),
+		})
+		return err
+	}, 4)
+}
+
+func EditRinhaEmbed(itc *disgord.InteractionCreate, msgID disgord.Snowflake, embed *disgord.Embed, msgs [2]*disgord.Message) (disgord.Snowflake, error) {
 	if msgs[0] != nil {
 		for _, msg := range msgs {
-			editRinhaEmbed(msg, embed)
+			editRinhaEmbedMessage(msg, embed)
 		}
 	} else {
-		editRinhaEmbed(msg, embed)
+		if msgID == 0 {
+			return handler.SendInteractionResponse(context.Background(), itc, &disgord.CreateInteractionResponse{
+				Type: disgord.InteractionCallbackChannelMessageWithSource,
+				Data: &disgord.CreateInteractionResponseData{
+					Content: itc.Member.User.Mention(),
+					Embeds:  []*disgord.Embed{embed}},
+			})
+		} else {
+			editRinhaEmbed(itc, msgID, embed)
+		}
 	}
+	return msgID, nil
 
 }
 func GetImageTile(options *RinhaOptions, turn int) string {
@@ -300,9 +318,11 @@ func GetUsername(name, realName string) string {
 	return name
 }
 
-func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, msg *disgord.Message, embed *disgord.Embed) (int, *rinha.Battle) {
+func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, mID disgord.Snowflake, embed *disgord.Embed, itc *disgord.InteractionCreate) (int, *rinha.Battle) {
 	var lastEffects string
+	msgID := mID
 	round := 0
+	var err error
 	for {
 		effects := battle.Play(-1, round)
 		var text string
@@ -367,12 +387,18 @@ func RinhaEngine(battle *rinha.Battle, options *RinhaOptions, msg *disgord.Messa
 						fighter.Galo.Type = 50
 					}
 				}
-				EditRinhaEmbed(msg, embed, options.MessageID)
+				_, err = EditRinhaEmbed(itc, msgID, embed, options.MessageID)
+				if err != nil {
+					return -1, nil
+				}
 				return winnerTurn, battle
 			}
 		}
 
-		EditRinhaEmbed(msg, embed, options.MessageID)
+		msgID, err = EditRinhaEmbed(itc, msgID, embed, options.MessageID)
+		if err != nil {
+			return -1, nil
+		}
 		lastEffects = text
 		round++
 		time.Sleep(3 * time.Second)
@@ -434,17 +460,8 @@ func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, optio
 			return -1, nil
 		}
 	}
-	var msg *disgord.Message
-	var err error
-	if options.MessageID[0] == nil {
-		msg, err = session.Channel(itc.ChannelID).CreateMessage(&disgord.CreateMessage{
-			Content: itc.Member.User.Mention(),
-			Embeds:  []*disgord.Embed{embed},
-		})
-		if err != nil {
-			return -1, nil
-		}
-	}
+	var msgID disgord.Snowflake
+	//var err error
 
 	battle := rinha.CreateBattle(options.GaloAuthor, options.GaloAdv, options.NoItems, options.IDs[0], options.IDs[1], options.Waiting, options.Usernames)
 	embed.Fields = []*disgord.EmbedField{
@@ -459,10 +476,10 @@ func ExecuteRinha(itc *disgord.InteractionCreate, session disgord.Session, optio
 			Inline: true,
 		},
 	}
-	EditRinhaEmbed(msg, embed, options.MessageID)
+
 	/*	if newEngine {
 			return RinhaEngineNew(&battle, &options, message, embed)
 		}
 	*/
-	return RinhaEngine(&battle, &options, msg, embed)
+	return RinhaEngine(&battle, &options, msgID, embed, itc)
 }

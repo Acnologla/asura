@@ -67,7 +67,7 @@ func runHelp(ctx context.Context, itc *disgord.InteractionCreate) *disgord.Creat
 			Type: disgord.InteractionCallbackChannelMessageWithSource,
 			Data: &disgord.CreateInteractionResponseData{
 				Embeds: []*disgord.Embed{{
-					Description: commandText + "\n\nPrefix: **j!**\nUse **/rinhahelp** para ver o tutorial de rinha de galo\n\n[Support](https://discord.gg/CfkBZyVsd7)\n[Vote](https://top.gg/bot/470684281102925844)\n[Website](https://acnologla.github.io/asura-site/)",
+					Description: commandText + "\n\nPrefix: **j!**\nUse **/rinhahelp** para ver o tutorial de rinha de galo\n\n[Support](https://discord.gg/CfkBZyVsd7)\n[Vote](https://top.gg/bot/470684281102925844)\n[Website](https://asurabot.com.br/)",
 					Color:       65535,
 					Footer: &disgord.EmbedFooter{
 						Text: "Se tem alguma duvida não exite em entrar no meu servidor de suporte",

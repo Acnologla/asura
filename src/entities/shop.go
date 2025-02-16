@@ -32,11 +32,11 @@ func (item *ShopItem) price() (int, int) {
 	switch item.Type {
 	case Shards:
 		if item.Rarity == 5 {
-			return 0, 2
+			return 0, 4
 		} else if item.Rarity == 3 {
-			return 14500, 0
+			return 15000, 0
 		} else if item.Rarity == 2 {
-			return 4600, 0
+			return 4750, 0
 		}
 		return 950, 0
 	case Cosmetics:

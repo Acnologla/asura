@@ -29,13 +29,13 @@ func CalcUserXp(user *entities.User) int {
 	n := len(user.Upgrades)
 	switch n {
 	case 0:
-		return 150
+		return 200
 	case 1:
-		return 800
+		return 1500
 	case 2:
-		return 5000
+		return 8000
 	case 3:
-		return 15000
+		return 20000
 	case 4:
 		return 50000
 	default:
